@@ -172,7 +172,7 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
         exit(1);
     }
 
-    if (!headers_sent()) {
+    if (!headers_sent() && !$isProduction) {
         http_response_code(500);
     }
 

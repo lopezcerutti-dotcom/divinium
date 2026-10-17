@@ -6,6 +6,12 @@
 # Forçar index.php como único ponto de entrada para impedir conflitos com default.php da Hostinger
 DirectoryIndex index.php
 
+# Redirecionar erros do servidor diretamente para o index.php, impedindo telas de 'Configuração incompleta' da Hostinger
+ErrorDocument 500 /index.php
+ErrorDocument 502 /index.php
+ErrorDocument 503 /index.php
+ErrorDocument 404 /index.php
+
 # 1. DESATIVAR LISTAGEM DE DIRETÓRIOS E ASSINATURA DO SERVIDOR
 Options -Indexes -MultiViews
 ServerSignature Off
