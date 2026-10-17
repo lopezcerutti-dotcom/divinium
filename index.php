@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 // Ponto de entrada: Carrega o bootstrap (suporta app/ fora ou dentro de public_html)
 $possibleBootstraps = [
+    __DIR__ . '/app/bootstrap.php',
     dirname(__DIR__) . '/app/bootstrap.php',
     __DIR__ . '/../app/bootstrap.php',
-    __DIR__ . '/app/bootstrap.php',
     dirname(__FILE__, 2) . '/app/bootstrap.php',
 ];
 

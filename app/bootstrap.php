@@ -40,6 +40,9 @@ if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // 3. CARREGAMENTO DO ARQUIVO DE AMBIENTE (.env, env.php OU FALLBACK SEGURO)
+if (file_exists(APP_PATH . '/Core/Env.php')) {
+    require_once APP_PATH . '/Core/Env.php';
+}
 use App\Core\Env;
 
 // Procurar o .env ou env.php na raiz do projeto ou pastas adjacentes
@@ -195,7 +198,7 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
 });
 
 // 6. BLINDAGEM DE SESSÃO PHP (Apenas para requisições Web)
-if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE) {
+if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE && !headers_sent()) {
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
     ini_set('session.cookie_httponly', '1');

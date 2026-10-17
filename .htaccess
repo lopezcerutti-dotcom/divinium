@@ -3,6 +3,9 @@
 # Compatível com LiteSpeed Web Server e Apache 2.4+ (Hostinger)
 # ==============================================================================
 
+# Forçar index.php como único ponto de entrada para impedir conflitos com default.php da Hostinger
+DirectoryIndex index.php
+
 # 1. DESATIVAR LISTAGEM DE DIRETÓRIOS E ASSINATURA DO SERVIDOR
 Options -Indexes -MultiViews
 ServerSignature Off
