@@ -924,7 +924,7 @@ body.luxury-theme {
 .sub-label {
     font-size: 0.72rem;
     letter-spacing: 0.2em;
-    color: var(--gold-accent);
+    color: var(--text-secondary, #6B665F);
     font-weight: 600;
     display: block;
     margin-bottom: 8px;

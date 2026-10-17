@@ -192,7 +192,7 @@ use App\Models\Setting;
                 <p>
                     <?= \App\Core\View::e(Setting::get('about_p2', 'Cada gema é única em suas veias, coloração e densidade. Encastoadas à mão sobre o aro duplo em prata, as pedras ganham vida e presença táctil sem jamais pesar no pulso.')) ?>
                 </p>
-                <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-accent); font-style: italic;">
+                <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-secondary, #6B665F); font-style: italic;">
                     "Qual delas conversa com você hoje?"
                 </p>
             </div>
