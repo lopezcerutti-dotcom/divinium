@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /gestao-privada-*
+Disallow: /api/
+Disallow: /carrinho/
+Disallow: /checkout/
+Disallow: /minha-conta/
+
+Allow: /
+Allow: /catalogo
+Allow: /produto/
+Allow: /politica-de-privacidade
+Allow: /termos-de-uso
+Allow: /trocas-e-devolucoes
+
+Sitemap: https://seudominio.com.br/sitemap.xml

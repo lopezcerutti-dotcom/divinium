@@ -1,0 +1,50 @@
+# ==============================================================================
+# GITIGNORE - SEGURANÇA E AMBIENTES (DIVINIUM)
+# ==============================================================================
+
+# Segredos e Configurações de Ambiente
+.env
+.env.local
+.env.staging
+.env.production
+.env.backup
+*.env
+env.php
+
+# Dependências do Composer e Pacotes
+/vendor/
+composer.phar
+
+# Logs segregados (mantendo apenas o diretório)
+/logs/app/*
+/logs/security/*
+/logs/payments/*
+/logs/webhooks/*
+!/logs/**/.gitkeep
+*.log
+
+# Bancos de dados locais / temporários
+*.sqlite
+*.sqlite3
+*.db
+
+# Armazenamento Privado (comprovantes, notas fiscais, backups locais)
+/storage/uploads/private/*
+/storage/cache/*
+/storage/backups/*
+!/storage/**/.gitkeep
+
+# Uploads Públicos gerados por usuários/clientes
+/public_html/uploads/products/*
+!/public_html/uploads/products/.gitkeep
+
+# IDEs e Sistema Operacional
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
