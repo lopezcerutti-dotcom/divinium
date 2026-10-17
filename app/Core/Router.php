@@ -45,7 +45,7 @@ class Router
     {
         $parsedUrl = parse_url($uri, PHP_URL_PATH);
         $path = rtrim($parsedUrl ?: '/', '/');
-        if ($path === '') {
+        if ($path === '' || $path === '/index.php' || $path === '/index.html' || $path === '/index') {
             $path = '/';
         }
 
