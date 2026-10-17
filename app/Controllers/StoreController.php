@@ -16,11 +16,22 @@ class StoreController
     public function index(): void
     {
         $seedCatalog = self::getSeedCatalog();
-        $categories = array_values($seedCatalog['categories'] ?? []);
+        $categories = [
+            ['id' => 1, 'name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Biojoias e Anéis Orgonite artesanais com pedras naturais.'],
+            ['id' => 2, 'name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Braceletes Caminhos e Elo com matriz de resina e pedras minerais.'],
+            ['id' => 3, 'name' => 'Brincos', 'slug' => 'brincos', 'description' => 'Brincos orgonite segundo furo com pedras naturais e acabamento refinado.'],
+        ];
         $products = $seedCatalog['products'] ?? [];
 
         try {
             $pdo = Database::getConnection();
+
+            // Sincronizar nomes e slugs das 3 categorias oficiais no banco de dados
+            $pdo->exec("
+                UPDATE categories SET name = 'Anéis', slug = 'aneis' WHERE id = 1;
+                UPDATE categories SET name = 'Braceletes', slug = 'braceletes' WHERE id = 2;
+                UPDATE categories SET name = 'Brincos', slug = 'brincos' WHERE id = 3;
+            ");
 
             // Garantir que as tabelas de categorias e produtos existam
             self::ensureCatalogTables($pdo);
@@ -33,22 +44,6 @@ class StoreController
                 self::syncSeedToDatabase($pdo, $seedCatalog);
             }
 
-            // Buscar categorias ativas com contagem de produtos
-            $categoriesStmt = $pdo->query('
-                SELECT c.*, COUNT(p.id) as product_count
-                FROM categories c
-                LEFT JOIN products p ON p.category_id = c.id AND p.is_active = 1
-                WHERE c.is_active = 1
-                GROUP BY c.id
-                ORDER BY c.sort_order ASC, c.name ASC
-            ');
-            if ($categoriesStmt) {
-                $dbCategories = $categoriesStmt->fetchAll();
-                if (!empty($dbCategories)) {
-                    $categories = $dbCategories;
-                }
-            }
-
             // Buscar produtos ativos do banco
             $productsStmt = $pdo->query('
                 SELECT p.*, c.name as category_name, c.slug as category_slug 
@@ -59,13 +54,19 @@ class StoreController
             ');
             if ($productsStmt) {
                 $dbProducts = $productsStmt->fetchAll();
-                if (!empty($dbProducts)) {
+                if (!empty($dbProducts) && count($dbProducts) >= 50) {
                     $products = $dbProducts;
                 }
             }
         } catch (\Throwable $e) {
             error_log('Aviso ao sincronizar catálogo do banco: ' . $e->getMessage());
         }
+
+        // Calcular contagens exatas de produtos por categoria
+        foreach ($categories as &$cat) {
+            $cat['product_count'] = count(array_filter($products, fn($p) => (int)($p['category_id'] ?? 0) === (int)$cat['id']));
+        }
+        unset($cat);
 
         View::render('store/index', [
             'pageTitle' => 'Loja Oficial | Catálogo Completo Biojoias & Orgonites',
