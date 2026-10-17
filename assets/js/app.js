@@ -199,11 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (overlay) overlay.addEventListener('click', closeDrawer);
 });
 
-// 7. CONTROLE DO SELETOR DE TEMAS MULTI-PALETA (4 TEMAS LUXO)
+// 7. CONTROLE DO SELETOR DE TEMAS (SUPORTE À ÁREA ADMINISTRATIVA)
 function setupThemeToggle() {
-    const btn = document.getElementById('themeToggleBtn');
-    const label = document.getElementById('themeToggleLabel');
-
     const availableThemes = [
         { id: 'theme-gold', name: 'Ouro Imperial', color: '#caa15c' },
         { id: 'theme-silver', name: 'Prata Nobre', color: '#cbd5e1' },
@@ -226,32 +223,10 @@ function setupThemeToggle() {
         document.documentElement.classList.add(found.id);
         document.body.classList.add(found.id);
 
-        if (label) {
-            label.textContent = found.name;
-        }
-
-        const gem = document.querySelector('.theme-toggle-gem');
-        if (gem) {
-            gem.style.boxShadow = `0 0 10px ${found.color}`;
-        }
-
         localStorage.setItem('divinium_theme', found.id);
     }
 
-    const savedTheme = localStorage.getItem('divinium_theme') || 'theme-gold';
-    applyTheme(savedTheme);
-
-    if (btn) {
-        btn.addEventListener('click', () => {
-            const current = localStorage.getItem('divinium_theme') || 'theme-gold';
-            let nextIndex = availableThemes.findIndex(t => t.id === current) + 1;
-            if (nextIndex >= availableThemes.length) {
-                nextIndex = 0;
-            }
-            applyTheme(availableThemes[nextIndex].id);
-        });
-    }
-
+    // Mantém a função disponível globalmente para pré-visualização no painel administrativo (/admin/temas)
     window.diviniumApplyTheme = applyTheme;
 }
 

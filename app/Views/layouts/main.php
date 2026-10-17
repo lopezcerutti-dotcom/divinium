@@ -26,12 +26,11 @@
     <!-- Token CSRF para requisições assíncronas -->
     <meta name="csrf-token" content="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
 
-    <!-- Inicialização Imediata do Tema (Suporta 4 temas luxo) -->
+    <!-- Aplicação do Tema Definido no Painel Administrativo -->
     <script>
         (function() {
-            var serverDefault = <?= json_encode(\App\Models\Setting::get('default_theme', 'theme-gold')) ?>;
-            var theme = localStorage.getItem('divinium_theme') || serverDefault;
-            document.documentElement.classList.add(theme);
+            var serverTheme = <?= json_encode(\App\Models\Setting::get('default_theme', 'theme-gold')) ?>;
+            document.documentElement.classList.add(serverTheme);
         })();
     </script>
 </head>
@@ -83,13 +82,6 @@
 
             <!-- Ações do Cabeçalho (Direita) -->
             <div class="header-actions">
-                <!-- Botão Seletor de Tema (Ouro Palha / Prata Nobre) -->
-                <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Alternar Tema Ouro e Prata" title="Clique para alternar entre Ouro Palha e Prata Nobre">
-                    <span class="theme-toggle-gem"></span>
-                    <span class="theme-toggle-label" id="themeToggleLabel">Ouro Palha</span>
-                    <span class="theme-toggle-arrow">⇄</span>
-                </button>
-
                 <button class="action-btn search-trigger" aria-label="Buscar produtos">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
