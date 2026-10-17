@@ -111,13 +111,37 @@ class Router
             $handler->handle();
         });
 
+        // Endpoint de Diagnóstico / Verificação de Saúde
+        $this->get('/health', function (): void {
+            header('Content-Type: application/json; charset=UTF-8');
+            $dbStatus = 'unknown';
+            try {
+                $pdo = Database::getConnection();
+                $dbDriver = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+                $dbStatus = 'connected (' . $dbDriver . ')';
+            } catch (\Throwable $e) {
+                $dbStatus = 'error: ' . $e->getMessage();
+            }
+            echo json_encode([
+                'status' => 'ok',
+                'php_version' => PHP_VERSION,
+                'db' => $dbStatus,
+                'time' => date('Y-m-d H:i:s')
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        });
+
         // Rota Raiz: Home focada em Branding & Conversão
-        $this->get('/', function (): void {
+        $homeHandler = function (): void {
             \App\Core\View::render('home/index', [
                 'pageTitle' => 'Joias que Revelam o Luxo Silencioso',
                 'pageDescription' => 'Divinium — Joias exclusivas em ouro 18k e pedras preciosas com a essência do quiet luxury.'
             ]);
-        });
+        };
+
+        $this->get('/', $homeHandler);
+        $this->get('/index.php', $homeHandler);
+        $this->get('/index', $homeHandler);
 
         // Rota da Loja Oficial com Vitrine e Redirecionamento Shopee
         $this->get('/loja', [\App\Controllers\StoreController::class, 'index']);
