@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 return [
     'categories' => [
-        1 => ['id' => 1, 'name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Biojoias e Anéis Orgonite artesanais com pedras naturais.'],
+        1 => ['id' => 1, 'name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Biojoias e AnÃ©is Orgonite artesanais com pedras naturais.'],
         2 => ['id' => 2, 'name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Braceletes Caminhos e Elo com matriz de resina e pedras minerais.'],
         3 => ['id' => 3, 'name' => 'Brincos', 'slug' => 'brincos', 'description' => 'Brincos orgonite segundo furo com pedras naturais e acabamento refinado.'],
     ],

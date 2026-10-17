@@ -11,192 +11,144 @@ class StoreController
 {
     /**
      * Página da Loja / Vitrine de Joias com links diretos para a Shopee
-     * Carrega e gerencia os 100 produtos das categorias: Anéis, Braceletes e Brincos.
      */
     public function index(): void
     {
-        $seedCatalog = self::getSeedCatalog();
-        $categories = [
-            ['id' => 1, 'name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Biojoias e Anéis Orgonite artesanais com pedras naturais.'],
-            ['id' => 2, 'name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Braceletes Caminhos e Elo com matriz de resina e pedras minerais.'],
-            ['id' => 3, 'name' => 'Brincos', 'slug' => 'brincos', 'description' => 'Brincos orgonite segundo furo com pedras naturais e acabamento refinado.'],
-        ];
-        $products = $seedCatalog['products'] ?? [];
+        $categories = [];
+        $products = [];
 
         try {
             $pdo = Database::getConnection();
 
-            // Sincronizar nomes e slugs das 3 categorias oficiais no banco de dados
-            $pdo->exec("
-                UPDATE categories SET name = 'Anéis', slug = 'aneis' WHERE id = 1;
-                UPDATE categories SET name = 'Braceletes', slug = 'braceletes' WHERE id = 2;
-                UPDATE categories SET name = 'Brincos', slug = 'brincos' WHERE id = 3;
-            ");
-
-            // Garantir que as tabelas de categorias e produtos existam
-            self::ensureCatalogTables($pdo);
-
-            // Verificar se o banco já possui os produtos; se tiver menos de 100, sincroniza
-            $countStmt = $pdo->query('SELECT COUNT(*) FROM products');
-            $totalInDb = $countStmt ? (int) $countStmt->fetchColumn() : 0;
-
-            if ($totalInDb < 100 && !empty($products)) {
-                self::syncSeedToDatabase($pdo, $seedCatalog);
+            // Buscar categorias ativas
+            $categoriesStmt = $pdo->query('SELECT * FROM categories WHERE is_active = 1 ORDER BY sort_order ASC, name ASC');
+            if ($categoriesStmt) {
+                $categories = $categoriesStmt->fetchAll() ?: [];
             }
 
-            // Buscar produtos ativos do banco
+            // Buscar produtos ativos com sua categoria
             $productsStmt = $pdo->query('
                 SELECT p.*, c.name as category_name, c.slug as category_slug 
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE p.is_active = 1 
-                ORDER BY p.is_featured DESC, p.stock_quantity DESC, p.id ASC
+                ORDER BY p.is_featured DESC, p.id DESC
             ');
             if ($productsStmt) {
-                $dbProducts = $productsStmt->fetchAll();
-                if (!empty($dbProducts) && count($dbProducts) >= 50) {
-                    $products = $dbProducts;
-                }
+                $products = $productsStmt->fetchAll() ?: [];
             }
         } catch (\Throwable $e) {
-            error_log('Aviso ao sincronizar catálogo do banco: ' . $e->getMessage());
+            error_log('Aviso ao carregar produtos do banco: ' . $e->getMessage());
         }
 
-        // Calcular contagens exatas de produtos por categoria
-        foreach ($categories as &$cat) {
-            $cat['product_count'] = count(array_filter($products, fn($p) => (int)($p['category_id'] ?? 0) === (int)$cat['id']));
+        // AUTO-CURA: Se o banco estiver vazio ou tabelas ainda não importadas,
+        // preenche com o catálogo autoral da Coleção Caminhos para a loja nunca ficar vazia!
+        if (empty($products)) {
+            $products = self::getDefaultProducts();
         }
-        unset($cat);
+
+        if (empty($categories)) {
+            $categories = [
+                ['id' => 1, 'name' => 'Coleção Caminhos', 'slug' => 'colecao-caminhos'],
+                ['id' => 2, 'name' => 'Pedras Raras', 'slug' => 'pedras-raras'],
+                ['id' => 3, 'name' => 'Edição Limitada', 'slug' => 'edicao-limitada'],
+            ];
+        }
 
         View::render('store/index', [
-            'pageTitle' => 'Loja Oficial | Catálogo Completo Biojoias & Orgonites',
-            'pageDescription' => 'Catálogo oficial Divinium com 100 biojoias e orgonites artesanais. Escolha seu anel, bracelete ou brinco com gemas e pedras naturais.',
+            'pageTitle' => 'Loja Oficial | Joias & Coleções Autorais',
+            'pageDescription' => 'Conheça o catálogo completo de joias Divinium. Escolha sua gema mineral e finalize sua compra com segurança na nossa loja oficial na Shopee.',
             'categories' => $categories,
             'products' => $products
         ]);
     }
 
     /**
-     * Retorna o catálogo oficial com os 100 produtos cadastrados a partir do CSV
+     * Catálogo fallback de alta definição com as joias Divinium
      *
-     * @return array{categories: array<int, array<string, mixed>>, products: array<int, array<string, mixed>>}
+     * @return array<int, array<string, mixed>>
      */
-    public static function getSeedCatalog(): array
+    private static function getDefaultProducts(): array
     {
-        $seedFile = defined('BASE_PATH') ? BASE_PATH . '/database/seed_products.php' : dirname(__DIR__, 2) . '/database/seed_products.php';
-        if (file_exists($seedFile)) {
-            $data = require $seedFile;
-            if (is_array($data) && !empty($data['products'])) {
-                return $data;
-            }
-        }
-
-        // Fallback via JSON
-        $jsonFile = defined('BASE_PATH') ? BASE_PATH . '/database/seed_products.json' : dirname(__DIR__, 2) . '/database/seed_products.json';
-        if (file_exists($jsonFile)) {
-            $json = json_decode((string) file_get_contents($jsonFile), true);
-            if (is_array($json) && !empty($json)) {
-                return [
-                    'categories' => [
-                        1 => ['id' => 1, 'name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Biojoias e Anéis Orgonite artesanais com pedras naturais.'],
-                        2 => ['id' => 2, 'name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Braceletes Caminhos e Elo com matriz de resina e pedras minerais.'],
-                        3 => ['id' => 3, 'name' => 'Brincos', 'slug' => 'brincos', 'description' => 'Brincos orgonite segundo furo com pedras naturais e acabamento refinado.'],
-                    ],
-                    'products' => $json
-                ];
-            }
-        }
-
-        return ['categories' => [], 'products' => []];
-    }
-
-    /**
-     * Garante a criação resiliente das tabelas caso o banco esteja zerado
-     */
-    private static function ensureCatalogTables(\PDO $pdo): void
-    {
-        try {
-            $pdo->exec("
-                CREATE TABLE IF NOT EXISTS categories (
-                    id INTEGER PRIMARY KEY,
-                    uuid VARCHAR(36) NOT NULL,
-                    parent_id INTEGER NULL,
-                    name VARCHAR(150) NOT NULL,
-                    slug VARCHAR(160) NOT NULL,
-                    description TEXT NULL,
-                    sort_order INTEGER DEFAULT 0,
-                    is_active INTEGER DEFAULT 1
-                );
-                CREATE TABLE IF NOT EXISTS products (
-                    id INTEGER PRIMARY KEY,
-                    uuid VARCHAR(36) NOT NULL,
-                    category_id INTEGER NULL,
-                    sku VARCHAR(64) NOT NULL,
-                    name VARCHAR(255) NOT NULL,
-                    slug VARCHAR(255) NOT NULL,
-                    description TEXT NULL,
-                    stone_mineral VARCHAR(100) NULL,
-                    price_cents INTEGER NOT NULL DEFAULT 38000,
-                    stock_quantity INTEGER NOT NULL DEFAULT 0,
-                    image_url VARCHAR(500) NULL,
-                    external_url VARCHAR(500) NULL,
-                    is_active INTEGER DEFAULT 1,
-                    is_featured INTEGER DEFAULT 0
-                );
-            ");
-        } catch (\Throwable $e) {
-            // Silencioso se tabela já existir com schema avançado MySQL
-        }
-    }
-
-    /**
-     * Sincroniza os 100 produtos e 3 categorias no banco de dados de forma idempotente
-     */
-    private static function syncSeedToDatabase(\PDO $pdo, array $seedCatalog): void
-    {
-        try {
-            // Sincronizar categorias
-            foreach ($seedCatalog['categories'] as $cat) {
-                $check = $pdo->prepare('SELECT id FROM categories WHERE id = ?');
-                $check->execute([$cat['id']]);
-                if (!$check->fetch()) {
-                    $ins = $pdo->prepare('INSERT INTO categories (id, uuid, name, slug, description, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, 1)');
-                    $ins->execute([$cat['id'], 'cat-' . $cat['slug'], $cat['name'], $cat['slug'], $cat['description'] ?? '', $cat['id']]);
-                }
-            }
-
-            // Sincronizar produtos
-            foreach ($seedCatalog['products'] as $prod) {
-                $check = $pdo->prepare('SELECT id FROM products WHERE sku = ?');
-                $check->execute([$prod['sku']]);
-                if (!$check->fetch()) {
-                    $ins = $pdo->prepare('
-                        INSERT INTO products (
-                            id, uuid, category_id, sku, name, slug, description, stone_mineral,
-                            price_cents, stock_quantity, image_url, external_url, is_active, is_featured
-                        ) VALUES (
-                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?
-                        )
-                    ');
-                    $ins->execute([
-                        $prod['id'],
-                        $prod['uuid'],
-                        $prod['category_id'],
-                        $prod['sku'],
-                        $prod['name'],
-                        $prod['slug'],
-                        $prod['description'],
-                        $prod['stone_mineral'],
-                        $prod['price_cents'],
-                        $prod['stock_quantity'],
-                        $prod['image_url'],
-                        $prod['external_url'],
-                        $prod['is_featured'] ?? 0
-                    ]);
-                }
-            }
-        } catch (\Throwable $e) {
-            error_log('Falha ao sincronizar dados do seed: ' . $e->getMessage());
-        }
+        return [
+            [
+                'id' => 1,
+                'name' => 'Bracelete Caminhos — Concha Verde Esmeralda',
+                'description' => 'Prata de Lei 925 com incrustação artesanal de concha verde esmeralda e acabamento espelhado.',
+                'stone_mineral' => 'Concha Verde Natural',
+                'price_cents' => 38000,
+                'compare_at_price_cents' => 45000,
+                'image_url' => '/assets/images/hero/featured-green-shell.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Bracelete Concha Verde'),
+                'category_id' => 1,
+                'category_name' => 'Coleção Caminhos',
+                'is_featured' => 1
+            ],
+            [
+                'id' => 2,
+                'name' => 'Bracelete Caminhos — Madrepérola Branca',
+                'description' => 'A pureza atemporal da madrepérola natural harmonizada com o brilho da prata 925.',
+                'stone_mineral' => 'Madrepérola Pura',
+                'price_cents' => 38000,
+                'compare_at_price_cents' => 45000,
+                'image_url' => '/assets/images/products/bracelete-madreperola.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Bracelete Madreperola'),
+                'category_id' => 1,
+                'category_name' => 'Coleção Caminhos',
+                'is_featured' => 1
+            ],
+            [
+                'id' => 3,
+                'name' => 'Bracelete Caminhos — Ônix Preto Absoluto',
+                'description' => 'Contraste poderoso e elegância sóbria com gema natural de ônix preto e prata de lei.',
+                'stone_mineral' => 'Ônix Preto Natural',
+                'price_cents' => 38000,
+                'compare_at_price_cents' => 45000,
+                'image_url' => '/assets/images/products/bracelete-onix.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Bracelete Onix'),
+                'category_id' => 2,
+                'category_name' => 'Pedras Raras',
+                'is_featured' => 1
+            ],
+            [
+                'id' => 4,
+                'name' => 'Bracelete Caminhos — Coral Vermelho Imperial',
+                'description' => 'Vibratilidade e distinção mineral em tom carmim profundo esculpido à mão.',
+                'stone_mineral' => 'Coral Vermelho',
+                'price_cents' => 38000,
+                'compare_at_price_cents' => 45000,
+                'image_url' => '/assets/images/products/bracelete-vermelho.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Bracelete Coral Vermelho'),
+                'category_id' => 2,
+                'category_name' => 'Pedras Raras',
+                'is_featured' => 0
+            ],
+            [
+                'id' => 5,
+                'name' => 'Bracelete Caminhos — Rose Gold & Quartzo',
+                'description' => 'Banhado em ouro rosé nobre com acabamento acetinado de alta joalheria.',
+                'stone_mineral' => 'Ouro Rosé & Cristal',
+                'price_cents' => 42000,
+                'compare_at_price_cents' => 49000,
+                'image_url' => '/assets/images/products/bracelete-rose-gold.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Bracelete Rose Gold'),
+                'category_id' => 3,
+                'category_name' => 'Edição Limitada',
+                'is_featured' => 0
+            ],
+            [
+                'id' => 6,
+                'name' => 'Coleção Completa — Caixa Exclusiva de Espelho',
+                'description' => 'Estojo com a tríade autoral da Coleção Caminhos em estojo nobre aveludado.',
+                'stone_mineral' => 'Coleção Tríade Mineral',
+                'price_cents' => 99000,
+                'compare_at_price_cents' => 114000,
+                'image_url' => '/assets/images/products/colecao-completa-espelho.jpg',
+                'external_url' => 'https://shopee.com.br/search?keyword=' . urlencode('Divinium Colecao Caminhos'),
+                'category_id' => 3,
+                'category_name' => 'Edição Limitada',
+                'is_featured' => 1
+            ],
+        ];
     }
 }
