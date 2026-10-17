@@ -134,6 +134,7 @@ class Database
                     stone_mineral VARCHAR(100) NULL,
                     price_cents INTEGER NOT NULL DEFAULT 38000,
                     compare_at_price_cents INTEGER NULL,
+                    stock_quantity INTEGER NOT NULL DEFAULT 0,
                     image_url VARCHAR(500) NULL,
                     external_url VARCHAR(500) NULL,
                     is_active INTEGER DEFAULT 1,
@@ -149,6 +150,46 @@ class Database
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 );
             ");
+
+            // Auto-popular com os 100 produtos se a tabela estiver vazia
+            $countStmt = $pdo->query('SELECT COUNT(*) FROM products');
+            if ($countStmt && (int) $countStmt->fetchColumn() === 0) {
+                $seedFile = defined('BASE_PATH') ? BASE_PATH . '/database/seed_products.php' : dirname(__DIR__, 2) . '/database/seed_products.php';
+                if (file_exists($seedFile)) {
+                    $seedData = require $seedFile;
+                    if (!empty($seedData['categories'])) {
+                        foreach ($seedData['categories'] as $cat) {
+                            $insCat = $pdo->prepare('INSERT OR IGNORE INTO categories (id, uuid, name, slug, description, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, 1)');
+                            $insCat->execute([$cat['id'], 'cat-' . $cat['slug'], $cat['name'], $cat['slug'], $cat['description'] ?? '', $cat['id']]);
+                        }
+                    }
+                    if (!empty($seedData['products'])) {
+                        foreach ($seedData['products'] as $prod) {
+                            $insProd = $pdo->prepare('
+                                INSERT OR IGNORE INTO products (
+                                    id, uuid, category_id, sku, name, slug, description, stone_mineral,
+                                    price_cents, stock_quantity, image_url, external_url, is_active, is_featured
+                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                            ');
+                            $insProd->execute([
+                                $prod['id'],
+                                $prod['uuid'],
+                                $prod['category_id'],
+                                $prod['sku'],
+                                $prod['name'],
+                                $prod['slug'],
+                                $prod['description'],
+                                $prod['stone_mineral'],
+                                $prod['price_cents'],
+                                $prod['stock_quantity'],
+                                $prod['image_url'],
+                                $prod['external_url'],
+                                $prod['is_featured'] ?? 0
+                            ]);
+                        }
+                    }
+                }
+            }
         } catch (\Throwable $e) {
             // Ignora silenciosamente para não interromper execução
         }
