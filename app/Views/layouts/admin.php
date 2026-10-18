@@ -44,7 +44,7 @@
                     <span>Categorias</span>
                 </a>
 
-                <a href="/admin/produtos#bling" onclick="if(typeof openBlingModal==='function'){openBlingModal(event);}" class="admin-nav-item" style="color: #34d399;">
+                <a href="/admin/produtos" onclick="if(typeof openBlingModal==='function'){openBlingModal(event);}" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '#bling') ? 'active' : '' ?>">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                     <span>Estoque & Bling ERP</span>
                 </a>
@@ -91,11 +91,17 @@
         <main class="admin-main">
             <header class="admin-topbar">
                 <div class="topbar-left">
+                    <div class="topbar-breadcrumb">Painel Administrativo &rsaquo; Divinium</div>
                     <h1 class="admin-page-title"><?= \App\Core\View::e($pageTitle ?? 'Painel de Controle') ?></h1>
                 </div>
                 <div class="topbar-right">
-                    <a href="/admin/produtos#novo" class="btn-admin-gold" onclick="openNewProductModal(event)">
-                        <span>+ Novo Produto</span>
+                    <div class="store-status-pill">
+                        <span class="pulse-dot"></span>
+                        <span>Loja Online</span>
+                    </div>
+                    <a href="/" target="_blank" class="btn-admin-secondary" style="gap: 6px;">
+                        <span>Ver Loja</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                     </a>
                 </div>
             </header>

@@ -29,8 +29,9 @@ class AdminController
         $totalProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
         $activeProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products WHERE is_active = 1')->fetchColumn();
         $totalCategories = (int) $this->pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn();
+        $totalStock = (int) $this->pdo->query('SELECT COALESCE(SUM(stock_quantity), 0) FROM products')->fetchColumn();
         
-        $productsStmt = $this->pdo->query('SELECT * FROM products ORDER BY id DESC LIMIT 20');
+        $productsStmt = $this->pdo->query('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC LIMIT 10');
         $products = $productsStmt->fetchAll();
 
         $categoriesStmt = $this->pdo->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC');
@@ -40,11 +41,12 @@ class AdminController
         $blingConfig = $blingService->getConfig();
 
         View::render('admin/dashboard', [
-            'pageTitle' => 'Painel Administrativo | Bastidores Divinium',
+            'pageTitle' => 'Painel de Controle | Divinium',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
             'totalProducts' => $totalProducts,
             'activeProducts' => $activeProducts,
             'totalCategories' => $totalCategories,
+            'totalStock' => $totalStock,
             'products' => $products,
             'categories' => $categories,
             'blingConfig' => $blingConfig,
@@ -60,6 +62,11 @@ class AdminController
             session_start();
         }
 
+        $totalProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
+        $activeProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products WHERE is_active = 1')->fetchColumn();
+        $totalCategories = (int) $this->pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn();
+        $totalStock = (int) $this->pdo->query('SELECT COALESCE(SUM(stock_quantity), 0) FROM products')->fetchColumn();
+
         $productsStmt = $this->pdo->query('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC');
         $products = $productsStmt->fetchAll();
 
@@ -69,8 +76,12 @@ class AdminController
         $blingConfig = $blingService->getConfig();
 
         View::render('admin/products', [
-            'pageTitle' => 'Gerenciar Produtos | Catálogo Divinium',
+            'pageTitle' => 'Catálogo de Joias & Estoque',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador'],
+            'totalProducts' => $totalProducts,
+            'activeProducts' => $activeProducts,
+            'totalCategories' => $totalCategories,
+            'totalStock' => $totalStock,
             'products' => $products,
             'categories' => $categories,
             'blingConfig' => $blingConfig,

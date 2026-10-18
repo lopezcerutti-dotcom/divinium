@@ -47,113 +47,129 @@
     </div>
 </div>
 
-<!-- BANNERS DE ATALHO RÁPIDO: MÉTRICAS, TEMAS E EDITOR -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <!-- ATALHO DASHBOARD DE ACOMPANHAMENTO -->
-    <div class="admin-card" style="background: linear-gradient(135deg, rgba(238, 77, 45, 0.12) 0%, rgba(20, 19, 18, 0.8) 100%); border: 1px solid rgba(238, 77, 45, 0.35); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="color: #ff6b4a; font-size: 1.1rem;">📈</span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0;">Dashboard de Acompanhamento</h3>
-                <span style="background: rgba(238, 77, 45, 0.2); color: #ff6b4a; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">Shopee</span>
+<!-- MÓDULOS EXECUTIVOS DE GESTÃO (GRID 2x2 ELEGANTE) -->
+<div class="exec-modules-grid">
+    <!-- MÓDULO 1: MÉTRICAS SHOPEE -->
+    <div class="exec-module-card" style="border-left: 3px solid #ff6b4a;">
+        <div class="exec-card-top">
+            <div class="exec-card-icon" style="background: rgba(238, 77, 45, 0.12); color: #ff6b4a;">
+                📈
             </div>
-            <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0;">Acompanhe cliques, taxa de conversão e volume financeiro.</p>
+            <span style="background: rgba(238, 77, 45, 0.15); color: #ff6b4a; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+                Shopee Conversão
+            </span>
         </div>
-        <a href="/admin/metricas" class="btn-admin-gold" style="text-decoration: none; padding: 8px 14px; font-size: 0.8rem; white-space: nowrap;">
-            <span>Ver Métricas ↗</span>
-        </a>
+        <div class="exec-card-body">
+            <h3>Dashboard de Acompanhamento</h3>
+            <p>Monitore volume de cliques, taxa de conversão nas joias e receita gerada pelas campanhas externas.</p>
+        </div>
+        <div class="exec-card-footer">
+            <span style="font-size: 0.78rem; color: #8e8880;">Relatórios em tempo real</span>
+            <a href="/admin/metricas" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
+                <span>Ver Métricas ↗</span>
+            </a>
+        </div>
     </div>
 
-    <!-- ATALHO GESTÃO DE TEMAS -->
-    <div class="admin-card" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(20, 19, 18, 0.8) 100%); border: 1px solid rgba(202, 161, 92, 0.35); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="color: #caa15c; font-size: 1.1rem;">✦</span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0;">Gestão de Temas</h3>
-                <span style="background: rgba(202, 161, 92, 0.2); color: #caa15c; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">4 Paletas</span>
+    <!-- MÓDULO 2: GESTÃO DE TEMAS -->
+    <div class="exec-module-card" style="border-left: 3px solid #caa15c;">
+        <div class="exec-card-top">
+            <div class="exec-card-icon" style="background: rgba(202, 161, 92, 0.12); color: #caa15c;">
+                ✦
             </div>
-            <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0;">Alterne entre Ouro, Prata, Esmeralda e Rose Gold.</p>
+            <span style="background: rgba(202, 161, 92, 0.15); color: #caa15c; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+                4 Paletas Autorais
+            </span>
         </div>
-        <a href="/admin/temas" class="btn-admin-gold" style="text-decoration: none; padding: 8px 14px; font-size: 0.8rem; white-space: nowrap;">
-            <span>Gerenciar ↗</span>
-        </a>
+        <div class="exec-card-body">
+            <h3>Gestão de Temas & Identidade</h3>
+            <p>Alterne a estética da boutique entre Ouro Nobre, Prata 925, Esmeralda e Rose Gold com um clique.</p>
+        </div>
+        <div class="exec-card-footer">
+            <span style="font-size: 0.78rem; color: #8e8880;">Design System dinâmico</span>
+            <a href="/admin/temas" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
+                <span>Gerenciar Paletas ↗</span>
+            </a>
+        </div>
     </div>
 
-    <!-- ATALHO EDITOR DA LANDING PAGE -->
-    <div class="admin-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(20, 19, 18, 0.8) 100%); border: 1px solid rgba(52, 211, 153, 0.3); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="color: #34d399; font-size: 1.1rem;">✎</span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0;">Editor da Landing Page</h3>
-                <span style="background: rgba(52, 211, 153, 0.2); color: #34d399; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">Ao Vivo</span>
+    <!-- MÓDULO 3: EDITOR DA LANDING PAGE -->
+    <div class="exec-module-card" style="border-left: 3px solid #34d399;">
+        <div class="exec-card-top">
+            <div class="exec-card-icon" style="background: rgba(52, 211, 153, 0.12); color: #34d399;">
+                ✎
             </div>
-            <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0;">Edite textos, fotos e valores da Home facilmente.</p>
+            <span style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+                CMS Ao Vivo
+            </span>
         </div>
-        <a href="/admin/landing-page" class="btn-admin-gold" style="text-decoration: none; padding: 8px 14px; font-size: 0.8rem; white-space: nowrap;">
-            <span>Editar Home ↗</span>
-        </a>
-    <!-- ATALHO INTEGRAÇÃO BLING ERP -->
-    <div class="admin-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(20, 19, 18, 0.85) 100%); border: 1px solid rgba(16, 185, 129, 0.4); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 0;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="color: #34d399; font-size: 1.1rem;">📦</span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0;">Estoque Bling ERP</h3>
-                <?php if (!empty($blingConfig['is_connected'])): ?>
-                    <span class="bling-status-badge bling-status-connected"><span class="bling-status-dot"></span> Conectado</span>
-                <?php elseif (!empty($blingConfig['client_id'])): ?>
-                    <span class="bling-status-badge bling-status-waiting"><span class="bling-status-dot"></span> Aguardando Autorização</span>
-                <?php else: ?>
-                    <span class="bling-status-badge bling-status-disconnected"><span class="bling-status-dot"></span> Não Vinculado</span>
-                <?php endif; ?>
+        <div class="exec-card-body">
+            <h3>Editor da Landing Page</h3>
+            <p>Edite fotos do Hero, textos do manifesto, depoimentos de clientes e blocos institucionais da Home.</p>
+        </div>
+        <div class="exec-card-footer">
+            <span style="font-size: 0.78rem; color: #8e8880;">Atualização instantânea</span>
+            <a href="/admin/landing-page" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
+                <span>Editar Home ↗</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- MÓDULO 4: INTEGRAÇÃO BLING ERP -->
+    <div class="exec-module-card" style="border-left: 3px solid #10b981;">
+        <div class="exec-card-top">
+            <div class="exec-card-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399;">
+                📦
             </div>
-            <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0;">
+            <?php if (!empty($blingConfig['is_connected'])): ?>
+                <span class="bling-status-badge bling-status-connected"><span class="bling-status-dot"></span> Bling Conectado</span>
+            <?php elseif (!empty($blingConfig['client_id'])): ?>
+                <span class="bling-status-badge bling-status-waiting"><span class="bling-status-dot"></span> Autorização Pendente</span>
+            <?php else: ?>
+                <span class="bling-status-badge bling-status-disconnected"><span class="bling-status-dot"></span> Não Vinculado</span>
+            <?php endif; ?>
+        </div>
+        <div class="exec-card-body">
+            <h3>Estoque & Bling ERP (API v3)</h3>
+            <p>
                 <?php if (!empty($blingConfig['last_sync_at'])): ?>
-                    Último sync: <strong><?= date('d/m/Y H:i', strtotime($blingConfig['last_sync_at'])) ?></strong> (<?= (int)$blingConfig['last_sync_count'] ?> itens)
+                    Último sync em <strong><?= date('d/m/Y H:i', strtotime($blingConfig['last_sync_at'])) ?></strong> com <strong><?= (int)$blingConfig['last_sync_count'] ?> itens</strong> atualizados.
                 <?php else: ?>
-                    Sincronize produtos, SKUs e saldo de estoque físico em tempo real.
+                    Sincronize produtos, SKUs, variações de pedras e estoque físico em tempo real.
                 <?php endif; ?>
             </p>
         </div>
-        <div style="display: flex; gap: 8px;">
-            <button class="btn-admin-bling" onclick="triggerBlingSync(event)" style="padding: 8px 14px; font-size: 0.8rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                </svg>
-                <span>Sincronizar</span>
-            </button>
-            <button class="btn-admin-secondary" onclick="openBlingModal(event)" style="padding: 8px 12px; font-size: 0.8rem;">
-                <span>Config</span>
-            </button>
+        <div class="exec-card-footer">
+            <div style="display: flex; gap: 8px; width: 100%; justify-content: flex-end;">
+                <button class="btn-admin-bling" onclick="triggerBlingSync(event)" style="padding: 8px 16px; font-size: 0.82rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                    </svg>
+                    <span class="sync-text">Sincronizar</span>
+                </button>
+                <button class="btn-admin-secondary" onclick="openBlingModal(event)" style="padding: 8px 14px; font-size: 0.82rem;">
+                    <span>Config Bling</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- TABELA DE GESTÃO DE PRODUTOS -->
-<div class="admin-card">
-    <div class="card-header-row">
+<!-- VISÃO RÁPIDA DO CATÁLOGO DE JOIAS -->
+<div class="admin-card" style="padding: 0; overflow: hidden; margin-bottom: 28px;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
         <div>
-            <h2 class="card-title">Joias e Produtos Cadastrados</h2>
-            <p style="font-size: 0.8rem; color: #9e978e; margin: 4px 0 0;">
-                Estoque integrado com Bling ERP. Gerencie as peças, variações de pedras e valores da loja.
+            <h2 class="card-title" style="font-size: 1.35rem;">Visão Recente do Catálogo</h2>
+            <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
+                Últimas joias cadastradas ou atualizadas pelo ERP. Gerencie todas no catálogo completo.
             </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <!-- BOTÃO PRINCIPAL DE SINCRONIZAÇÃO COM O BLING -->
-            <button class="btn-admin-bling" id="syncBlingBtnTable" onclick="triggerBlingSync(event)" title="Sincronizar produtos e saldo de estoque com o Bling">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="sync-icon">
-                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                </svg>
-                <span class="sync-text">Sincronizar com Bling</span>
-            </button>
-
-            <!-- BOTÃO CONFIGURAR CREDENCIAIS BLING -->
-            <button class="btn-admin-secondary" onclick="openBlingModal(event)" style="display: inline-flex; align-items: center; gap: 6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0 2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                <span>Config Bling</span>
-            </button>
-
+            <a href="/admin/produtos" class="btn-admin-secondary" style="gap: 6px;">
+                <span>Ver Catálogo Completo (<?= (int) ($totalProducts ?? 0) ?>) &rarr;</span>
+            </a>
             <button class="btn-admin-gold" onclick="openNewProductModal(event)">
-                <span>+ Novo Produto</span>
+                <span>+ Nova Joia</span>
             </button>
         </div>
     </div>
@@ -162,53 +178,71 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;">Foto</th>
-                    <th>Nome da Joia</th>
+                    <th style="width: 64px; text-align: center;">Foto</th>
+                    <th>Nome da Joia & SKU</th>
                     <th>Gema / Mineral</th>
                     <th>Preço (R$)</th>
                     <th>Preço Pix (-5%)</th>
                     <th>Estoque</th>
-                    <th>Link Shopee</th>
+                    <th>Shopee</th>
                     <th>Status</th>
-                    <th style="text-align: right;">Ações</th>
+                    <th style="text-align: right; padding-right: 24px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($products)): ?>
                     <?php foreach ($products as $p): ?>
+                        <?php 
+                            $stock = (int) ($p['stock_quantity'] ?? 0);
+                            $stockClass = $stock > 3 ? 'stock-in' : ($stock > 0 ? 'stock-low' : 'stock-out');
+                            $stockText = $stock > 3 ? ($stock . ' un.') : ($stock > 0 ? ($stock . ' un. • Baixo') : 'Esgotado');
+                        ?>
                         <tr id="product-row-<?= $p['id'] ?>">
-                            <td>
-                                <img src="<?= \App\Core\View::e($p['image_url'] ?? '/assets/images/hero/featured-green-shell.jpg') ?>" 
-                                     alt="<?= \App\Core\View::e($p['name']) ?>" 
-                                     class="table-thumb"
-                                     onerror="this.src='/assets/images/hero/featured-green-shell.jpg';">
+                            <td style="text-align: center; padding-left: 18px;">
+                                <div class="table-thumb-wrap">
+                                    <img src="<?= \App\Core\View::e($p['image_url'] ?? '/assets/images/hero/featured-green-shell.jpg') ?>" 
+                                         alt="<?= \App\Core\View::e($p['name']) ?>" 
+                                         class="table-thumb"
+                                         loading="lazy"
+                                         onerror="this.src='/assets/images/hero/featured-green-shell.jpg';">
+                                </div>
                             </td>
                             <td>
-                                <strong><?= \App\Core\View::e($p['name']) ?></strong>
-                                <div style="font-size: 0.72rem; color: #8e8880;">SKU: <?= \App\Core\View::e($p['sku'] ?? 'DIV-001') ?></div>
+                                <strong style="color: #ffffff; font-size: 0.9rem; display: block; margin-bottom: 2px;">
+                                    <?= \App\Core\View::e($p['name']) ?>
+                                </strong>
+                                <span style="font-family: monospace; font-size: 0.72rem; color: #a8a096; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;">
+                                    <?= \App\Core\View::e($p['sku'] ?? 'DIV-001') ?>
+                                </span>
                             </td>
                             <td>
-                                <span style="display: inline-flex; align-items: center; gap: 6px;">
-                                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #d4ba88;"></span>
+                                <span class="stone-pill">
+                                    <span class="stone-dot"></span>
                                     <?= \App\Core\View::e($p['stone_mineral'] ?? 'Mineral Puro') ?>
                                 </span>
                             </td>
                             <td>
-                                <strong>R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?></strong>
-                            </td>
-                            <td style="color: #4ade80;">
-                                R$ <?= number_format((($p['promotional_price_cents'] ?? $p['price_cents'] * 0.95) / 100), 2, ',', '.') ?>
+                                <strong style="color: #ede7df;">
+                                    R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?>
+                                </strong>
                             </td>
                             <td>
-                                <span><?= (int) ($p['stock_quantity'] ?? 0) ?> un.</span>
+                                <strong style="color: #34d399; font-size: 0.88rem;">
+                                    R$ <?= number_format((($p['promotional_price_cents'] ?? ($p['price_cents'] ?? 0) * 0.95) / 100), 2, ',', '.') ?>
+                                </strong>
+                            </td>
+                            <td>
+                                <span class="stock-badge <?= $stockClass ?>">
+                                    <?= $stockText ?>
+                                </span>
                             </td>
                             <td>
                                 <?php if (!empty($p['external_url'])): ?>
-                                    <a href="<?= \App\Core\View::e($p['external_url']) ?>" target="_blank" rel="noopener noreferrer" style="color: #ee4d2d; font-size: 0.76rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(238, 77, 45, 0.12); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(238, 77, 45, 0.3);">
+                                    <a href="<?= \App\Core\View::e($p['external_url']) ?>" target="_blank" rel="noopener noreferrer" class="shopee-badge">
                                         <span>↗ Shopee</span>
                                     </a>
                                 <?php else: ?>
-                                    <span style="color: #777; font-size: 0.72rem;">Não definido</span>
+                                    <span style="color: #6b655c; font-size: 0.74rem;">—</span>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -216,7 +250,7 @@
                                     <?= !empty($p['is_active']) ? 'Exibido' : 'Oculto' ?>
                                 </span>
                             </td>
-                            <td style="text-align: right;">
+                            <td style="text-align: right; padding-right: 24px;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
                                     <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)">
                                         <?= !empty($p['is_active']) ? 'Ocultar' : 'Exibir' ?>
@@ -224,17 +258,14 @@
                                     <button class="btn-table-action" onclick='editProduct(<?= json_encode($p, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT) ?>)'>
                                         Editar
                                     </button>
-                                    <button class="btn-table-action btn-delete" onclick="deleteProduct(<?= $p['id'] ?>)">
-                                        Excluir
-                                    </button>
                                 </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="9" style="text-align: center; padding: 30px; color: #8e8880;">
-                            Nenhum produto cadastrado no momento. Clique no botão acima para adicionar sua primeira joia.
+                        <td colspan="9" style="text-align: center; padding: 36px 20px; color: #8e8880;">
+                            Nenhuma joia cadastrada ainda. Clique em "Sincronizar" no módulo Bling acima ou cadastre uma nova peça.
                         </td>
                     </tr>
                 <?php endif; ?>
