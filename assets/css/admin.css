@@ -663,3 +663,113 @@ body.admin-theme {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==============================================================================
+   INTEGRAÇÃO BLING ERP (ESTOQUE & PRODUTOS)
+   ============================================================================== */
+.btn-admin-bling {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    color: #ffffff;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+    transition: all 0.2s ease;
+}
+
+.btn-admin-bling:hover {
+    background: linear-gradient(135deg, #047857 0%, #059669 100%);
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-admin-bling:active {
+    transform: translateY(0);
+}
+
+.btn-admin-bling.is-syncing {
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+.btn-admin-bling.is-syncing svg {
+    animation: blingSpin 0.9s linear infinite;
+}
+
+@keyframes blingSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.bling-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.bling-status-connected {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.bling-status-waiting {
+    background: rgba(234, 179, 8, 0.15);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.bling-status-disconnected {
+    background: rgba(156, 163, 175, 0.15);
+    color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.bling-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.bling-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+.bling-tab-btn {
+    background: transparent;
+    border: none;
+    color: #9e978e;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bling-tab-btn:hover {
+    color: #ede7df;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.bling-tab-btn.active {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.12);
+    font-weight: 600;
+}
+

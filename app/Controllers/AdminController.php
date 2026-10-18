@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Core\Database;
 use App\Core\View;
+use App\Integrations\Bling\BlingService;
 
 class AdminController
 {
@@ -35,6 +36,9 @@ class AdminController
         $categoriesStmt = $this->pdo->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC');
         $categories = $categoriesStmt->fetchAll();
 
+        $blingService = new BlingService($this->pdo);
+        $blingConfig = $blingService->getConfig();
+
         View::render('admin/dashboard', [
             'pageTitle' => 'Painel Administrativo | Bastidores Divinium',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
@@ -43,6 +47,7 @@ class AdminController
             'totalCategories' => $totalCategories,
             'products' => $products,
             'categories' => $categories,
+            'blingConfig' => $blingConfig,
         ], 'admin');
     }
 
@@ -60,11 +65,15 @@ class AdminController
 
         $categories = $this->pdo->query('SELECT * FROM categories ORDER BY name ASC')->fetchAll();
 
+        $blingService = new BlingService($this->pdo);
+        $blingConfig = $blingService->getConfig();
+
         View::render('admin/products', [
             'pageTitle' => 'Gerenciar Produtos | Catálogo Divinium',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador'],
             'products' => $products,
             'categories' => $categories,
+            'blingConfig' => $blingConfig,
         ], 'admin');
     }
 
@@ -469,6 +478,111 @@ class AdminController
             'success' => true,
             'message' => 'Tema padrão do site atualizado com sucesso!'
         ]);
+    }
+
+    /**
+     * Salva as credenciais do aplicativo Bling ERP
+     */
+    public function blingSaveConfig(): void
+    {
+        $clientId = trim((string) ($_POST['client_id'] ?? ''));
+        $clientSecret = trim((string) ($_POST['client_secret'] ?? ''));
+        $redirectUri = trim((string) ($_POST['redirect_uri'] ?? ''));
+
+        if ($clientId === '' || $clientSecret === '') {
+            $this->respond(['success' => false, 'error' => 'Client ID e Client Secret são obrigatórios.'], 422);
+            return;
+        }
+
+        $service = new BlingService($this->pdo);
+        $service->saveCredentials($clientId, $clientSecret, $redirectUri);
+
+        $this->respond([
+            'success' => true,
+            'message' => 'Credenciais do Bling salvas com sucesso! Agora você pode conectar ou sincronizar.'
+        ]);
+    }
+
+    /**
+     * Redireciona para o Bling para conceder autorização OAuth 2.0
+     */
+    public function blingAuthorize(): void
+    {
+        try {
+            $service = new BlingService($this->pdo);
+            $authUrl = $service->getAuthorizationUrl();
+            header('Location: ' . $authUrl);
+            exit;
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao iniciar autorização Bling: ' . $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Callback OAuth 2.0 recebido do Bling
+     */
+    public function blingCallback(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $code = trim((string) ($_GET['code'] ?? ''));
+        $error = trim((string) ($_GET['error'] ?? ''));
+
+        if (!empty($error)) {
+            $_SESSION['flash_error'] = 'Autorização negada pelo Bling: ' . $error;
+            header('Location: /admin/produtos');
+            exit;
+        }
+
+        if (empty($code)) {
+            $_SESSION['flash_error'] = 'Código de autorização não recebido do Bling.';
+            header('Location: /admin/produtos');
+            exit;
+        }
+
+        try {
+            $service = new BlingService($this->pdo);
+            $service->exchangeCodeForTokens($code);
+            $_SESSION['flash_success'] = 'Conta Bling conectada com sucesso! Você já pode sincronizar o estoque via API.';
+        } catch (\Throwable $e) {
+            $_SESSION['flash_error'] = 'Falha ao autenticar com Bling: ' . $e->getMessage();
+        }
+
+        header('Location: /admin/produtos');
+        exit;
+    }
+
+    /**
+     * Dispara a sincronização de produtos e estoques com o Bling
+     */
+    public function blingSync(): void
+    {
+        $mode = trim((string) ($_POST['mode'] ?? 'auto')); // 'auto', 'api', 'catalog'
+
+        try {
+            $service = new BlingService($this->pdo);
+
+            if ($mode === 'catalog') {
+                $result = $service->syncFromLocalDataset();
+            } elseif ($mode === 'api') {
+                $result = $service->syncFromApi();
+            } else {
+                $result = $service->syncNow();
+            }
+
+            $this->respond([
+                'success' => true,
+                'message' => $result['message'] ?? sprintf('%d produtos sincronizados com o estoque do Bling!', $result['total'] ?? 0),
+                'data'    => $result,
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond([
+                'success' => false,
+                'error'   => 'Erro na sincronização com Bling: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

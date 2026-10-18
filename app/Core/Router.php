@@ -52,6 +52,13 @@ class Router
         // Executar validação global de CSRF em métodos de escrita (exceto webhooks)
         CsrfMiddleware::validate();
 
+        // Interceptar callback OAuth do Bling caso retorne na raiz ou em /admin/bling/callback
+        if (isset($_GET['code']) && ($path === '/' || $path === '/admin/bling/callback')) {
+            $controller = new \App\Controllers\AdminController();
+            $controller->blingCallback();
+            return;
+        }
+
         // 1. Busca exata de rota
         if (isset($this->routes[$method][$path])) {
             $route = $this->routes[$method][$path];
@@ -194,5 +201,11 @@ class Router
         $this->post('/admin/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
         $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
         $this->post('/admin/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
+
+        // Rotas de Integração Bling ERP (OAuth2 & Sincronização)
+        $this->get('/admin/bling/authorize', [\App\Controllers\AdminController::class, 'blingAuthorize'], $adminAuth);
+        $this->get('/admin/bling/callback', [\App\Controllers\AdminController::class, 'blingCallback']);
+        $this->post('/admin/bling/config', [\App\Controllers\AdminController::class, 'blingSaveConfig'], $adminAuth);
+        $this->post('/admin/bling/sync', [\App\Controllers\AdminController::class, 'blingSync'], $adminAuth);
     }
 }
