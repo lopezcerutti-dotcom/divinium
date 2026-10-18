@@ -63,13 +63,13 @@ class Setting
         try {
             $pdo = Database::getConnection();
 
-            $check = $pdo->prepare('SELECT id FROM settings WHERE key_name = :key_name LIMIT 1');
+            $check = $pdo->prepare('SELECT COUNT(*) FROM settings WHERE key_name = :key_name');
             $check->execute(['key_name' => $key]);
-            $existingId = $check->fetchColumn();
+            $exists = ((int) $check->fetchColumn()) > 0;
 
-            if ($existingId) {
-                $stmt = $pdo->prepare('UPDATE settings SET value = :value, updated_at = CURRENT_TIMESTAMP WHERE id = :id');
-                $stmt->execute(['value' => $value, 'id' => $existingId]);
+            if ($exists) {
+                $stmt = $pdo->prepare('UPDATE settings SET value = :value WHERE key_name = :key_name');
+                $stmt->execute(['value' => $value, 'key_name' => $key]);
             } else {
                 $stmt = $pdo->prepare('INSERT INTO settings (key_name, value) VALUES (:key_name, :value)');
                 $stmt->execute(['key_name' => $key, 'value' => $value]);

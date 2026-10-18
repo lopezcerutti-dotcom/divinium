@@ -201,6 +201,9 @@ class Router
         $this->post('/admin/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
         $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
         $this->post('/admin/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
+        $this->post('/admin/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);
+        $this->post('/admin/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
+        $this->post('/admin/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);
 
         // Rotas de Integração Bling ERP (OAuth2 & Sincronização)
         $this->get('/admin/bling/authorize', [\App\Controllers\AdminController::class, 'blingAuthorize'], $adminAuth);

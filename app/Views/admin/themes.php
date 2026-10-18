@@ -110,6 +110,135 @@
     <?php endforeach; ?>
 </div>
 
+<!-- ESTÚDIO DE PERSONALIZAÇÃO DE CORES & IDENTIDADE AUTORAL -->
+<div class="admin-card" style="border: 1px solid rgba(202, 161, 92, 0.35); padding: 26px; margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; flex-wrap: wrap; gap: 14px;">
+        <div>
+            <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; font-size: 1.35rem; margin: 0;">
+                <span style="color: #caa15c;">🎨</span>
+                Estúdio de Cores & Personalização Autoral
+            </h3>
+            <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
+                Personalize as cores primárias, superfícies e fontes para criar uma paleta exclusiva para sua joalheria.
+            </p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" class="btn-admin-secondary" onclick="resetToThemeDefaults()">
+                <span>Restaurar Padrões</span>
+            </button>
+            <button type="button" class="btn-admin-gold" onclick="document.getElementById('customThemeForm').requestSubmit()">
+                <span>Salvar Identidade Personalizada</span>
+            </button>
+        </div>
+    </div>
+
+    <form id="customThemeForm" onsubmit="handleCustomThemeSubmit(event)">
+        <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+
+        <!-- GRID DE CORES -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 22px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_primary">Cor Primária (Ouro / Botões)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_primary" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#CAA15C') ?>" 
+                           onchange="document.getElementById('custom_color_primary').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_primary" name="custom_color_primary" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#CAA15C') ?>" 
+                           oninput="document.getElementById('picker_primary').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_accent">Cor de Realce (Acentos & Hover)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_accent" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#E0C080') ?>" 
+                           onchange="document.getElementById('custom_color_accent').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_accent" name="custom_color_accent" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#E0C080') ?>" 
+                           oninput="document.getElementById('picker_accent').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_bg">Fundo da Página (Dark Noir)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_bg" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_surface">Superfície dos Cards & Módulos</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_surface" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           onchange="document.getElementById('custom_color_surface').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID DE TIPOGRAFIA E FORMAS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_font_serif">Tipografia dos Títulos Principais</label>
+                <select id="custom_font_serif" name="custom_font_serif" class="form-select" onchange="updateCustomPreview()">
+                    <option value="'Cormorant Garamond', Georgia, serif" <?= ($customSettings['custom_font_serif'] ?? '') === "'Cormorant Garamond', Georgia, serif" ? 'selected' : '' ?>>Cormorant Garamond (Alta Joalheria)</option>
+                    <option value="'Playfair Display', serif" <?= ($customSettings['custom_font_serif'] ?? '') === "'Playfair Display', serif" ? 'selected' : '' ?>>Playfair Display (Vogue Editorial)</option>
+                    <option value="'Cinzel', serif" <?= ($customSettings['custom_font_serif'] ?? '') === "'Cinzel', serif" ? 'selected' : '' ?>>Cinzel (Imperial Romana)</option>
+                    <option value="'Montserrat', sans-serif" <?= ($customSettings['custom_font_serif'] ?? '') === "'Montserrat', sans-serif" ? 'selected' : '' ?>>Montserrat (Moderna & Minimalista)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_font_sans">Tipografia do Texto / Leitura</label>
+                <select id="custom_font_sans" name="custom_font_sans" class="form-select">
+                    <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Legibilidade 4K)</option>
+                    <option value="'Inter', sans-serif" <?= ($customSettings['custom_font_sans'] ?? '') === "'Inter', sans-serif" ? 'selected' : '' ?>>Inter (Clean Contemporâneo)</option>
+                    <option value="'Outfit', sans-serif" <?= ($customSettings['custom_font_sans'] ?? '') === "'Outfit', sans-serif" ? 'selected' : '' ?>>Outfit (Geométrica Suave)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_border_radius">Estilo de Bordas & Botões</label>
+                <select id="custom_border_radius" name="custom_border_radius" class="form-select" onchange="updateCustomPreview()">
+                    <option value="8px" <?= ($customSettings['custom_border_radius'] ?? '8px') === '8px' ? 'selected' : '' ?>>8px — Luxo Clássico (Equilibrado)</option>
+                    <option value="16px" <?= ($customSettings['custom_border_radius'] ?? '') === '16px' ? 'selected' : '' ?>>16px — Contemporâneo Macio</option>
+                    <option value="24px" <?= ($customSettings['custom_border_radius'] ?? '') === '24px' ? 'selected' : '' ?>>24px — Pílula / Soft Organic</option>
+                    <option value="2px" <?= ($customSettings['custom_border_radius'] ?? '') === '2px' ? 'selected' : '' ?>>2px — Afiado / Alta Geometria</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- PRÉ-VISUALIZADOR DA SUA PALETA AO VIVO -->
+        <div id="customPalettePreviewBox" style="margin-top: 20px; background: #0d0c0b; border: 1px solid #caa15c; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+                <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.4rem; color: #caa15c; display: block; font-weight: 700;">
+                    Divinium Joias Contemporâneas
+                </span>
+                <span style="font-size: 0.8rem; color: #ded7cf;">
+                    Prévia em tempo real das cores e tipografia selecionadas acima.
+                </span>
+            </div>
+            <button type="button" id="previewBtnSample" class="btn-admin-gold" style="background: #caa15c; color: #000; border-radius: 8px;">
+                <span>Exemplo de Botão</span>
+            </button>
+        </div>
+    </form>
+</div>
+
 <!-- INFORMAÇÕES DE IMPLEMENTAÇÃO E CUSTOMIZAÇÃO -->
 <div class="admin-card" style="border: 1px solid rgba(255, 255, 255, 0.08); padding: 24px;">
     <h3 class="card-title" style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
@@ -225,4 +354,78 @@ async function setDefaultTheme(themeId, btnElement) {
         btnElement.innerHTML = originalText;
     }
 }
+
+function updateCustomPreview() {
+    const primary = document.getElementById('custom_color_primary')?.value || '#CAA15C';
+    const accent = document.getElementById('custom_color_accent')?.value || '#E0C080';
+    const bg = document.getElementById('custom_color_bg')?.value || '#0D0C0B';
+    const surface = document.getElementById('custom_color_surface')?.value || '#141312';
+    const fontSerif = document.getElementById('custom_font_serif')?.value || "'Cormorant Garamond', Georgia, serif";
+    const radius = document.getElementById('custom_border_radius')?.value || '8px';
+
+    const box = document.getElementById('customPalettePreviewBox');
+    if (box) {
+        box.style.backgroundColor = bg;
+        box.style.borderColor = primary;
+    }
+    const title = document.getElementById('previewSerifTitle');
+    if (title) {
+        title.style.color = primary;
+        title.style.fontFamily = fontSerif;
+    }
+    const btn = document.getElementById('previewBtnSample');
+    if (btn) {
+        btn.style.backgroundColor = primary;
+        btn.style.borderRadius = radius;
+    }
+}
+
+function resetToThemeDefaults() {
+    document.getElementById('custom_color_primary').value = '#CAA15C';
+    document.getElementById('picker_primary').value = '#CAA15C';
+    document.getElementById('custom_color_accent').value = '#E0C080';
+    document.getElementById('picker_accent').value = '#E0C080';
+    document.getElementById('custom_color_bg').value = '#0D0C0B';
+    document.getElementById('picker_bg').value = '#0D0C0B';
+    document.getElementById('custom_color_surface').value = '#141312';
+    document.getElementById('picker_surface').value = '#141312';
+    document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
+    document.getElementById('custom_border_radius').value = '8px';
+    updateCustomPreview();
+}
+
+async function handleCustomThemeSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('customThemeForm');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    if (csrfToken && !formData.has('_csrf_token')) {
+        formData.append('_csrf_token', csrfToken);
+    }
+
+    try {
+        const res = await fetch('/admin/temas/salvar-custom', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(data.message || 'Identidade visual e paleta personalizada salvas!');
+            window.location.reload();
+        } else {
+            alert(data.error || 'Erro ao salvar tema personalizado.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', updateCustomPreview);
 </script>

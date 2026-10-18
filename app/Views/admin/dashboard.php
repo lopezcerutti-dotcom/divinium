@@ -155,6 +155,82 @@
     </div>
 </div>
 
+<!-- PAINEL DE CONFIGURAÇÕES GERAIS DA BOUTIQUE (TOTALMENTE EDITÁVEL) -->
+<div class="admin-card" style="margin-bottom: 28px; border: 1px solid rgba(212, 186, 136, 0.25);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+        <div>
+            <h2 class="card-title" style="display: flex; align-items: center; gap: 8px;">
+                <span style="color: #caa15c;">✦</span>
+                Configurações da Boutique & Vendas
+            </h2>
+            <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
+                Edite os parâmetros da marca, canais de contato, link da Shopee e anúncios exibidos na loja.
+            </p>
+        </div>
+        <button type="button" class="btn-admin-gold" onclick="document.getElementById('storeSettingsForm').requestSubmit()">
+            <span>Salvar Configurações da Loja</span>
+        </button>
+    </div>
+
+    <form id="storeSettingsForm" onsubmit="handleStoreSettingsSubmit(event)">
+        <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-bottom: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="store_brand_name">Nome da Marca / Joalheria</label>
+                <input type="text" id="store_brand_name" name="store_brand_name" class="form-input" 
+                       value="<?= \App\Core\View::e($storeSettings['store_brand_name'] ?? 'Divinium Joias Contemporâneas') ?>" 
+                       placeholder="Divinium Joias Contemporâneas">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="store_whatsapp">WhatsApp Concierge / Vendas</label>
+                <input type="text" id="store_whatsapp" name="store_whatsapp" class="form-input" 
+                       value="<?= \App\Core\View::e($storeSettings['store_whatsapp'] ?? '+55 (11) 99999-9999') ?>" 
+                       placeholder="+55 (11) 99999-9999">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="store_contact_email">E-mail de Atendimento</label>
+                <input type="email" id="store_contact_email" name="store_contact_email" class="form-input" 
+                       value="<?= \App\Core\View::e($storeSettings['store_contact_email'] ?? 'contato@divinium.com.br') ?>" 
+                       placeholder="contato@divinium.com.br">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="shopee_store_url">Link da Loja Oficial Shopee</label>
+                <input type="url" id="shopee_store_url" name="shopee_store_url" class="form-input" 
+                       value="<?= \App\Core\View::e($storeSettings['shopee_store_url'] ?? 'https://shopee.com.br') ?>" 
+                       placeholder="https://shopee.com.br/divinium">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 18px; align-items: flex-end;">
+            <div class="form-group" style="margin: 0;">
+                <label for="top_banner_text">Faixa de Anúncio Superior (Top Banner do Site)</label>
+                <input type="text" id="top_banner_text" name="top_banner_text" class="form-input" 
+                       value="<?= \App\Core\View::e($storeSettings['top_banner_text'] ?? '✨ Frete Cortesia com Seguro para todo o Brasil • 5% de Desconto no Pix • Até 10x sem juros') ?>" 
+                       placeholder="✨ Frete Cortesia com Seguro para todo o Brasil...">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="store_pix_discount">Desconto no Pix (%)</label>
+                <input type="number" id="store_pix_discount" name="store_pix_discount" class="form-input" 
+                       value="<?= (int) ($storeSettings['store_pix_discount'] ?? 5) ?>" min="0" max="50">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="store_status_mode">Modo da Loja</label>
+                <select id="store_status_mode" name="store_status_mode" class="form-select">
+                    <option value="online" <?= ($storeSettings['store_status_mode'] ?? 'online') === 'online' ? 'selected' : '' ?>>🟢 Loja Aberta (Ao Vivo)</option>
+                    <option value="maintenance" <?= ($storeSettings['store_status_mode'] ?? '') === 'maintenance' ? 'selected' : '' ?>>🟡 Em Manutenção</option>
+                    <option value="vacation" <?= ($storeSettings['store_status_mode'] ?? '') === 'vacation' ? 'selected' : '' ?>>🔵 Pausa / Férias</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
 <!-- VISÃO RÁPIDA DO CATÁLOGO DE JOIAS -->
 <div class="admin-card" style="padding: 0; overflow: hidden; margin-bottom: 28px;">
     <div style="padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
@@ -633,6 +709,36 @@ async function triggerBlingSync(e, mode = 'auto') {
 
 function executeBlingSync(mode) {
     triggerBlingSync(null, mode);
+}
+
+async function handleStoreSettingsSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('storeSettingsForm');
+    const formData = new FormData(form);
+    const csrfToken = getCsrfToken();
+    if (csrfToken && !formData.has('_csrf_token')) {
+        formData.append('_csrf_token', csrfToken);
+    }
+
+    try {
+        const res = await fetch('/admin/configuracoes/salvar', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(data.message || 'Configurações da loja atualizadas com sucesso!');
+        } else {
+            alert(data.error || 'Erro ao salvar configurações.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
 }
 </script>
 

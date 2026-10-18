@@ -40,7 +40,13 @@ foreach ($chartDays as $d) {
             <div class="metric-icon-wrap" style="background: rgba(238, 77, 45, 0.15); color: #ee4d2d; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h6v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"/></svg>
             </div>
-            <span style="font-size: 0.72rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); padding: 2px 8px; border-radius: 12px; font-weight: 600;">+24% vs semana ant.</span>
+            <?php 
+                $clicksTarget = (int) ($metricsConfig['monthly_clicks_target'] ?? 1000);
+                $clicksPct = min(100, round(($totalClicks / max(1, $clicksTarget)) * 100));
+            ?>
+            <span style="font-size: 0.72rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); padding: 2px 8px; border-radius: 12px; font-weight: 600;">
+                <?= $clicksPct ?>% da meta mensal
+            </span>
         </div>
         <div class="metric-data">
             <span class="metric-value" style="font-size: 1.9rem; font-weight: 700; color: #ffffff; display: block; line-height: 1.1; margin-bottom: 4px;"><?= number_format($totalClicks, 0, ',', '.') ?></span>
@@ -54,7 +60,13 @@ foreach ($chartDays as $d) {
             <div class="metric-icon-wrap" style="background: rgba(202, 161, 92, 0.15); color: #caa15c; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
-            <span style="font-size: 0.72rem; color: #caa15c; background: rgba(202, 161, 92, 0.1); padding: 2px 8px; border-radius: 12px; font-weight: 600;">Demanda Ativa</span>
+            <?php 
+                $revTarget = (int) ($metricsConfig['monthly_revenue_target'] ?? 50000);
+                $revPct = min(100, round((($potentialSalesCents / 100) / max(1, $revTarget)) * 100));
+            ?>
+            <span style="font-size: 0.72rem; color: #caa15c; background: rgba(202, 161, 92, 0.1); padding: 2px 8px; border-radius: 12px; font-weight: 600;">
+                Meta: R$ <?= number_format($revTarget, 0, ',', '.') ?>
+            </span>
         </div>
         <div class="metric-data">
             <span class="metric-value" style="font-size: 1.7rem; font-weight: 700; color: #caa15c; display: block; line-height: 1.1; margin-bottom: 4px;">R$ <?= number_format($potentialSalesCents / 100, 2, ',', '.') ?></span>
@@ -293,3 +305,128 @@ foreach ($chartDays as $d) {
         </table>
     </div>
 </div>
+
+<!-- 5. CONFIGURAÇÕES EDITÁVEIS DE RASTREAMENTO & MARKETING -->
+<div class="admin-card" style="border: 1px solid rgba(202, 161, 92, 0.3); padding: 24px; margin-top: 28px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+        <div>
+            <h3 class="card-title" style="margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                <span style="color: #caa15c;">⚙️</span>
+                Configurações de Rastreamento, Pixels & Metas de Conversão
+            </h3>
+            <p style="font-size: 0.8rem; color: #888; margin: 3px 0 0;">
+                Configure seus códigos de rastreamento do Facebook/Meta, Google Analytics, TikTok e estabeleça suas metas mensais.
+            </p>
+        </div>
+        <button type="button" class="btn-admin-gold" onclick="document.getElementById('metricsConfigForm').requestSubmit()">
+            <span>Salvar Configurações de Métricas</span>
+        </button>
+    </div>
+
+    <form id="metricsConfigForm" onsubmit="handleMetricsConfigSubmit(event)">
+        <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="meta_pixel_id">Meta Pixel ID (Facebook & Instagram Ads)</label>
+                <input type="text" id="meta_pixel_id" name="meta_pixel_id" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['meta_pixel_id'] ?? '') ?>" 
+                       placeholder="Ex: 123456789012345">
+                <span style="font-size: 0.72rem; color: #8e8880;">Identificador para otimização de anúncios de conversão.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="ga4_measurement_id">Google Analytics 4 (ID de Medição)</label>
+                <input type="text" id="ga4_measurement_id" name="ga4_measurement_id" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['ga4_measurement_id'] ?? '') ?>" 
+                       placeholder="Ex: G-XXXXXXXXXX">
+                <span style="font-size: 0.72rem; color: #8e8880;">Rastreia fluxo e permanência de visitantes.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="gtm_container_id">Google Tag Manager (ID do Contêiner)</label>
+                <input type="text" id="gtm_container_id" name="gtm_container_id" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['gtm_container_id'] ?? '') ?>" 
+                       placeholder="Ex: GTM-XXXXXXX">
+                <span style="font-size: 0.72rem; color: #8e8880;">Disparador central de tags de marketing.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="tiktok_pixel_id">TikTok Ads Pixel ID</label>
+                <input type="text" id="tiktok_pixel_id" name="tiktok_pixel_id" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['tiktok_pixel_id'] ?? '') ?>" 
+                       placeholder="Ex: CXXXXXXXXXXXXXX">
+                <span style="font-size: 0.72rem; color: #8e8880;">Pixel para campanhas no TikTok.</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="monthly_revenue_target">Meta de Demanda Mensal (R$)</label>
+                <input type="number" id="monthly_revenue_target" name="monthly_revenue_target" class="form-input" 
+                       value="<?= (int) ($metricsConfig['monthly_revenue_target'] ?? 50000) ?>" min="1000" step="500">
+                <span style="font-size: 0.72rem; color: #8e8880;">Meta financeira de intenções de compra.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="monthly_clicks_target">Meta Mensal de Cliques Shopee</label>
+                <input type="number" id="monthly_clicks_target" name="monthly_clicks_target" class="form-input" 
+                       value="<?= (int) ($metricsConfig['monthly_clicks_target'] ?? 1000) ?>" min="50" step="50">
+                <span style="font-size: 0.72rem; color: #8e8880;">Meta de redirecionamentos para a loja.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="default_utm_source">UTM Source Padrão</label>
+                <input type="text" id="default_utm_source" name="default_utm_source" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['default_utm_source'] ?? 'divinium_site') ?>" 
+                       placeholder="divinium_site">
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="default_utm_campaign">UTM Campaign Padrão</label>
+                <input type="text" id="default_utm_campaign" name="default_utm_campaign" class="form-input" 
+                       value="<?= \App\Core\View::e($metricsConfig['default_utm_campaign'] ?? 'colecao_2026') ?>" 
+                       placeholder="colecao_2026">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+}
+
+async function handleMetricsConfigSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('metricsConfigForm');
+    const formData = new FormData(form);
+    const csrfToken = getCsrfToken();
+    if (csrfToken && !formData.has('_csrf_token')) {
+        formData.append('_csrf_token', csrfToken);
+    }
+
+    try {
+        const res = await fetch('/admin/metricas/salvar', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(data.message || 'Configurações de métricas e rastreamento salvas com sucesso!');
+            window.location.reload();
+        } else {
+            alert(data.error || 'Erro ao salvar configurações.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
+}
+</script>

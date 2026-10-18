@@ -39,6 +39,7 @@ class AdminController
 
         $blingService = new BlingService($this->pdo);
         $blingConfig = $blingService->getConfig();
+        $storeSettings = \App\Models\Setting::getAll();
 
         View::render('admin/dashboard', [
             'pageTitle' => 'Painel de Controle | Divinium',
@@ -50,6 +51,7 @@ class AdminController
             'products' => $products,
             'categories' => $categories,
             'blingConfig' => $blingConfig,
+            'storeSettings' => $storeSettings,
         ], 'admin');
     }
 
@@ -384,6 +386,8 @@ class AdminController
         ');
         $recentClicks = $recentClicksStmt ? $recentClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
 
+        $metricsConfig = \App\Models\Setting::getAll();
+
         View::render('admin/metrics', [
             'pageTitle' => 'Dashboard de Acompanhamento | Vendas Shopee & Métricas',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
@@ -395,6 +399,7 @@ class AdminController
             'topProducts' => $topProducts,
             'categoryClicks' => $categoryClicks,
             'recentClicks' => $recentClicks,
+            'metricsConfig' => $metricsConfig,
         ], 'admin');
     }
 
@@ -408,6 +413,7 @@ class AdminController
         }
 
         $defaultTheme = \App\Models\Setting::get('default_theme', 'theme-gold');
+        $customThemeSettings = \App\Models\Setting::getAll();
 
         $themesList = [
             [
@@ -469,6 +475,7 @@ class AdminController
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
             'defaultTheme' => $defaultTheme,
             'themes' => $themesList,
+            'customSettings' => $customThemeSettings,
         ], 'admin');
     }
 
@@ -478,17 +485,74 @@ class AdminController
     public function saveDefaultTheme(): void
     {
         $theme = trim((string) ($_POST['theme_id'] ?? 'theme-gold'));
-        $allowed = ['theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose'];
+        $allowed = ['theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose', 'theme-custom'];
         if (!in_array($theme, $allowed, true)) {
             $this->respond(['success' => false, 'error' => 'Tema inválido.'], 422);
             return;
         }
 
-        \App\Models\Setting::set('default_theme', $theme, 'Tema Padrão da Loja');
+        \App\Models\Setting::set('default_theme', $theme);
         $this->respond([
             'success' => true,
             'message' => 'Tema padrão do site atualizado com sucesso!'
         ]);
+    }
+
+    /**
+     * Salvar Personalização da Paleta de Cores Customizada
+     */
+    public function saveCustomTheme(): void
+    {
+        try {
+            \App\Models\Setting::setMany($_POST);
+            $this->respond([
+                'success' => true,
+                'message' => 'Paleta personalizada e identidade visual gravadas com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar tema personalizado: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Salvar Configurações Gerais da Loja (Dashboard)
+     */
+    public function saveStoreSettings(): void
+    {
+        try {
+            \App\Models\Setting::setMany($_POST);
+            $this->respond([
+                'success' => true,
+                'message' => 'Configurações gerais da loja atualizadas com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar configurações da loja: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Salvar Parâmetros de Rastreamento e Metas de Marketing (Métricas)
+     */
+    public function saveMetricsConfig(): void
+    {
+        try {
+            \App\Models\Setting::setMany($_POST);
+            $this->respond([
+                'success' => true,
+                'message' => 'Metas e tags de rastreamento salvas com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar parâmetros de métricas: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
