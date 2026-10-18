@@ -252,6 +252,7 @@
         </div>
 
         <form id="productForm" onsubmit="handleProductSubmit(event)">
+            <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
             <input type="hidden" name="id" id="prodId" value="">
 
             <div class="form-group">
@@ -348,6 +349,12 @@ function editProduct(product) {
     document.getElementById('productModal').classList.add('active');
 }
 
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+}
+
 async function handleProductSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('saveProdBtn');
@@ -355,6 +362,10 @@ async function handleProductSubmit(e) {
     btn.innerText = 'Salvando...';
 
     const formData = new FormData(document.getElementById('productForm'));
+    const csrfToken = getCsrfToken();
+    if (csrfToken && !formData.has('_csrf_token')) {
+        formData.append('_csrf_token', csrfToken);
+    }
 
     try {
         const response = await fetch('/admin/produtos/salvar', {
@@ -362,6 +373,7 @@ async function handleProductSubmit(e) {
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             }
         });
@@ -383,6 +395,10 @@ async function handleProductSubmit(e) {
 async function toggleProductStatus(id) {
     const formData = new FormData();
     formData.append('id', id);
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+        formData.append('_csrf_token', csrfToken);
+    }
 
     try {
         const response = await fetch('/admin/produtos/toggle', {
@@ -390,6 +406,7 @@ async function toggleProductStatus(id) {
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             }
         });
@@ -409,6 +426,10 @@ async function deleteProduct(id) {
 
     const formData = new FormData();
     formData.append('id', id);
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+        formData.append('_csrf_token', csrfToken);
+    }
 
     try {
         const response = await fetch('/admin/produtos/excluir', {
@@ -416,6 +437,7 @@ async function deleteProduct(id) {
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             }
         });
@@ -471,7 +493,12 @@ async function handleBlingConfigSubmit(e) {
     btn.disabled = true;
     btn.innerText = 'Salvando...';
 
-    const formData = new FormData(document.getElementById('blingConfigForm'));
+    const form = document.getElementById('blingConfigForm');
+    const formData = new FormData(form);
+    const csrfToken = getCsrfToken();
+    if (csrfToken && !formData.has('_csrf_token')) {
+        formData.append('_csrf_token', csrfToken);
+    }
 
     try {
         const res = await fetch('/admin/bling/config', {
@@ -479,6 +506,7 @@ async function handleBlingConfigSubmit(e) {
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             }
         });
@@ -517,12 +545,17 @@ async function triggerBlingSync(e, mode = 'auto') {
     try {
         const formData = new FormData();
         formData.append('mode', mode);
+        const csrfToken = getCsrfToken();
+        if (csrfToken) {
+            formData.append('_csrf_token', csrfToken);
+        }
 
         const res = await fetch('/admin/bling/sync', {
             method: 'POST',
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             }
         });
@@ -670,6 +703,7 @@ function executeBlingSync(mode) {
         <!-- ABA 2: CONFIGURAÇÃO DE CREDENCIAIS (OAUTH2 API V3) -->
         <div id="blingTabConfig" class="bling-tab-content" style="display: none;">
             <form id="blingConfigForm" onsubmit="handleBlingConfigSubmit(event)">
+                <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
                 <div class="form-group">
                     <label for="blingClientId">Client ID do Aplicativo Bling *</label>
                     <input type="text" id="blingClientId" name="client_id" class="form-input" required 
