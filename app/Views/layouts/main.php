@@ -95,26 +95,26 @@
 
             <!-- Links de Navegação (Desktop Esquerda) -->
             <nav class="nav-links left-nav" aria-label="Navegação Principal">
-                <a href="/" class="nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>">Início</a>
-                <a href="/loja" class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>">Loja</a>
-                <a href="/#about" class="nav-link">Sobre</a>
+                <a href="/" class="nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_home', 'Início')) ?></a>
+                <a href="/loja" class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_store', 'Loja')) ?></a>
+                <a href="/#about" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_about', 'Sobre')) ?></a>
                 <div class="nav-item-dropdown">
-                    <a href="/loja" class="nav-link dropdown-toggle">Coleções <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+                    <a href="/loja" class="nav-link dropdown-toggle"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_collections', 'Coleções')) ?> <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
-                        <a href="/loja">Ver Todas as Peças</a>
-                        <a href="/loja#braceletes">Braceletes Exclusivos</a>
-                        <a href="/loja#colares">Colares & Pingentes</a>
-                        <a href="/loja#aneis">Anéis & Alianças</a>
+                        <a href="/loja"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all', 'Ver Todas as Peças')) ?></a>
+                        <a href="/loja#braceletes"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos')) ?></a>
+                        <a href="/loja#colares"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?></a>
+                        <a href="/loja#aneis"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings', 'Anéis & Alianças')) ?></a>
                     </div>
                 </div>
-                <a href="/#services" class="nav-link">Garantia</a>
+                <a href="/#services" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_services', 'Garantia')) ?></a>
             </nav>
 
             <!-- Logo Central da Marca -->
             <div class="brand-logo-container">
                 <a href="/" class="brand-logo" aria-label="Divinium Home">
-                    <span class="logo-text">DIVINIUM</span>
-                    <span class="logo-sub">HAUTE JOAILLERIE</span>
+                    <span class="logo-text"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
+                    <span class="logo-sub"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_sub', 'HAUTE JOAILLERIE')) ?></span>
                 </a>
             </div>
 
@@ -143,14 +143,14 @@
     <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
     <aside class="cart-drawer" id="cartDrawer" aria-label="Sacola de compras">
         <div class="cart-drawer-header">
-            <h3>Sua Sacola de Escolhas</h3>
+            <h3><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_title', 'Sua Sacola de Escolhas')) ?></h3>
             <button class="close-drawer-btn" id="closeCartDrawer" aria-label="Fechar Sacola">&times;</button>
         </div>
         <div class="cart-drawer-body" id="cartDrawerBody">
             <div class="empty-cart-state">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="empty-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                <p>Sua sacola está vazia no momento.</p>
-                <a href="#collections" class="btn-discover" onclick="closeDrawer()">Descobrir Coleção</a>
+                <p><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?></p>
+                <a href="#collections" class="btn-discover" onclick="closeDrawer()"><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_discover', 'Descobrir Coleção')) ?></a>
             </div>
         </div>
         <div class="cart-drawer-footer">
@@ -159,9 +159,9 @@
                 <span class="subtotal-val" id="cartSubtotalVal">R$ 0,00</span>
             </div>
             <div class="cart-perks">
-                <small>🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo</small>
+                <small><?= \App\Core\View::e(\App\Models\Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?></small>
             </div>
-            <a href="/checkout" class="btn-checkout-primary">Finalizar Compra</a>
+            <a href="/checkout" class="btn-checkout-primary"><?= \App\Core\View::e(\App\Models\Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?></a>
         </div>
     </aside>
 
@@ -174,8 +174,8 @@
     <footer class="main-footer">
         <div class="container footer-top">
             <div class="footer-col brand-col">
-                <span class="footer-logo">DIVINIUM</span>
-                <p class="brand-tagline">Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.</p>
+                <span class="footer-logo"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
+                <p class="brand-tagline"><?= \App\Core\View::e(\App\Models\Setting::get('footer_tagline', 'Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.')) ?></p>
                 <div class="footer-socials">
                     <a href="<?= \App\Core\View::e(\App\Models\Setting::get('footer_instagram', 'https://instagram.com')) ?>" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
                     <a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp VIP</a>
@@ -183,54 +183,54 @@
             </div>
 
             <div class="footer-col">
-                <h4>Coleções</h4>
+                <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col1_title', 'Coleções')) ?></h4>
                 <ul>
-                    <li><a href="/loja">Ver Catálogo Completo</a></li>
-                    <li><a href="/loja#braceletes">Pulseiras & Braceletes</a></li>
-                    <li><a href="/loja#colares">Colares & Pingentes</a></li>
-                    <li><a href="/loja#aneis">Anéis Solitários & Alianças</a></li>
-                    <li><a href="/loja">Edições Numeradas</a></li>
+                    <li><a href="/loja"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all', 'Ver Catálogo Completo')) ?></a></li>
+                    <li><a href="/loja#braceletes"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets', 'Pulseiras & Braceletes')) ?></a></li>
+                    <li><a href="/loja#colares"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?></a></li>
+                    <li><a href="/loja#aneis"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings', 'Anéis Solitários & Alianças')) ?></a></li>
+                    <li><a href="/loja"><?= \App\Core\View::e(\App\Models\Setting::get('footer_editions_text', 'Edições Numeradas')) ?></a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Atendimento & Concierge</h4>
+                <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col2_title', 'Atendimento & Concierge')) ?></h4>
                 <ul>
-                    <li><a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank">Atendimento via WhatsApp</a></li>
+                    <li><a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank"><?= \App\Core\View::e(\App\Models\Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp')) ?></a></li>
                     <li><a href="mailto:<?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?></a></li>
-                    <li><a href="/trocas-e-devolucoes">Trocas e Devoluções (CDC 7 Dias)</a></li>
-                    <li><a href="/garantia-e-cuidados">Certificado & Cuidados</a></li>
-                    <li><a href="/guia-de-medidas">Guia de Medidas de Anéis</a></li>
+                    <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', 'Trocas e Devoluções (CDC 7 Dias)')) ?></a></li>
+                    <li><a href="/garantia-e-cuidados"><?= \App\Core\View::e(\App\Models\Setting::get('footer_warranty_text', 'Certificado & Cuidados')) ?></a></li>
+                    <li><a href="/guia-de-medidas"><?= \App\Core\View::e(\App\Models\Setting::get('footer_size_guide_text', 'Guia de Medidas de Anéis')) ?></a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Segurança & Privacidade</h4>
+                <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col3_title', 'Segurança & Privacidade')) ?></h4>
                 <ul>
-                    <li><a href="/politica-de-privacidade">Política de Privacidade (LGPD)</a></li>
-                    <li><a href="/termos-de-uso">Termos de Uso</a></li>
-                    <li><a href="/dpo">Encarregado de Dados (DPO)</a></li>
-                    <li><span>Segunda a Sexta: 09h às 18h</span></li>
+                    <li><a href="/politica-de-privacidade"><?= \App\Core\View::e(\App\Models\Setting::get('footer_privacy_text', 'Política de Privacidade (LGPD)')) ?></a></li>
+                    <li><a href="/termos-de-uso"><?= \App\Core\View::e(\App\Models\Setting::get('footer_terms_text', 'Termos de Uso')) ?></a></li>
+                    <li><a href="/dpo"><?= \App\Core\View::e(\App\Models\Setting::get('footer_dpo_text', 'Encarregado de Dados (DPO)')) ?></a></li>
+                    <li><span><?= \App\Core\View::e(\App\Models\Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?></span></li>
                 </ul>
             </div>
         </div>
 
         <div class="container footer-middle">
             <div class="payment-methods-row">
-                <span class="payment-badge">PIX (Aprovação Imediata)</span>
-                <span class="payment-badge">Cartão de Crédito em até 10x</span>
-                <span class="payment-badge">Boleto Bancário</span>
-                <span class="payment-badge">Gateway Homologado ASAAS</span>
+                <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge1', 'PIX (Aprovação Imediata)')) ?></span>
+                <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge2', 'Cartão de Crédito em até 10x')) ?></span>
+                <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge3', 'Boleto Bancário')) ?></span>
+                <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?></span>
             </div>
         </div>
 
         <div class="container footer-bottom">
             <div class="legal-info">
                 <p><?= \App\Core\View::e(\App\Models\Setting::get('footer_legal_info', 'DIVINIUM JOIAS LTDA. • CNPJ: 00.000.000/0001-00 • São Paulo/SP - Brasil')) ?></p>
-                <p>Conforme o Decreto nº 7.962/2013 e Lei 8.078/1990 (Código de Defesa do Consumidor). Direito de arrependimento em até 7 dias corridos após o recebimento.</p>
+                <p><?= \App\Core\View::e(\App\Models\Setting::get('footer_consumer_rights', 'Conforme o Decreto nº 7.962/2013 e Lei 8.078/1990 (Código de Defesa do Consumidor). Direito de arrependimento em até 7 dias corridos após o recebimento.')) ?></p>
             </div>
             <div class="copyright">
-                <p>&copy; <?= date('Y') ?> Divinium. Todos os direitos reservados.</p>
+                <p>&copy; <?= date('Y') ?> <?= \App\Core\View::e(\App\Models\Setting::get('footer_copyright_brand', 'Divinium. Todos os direitos reservados.')) ?></p>
             </div>
         </div>
     </footer>
@@ -238,9 +238,9 @@
     <!-- 6. BANNER DE COOKIES LGPD -->
     <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite">
         <div class="cookie-content">
-            <p>Utilizamos cookies essenciais para garantir a melhor experiência de navegação e compra segura em conformidade com a LGPD. Ao continuar, você concorda com nossos <a href="/termos-de-uso">Termos de Uso</a> e <a href="/politica-de-privacidade">Política de Privacidade</a>.</p>
+            <p><?= \App\Core\View::e(\App\Models\Setting::get('cookie_banner_text', 'Utilizamos cookies essenciais para garantir a melhor experiência de navegação e compra segura em conformidade com a LGPD. Ao continuar, você concorda com nossos Termos de Uso e Política de Privacidade.')) ?></p>
             <div class="cookie-actions">
-                <button class="cookie-btn-accept" id="acceptCookiesBtn">Prosseguir</button>
+                <button class="cookie-btn-accept" id="acceptCookiesBtn"><?= \App\Core\View::e(\App\Models\Setting::get('cookie_banner_btn', 'Prosseguir')) ?></button>
             </div>
         </div>
     </div>

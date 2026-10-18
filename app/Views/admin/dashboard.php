@@ -104,13 +104,13 @@
             </span>
         </div>
         <div class="exec-card-body">
-            <h3>Editor da Landing Page</h3>
-            <p>Edite fotos do Hero, textos do manifesto, depoimentos de clientes e blocos institucionais da Home.</p>
+            <h3>Editor de Textos & Landing Page</h3>
+            <p>Edite 100% dos textos do site: cabeçalho, menu, sacola, minerais, serviços, depoimentos, loja e rodapé ao vivo.</p>
         </div>
         <div class="exec-card-footer">
             <span style="font-size: 0.78rem; color: #8e8880;">Atualização instantânea</span>
             <a href="/admin/landing-page" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
-                <span>Editar Home ↗</span>
+                <span>Editar Textos ↗</span>
             </a>
         </div>
     </div>
