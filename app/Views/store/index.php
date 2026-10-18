@@ -12,31 +12,30 @@
         
         <div class="store-hero-badge">
             <span class="badge-sparkle">✦</span>
-            <span>VITRINE OFICIAL DIVINIUM • CHECKOUT GARANTIDO SHOPEE</span>
+            <span><?= \App\Core\View::e(\App\Models\Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CHECKOUT GARANTIDO SHOPEE')) ?></span>
         </div>
 
         <h1 class="store-hero-title">
-            Joias Autorais & <span class="gold-gradient-glow">Sintonia Mineral</span>
+            <?= \App\Core\View::e(\App\Models\Setting::get('store_hero_title', 'Joias Autorais &')) ?> <span class="gold-gradient-glow"><?= \App\Core\View::e(\App\Models\Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?></span>
         </h1>
 
         <p class="store-hero-subtitle">
-            Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. 
-            Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento da nossa <strong>Loja Oficial na Shopee</strong>.
+            <?= \App\Core\View::e(\App\Models\Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento da nossa Loja Oficial na Shopee.')) ?>
         </p>
 
         <!-- Faixa de Garantia & Confiança Shopee -->
         <div class="store-trust-badges">
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <span>Garantia Shopee • Compra 100% Protegida</span>
+                <span><?= \App\Core\View::e(\App\Models\Setting::get('store_badge_1', 'Garantia Shopee • Compra 100% Protegida')) ?></span>
             </div>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <span>Certificado de Prata de Lei 925</span>
+                <span><?= \App\Core\View::e(\App\Models\Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?></span>
             </div>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                <span>Envio Rápido e Seguro para todo o Brasil</span>
+                <span><?= \App\Core\View::e(\App\Models\Setting::get('store_badge_3', 'Envio Rápido e Seguro para todo o Brasil')) ?></span>
             </div>
         </div>
 
@@ -51,7 +50,7 @@
         <div class="store-filter-bar">
             <div class="filter-pills-wrap">
                 <button class="store-filter-pill active" data-filter="all" onclick="filterStore('all', this)">
-                    <span>Todas as Peças</span>
+                    <span><?= \App\Core\View::e(\App\Models\Setting::get('store_filter_all', 'Todas as Peças')) ?></span>
                     <span class="count-pill"><?= count($products ?? []) ?></span>
                 </button>
                 
@@ -66,7 +65,7 @@
 
             <div class="store-info-pill">
                 <span class="shopee-dot"></span>
-                <span>Clique na peça para comprar na Shopee</span>
+                <span><?= \App\Core\View::e(\App\Models\Setting::get('store_info_pill_text', 'Clique na peça para comprar na Shopee')) ?></span>
             </div>
         </div>
 

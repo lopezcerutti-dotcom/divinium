@@ -35,58 +35,58 @@ use App\Models\Setting;
 
             <!-- Seletor Interativo de Gemas (Paleta Mineral Sexy) -->
             <div class="hero-mineral-box">
-                <span class="mineral-box-label">Escolha sua sintonia mineral:</span>
+                <span class="mineral-box-label"><?= \App\Core\View::e(Setting::get('hero_mineral_box_label', 'Escolha sua sintonia mineral:')) ?></span>
                 <div class="mineral-pills-row" role="radiogroup" aria-label="Selecione o mineral">
                     <button class="mineral-pill active" 
                             data-stone="verde" 
-                            data-title="Bracelete Caminhos • Quartzo Verde" 
-                            data-desc="Prata nobre e quartzo verde natural em concha mineral." 
+                            data-title="<?= \App\Core\View::e(Setting::get('stone_verde_title', 'Bracelete Caminhos • Quartzo Verde')) ?>" 
+                            data-desc="<?= \App\Core\View::e(Setting::get('stone_verde_desc', 'Prata nobre e quartzo verde natural em concha mineral.')) ?>" 
                             data-price="R$ 380,00" 
                             data-pix="ou R$ 361,00 no Pix (5% OFF)" 
                             data-img="/assets/images/hero/featured-green-shell.jpg" 
                             data-id="cam-verde"
                             data-cents="38000">
                         <span class="mineral-dot" style="background: radial-gradient(circle, #3d865b, #153f28);"></span>
-                        <span class="mineral-name">Quartzo Verde</span>
+                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_verde_name', 'Quartzo Verde')) ?></span>
                     </button>
                     
                     <button class="mineral-pill" 
                             data-stone="madreperola" 
-                            data-title="Bracelete Caminhos • Madrepérola" 
-                            data-desc="Prata nobre e nácar natural de madrepérola com brilho perolado." 
+                            data-title="<?= \App\Core\View::e(Setting::get('stone_madre_title', 'Bracelete Caminhos • Madrepérola')) ?>" 
+                            data-desc="<?= \App\Core\View::e(Setting::get('stone_madre_desc', 'Prata nobre e nácar natural de madrepérola com brilho perolado.')) ?>" 
                             data-price="R$ 380,00" 
                             data-pix="ou R$ 361,00 no Pix (5% OFF)" 
                             data-img="/assets/images/products/bracelete-madreperola.jpg" 
                             data-id="cam-madre"
                             data-cents="38000">
                         <span class="mineral-dot" style="background: radial-gradient(circle, #fcf8ee, #dfcca2);"></span>
-                        <span class="mineral-name">Madrepérola</span>
+                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_madre_name', 'Madrepérola')) ?></span>
                     </button>
                     
                     <button class="mineral-pill" 
                             data-stone="vermelho" 
-                            data-title="Bracelete Caminhos • Jaspe Vermelho" 
-                            data-desc="Prata nobre e jaspe vermelho mineral de presença intensa e terrosa." 
+                            data-title="<?= \App\Core\View::e(Setting::get('stone_verm_title', 'Bracelete Caminhos • Jaspe Vermelho')) ?>" 
+                            data-desc="<?= \App\Core\View::e(Setting::get('stone_verm_desc', 'Prata nobre e jaspe vermelho mineral de presença intensa e terrosa.')) ?>" 
                             data-price="R$ 380,00" 
                             data-pix="ou R$ 361,00 no Pix (5% OFF)" 
                             data-img="/assets/images/products/bracelete-vermelho.jpg" 
                             data-id="cam-verm"
                             data-cents="38000">
                         <span class="mineral-dot" style="background: radial-gradient(circle, #c53030, #631212);"></span>
-                        <span class="mineral-name">Jaspe Vermelho</span>
+                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_verm_name', 'Jaspe Vermelho')) ?></span>
                     </button>
                     
                     <button class="mineral-pill" 
                             data-stone="onix" 
-                            data-title="Bracelete Caminhos • Ônix Negro" 
-                            data-desc="Prata nobre e ônix negro de acabamento mineral espelhado." 
+                            data-title="<?= \App\Core\View::e(Setting::get('stone_onix_title', 'Bracelete Caminhos • Ônix Negro')) ?>" 
+                            data-desc="<?= \App\Core\View::e(Setting::get('stone_onix_desc', 'Prata nobre e ônix negro de acabamento mineral espelhado.')) ?>" 
                             data-price="R$ 380,00" 
                             data-pix="ou R$ 361,00 no Pix (5% OFF)" 
                             data-img="/assets/images/products/bracelete-onix.jpg" 
                             data-id="cam-onix"
                             data-cents="38000">
                         <span class="mineral-dot" style="background: radial-gradient(circle, #2b2b2b, #0c0c0c);"></span>
-                        <span class="mineral-name">Ônix Negro</span>
+                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_onix_name', 'Ônix Negro')) ?></span>
                     </button>
                 </div>
             </div>
@@ -193,25 +193,25 @@ use App\Models\Setting;
                     <?= \App\Core\View::e(Setting::get('about_p2', 'Cada gema é única em suas veias, coloração e densidade. Encastoadas à mão sobre o aro duplo em prata, as pedras ganham vida e presença táctil sem jamais pesar no pulso.')) ?>
                 </p>
                 <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-secondary, #6B665F); font-style: italic;">
-                    "Qual delas conversa com você hoje?"
+                    "<?= \App\Core\View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                 </p>
             </div>
             
             <div class="about-cta">
-                <a href="#services" class="btn-outline-dark">Conheça Nossa História</a>
+                <a href="#services" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
             </div>
 
             <!-- Miniatura com macro da gema -->
             <div class="about-micro-feature">
                 <div class="micro-thumb">
-                    <img src="/assets/images/about/macro-texture.jpg" 
-                         alt="Textura Mineral Orgânica" 
+                    <img src="<?= \App\Core\View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>" 
+                         alt="<?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?>" 
                          loading="lazy"
                          onerror="this.onerror=null; this.src='/assets/images/about/macro-texture.png';">
                 </div>
                 <div class="micro-info">
-                    <strong>Textura Mineral Autêntica</strong>
-                    <span>Fragmentos minerais nobres preservados com resina de alta transparência.</span>
+                    <strong><?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?></strong>
+                    <span><?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?></span>
                 </div>
             </div>
         </div>
@@ -219,13 +219,13 @@ use App\Models\Setting;
         <!-- Coluna de Imagem Editorial em Destaque -->
         <div class="about-image-column">
             <div class="editorial-frame">
-                <img src="/assets/images/about/banner-caminhos.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>" 
                      alt="Coleção Braceletes Caminhos Divinium" 
                      class="editorial-img" 
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/about/banner-caminhos.png';">
                 <div class="editorial-caption">
-                    <span>COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR</span>
+                    <span><?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?></span>
                 </div>
             </div>
         </div>
@@ -242,16 +242,16 @@ use App\Models\Setting;
         <!-- Cabeçalho da Vitrine com Filtros em Pílula -->
         <div class="showcase-header">
             <div class="showcase-titles">
-                <span class="sub-label">SELEÇÃO EXCLUSIVA</span>
-                <h2 class="section-serif-title">Braceletes CAMINHOS</h2>
+                <span class="sub-label"><?= \App\Core\View::e(Setting::get('collections_tag', 'SELEÇÃO EXCLUSIVA')) ?></span>
+                <h2 class="section-serif-title"><?= \App\Core\View::e(Setting::get('collections_title', 'Braceletes CAMINHOS')) ?></h2>
             </div>
             
             <div class="showcase-filter-pills" role="tablist">
-                <button class="filter-pill active" data-filter="all">Todas as Peças</button>
-                <button class="filter-pill" data-filter="verde">Quartzo Verde</button>
-                <button class="filter-pill" data-filter="madreperola">Madrepérola</button>
-                <button class="filter-pill" data-filter="vermelho">Jaspe Vermelho</button>
-                <button class="filter-pill" data-filter="onix">Ônix Negro</button>
+                <button class="filter-pill active" data-filter="all"><?= \App\Core\View::e(Setting::get('filter_pill_all', 'Todas as Peças')) ?></button>
+                <button class="filter-pill" data-filter="verde"><?= \App\Core\View::e(Setting::get('filter_pill_verde', 'Quartzo Verde')) ?></button>
+                <button class="filter-pill" data-filter="madreperola"><?= \App\Core\View::e(Setting::get('filter_pill_madre', 'Madrepérola')) ?></button>
+                <button class="filter-pill" data-filter="vermelho"><?= \App\Core\View::e(Setting::get('filter_pill_verm', 'Jaspe Vermelho')) ?></button>
+                <button class="filter-pill" data-filter="onix"><?= \App\Core\View::e(Setting::get('filter_pill_onix', 'Ônix Negro')) ?></button>
             </div>
         </div>
 
@@ -327,14 +327,14 @@ use App\Models\Setting;
             <!-- Card Editorial Lateral: Coleção Completa no Espelho -->
             <div class="showcase-lifestyle-card">
                 <div class="lifestyle-media">
-                    <img src="/assets/images/products/colecao-completa-espelho.jpg" 
-                         alt="Composição Completa Braceletes Caminhos" 
+                    <img src="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_img', '/assets/images/products/colecao-completa-espelho.jpg')) ?>" 
+                         alt="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_title', 'Harmonia Mineral no Espelho')) ?>" 
                          loading="lazy"
                          onerror="this.onerror=null; this.src='/assets/images/products/colecao-completa-espelho.png';">
                 </div>
                 <div class="lifestyle-caption">
-                    <h4>Harmonia Mineral no Espelho</h4>
-                    <p>Seis caminhos, seis vibrações. Combine mais de uma cor para expressar as diferentes nuances da sua presença.</p>
+                    <h4><?= \App\Core\View::e(Setting::get('showcase_lifestyle_title', 'Harmonia Mineral no Espelho')) ?></h4>
+                    <p><?= \App\Core\View::e(Setting::get('showcase_lifestyle_text', 'Seis caminhos, seis vibrações. Combine mais de uma cor para expressar as diferentes nuances da sua presença.')) ?></p>
                 </div>
             </div>
 
@@ -374,12 +374,12 @@ use App\Models\Setting;
             <!-- Serviço 01 -->
             <div class="service-item">
                 <div class="service-num">01</div>
-                <div class="service-name">Consultoria de Sintonia Mineral</div>
+                <div class="service-name"><?= \App\Core\View::e(Setting::get('service_1_title', 'Consultoria de Sintonia Mineral')) ?></div>
                 <div class="service-details">
                     <ul>
-                        <li>Ajuda personalizada para descobrir a pedra que melhor conversa com seu momento</li>
-                        <li>Harmonização de presentes inesquecíveis para pessoas queridas</li>
-                        <li>Atendimento direto pelo nosso Concierge no WhatsApp</li>
+                        <li><?= \App\Core\View::e(Setting::get('service_1_item_1', 'Ajuda personalizada para descobrir a pedra que melhor conversa com seu momento')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_1_item_2', 'Harmonização de presentes inesquecíveis para pessoas queridas')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_1_item_3', 'Atendimento direto pelo nosso Concierge no WhatsApp')) ?></li>
                     </ul>
                 </div>
             </div>
@@ -387,12 +387,12 @@ use App\Models\Setting;
             <!-- Serviço 02 -->
             <div class="service-item">
                 <div class="service-num">02</div>
-                <div class="service-name">Cuidado Artesanal & Manutenção da Prata</div>
+                <div class="service-name"><?= \App\Core\View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção da Prata')) ?></div>
                 <div class="service-details">
                     <ul>
-                        <li>Orientações de limpeza e conservação natural da prata de lei</li>
-                        <li>Polimento artesanal para renovação periódica do brilho original</li>
-                        <li>Proteção e impermeabilização da resina mineral</li>
+                        <li><?= \App\Core\View::e(Setting::get('service_2_item_1', 'Orientações de limpeza e conservação natural da prata de lei')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_2_item_2', 'Polimento artesanal para renovação periódica do brilho original')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_2_item_3', 'Proteção e impermeabilização da resina mineral')) ?></li>
                     </ul>
                 </div>
             </div>
@@ -400,12 +400,12 @@ use App\Models\Setting;
             <!-- Serviço 03 -->
             <div class="service-item">
                 <div class="service-num">03</div>
-                <div class="service-name">Ajuste de Conforto & Garantia</div>
+                <div class="service-name"><?= \App\Core\View::e(Setting::get('service_3_title', 'Ajuste de Conforto & Garantia')) ?></div>
                 <div class="service-details">
                     <ul>
-                        <li>Aro anatômico maleável que se molda gentilmente ao formato do seu pulso</li>
-                        <li>Garantia contra defeitos de fabricação e desprendimento de gemas</li>
-                        <li>Certificado de autenticidade dos minerais naturais</li>
+                        <li><?= \App\Core\View::e(Setting::get('service_3_item_1', 'Aro anatômico maleável que se molda gentilmente ao formato do seu pulso')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_3_item_2', 'Garantia contra defeitos de fabricação e desprendimento de gemas')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_3_item_3', 'Certificado de autenticidade dos minerais naturais')) ?></li>
                     </ul>
                 </div>
             </div>
@@ -422,25 +422,25 @@ use App\Models\Setting;
     <div class="container heritage-grid">
         <div class="heritage-media">
             <div class="media-frame-shadow">
-                <img src="/assets/images/about/banner-unica.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('heritage_banner_img', '/assets/images/about/banner-unica.jpg')) ?>" 
                      alt="Cada Peça é Única Divinium" 
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/about/banner-unica.png';">
             </div>
         </div>
         <div class="heritage-text">
-            <span class="sub-label">SOFISTICAÇÃO & NATUREZA</span>
+            <span class="sub-label"><?= \App\Core\View::e(Setting::get('heritage_tag', 'SOFISTICAÇÃO & NATUREZA')) ?></span>
             <h2 class="section-serif-title">
-                Cada Peça é Única
+                <?= \App\Core\View::e(Setting::get('heritage_title', 'Cada Peça é Única')) ?>
             </h2>
             <p>
-                A natureza não se repete, e nós respeitamos esse princípio. Quando você adquire um bracelete Divinium, tem a certeza de que nenhuma outra pessoa no mundo possui um exemplar idêntico ao seu.
+                <?= \App\Core\View::e(Setting::get('heritage_p1', 'A natureza não se repete, e nós respeitamos esse princípio. Quando você adquire um bracelete Divinium, tem a certeza de que nenhuma outra pessoa no mundo possui um exemplar idêntico ao seu.')) ?>
             </p>
             <p>
-                O aro duplo oferece estabilidade elegante e leveza incomparável no antebraço, transitando com naturalidade do visual casual diário a eventos de gala.
+                <?= \App\Core\View::e(Setting::get('heritage_p2', 'O aro duplo oferece estabilidade elegante e leveza incomparável no antebraço, transitando com naturalidade do visual casual diário a eventos de gala.')) ?>
             </p>
             <div class="heritage-action">
-                <a href="#collections" class="btn-outline-dark">Escolher Meu Bracelete</a>
+                <a href="#collections" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('heritage_cta_text', 'Escolher Meu Bracelete')) ?></a>
             </div>
         </div>
     </div>
@@ -454,24 +454,24 @@ use App\Models\Setting;
         
         <div class="testimonials-header">
             <h2 class="section-serif-title">
-                Amado por Quem Valoriza a Beleza Atemporal
+                <?= \App\Core\View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>
             </h2>
         </div>
 
         <div class="testimonial-showcase-box">
             <div class="testimonial-backdrop">
-                <img src="/assets/images/about/model-wrist-sunglasses.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>" 
                      alt="Modelo usando Bracelete Divinium"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/about/model-wrist-sunglasses.png';">
             </div>
             
             <div class="testimonial-quote-card">
-                <div class="quote-stars">★★★★★</div>
+                <div class="quote-stars"><?= \App\Core\View::e(Setting::get('testimonial_stars', '★★★★★')) ?></div>
                 <blockquote class="quote-text">
-                    "Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!"
+                    "<?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?>"
                 </blockquote>
-                <cite class="quote-author">[ Marcela R. • São Paulo/SP • Cliente Verificada ]</cite>
+                <cite class="quote-author"><?= \App\Core\View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?></cite>
             </div>
         </div>
 
