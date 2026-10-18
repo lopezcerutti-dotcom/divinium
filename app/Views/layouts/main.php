@@ -33,6 +33,44 @@
             document.documentElement.classList.add(serverTheme);
         })();
     </script>
+
+    <!-- Personalização de Fundo Dinâmico (Configurado no Painel Administrativo) -->
+    <?php
+        $siteBgImage = \App\Models\Setting::get('site_bg_image');
+        $siteBgOverlay = \App\Models\Setting::get('site_bg_overlay', '0.75');
+        $siteBgRepeat = \App\Models\Setting::get('site_bg_repeat', 'cover');
+        $heroBgImage = \App\Models\Setting::get('hero_bg_image');
+        $heroBgOverlay = \App\Models\Setting::get('hero_bg_overlay', '0.60');
+    ?>
+    <?php if (!empty($siteBgImage) || !empty($heroBgImage)): ?>
+    <style id="divinium-dynamic-bg">
+        <?php if (!empty($siteBgImage)): ?>
+        body.luxury-theme {
+            background-color: #0d0c0b !important;
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$siteBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$siteBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
+            background-size: <?= $siteBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
+            background-repeat: <?= $siteBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
+            background-attachment: fixed !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+
+        <?php if (!empty($heroBgImage)): ?>
+        .hero-section {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+        }
+        <?php elseif (!empty($siteBgImage)): ?>
+        .hero-section {
+            background-image: linear-gradient(rgba(13, 12, 11, 0.45), rgba(13, 12, 11, 0.85)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
+            background-size: cover !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+    </style>
+    <?php endif; ?>
 </head>
 <body class="luxury-theme">
 

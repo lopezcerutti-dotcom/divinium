@@ -228,6 +228,43 @@
                 </select>
             </div>
         </div>
+
+        <!-- IMAGEM DE FUNDO GLOBAL & HERO -->
+        <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="dashboard_site_bg_image" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>🖼️ Imagem de Fundo Global da Loja</span>
+                    <a href="/admin/temas" style="color: #caa15c; font-size: 0.74rem; text-decoration: none;">Ver Texturas ↗</a>
+                </label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="dashboard_site_bg_image" name="site_bg_image" class="form-input" 
+                           value="<?= \App\Core\View::e($storeSettings['site_bg_image'] ?? '') ?>" 
+                           placeholder="Ex: /assets/images/backgrounds/marble-noir.svg ou URL">
+                    <label class="btn-admin-secondary" style="padding: 0 12px; cursor: pointer; display: flex; align-items: center; white-space: nowrap;">
+                        <span>📁 Upload</span>
+                        <input type="file" accept="image/*" style="display: none;" onchange="uploadDashboardBg(this, 'dashboard_site_bg_image', 'site_bg_image')">
+                    </label>
+                </div>
+                <span style="font-size: 0.72rem; color: #8e8880;">Aplica-se ao fundo de todas as páginas da loja. Deixe vazio para usar o fundo nativo do tema.</span>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="dashboard_hero_bg_image" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>👑 Imagem de Fundo do Hero (Banner Principal)</span>
+                    <a href="/admin/landing-page" style="color: #caa15c; font-size: 0.74rem; text-decoration: none;">Editor Home ↗</a>
+                </label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="dashboard_hero_bg_image" name="hero_bg_image" class="form-input" 
+                           value="<?= \App\Core\View::e($storeSettings['hero_bg_image'] ?? '') ?>" 
+                           placeholder="Ex: /assets/images/hero/hero-caminhos.jpg ou URL">
+                    <label class="btn-admin-secondary" style="padding: 0 12px; cursor: pointer; display: flex; align-items: center; white-space: nowrap;">
+                        <span>📁 Upload</span>
+                        <input type="file" accept="image/*" style="display: none;" onchange="uploadDashboardBg(this, 'dashboard_hero_bg_image', 'hero_bg_image')">
+                    </label>
+                </div>
+                <span style="font-size: 0.72rem; color: #8e8880;">Substitui o gradiente padrão da abertura da Home por uma foto em alta definição.</span>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -735,6 +772,38 @@ async function handleStoreSettingsSubmit(e) {
             alert(data.message || 'Configurações da loja atualizadas com sucesso!');
         } else {
             alert(data.error || 'Erro ao salvar configurações.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
+}
+
+async function uploadDashboardBg(input, inputId, targetKey) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('bg_file', file);
+    formData.append('target_key', targetKey);
+    const csrfToken = getCsrfToken();
+    if (csrfToken) formData.append('_csrf_token', csrfToken);
+
+    try {
+        const res = await fetch('/admin/temas/upload-bg', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+            const inputEl = document.getElementById(inputId);
+            if (inputEl) inputEl.value = data.url;
+            alert(data.message || 'Imagem de fundo enviada com sucesso!');
+        } else {
+            alert(data.error || 'Erro ao enviar imagem.');
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);

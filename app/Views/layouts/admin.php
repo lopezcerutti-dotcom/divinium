@@ -13,6 +13,26 @@
     <link rel="stylesheet" href="/assets/css/admin.css?v=<?= time() ?>">
 
     <meta name="csrf-token" content="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+    <?php
+        $adminBgImage = \App\Models\Setting::get('admin_bg_image');
+        $adminBgOverlay = \App\Models\Setting::get('admin_bg_overlay', '0.85');
+    ?>
+    <?php if (!empty($adminBgImage)): ?>
+    <style id="admin-dynamic-bg">
+        body.admin-theme {
+            background-color: #0d0c0b !important;
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$adminBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$adminBgOverlay + 0.10) ?>)), url('<?= \App\Core\View::e($adminBgImage) ?>') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center center !important;
+        }
+        .admin-main, .admin-card {
+            background-color: rgba(20, 22, 26, 0.75) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+        }
+    </style>
+    <?php endif; ?>
 </head>
 <body class="admin-theme">
 

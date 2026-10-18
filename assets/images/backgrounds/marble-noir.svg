@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <radialGradient id="grad-base" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#191715"/>
+      <stop offset="60%" stop-color="#100e0d"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </radialGradient>
+    <linearGradient id="gold-vein" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(202,161,92,0.18)"/>
+      <stop offset="50%" stop-color="rgba(224,192,128,0.35)"/>
+      <stop offset="100%" stop-color="rgba(156,122,88,0.1)"/>
+    </linearGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" result="warp"/>
+      <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="40" in="SourceGraphic" in2="warp"/>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad-base)"/>
+  <g filter="url(#noise)" opacity="0.6">
+    <path d="M-100,150 Q200,300 450,180 T900,450" fill="none" stroke="url(#gold-vein)" stroke-width="3" opacity="0.65"/>
+    <path d="M-50,600 Q300,400 550,620 T950,200" fill="none" stroke="url(#gold-vein)" stroke-width="2" opacity="0.45"/>
+    <path d="M100,-100 Q400,250 350,550 T500,900" fill="none" stroke="url(#gold-vein)" stroke-width="1.8" opacity="0.5"/>
+    <path d="M600,-50 Q700,350 400,600 T200,950" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+  </g>
+</svg>

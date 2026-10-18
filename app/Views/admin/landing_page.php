@@ -172,6 +172,23 @@ use App\Models\Setting;
                            value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_3', 'Certificado de Garantia')) ?>"
                            placeholder="Certificado de Garantia">
                 </div>
+
+                <div class="form-group full-width" style="background: rgba(202, 161, 92, 0.08); border: 1px solid rgba(202, 161, 92, 0.25); border-radius: 10px; padding: 18px; margin-top: 10px;">
+                    <label for="hero_bg_image" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #caa15c;">
+                        <span>🖼️ Imagem de Fundo do Hero (Banner Principal)</span>
+                        <a href="/admin/temas" target="_blank" style="color: #fff; font-size: 0.74rem; text-decoration: none; background: rgba(202, 161, 92, 0.2); padding: 2px 8px; border-radius: 6px;">Gerenciar Texturas ↗</a>
+                    </label>
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <input type="text" id="hero_bg_image" name="hero_bg_image" class="form-input" 
+                               value="<?= \App\Core\View::e(Setting::get('hero_bg_image', '')) ?>" 
+                               placeholder="Ex: /assets/images/hero/hero-caminhos.jpg ou link externo">
+                        <label class="btn-admin-gold" style="padding: 0 16px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.8rem;">
+                            <span>📁 Fazer Upload</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadHeroEditorBg(this)">
+                        </label>
+                    </div>
+                    <span class="field-hint">Se preenchido, substitui o gradiente padrão da abertura da Home por esta imagem. Deixe vazio para usar o padrão do tema.</span>
+                </div>
             </div>
         </div>
 
@@ -509,6 +526,39 @@ async function handleEditorSubmit(e) {
         alert('Erro ao processar a solicitação: ' + err.message);
         btn.disabled = false;
         btn.innerHTML = '<span>Salvar Alterações da Landing Page</span>';
+    }
+}
+
+async function uploadHeroEditorBg(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('bg_file', file);
+    formData.append('target_key', 'hero_bg_image');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    if (csrfToken) formData.append('_csrf_token', csrfToken);
+
+    try {
+        const res = await fetch('/admin/temas/upload-bg', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+            document.getElementById('hero_bg_image').value = data.url;
+            alert(data.message || 'Imagem de fundo do Hero enviada com sucesso!');
+        } else {
+            alert(data.error || 'Erro ao enviar imagem.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
     }
 }
 </script>

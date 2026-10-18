@@ -202,6 +202,8 @@ class Router
         $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
         $this->post('/admin/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
         $this->post('/admin/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);
+        $this->post('/admin/temas/upload-bg', [\App\Controllers\AdminController::class, 'uploadBackgroundImage'], $adminAuth);
+        $this->post('/admin/temas/remover-bg', [\App\Controllers\AdminController::class, 'removeBackgroundImage'], $adminAuth);
         $this->post('/admin/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
         $this->post('/admin/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);
 

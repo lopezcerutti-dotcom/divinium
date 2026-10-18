@@ -518,6 +518,81 @@ class AdminController
     }
 
     /**
+     * Upload de Imagem de Fundo (Site, Hero ou Admin)
+     */
+    public function uploadBackgroundImage(): void
+    {
+        try {
+            if (empty($_FILES['bg_file']['tmp_name']) || !is_uploaded_file($_FILES['bg_file']['tmp_name'])) {
+                $this->respond(['success' => false, 'error' => 'Nenhum arquivo de imagem foi enviado.'], 400);
+                return;
+            }
+
+            $ext = strtolower(pathinfo($_FILES['bg_file']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+            if (!in_array($ext, $allowed, true)) {
+                $this->respond(['success' => false, 'error' => 'Formato de arquivo inválido. Permitidos: JPG, PNG, WEBP, SVG.'], 400);
+                return;
+            }
+
+            $targetKey = trim((string) ($_POST['target_key'] ?? 'site_bg_image'));
+            $allowedKeys = ['site_bg_image', 'hero_bg_image', 'admin_bg_image'];
+            if (!in_array($targetKey, $allowedKeys, true)) {
+                $targetKey = 'site_bg_image';
+            }
+
+            $uploadDir = BASE_PATH . '/assets/images/backgrounds';
+            if (!is_dir($uploadDir)) {
+                @mkdir($uploadDir, 0755, true);
+            }
+
+            $filename = 'bg-' . time() . '-' . rand(100, 999) . '.' . $ext;
+            $dest = $uploadDir . '/' . $filename;
+
+            if (!move_uploaded_file($_FILES['bg_file']['tmp_name'], $dest)) {
+                $this->respond(['success' => false, 'error' => 'Não foi possível salvar o arquivo no servidor.'], 500);
+                return;
+            }
+
+            $url = '/assets/images/backgrounds/' . $filename;
+            \App\Models\Setting::set($targetKey, $url);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Imagem de fundo enviada e aplicada com sucesso!',
+                'url' => $url,
+                'target_key' => $targetKey
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao processar upload: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Remover Imagem de Fundo (Restaura o Padrão do Tema)
+     */
+    public function removeBackgroundImage(): void
+    {
+        try {
+            $targetKey = trim((string) ($_POST['target_key'] ?? 'site_bg_image'));
+            $allowedKeys = ['site_bg_image', 'hero_bg_image', 'admin_bg_image'];
+            if (!in_array($targetKey, $allowedKeys, true)) {
+                $targetKey = 'site_bg_image';
+            }
+
+            \App\Models\Setting::set($targetKey, '');
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Imagem de fundo removida. O padrão do tema foi restaurado!',
+                'target_key' => $targetKey
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao remover imagem: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Salvar Configurações Gerais da Loja (Dashboard)
      */
     public function saveStoreSettings(): void
