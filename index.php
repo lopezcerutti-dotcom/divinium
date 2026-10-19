@@ -27,8 +27,9 @@ foreach ($possibleBootstraps as $candidate) {
 }
 
 if ($bootstrapFile === null) {
-    http_response_code(500);
-    exit('Erro de inicialização: Pasta app/ não encontrada no servidor. Certifique-se de que a pasta app/ foi enviada.');
+    header('Content-Type: text/html; charset=UTF-8');
+    echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}</style></head><body><h2>DIVINIUM</h2><p style="color:#aaa;">Atualizando serviços com segurança. Por favor, recarregue a página em alguns instantes.</p></body></html>';
+    exit(0);
 }
 
 $app = require_once $bootstrapFile;
@@ -47,21 +48,36 @@ try {
     }
     @file_put_contents($logDir . '/exception.log', sprintf("[%s] %s em %s:%d\n", date('Y-m-d H:i:s'), $e->getMessage(), $e->getFile(), $e->getLine()), FILE_APPEND | LOCK_EX);
 
-    // AUTO-RECUPERAÇÃO: Na web, em requisições GET, nunca quebra a tela do usuário
-    if (php_sapi_name() !== 'cli' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+    $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+        || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+
+    if ($isJson) {
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=UTF-8');
+        }
+        echo json_encode([
+            'success' => false,
+            'error' => 'Ocorreu uma instabilidade temporária no servidor. Por favor, tente novamente.'
+        ], JSON_UNESCAPED_UNICODE);
+        exit(0);
+    }
+
+    // AUTO-RECUPERAÇÃO: Na web, em requisições GET ou POST, renderiza página da Home ou tela amigável
+    if (php_sapi_name() !== 'cli') {
         try {
             \App\Core\View::render('home/index', [
                 'pageTitle' => 'Joias que Revelam o Luxo Silencioso',
-                'pageDescription' => 'Divinium — Joias exclusivas em ouro 18k e pedras preciosas com a essência do quiet luxury.'
+                'pageDescription' => 'Divinium — Joias exclusivas em prata de lei 925 e gemas minerais raras com a essência do quiet luxury.'
             ]);
-            exit;
+            exit(0);
         } catch (Throwable $renderErr) {
-            // Se até a View falhar, recarrega a página de forma fluida
-            header('Content-Type: text/html; charset=UTF-8');
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium</title><meta http-equiv="refresh" content="2;url=/"></head><body style="background:#0d0f12;color:#caa15c;font-family:sans-serif;text-align:center;padding:100px 20px;"><h2>Divinium Joalheria</h2><p style="color:#aaa;">Carregando boutique...</p></body></html>';
-            exit;
+            if (!headers_sent()) {
+                header('Content-Type: text/html; charset=UTF-8');
+            }
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;font-size:0.95rem;}a{color:#0d0c0b;background:#d4ba88;padding:10px 22px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>A boutique está inicializando os serviços com segurança.</p><a href="/">Atualizar Página</a></body></html>';
+            exit(0);
         }
     }
 
-    throw $e;
+    exit(1);
 }

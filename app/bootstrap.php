@@ -185,7 +185,7 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
                 'message' => 'Ocorreu um erro interno ao processar sua requisição. Tente novamente mais tarde.'
             ], JSON_UNESCAPED_UNICODE);
         } else {
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Erro no Servidor</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;"><h2>Desculpe, ocorreu uma instabilidade momentânea.</h2><p>Nossa equipe já foi notificada. Por favor, recarregue a página em alguns instantes.</p></body></html>';
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:8px 18px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;}</style></head><body><h2>DIVINIUM</h2><p>Nosso servidor está finalizando uma atualização automática momentânea.</p><p><a href="/">Recarregar Página</a></p></body></html>';
         }
     } else {
         echo "<pre style='background:#f8d7da;color:#721c24;padding:20px;border-radius:5px;'>";
@@ -194,33 +194,37 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
         echo htmlspecialchars($e->getTraceAsString());
         echo "</pre>";
     }
-    exit(1);
+    exit(0);
 });
 
 // 6. BLINDAGEM DE SESSÃO PHP (Apenas para requisições Web)
 if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE && !headers_sent()) {
-    ini_set('session.use_strict_mode', '1');
-    ini_set('session.use_only_cookies', '1');
-    ini_set('session.cookie_httponly', '1');
-    
-    // Cookie seguro somente se estiver sob HTTPS
-    $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
-               (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-    
-    if ($isHttps) {
-        ini_set('session.cookie_secure', '1');
+    try {
+        @ini_set('session.use_strict_mode', '1');
+        @ini_set('session.use_only_cookies', '1');
+        @ini_set('session.cookie_httponly', '1');
+        
+        // Cookie seguro somente se estiver sob HTTPS
+        $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        
+        if ($isHttps) {
+            @ini_set('session.cookie_secure', '1');
+        }
+
+        @session_set_cookie_params([
+            'lifetime' => (int) Env::get('SESSION_LIFETIME', 7200),
+            'path' => '/',
+            'domain' => '',
+            'secure' => $isHttps,
+            'httponly' => true,
+            'samesite' => (string) Env::get('SESSION_SAME_SITE', 'Lax')
+        ]);
+
+        @session_start();
+    } catch (\Throwable $sessionEx) {
+        // Ignora silenciosamente para não interromper inicialização
     }
-
-    session_set_cookie_params([
-        'lifetime' => (int) Env::get('SESSION_LIFETIME', 7200),
-        'path' => '/',
-        'domain' => '',
-        'secure' => $isHttps,
-        'httponly' => true,
-        'samesite' => (string) Env::get('SESSION_SAME_SITE', 'Lax')
-    ]);
-
-    session_start();
 }
 
 // 7. RETORNO DO AMBIENTE INICIALIZADO
