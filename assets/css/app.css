@@ -599,6 +599,171 @@ body.luxury-theme {
     transform: scale(1.04);
 }
 
+/* ==============================================================================
+   CARROSSEL EDITORIAL DO HERO (ALTA JOALHERIA & TRANSIÇÕES SUAVES)
+   ============================================================================== */
+.hero-carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-carousel-frame {
+    position: relative;
+    width: 380px;
+    height: 500px;
+    border-radius: 24px;
+    background: radial-gradient(circle at 50% 30%, rgba(38, 34, 30, 0.95) 0%, rgba(14, 13, 12, 0.99) 100%);
+    border: 1px solid rgba(212, 186, 136, 0.3);
+    box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 186, 136, 0.12);
+    overflow: hidden;
+    z-index: 2;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease, border-color 0.4s ease;
+}
+
+.hero-carousel-frame:hover {
+    border-color: rgba(212, 186, 136, 0.5);
+    box-shadow: 0 38px 85px rgba(0, 0, 0, 0.88), 0 0 65px rgba(212, 186, 136, 0.22);
+}
+
+.hero-carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-carousel-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.025);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+    z-index: 1;
+}
+
+.hero-carousel-slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    z-index: 2;
+}
+
+.hero-carousel-link,
+.hero-carousel-media-wrap {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.hero-carousel-media-wrap {
+    cursor: default;
+}
+
+.hero-carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-carousel-frame:hover .hero-carousel-slide.active .hero-carousel-img {
+    transform: scale(1.035);
+}
+
+/* Setas discretas e elegantes em tons prata e ouro translúcidos */
+.hero-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(14, 13, 12, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 186, 136, 0.35);
+    color: #ede7df;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 5;
+    opacity: 0.82;
+    user-select: none;
+    padding: 0;
+}
+
+.hero-carousel-arrow:hover {
+    opacity: 1;
+    background: rgba(212, 186, 136, 0.22);
+    border-color: #d4ba88;
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.hero-carousel-prev {
+    left: 14px;
+}
+
+.hero-carousel-next {
+    right: 14px;
+}
+
+/* Indicadores de posição minimalistas */
+.hero-carousel-dots {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 5;
+    background: rgba(10, 9, 8, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-carousel-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.hero-carousel-dot.active {
+    width: 22px;
+    border-radius: 10px;
+    background: #d4ba88;
+    box-shadow: 0 0 10px rgba(212, 186, 136, 0.7);
+}
+
 /* Quadro Editorial Secundário Sobreposto (Lifestyle & Presença Autoral) */
 .editorial-frame-floating {
     position: absolute;
@@ -1557,6 +1722,15 @@ body.luxury-theme {
         height: 470px;
         margin: 0 auto;
     }
+    .hero-carousel-container {
+        max-width: 420px;
+        height: 480px;
+        margin: 0 auto;
+    }
+    .hero-carousel-frame {
+        width: 320px;
+        height: 440px;
+    }
     .editorial-frame-main {
         width: 310px;
         height: 430px;
@@ -1595,6 +1769,23 @@ body.luxury-theme {
         height: 390px;
         margin: 0 auto;
     }
+    .hero-carousel-container {
+        max-width: 320px;
+        height: 400px;
+        margin: 0 auto;
+    }
+    .hero-carousel-frame {
+        width: 270px;
+        height: 370px;
+        border-radius: 18px;
+    }
+    .hero-carousel-arrow {
+        width: 32px;
+        height: 32px;
+    }
+    .hero-carousel-prev { left: 8px; }
+    .hero-carousel-next { right: 8px; }
+    .hero-carousel-dots { bottom: 12px; padding: 4px 10px; }
     .editorial-frame-main {
         width: 250px;
         height: 350px;
@@ -2822,15 +3013,31 @@ body.theme-silver .stage-corner {
 }
 
 html.theme-silver .stage-frame,
-body.theme-silver .stage-frame {
-    border-color: rgba(226, 232, 240, 0.22) !important;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(226, 232, 240, 0.12) !important;
+body.theme-silver .stage-frame,
+html.theme-silver .hero-carousel-frame,
+body.theme-silver .hero-carousel-frame {
+    border-color: rgba(226, 232, 240, 0.28) !important;
+    box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 50px rgba(226, 232, 240, 0.14) !important;
 }
 
 html.theme-silver .stage-frame:hover,
-body.theme-silver .stage-frame:hover {
-    border-color: rgba(226, 232, 240, 0.45) !important;
-    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 55px rgba(226, 232, 240, 0.22) !important;
+body.theme-silver .stage-frame:hover,
+html.theme-silver .hero-carousel-frame:hover,
+body.theme-silver .hero-carousel-frame:hover {
+    border-color: rgba(226, 232, 240, 0.5) !important;
+    box-shadow: 0 38px 85px rgba(0, 0, 0, 0.88), 0 0 65px rgba(226, 232, 240, 0.24) !important;
+}
+
+html.theme-silver .hero-carousel-arrow:hover,
+body.theme-silver .hero-carousel-arrow:hover {
+    background: rgba(226, 232, 240, 0.22) !important;
+    border-color: #cbd5e1 !important;
+}
+
+html.theme-silver .hero-carousel-dot.active,
+body.theme-silver .hero-carousel-dot.active {
+    background: #cbd5e1 !important;
+    box-shadow: 0 0 10px rgba(203, 213, 225, 0.75) !important;
 }
 
 /* 14.3 CARD DESTAQUE DO PRODUTO NO TEMA 2 (GLASSMORPHISM COM TEXTO ESCURO NÍTIDO) */
@@ -3059,15 +3266,31 @@ body.theme-emerald .stage-corner {
 }
 
 html.theme-emerald .stage-frame,
-body.theme-emerald .stage-frame {
+body.theme-emerald .stage-frame,
+html.theme-emerald .hero-carousel-frame,
+body.theme-emerald .hero-carousel-frame {
     border-color: rgba(52, 211, 153, 0.3) !important;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.2) !important;
+    box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 50px rgba(16, 185, 129, 0.2) !important;
 }
 
 html.theme-emerald .stage-frame:hover,
-body.theme-emerald .stage-frame:hover {
-    border-color: rgba(52, 211, 153, 0.5) !important;
-    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 55px rgba(16, 185, 129, 0.3) !important;
+body.theme-emerald .stage-frame:hover,
+html.theme-emerald .hero-carousel-frame:hover,
+body.theme-emerald .hero-carousel-frame:hover {
+    border-color: rgba(52, 211, 153, 0.55) !important;
+    box-shadow: 0 38px 85px rgba(0, 0, 0, 0.9), 0 0 65px rgba(16, 185, 129, 0.3) !important;
+}
+
+html.theme-emerald .hero-carousel-arrow:hover,
+body.theme-emerald .hero-carousel-arrow:hover {
+    background: rgba(16, 185, 129, 0.22) !important;
+    border-color: #34d399 !important;
+}
+
+html.theme-emerald .hero-carousel-dot.active,
+body.theme-emerald .hero-carousel-dot.active {
+    background: #10b981 !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.75) !important;
 }
 
 /* Card Destaque Glassmorphism Esmeralda */
@@ -3253,15 +3476,31 @@ body.theme-rose .stage-corner {
 }
 
 html.theme-rose .stage-frame,
-body.theme-rose .stage-frame {
+body.theme-rose .stage-frame,
+html.theme-rose .hero-carousel-frame,
+body.theme-rose .hero-carousel-frame {
     border-color: rgba(253, 164, 175, 0.3) !important;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(244, 63, 94, 0.2) !important;
+    box-shadow: 0 30px 75px rgba(0, 0, 0, 0.8), 0 0 50px rgba(244, 63, 94, 0.2) !important;
 }
 
 html.theme-rose .stage-frame:hover,
-body.theme-rose .stage-frame:hover {
-    border-color: rgba(253, 164, 175, 0.5) !important;
-    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 55px rgba(244, 63, 94, 0.3) !important;
+body.theme-rose .stage-frame:hover,
+html.theme-rose .hero-carousel-frame:hover,
+body.theme-rose .hero-carousel-frame:hover {
+    border-color: rgba(253, 164, 175, 0.55) !important;
+    box-shadow: 0 38px 85px rgba(0, 0, 0, 0.9), 0 0 65px rgba(244, 63, 94, 0.3) !important;
+}
+
+html.theme-rose .hero-carousel-arrow:hover,
+body.theme-rose .hero-carousel-arrow:hover {
+    background: rgba(244, 63, 94, 0.22) !important;
+    border-color: #fda4af !important;
+}
+
+html.theme-rose .hero-carousel-dot.active,
+body.theme-rose .hero-carousel-dot.active {
+    background: #fb7185 !important;
+    box-shadow: 0 0 10px rgba(251, 113, 133, 0.75) !important;
 }
 
 /* Card Destaque Glassmorphism Rose */

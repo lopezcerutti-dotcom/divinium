@@ -54,7 +54,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <span>👑 Hero & Títulos</span>
         </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-stage', this)">
-            <span>💎 Palco em Destaque</span>
+            <span>🎠 Carrossel Principal</span>
         </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-about', this)">
             <span>📜 Manifesto & Sobre</span>
@@ -368,44 +368,62 @@ $renderToggle = function(string $key, string $default = '1'): string {
         </div>
 
         <!-- ============================================================== -->
-        <!-- SEÇÃO 4: COMPOSIÇÃO VISUAL EDITORIAL DO HERO -->
+        <!-- SEÇÃO 4: CARROSSEL DE IMAGENS PRINCIPAIS DA HOME -->
         <!-- ============================================================== -->
         <div class="editor-section-card" id="sec-stage">
             <div class="section-card-header">
-                <div class="section-icon">💎</div>
+                <div class="section-icon">🎠</div>
                 <div>
-                    <h3>Composição Visual Editorial do Hero (Alta Joalheria)</h3>
-                    <p>Defina as fotografias editoriais exibidas na abertura da Home em composição de luxo (sem textos sobrepostos).</p>
+                    <h3>Carrossel de Imagens Principais da Home (Alta Joalheria)</h3>
+                    <p>Gerencie as fotografias, links, textos e a reprodução automática do carrossel exibido na abertura da Home.</p>
                 </div>
             </div>
 
             <div class="form-grid">
-                <div class="form-group full-width">
-                    <label for="hero_editorial_main_img" style="font-weight: 600; color: #caa15c;">Quadro Editorial Principal (Fotografia Still-Life)</label>
-                    <div style="display: flex; gap: 10px; margin-top: 6px;">
-                        <input type="text" id="hero_editorial_main_img" name="hero_editorial_main_img" class="form-input"
-                               value="<?= \App\Core\View::e(Setting::get('hero_editorial_main_img', '/assets/images/hero/featured-green-shell.jpg')) ?>"
-                               placeholder="/assets/images/hero/featured-green-shell.jpg">
-                        <label class="btn-admin-gold" style="padding: 0 16px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.8rem;">
-                            <span>📁 Upload</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadEditorialImage(this, 'hero_editorial_main_img')">
-                        </label>
+                <!-- Configurações Gerais do Carrossel -->
+                <div class="form-group" style="background: rgba(212, 186, 136, 0.05); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.88rem;">Reprodução Automática (Autoplay)</label>
+                        <?= $renderToggle('hero_carousel_autoplay') ?>
                     </div>
-                    <span class="field-hint">Fotografia principal em proporção vertical/retrato destacando as joias com iluminação natural.</span>
+                    <span class="field-hint" style="margin-top: 2px;">Alterna as imagens automaticamente com transição suave. Pausa ao passar o cursor ou tocar no carrossel.</span>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="hero_editorial_sec_img" style="font-weight: 600; color: #caa15c;">Quadro Editorial Secundário Sobreposto (Lifestyle & Joia em Uso)</label>
-                    <div style="display: flex; gap: 10px; margin-top: 6px;">
-                        <input type="text" id="hero_editorial_sec_img" name="hero_editorial_sec_img" class="form-input"
-                               value="<?= \App\Core\View::e(Setting::get('hero_editorial_sec_img', '/assets/images/testimonials/lifestyle-wrist.jpeg')) ?>"
-                               placeholder="/assets/images/testimonials/lifestyle-wrist.jpeg">
-                        <label class="btn-admin-gold" style="padding: 0 16px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.8rem;">
-                            <span>📁 Upload</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadEditorialImage(this, 'hero_editorial_sec_img')">
-                        </label>
+                <div class="form-group" style="background: rgba(255, 255, 255, 0.02); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.06);">
+                    <label for="hero_carousel_interval" style="color: #ffffff; font-weight: 600; font-size: 0.88rem;">Tempo de Exibição por Slide</label>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                        <input type="number" id="hero_carousel_interval" name="hero_carousel_interval" class="form-input" min="2" max="30" step="1"
+                               value="<?= View::e(Setting::get('hero_carousel_interval', '5')) ?>" style="width: 100px;">
+                        <span style="font-size: 0.82rem; color: #b5ada3;">segundos por imagem</span>
                     </div>
-                    <span class="field-hint">Fotografia complementar sobreposta (ex: modelo com a peça no pulso ou detalhe artesanal autêntico).</span>
+                    <span class="field-hint">Intervalo entre trocas de slide (recomendado: 4 a 7 segundos).</span>
+                </div>
+
+                <!-- Input Hidden com os Slides Serializados em JSON -->
+                <input type="hidden" name="hero_carousel_slides" id="heroCarouselSlidesJson" value="<?= View::e(Setting::get('hero_carousel_slides', '')) ?>">
+                <input type="hidden" name="hero_editorial_main_img" id="hero_editorial_main_img_sync" value="<?= View::e(Setting::get('hero_editorial_main_img', '')) ?>">
+                <input type="hidden" name="hero_editorial_sec_img" id="hero_editorial_sec_img_sync" value="<?= View::e(Setting::get('hero_editorial_sec_img', '')) ?>">
+
+                <!-- Gerenciador Visual de Slides -->
+                <div class="form-group full-width" style="margin-top: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
+                        <div>
+                            <h4 style="color: #d4ba88; font-size: 0.95rem; font-weight: 600; margin: 0;">Imagens do Carrossel (<span id="carouselSlidesCount">0</span>)</h4>
+                            <span class="field-hint" style="margin: 2px 0 0;">Adicione, reordene, configure links e textos alternativos para cada imagem.</span>
+                        </div>
+                        <button type="button" class="btn-admin-gold" onclick="addNewCarouselSlide()" style="font-size: 0.8rem; padding: 8px 16px;">
+                            <span>+ Adicionar Nova Imagem</span>
+                        </button>
+                    </div>
+
+                    <div id="carouselSlidesContainer" class="carousel-slides-manager">
+                        <!-- Renderizado via JavaScript -->
+                    </div>
+
+                    <button type="button" class="btn-add-carousel-slide" onclick="addNewCarouselSlide()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>+ Adicionar Outra Imagem ao Carrossel da Home</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1191,6 +1209,11 @@ async function handleEditorSubmit(e) {
     status.innerText = 'Gravando configurações e atualizando o site...';
     status.style.color = '#d4ba88';
 
+    // Sincronizar dados do carrossel antes de coletar o FormData
+    if (typeof syncCarouselSlidesToForm === 'function') {
+        syncCarouselSlidesToForm();
+    }
+
     const form = document.getElementById('landingPageForm');
     const formData = new FormData(form);
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
@@ -1293,12 +1316,263 @@ async function uploadEditorialImage(input, targetId) {
         if (data.success && data.url) {
             const targetEl = document.getElementById(targetId);
             if (targetEl) targetEl.value = data.url;
-            alert(data.message || 'Imagem editorial enviada com sucesso! Clique em Salvar para publicar.');
+            alert(data.message || 'Imagem enviada com sucesso! Clique em Salvar para publicar.');
         } else {
             alert(data.error || 'Erro ao enviar imagem.');
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);
     }
+}
+
+// ==============================================================================
+// GERENCIADOR VISUAL DE SLIDES DO CARROSSEL DA HOME
+// ==============================================================================
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+let currentCarouselSlides = [];
+
+function initCarouselSlidesManager() {
+    const jsonInput = document.getElementById('heroCarouselSlidesJson');
+    let loaded = [];
+    if (jsonInput && jsonInput.value) {
+        try {
+            const parsed = JSON.parse(jsonInput.value);
+            if (Array.isArray(parsed)) loaded = parsed;
+        } catch (e) {
+            loaded = [];
+        }
+    }
+
+    if (loaded.length === 0) {
+        loaded = [
+            {
+                id: 1,
+                image_url: '/assets/images/hero/featured-green-shell.jpg',
+                alt_text: 'Bracelete Caminhos em Prata 925 com Concha Verde Esmeralda',
+                link_url: '/loja',
+                sort_order: 1,
+                is_active: 1
+            },
+            {
+                id: 2,
+                image_url: '/assets/images/testimonials/lifestyle-wrist.jpeg',
+                alt_text: 'Joia Autoral DIVINIUM no Pulso — Coleção Caminhos',
+                link_url: '/loja',
+                sort_order: 2,
+                is_active: 1
+            },
+            {
+                id: 3,
+                image_url: '/assets/images/about/model-wrist-sunglasses.jpg',
+                alt_text: 'Alta Joalheria Autoral Brasileira DIVINIUM',
+                link_url: '/loja',
+                sort_order: 3,
+                is_active: 1
+            }
+        ];
+    }
+
+    currentCarouselSlides = loaded;
+    renderCarouselSlides();
+}
+
+function syncCarouselSlidesToForm() {
+    const jsonInput = document.getElementById('heroCarouselSlidesJson');
+    if (jsonInput) {
+        jsonInput.value = JSON.stringify(currentCarouselSlides);
+    }
+    const active = currentCarouselSlides.filter(s => s.is_active == 1);
+    const mainSync = document.getElementById('hero_editorial_main_img_sync');
+    const secSync = document.getElementById('hero_editorial_sec_img_sync');
+    if (mainSync && active.length > 0) mainSync.value = active[0].image_url;
+    if (secSync && active.length > 1) secSync.value = active[1].image_url;
+}
+
+function renderCarouselSlides() {
+    const container = document.getElementById('carouselSlidesContainer');
+    const counter = document.getElementById('carouselSlidesCount');
+    if (!container) return;
+
+    if (counter) counter.innerText = currentCarouselSlides.length;
+
+    if (currentCarouselSlides.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 28px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 10px; color: #8e8880; font-size: 0.84rem;">
+                Nenhuma imagem adicionada ao carrossel ainda. Clique em "<strong>+ Adicionar Nova Imagem</strong>" para compor a abertura da Home.
+            </div>
+        `;
+        syncCarouselSlidesToForm();
+        return;
+    }
+
+    let html = '';
+    currentCarouselSlides.forEach((slide, idx) => {
+        const img = slide.image_url || '/assets/images/hero/featured-green-shell.jpg';
+        const alt = slide.alt_text || '';
+        const link = slide.link_url || '';
+        const order = slide.sort_order !== undefined ? slide.sort_order : (idx + 1);
+        const isActive = slide.is_active != 0;
+
+        html += `
+            <div class="carousel-slide-item ${isActive ? '' : 'is-inactive'}" id="slideItem_${idx}">
+                <div class="carousel-slide-thumb-wrap">
+                    <img src="${escapeHtml(img)}" 
+                         id="slideThumb_${idx}" 
+                         class="carousel-slide-thumb" 
+                         alt="Preview Slide ${idx + 1}"
+                         onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
+                </div>
+
+                <div class="carousel-slide-fields">
+                    <div class="carousel-slide-header">
+                        <div class="carousel-slide-title">
+                            <span>Imagem #${idx + 1}</span>
+                            ${!isActive ? '<span style="font-size: 0.7rem; color: #f87171; background: rgba(248,113,113,0.1); padding: 1px 6px; border-radius: 4px;">Oculta</span>' : ''}
+                        </div>
+                        <div class="carousel-slide-actions">
+                            <button type="button" class="btn-slide-order" onclick="moveCarouselSlide(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Mover para cima">▲</button>
+                            <button type="button" class="btn-slide-order" onclick="moveCarouselSlide(${idx}, 1)" ${idx === currentCarouselSlides.length - 1 ? 'disabled' : ''} title="Mover para baixo">▼</button>
+                            <button type="button" class="btn-slide-delete" onclick="removeCarouselSlide(${idx})" title="Excluir esta imagem">✕ Excluir</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.76rem;">URL da Imagem *</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" class="form-input" style="font-size: 0.8rem;" value="${escapeHtml(img)}" placeholder="/assets/images/hero/featured-green-shell.jpg" oninput="updateCarouselSlide(${idx}, 'image_url', this.value); updateSlideThumb(${idx}, this.value)">
+                                <label class="btn-admin-gold" style="padding: 0 12px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.74rem;">
+                                    <span>📁 Upload</span>
+                                    <input type="file" accept="image/*" style="display: none;" onchange="uploadSlideImage(this, ${idx})">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.76rem;">Texto Alternativo (Alt / Acessibilidade / SEO)</label>
+                            <input type="text" class="form-input" style="font-size: 0.8rem;" value="${escapeHtml(alt)}" placeholder="Ex: Bracelete Caminhos em Prata 925" oninput="updateCarouselSlide(${idx}, 'alt_text', this.value)">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.76rem;">Link de Destino (Ao Clicar na Imagem - Opcional)</label>
+                            <input type="text" class="form-input" style="font-size: 0.8rem;" value="${escapeHtml(link)}" placeholder="Ex: /loja ou https://wa.me/..." oninput="updateCarouselSlide(${idx}, 'link_url', this.value)">
+                        </div>
+
+                        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;">
+                            <div class="form-group" style="margin: 0; width: 110px;">
+                                <label style="font-size: 0.76rem;">Ordem</label>
+                                <input type="number" class="form-input" style="font-size: 0.8rem;" value="${order}" oninput="updateCarouselSlide(${idx}, 'sort_order', parseInt(this.value, 10) || 0)">
+                            </div>
+
+                            <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ded7cf; cursor: pointer; margin-bottom: 8px; user-select: none;">
+                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="updateCarouselSlide(${idx}, 'is_active', this.checked ? 1 : 0); renderCarouselSlides();" style="accent-color: #d4ba88; width: 16px; height: 16px;">
+                                <span>Exibir imagem</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    syncCarouselSlidesToForm();
+}
+
+function updateSlideThumb(idx, url) {
+    const thumb = document.getElementById('slideThumb_' + idx);
+    if (thumb && url) {
+        thumb.src = url;
+    }
+}
+
+function updateCarouselSlide(idx, key, val) {
+    if (currentCarouselSlides[idx]) {
+        currentCarouselSlides[idx][key] = val;
+        syncCarouselSlidesToForm();
+    }
+}
+
+function addNewCarouselSlide() {
+    const newOrder = currentCarouselSlides.length + 1;
+    currentCarouselSlides.push({
+        id: Date.now(),
+        image_url: '/assets/images/hero/featured-green-shell.jpg',
+        alt_text: 'Nova Joia DIVINIUM',
+        link_url: '/loja',
+        sort_order: newOrder,
+        is_active: 1
+    });
+    renderCarouselSlides();
+}
+
+function removeCarouselSlide(idx) {
+    if (!confirm('Tem certeza que deseja remover esta imagem do carrossel?')) return;
+    currentCarouselSlides.splice(idx, 1);
+    currentCarouselSlides.forEach((s, i) => s.sort_order = i + 1);
+    renderCarouselSlides();
+}
+
+function moveCarouselSlide(idx, direction) {
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= currentCarouselSlides.length) return;
+
+    const temp = currentCarouselSlides[idx];
+    currentCarouselSlides[idx] = currentCarouselSlides[targetIdx];
+    currentCarouselSlides[targetIdx] = temp;
+
+    currentCarouselSlides.forEach((s, i) => s.sort_order = i + 1);
+    renderCarouselSlides();
+}
+
+async function uploadSlideImage(input, idx) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('bg_file', file);
+    formData.append('target_key', 'slide_' + idx);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    if (csrfToken) formData.append('_csrf_token', csrfToken);
+
+    try {
+        const res = await fetch('/admin/temas/upload-bg', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+            updateCarouselSlide(idx, 'image_url', data.url);
+            renderCarouselSlides();
+            alert('Imagem enviada com sucesso! Clique em Salvar Alterações para publicar.');
+        } else {
+            alert(data.error || 'Erro ao enviar imagem.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCarouselSlidesManager);
+} else {
+    initCarouselSlidesManager();
 }
 </script>

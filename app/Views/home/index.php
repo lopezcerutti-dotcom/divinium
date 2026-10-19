@@ -62,40 +62,128 @@ use App\Models\Setting;
             </div>
         </div>
 
-        <!-- Coluna Direita: COMPOSIÇÃO VISUAL EDITORIAL DE LUXO (SEM TEXTOS SOBREPOSTOS) -->
+        <!-- Coluna Direita: CARROSSEL EDITORIAL DE IMAGENS PRINCIPAIS (ALTA JOALHERIA) -->
+        <?php
+            $carouselAutoplay = Setting::get('hero_carousel_autoplay', '1');
+            $carouselInterval = (int) Setting::get('hero_carousel_interval', '5');
+            if ($carouselInterval < 2) $carouselInterval = 5;
+
+            $slidesJson = Setting::get('hero_carousel_slides');
+            $carouselSlides = [];
+            if (!empty($slidesJson)) {
+                $decoded = json_decode($slidesJson, true);
+                if (is_array($decoded)) {
+                    $carouselSlides = $decoded;
+                }
+            }
+
+            if (empty($carouselSlides)) {
+                $mainImg = Setting::get('hero_editorial_main_img', '/assets/images/hero/featured-green-shell.jpg');
+                $secImg = Setting::get('hero_editorial_sec_img', '/assets/images/testimonials/lifestyle-wrist.jpeg');
+                $carouselSlides = [
+                    [
+                        'id' => 1,
+                        'image_url' => $mainImg,
+                        'alt_text' => 'Bracelete Caminhos em Prata 925 com Concha Verde Esmeralda',
+                        'link_url' => '/loja',
+                        'sort_order' => 1,
+                        'is_active' => 1
+                    ],
+                    [
+                        'id' => 2,
+                        'image_url' => $secImg,
+                        'alt_text' => 'Joia Autoral DIVINIUM no Pulso — Coleção Caminhos',
+                        'link_url' => '/loja',
+                        'sort_order' => 2,
+                        'is_active' => 1
+                    ],
+                    [
+                        'id' => 3,
+                        'image_url' => '/assets/images/about/model-wrist-sunglasses.jpg',
+                        'alt_text' => 'Alta Joalheria Autoral Brasileira DIVINIUM',
+                        'link_url' => '/loja',
+                        'sort_order' => 3,
+                        'is_active' => 1
+                    ]
+                ];
+            }
+
+            $activeSlides = array_values(array_filter($carouselSlides, fn($s) => ($s['is_active'] ?? 1) == 1));
+            usort($activeSlides, fn($a, $b) => ($a['sort_order'] ?? 0) <=> ($b['sort_order'] ?? 0));
+            if (empty($activeSlides) && !empty($carouselSlides)) {
+                $activeSlides = array_values($carouselSlides);
+            }
+        ?>
         <div class="hero-stage">
-            <div class="hero-editorial-composition">
+            <div class="hero-carousel-container" id="heroCarousel" 
+                 data-autoplay="<?= $carouselAutoplay ?>" 
+                 data-interval="<?= $carouselInterval * 1000 ?>"
+                 tabindex="0"
+                 role="region"
+                 aria-roledescription="carousel"
+                 aria-label="Carrossel de Joias DIVINIUM">
+                
                 <!-- Efeito Atmosférico de Iluminação Suave -->
                 <div class="editorial-ambient-glow"></div>
 
-                <!-- Detalhes de Acabamento Arquitetônico -->
-                <div class="editorial-accent-accent"></div>
-
-                <!-- Quadro Editorial Principal (Still-Life de Alta Joalheria) -->
-                <div class="editorial-frame editorial-frame-main">
+                <!-- Moldura de Alta Joalheria do Carrossel -->
+                <div class="hero-carousel-frame">
+                    <!-- Cantos Ornamentais de Alta Joalheria -->
                     <div class="stage-corner corner-tl"></div>
                     <div class="stage-corner corner-tr"></div>
                     <div class="stage-corner corner-bl"></div>
                     <div class="stage-corner corner-br"></div>
 
-                    <div class="editorial-media-wrap">
-                        <img src="<?= \App\Core\View::e(Setting::get('hero_editorial_main_img', '/assets/images/hero/featured-green-shell.jpg')) ?>" 
-                             alt="Joia Autoral DIVINIUM"
-                             class="editorial-main-img"
-                             loading="eager"
-                             onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
+                    <!-- Trilho com os Slides -->
+                    <div class="hero-carousel-track" id="heroCarouselTrack">
+                        <?php foreach ($activeSlides as $idx => $slide): ?>
+                            <?php 
+                                $hasLink = !empty($slide['link_url']);
+                                $imgSrc = $slide['image_url'] ?? '/assets/images/hero/featured-green-shell.jpg';
+                                $imgAlt = $slide['alt_text'] ?? 'Joia Autoral DIVINIUM';
+                            ?>
+                            <div class="hero-carousel-slide <?= $idx === 0 ? 'active' : '' ?>" data-index="<?= $idx ?>">
+                                <?php if ($hasLink): ?>
+                                    <a href="<?= \App\Core\View::e($slide['link_url']) ?>" class="hero-carousel-link" title="<?= \App\Core\View::e($imgAlt) ?>">
+                                        <img src="<?= \App\Core\View::e($imgSrc) ?>" 
+                                             alt="<?= \App\Core\View::e($imgAlt) ?>" 
+                                             class="hero-carousel-img"
+                                             loading="<?= $idx === 0 ? 'eager' : 'lazy' ?>"
+                                             onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
+                                    </a>
+                                <?php else: ?>
+                                    <div class="hero-carousel-media-wrap">
+                                        <img src="<?= \App\Core\View::e($imgSrc) ?>" 
+                                             alt="<?= \App\Core\View::e($imgAlt) ?>" 
+                                             class="hero-carousel-img"
+                                             loading="<?= $idx === 0 ? 'eager' : 'lazy' ?>"
+                                             onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
 
-                <!-- Quadro Editorial Secundário Sobreposto (Lifestyle & Presença Autoral) -->
-                <div class="editorial-frame editorial-frame-floating">
-                    <div class="editorial-media-wrap">
-                        <img src="<?= \App\Core\View::e(Setting::get('hero_editorial_sec_img', '/assets/images/testimonials/lifestyle-wrist.jpeg')) ?>" 
-                             alt="Design de Joia DIVINIUM em Uso"
-                             class="editorial-floating-img"
-                             loading="eager"
-                             onerror="this.onerror=null; this.src='/assets/images/testimonials/lifestyle-wrist.jpeg';">
+                    <!-- Setas Discretas de Navegação Manual -->
+                    <?php if (count($activeSlides) > 1): ?>
+                    <button type="button" class="hero-carousel-arrow hero-carousel-prev" id="heroCarouselPrev" aria-label="Imagem anterior" title="Imagem anterior">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button type="button" class="hero-carousel-arrow hero-carousel-next" id="heroCarouselNext" aria-label="Próxima imagem" title="Próxima imagem">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+
+                    <!-- Indicadores de Posição Minimalistas -->
+                    <div class="hero-carousel-dots" id="heroCarouselDots">
+                        <?php foreach ($activeSlides as $idx => $slide): ?>
+                            <button type="button" 
+                                    class="hero-carousel-dot <?= $idx === 0 ? 'active' : '' ?>" 
+                                    data-index="<?= $idx ?>" 
+                                    aria-label="Ir para imagem <?= $idx + 1 ?>"></button>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
+
                 </div>
             </div>
         </div>
