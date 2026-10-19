@@ -90,7 +90,7 @@
 <div class="admin-filter-bar">
     <div class="search-box-wrap">
         <svg class="search-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="catalogSearchInput" class="search-box-input" placeholder="Buscar por joia, SKU, gema mineral..." onkeyup="filterCatalog()">
+        <input type="text" id="catalogSearchInput" class="search-box-input" placeholder="Buscar por nome ou SKU da joia..." onkeyup="filterCatalog()" oninput="filterCatalog()">
     </div>
 
     <!-- FILTRO DE CATEGORIA -->
@@ -121,9 +121,36 @@
     </div>
 </div>
 
-<!-- TABELA DE GESTÃO DO CATÁLOGO -->
+<!-- TABELA DE GESTÃO DO CATÁLOGO COM ROLAGEM DUPLA, CABEÇALHO FIXO & PAGINAÇÃO -->
 <div class="admin-card" style="padding: 0; overflow: hidden;">
-    <div style="overflow-x: auto;">
+    
+    <!-- CONTROLES DE PAGINAÇÃO SUPERIOR -->
+    <div class="pagination-bar pagination-bar-top" id="paginationBarTop">
+        <div class="pagination-info" id="paginationInfoTop">
+            Carregando catálogo...
+        </div>
+        <div class="pagination-controls-wrap">
+            <div class="pagination-per-page">
+                <label for="perPageSelectTop">Itens por página:</label>
+                <select id="perPageSelectTop" class="per-page-select" onchange="changeItemsPerPage(this.value)">
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div class="pagination-nav" id="paginationNavTop">
+                <!-- Botões gerados via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA DE ROLAGEM HORIZONTAL SUPERIOR SINCRONIZADA -->
+    <div class="table-scroll-top-wrapper" id="catalogScrollTopWrapper">
+        <div class="table-scroll-top-track" id="catalogScrollTopTrack"></div>
+    </div>
+
+    <!-- CONTAINER DA TABELA COM ROLAGEM VERTICAL E HORIZONTAL (CABEÇALHO FIXO) -->
+    <div class="table-scroll-container" id="catalogTableScrollContainer">
         <table class="admin-table" id="productsTable">
             <thead>
                 <tr>
@@ -304,6 +331,26 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- CONTROLES DE PAGINAÇÃO INFERIOR -->
+    <div class="pagination-bar pagination-bar-bottom" id="paginationBarBottom">
+        <div class="pagination-info" id="paginationInfoBottom">
+            Carregando catálogo...
+        </div>
+        <div class="pagination-controls-wrap">
+            <div class="pagination-per-page">
+                <label for="perPageSelectBottom">Itens por página:</label>
+                <select id="perPageSelectBottom" class="per-page-select" onchange="changeItemsPerPage(this.value)">
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div class="pagination-nav" id="paginationNavBottom">
+                <!-- Botões gerados via JavaScript -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -681,49 +728,233 @@
 
 <script>
 /* ==============================================================================
-   FILTROS EM TEMPO REAL NO CLIENT-SIDE
+   FILTROS, PESQUISA POR NOME/SKU & PAGINAÇÃO MULTI-ITENS
    ============================================================================== */
-function filterCatalog() {
-    const searchVal = (document.getElementById('catalogSearchInput')?.value || '').toLowerCase().trim();
-    const catVal = (document.getElementById('catalogCategoryFilter')?.value || '').toLowerCase().trim();
-    const statusVal = (document.getElementById('catalogStatusFilter')?.value || '').toLowerCase().trim();
-    const stockVal = (document.getElementById('catalogStockFilter')?.value || '').toLowerCase().trim();
+let currentPage = 1;
+let itemsPerPage = 25;
+let filteredRows = [];
 
-    const rows = document.querySelectorAll('#catalogTableBody tr[data-name]');
-    let visibleCount = 0;
+function normalizeSearchText(str) {
+    return (str || '')
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+}
 
-    rows.forEach(row => {
-        const name = row.getAttribute('data-name') || '';
-        const sku = row.getAttribute('data-sku') || '';
-        const stone = row.getAttribute('data-stone') || '';
-        const category = (row.getAttribute('data-category') || '').toLowerCase();
-        const status = row.getAttribute('data-status') || '';
+function filterCatalog(resetPage = true) {
+    if (resetPage) {
+        currentPage = 1;
+    }
+
+    const searchVal = normalizeSearchText(document.getElementById('catalogSearchInput')?.value || '');
+    const catVal = normalizeSearchText(document.getElementById('catalogCategoryFilter')?.value || '');
+    const statusVal = normalizeSearchText(document.getElementById('catalogStatusFilter')?.value || '');
+    const stockVal = (document.getElementById('catalogStockFilter')?.value || '').trim();
+
+    const allRows = Array.from(document.querySelectorAll('#catalogTableBody tr[data-name]'));
+    filteredRows = [];
+
+    allRows.forEach(row => {
+        const name = normalizeSearchText(row.getAttribute('data-name'));
+        const sku = normalizeSearchText(row.getAttribute('data-sku'));
+        const stone = normalizeSearchText(row.getAttribute('data-stone'));
+        const category = normalizeSearchText(row.getAttribute('data-category'));
+        const status = normalizeSearchText(row.getAttribute('data-status'));
         const stock = parseInt(row.getAttribute('data-stock') || '0', 10);
 
-        let matchesSearch = !searchVal || name.includes(searchVal) || sku.includes(searchVal) || stone.includes(searchVal);
-        let matchesCategory = !catVal || category === catVal;
-        let matchesStatus = !statusVal || status === statusVal;
-        
+        // Pesquisa abrangente por Nome ou SKU (e gema mineral como bônus)
+        const matchesSearch = !searchVal || name.includes(searchVal) || sku.includes(searchVal) || stone.includes(searchVal);
+        const matchesCategory = !catVal || category === catVal;
+        const matchesStatus = !statusVal || status === statusVal;
+
         let matchesStock = true;
         if (stockVal === 'in_stock') matchesStock = stock > 0;
         else if (stockVal === 'low_stock') matchesStock = stock >= 1 && stock <= 3;
         else if (stockVal === 'out_of_stock') matchesStock = stock === 0;
 
         if (matchesSearch && matchesCategory && matchesStatus && matchesStock) {
-            row.style.display = '';
-            visibleCount++;
-        } else {
-            row.style.display = 'none';
+            filteredRows.push(row);
         }
     });
 
-    const countElem = document.getElementById('visibleItemsCount');
-    if (countElem) countElem.innerText = visibleCount;
+    renderPagination();
+}
 
+function changeItemsPerPage(newVal) {
+    itemsPerPage = parseInt(newVal, 10) || 25;
+    currentPage = 1;
+
+    // Sincronizar os controles de página (topo e rodapé)
+    const topSelect = document.getElementById('perPageSelectTop');
+    const bottomSelect = document.getElementById('perPageSelectBottom');
+    if (topSelect) topSelect.value = itemsPerPage;
+    if (bottomSelect) bottomSelect.value = itemsPerPage;
+
+    renderPagination();
+}
+
+function goToPage(page) {
+    const totalPages = Math.ceil(filteredRows.length / itemsPerPage) || 1;
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+    currentPage = page;
+
+    renderPagination();
+
+    // Rola suavemente o container para o início da lista de produtos
+    const tableContainer = document.getElementById('catalogTableScrollContainer');
+    if (tableContainer) {
+        tableContainer.scrollTop = 0;
+    }
+}
+
+function renderPagination() {
+    const totalItems = filteredRows.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+    // 1. Ocultar todas as linhas e exibir somente a página ativa
+    const allRows = document.querySelectorAll('#catalogTableBody tr[data-name]');
+    allRows.forEach(r => r.style.display = 'none');
+
+    for (let i = startIndex; i < endIndex; i++) {
+        if (filteredRows[i]) {
+            filteredRows[i].style.display = '';
+        }
+    }
+
+    // 2. Alerta de busca sem resultados
     const noResultsRow = document.getElementById('noResultsFilterRow');
     if (noResultsRow) {
-        noResultsRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+        noResultsRow.style.display = (totalItems === 0 && allRows.length > 0) ? '' : 'none';
     }
+
+    // 3. Atualizar resumo textual (Topo e Rodapé)
+    const displayStart = totalItems === 0 ? 0 : startIndex + 1;
+    const displayEnd = endIndex;
+    const infoHtml = totalItems === 0 
+        ? `Nenhuma joia encontrada` 
+        : `Mostrando <strong>${displayStart}–${displayEnd}</strong> de <strong>${totalItems}</strong> joias`;
+
+    const topInfo = document.getElementById('paginationInfoTop');
+    const bottomInfo = document.getElementById('paginationInfoBottom');
+    if (topInfo) topInfo.innerHTML = infoHtml;
+    if (bottomInfo) bottomInfo.innerHTML = infoHtml;
+
+    const countElem = document.getElementById('visibleItemsCount');
+    if (countElem) countElem.innerText = totalItems;
+
+    // 4. Renderizar botões de navegação sincronizados
+    renderPaginationNavButtons('paginationNavTop', totalPages);
+    renderPaginationNavButtons('paginationNavBottom', totalPages);
+
+    // 5. Atualizar largura do scroll horizontal superior
+    updateScrollbarSync();
+}
+
+function renderPaginationNavButtons(containerId, totalPages) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (totalPages <= 1) {
+        container.innerHTML = `
+            <button type="button" class="pagination-btn" disabled title="Página anterior">‹</button>
+            <button type="button" class="pagination-btn active">1</button>
+            <button type="button" class="pagination-btn" disabled title="Próxima página">›</button>
+        `;
+        return;
+    }
+
+    let html = '';
+
+    // Primeira página
+    html += `<button type="button" class="pagination-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''} title="Primeira página">«</button>`;
+    // Página anterior
+    html += `<button type="button" class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Página anterior">‹</button>`;
+
+    // Janela de páginas (até 5 visíveis)
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= 3) {
+        endPage = Math.min(5, totalPages);
+    }
+    if (currentPage >= totalPages - 2) {
+        startPage = Math.max(1, totalPages - 4);
+    }
+
+    if (startPage > 1) {
+        html += `<button type="button" class="pagination-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) {
+            html += `<span style="color: #6b655c; padding: 0 4px;">...</span>`;
+        }
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+        const isActive = p === currentPage;
+        html += `<button type="button" class="pagination-btn ${isActive ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span style="color: #6b655c; padding: 0 4px;">...</span>`;
+        }
+        html += `<button type="button" class="pagination-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // Próxima página
+    html += `<button type="button" class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Próxima página">›</button>`;
+    // Última página
+    html += `<button type="button" class="pagination-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''} title="Última página">»</button>`;
+
+    container.innerHTML = html;
+}
+
+/* ==============================================================================
+   SINCRONIZAÇÃO DE ROLAGEM HORIZONTAL SUPERIOR & INFERIOR
+   ============================================================================== */
+function updateScrollbarSync() {
+    const topTrack = document.getElementById('catalogScrollTopTrack');
+    const table = document.getElementById('productsTable');
+    if (topTrack && table) {
+        topTrack.style.width = table.scrollWidth + 'px';
+    }
+}
+
+function initTableScrollSync() {
+    const topWrapper = document.getElementById('catalogScrollTopWrapper');
+    const bottomWrapper = document.getElementById('catalogTableScrollContainer');
+    const table = document.getElementById('productsTable');
+    if (!topWrapper || !bottomWrapper || !table) return;
+
+    updateScrollbarSync();
+
+    let isSyncingTop = false;
+    let isSyncingBottom = false;
+
+    topWrapper.addEventListener('scroll', () => {
+        if (!isSyncingTop) {
+            isSyncingBottom = true;
+            bottomWrapper.scrollLeft = topWrapper.scrollLeft;
+        }
+        isSyncingTop = false;
+    });
+
+    bottomWrapper.addEventListener('scroll', () => {
+        if (!isSyncingBottom) {
+            isSyncingTop = true;
+            topWrapper.scrollLeft = bottomWrapper.scrollLeft;
+        }
+        isSyncingBottom = false;
+    });
+
+    window.addEventListener('resize', updateScrollbarSync);
 }
 
 /* ==============================================================================
@@ -1150,7 +1381,19 @@ async function toggleProductStatus(id) {
         });
         const data = await response.json();
         if (data.success) {
-            window.location.reload();
+            const row = document.getElementById('product-row-' + id);
+            const badge = document.getElementById('status-badge-' + id);
+            const btn = row?.querySelector('.btn-table-action');
+            if (row && badge) {
+                const isPublished = (data.status === 'published' || data.is_active == 1);
+                row.setAttribute('data-status', isPublished ? 'ativo' : 'oculto');
+                badge.className = 'badge-status ' + (isPublished ? 'status-published' : 'status-hidden');
+                badge.innerText = isPublished ? 'Publicado' : 'Oculto';
+                if (btn) btn.innerText = isPublished ? 'Ocultar' : 'Publicar';
+                filterCatalog(false);
+            } else {
+                window.location.reload();
+            }
         } else {
             alert(data.error || 'Erro ao alterar status.');
         }
@@ -1345,8 +1588,11 @@ function executeBlingSync(mode) {
     triggerBlingSync(null, mode);
 }
 
-// Auto open if hash is #novo or #bling
+// Inicialização de Scroll Sincronizado, Paginação e Abertura por Hash
 document.addEventListener('DOMContentLoaded', () => {
+    initTableScrollSync();
+    filterCatalog();
+
     if (window.location.hash === '#novo') {
         openNewProductModal();
     } else if (window.location.hash === '#bling') {

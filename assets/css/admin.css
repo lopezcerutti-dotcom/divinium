@@ -1325,4 +1325,178 @@ body.admin-theme {
     font-weight: 600;
 }
 
+/* ==============================================================================
+   SCROLL SINCRONIZADO, CABEÇALHO FIXO & PAGINAÇÃO (CATÁLOGO DE PRODUTOS)
+   ============================================================================== */
+
+/* 1. Barra de rolagem horizontal superior */
+.table-scroll-top-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.table-scroll-top-track {
+    height: 1px;
+}
+
+/* 2. Container com rolagem vertical e horizontal */
+.table-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 640px;
+    position: relative;
+}
+
+/* Estilização das barras de rolagem (Quiet Luxury) */
+.table-scroll-top-wrapper::-webkit-scrollbar,
+.table-scroll-container::-webkit-scrollbar {
+    height: 9px;
+    width: 8px;
+}
+
+.table-scroll-top-wrapper::-webkit-scrollbar-track,
+.table-scroll-container::-webkit-scrollbar-track {
+    background: #141312;
+}
+
+.table-scroll-top-wrapper::-webkit-scrollbar-thumb,
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(212, 186, 136, 0.35);
+    border-radius: 6px;
+    border: 2px solid #141312;
+}
+
+.table-scroll-top-wrapper::-webkit-scrollbar-thumb:hover,
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 186, 136, 0.7);
+}
+
+/* 3. Cabeçalho fixo durante a rolagem vertical */
+#productsTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #161514;
+    border-bottom: 2px solid rgba(212, 186, 136, 0.35);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+}
+
+/* 4. Barras de paginação (Topo e Rodapé) */
+.pagination-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 18px;
+    background: rgba(22, 21, 20, 0.95);
+    font-size: 0.82rem;
+    color: #a8a096;
+}
+
+.pagination-bar-top {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pagination-bar-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pagination-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #b5ada3;
+    font-size: 0.82rem;
+}
+
+.pagination-info strong {
+    color: #f7f4ee;
+}
+
+.pagination-controls-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.pagination-per-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #9e978e;
+}
+
+.per-page-select {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f7f4ee;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.per-page-select:focus,
+.per-page-select:hover {
+    border-color: #d4ba88;
+}
+
+.per-page-select option {
+    background: #1c1a18;
+    color: #ffffff;
+}
+
+.pagination-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ded7cf;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    text-align: center;
+    user-select: none;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+    background: rgba(212, 186, 136, 0.15);
+    border-color: rgba(212, 186, 136, 0.4);
+    color: #ffffff;
+}
+
+.pagination-btn.active {
+    background: #d4ba88;
+    border-color: #d4ba88;
+    color: #0d0c0b;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(212, 186, 136, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+
 
