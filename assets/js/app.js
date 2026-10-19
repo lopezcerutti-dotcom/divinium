@@ -131,53 +131,9 @@ function setupCookieBanner() {
     }
 }
 
-// 5. SELETOR INTERATIVO DE GEMAS NO HERO (HERO MINERAL SWITCHER)
+// 5. SELETOR INTERATIVO DE GEMAS (DESATIVADO - A HOME AGORA UTILIZA COMPOSIÇÃO EDITORIAL PURA)
 function setupHeroMineralSwitcher() {
-    const pills = document.querySelectorAll('.mineral-pill');
-    const heroImg = document.getElementById('heroSpotlightImg');
-    const heroTitle = document.getElementById('heroSpotlightTitle');
-    const heroDesc = document.getElementById('heroSpotlightDesc');
-    const heroPrice = document.getElementById('heroSpotlightPrice');
-    const heroPix = document.getElementById('heroSpotlightPix');
-    const quickBuyBtn = document.getElementById('heroQuickBuyBtn');
-
-    if (!pills.length || !heroImg) return;
-
-    pills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            pills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-
-            const title = pill.dataset.title;
-            const desc = pill.dataset.desc;
-            const price = pill.dataset.price;
-            const pix = pill.dataset.pix;
-            const img = pill.dataset.img;
-            const id = pill.dataset.id;
-            const priceCents = parseInt(pill.dataset.cents || '38000', 10);
-
-            // Transição visual suave (crossfade & scale micro-animation)
-            heroImg.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-            heroImg.style.opacity = '0.2';
-            heroImg.style.transform = 'scale(0.96)';
-
-            setTimeout(() => {
-                heroImg.src = img;
-                heroImg.alt = title;
-                if (heroTitle) heroTitle.textContent = title;
-                if (heroDesc) heroDesc.textContent = desc;
-                if (heroPrice) heroPrice.textContent = price;
-                if (heroPix) heroPix.textContent = pix;
-                
-                if (quickBuyBtn) {
-                    quickBuyBtn.onclick = () => addToCart(id, title, priceCents);
-                }
-
-                heroImg.style.opacity = '1';
-                heroImg.style.transform = 'scale(1)';
-            }, 220);
-        });
-    });
+    // As informações e variações de minerais residem exclusivamente na Boutique (/loja).
 }
 
 // INICIALIZAÇÃO

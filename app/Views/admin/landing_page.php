@@ -349,144 +349,48 @@ use App\Models\Setting;
                     <span class="field-hint">Se preenchido, substitui o gradiente padrão da abertura da Home por esta imagem. Deixe vazio para usar o padrão do tema.</span>
                 </div>
 
-                <!-- Seletor Interativo de Gemas Minerais -->
-                <div class="form-group full-width" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px;">
-                    <label for="hero_mineral_box_label" style="color: #caa15c; font-weight: 700;">Rótulo do Box Seletor de Minerais</label>
-                    <input type="text" id="hero_mineral_box_label" name="hero_mineral_box_label" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('hero_mineral_box_label', 'Escolha sua sintonia mineral:')) ?>"
-                           placeholder="Escolha sua sintonia mineral:">
-                </div>
-
-                <!-- Mineral 1: Quartzo Verde -->
-                <div class="form-group">
-                    <label for="stone_verde_name">Mineral 1 - Nome da Pílula</label>
-                    <input type="text" id="stone_verde_name" name="stone_verde_name" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verde_name', 'Quartzo Verde')) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="stone_verde_title">Mineral 1 - Título no Card</label>
-                    <input type="text" id="stone_verde_title" name="stone_verde_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verde_title', 'Bracelete Caminhos • Quartzo Verde')) ?>">
-                </div>
-                <div class="form-group full-width">
-                    <label for="stone_verde_desc">Mineral 1 - Descrição Tátil</label>
-                    <input type="text" id="stone_verde_desc" name="stone_verde_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verde_desc', 'Prata nobre e quartzo verde natural em concha mineral.')) ?>">
-                </div>
-
-                <!-- Mineral 2: Madrepérola -->
-                <div class="form-group">
-                    <label for="stone_madre_name">Mineral 2 - Nome da Pílula</label>
-                    <input type="text" id="stone_madre_name" name="stone_madre_name" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_madre_name', 'Madrepérola')) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="stone_madre_title">Mineral 2 - Título no Card</label>
-                    <input type="text" id="stone_madre_title" name="stone_madre_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_madre_title', 'Bracelete Caminhos • Madrepérola')) ?>">
-                </div>
-                <div class="form-group full-width">
-                    <label for="stone_madre_desc">Mineral 2 - Descrição Tátil</label>
-                    <input type="text" id="stone_madre_desc" name="stone_madre_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_madre_desc', 'Prata nobre e nácar natural de madrepérola com brilho perolado.')) ?>">
-                </div>
-
-                <!-- Mineral 3: Jaspe Vermelho -->
-                <div class="form-group">
-                    <label for="stone_verm_name">Mineral 3 - Nome da Pílula</label>
-                    <input type="text" id="stone_verm_name" name="stone_verm_name" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verm_name', 'Jaspe Vermelho')) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="stone_verm_title">Mineral 3 - Título no Card</label>
-                    <input type="text" id="stone_verm_title" name="stone_verm_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verm_title', 'Bracelete Caminhos • Jaspe Vermelho')) ?>">
-                </div>
-                <div class="form-group full-width">
-                    <label for="stone_verm_desc">Mineral 3 - Descrição Tátil</label>
-                    <input type="text" id="stone_verm_desc" name="stone_verm_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_verm_desc', 'Prata nobre e jaspe vermelho mineral de presença intensa e terrosa.')) ?>">
-                </div>
-
-                <!-- Mineral 4: Ônix Negro -->
-                <div class="form-group">
-                    <label for="stone_onix_name">Mineral 4 - Nome da Pílula</label>
-                    <input type="text" id="stone_onix_name" name="stone_onix_name" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_onix_name', 'Ônix Negro')) ?>">
-                </div>
-                <div class="form-group">
-                    <label for="stone_onix_title">Mineral 4 - Título no Card</label>
-                    <input type="text" id="stone_onix_title" name="stone_onix_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_onix_title', 'Bracelete Caminhos • Ônix Negro')) ?>">
-                </div>
-                <div class="form-group full-width">
-                    <label for="stone_onix_desc">Mineral 4 - Descrição Tátil</label>
-                    <input type="text" id="stone_onix_desc" name="stone_onix_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stone_onix_desc', 'Prata nobre e ônix negro de acabamento mineral espelhado.')) ?>">
-                </div>
             </div>
         </div>
 
         <!-- ============================================================== -->
-        <!-- SEÇÃO 4: PALCO DA PEÇA EM DESTAQUE (HERO STAGE) -->
+        <!-- SEÇÃO 4: COMPOSIÇÃO VISUAL EDITORIAL DO HERO -->
         <!-- ============================================================== -->
         <div class="editor-section-card" id="sec-stage">
             <div class="section-card-header">
                 <div class="section-icon">💎</div>
                 <div>
-                    <h3>Palco da Peça em Destaque (Lado Direito do Hero)</h3>
-                    <p>Controle as informações do card flutuante com a foto da joia na abertura do site.</p>
+                    <h3>Composição Visual Editorial do Hero (Alta Joalheria)</h3>
+                    <p>Defina as fotografias editoriais exibidas na abertura da Home em composição de luxo (sem textos sobrepostos).</p>
                 </div>
             </div>
 
             <div class="form-grid">
-                <div class="form-group">
-                    <label for="stage_top_tag">Etiqueta Superior Flutuante</label>
-                    <input type="text" id="stage_top_tag" name="stage_top_tag" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_top_tag', 'PEÇA EM DESTAQUE')) ?>"
-                           placeholder="PEÇA EM DESTAQUE">
-                </div>
-
-                <div class="form-group">
-                    <label for="stage_card_eyebrow">Etiqueta do Card</label>
-                    <input type="text" id="stage_card_eyebrow" name="stage_card_eyebrow" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_card_eyebrow', 'EDIÇÃO AUTORAL DIVINIUM')) ?>"
-                           placeholder="EDIÇÃO AUTORAL DIVINIUM">
-                </div>
-
-                <div class="form-group">
-                    <label for="stage_product_title">Título da Peça Padrão</label>
-                    <input type="text" id="stage_product_title" name="stage_product_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_product_title', 'Bracelete Caminhos • Verde')) ?>"
-                           placeholder="Bracelete Caminhos • Verde">
-                </div>
-
-                <div class="form-group">
-                    <label for="stage_product_price">Preço Principal (R$)</label>
-                    <input type="text" id="stage_product_price" name="stage_product_price" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_product_price', 'R$ 380,00')) ?>"
-                           placeholder="R$ 380,00">
-                </div>
-
-                <div class="form-group">
-                    <label for="stage_product_pix">Texto Condição Pix</label>
-                    <input type="text" id="stage_product_pix" name="stage_product_pix" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_product_pix', 'ou R$ 361,00 no Pix (5% OFF)')) ?>"
-                           placeholder="ou R$ 361,00 no Pix (5% OFF)">
-                </div>
-
-                <div class="form-group">
-                    <label for="stage_product_image">Caminho da Imagem Padrão do Palco</label>
-                    <input type="text" id="stage_product_image" name="stage_product_image" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_product_image', '/assets/images/hero/featured-green-shell.jpg')) ?>"
-                           placeholder="/assets/images/hero/featured-green-shell.jpg">
+                <div class="form-group full-width">
+                    <label for="hero_editorial_main_img" style="font-weight: 600; color: #caa15c;">Quadro Editorial Principal (Fotografia Still-Life)</label>
+                    <div style="display: flex; gap: 10px; margin-top: 6px;">
+                        <input type="text" id="hero_editorial_main_img" name="hero_editorial_main_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('hero_editorial_main_img', '/assets/images/hero/featured-green-shell.jpg')) ?>"
+                               placeholder="/assets/images/hero/featured-green-shell.jpg">
+                        <label class="btn-admin-gold" style="padding: 0 16px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.8rem;">
+                            <span>📁 Upload</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadEditorialImage(this, 'hero_editorial_main_img')">
+                        </label>
+                    </div>
+                    <span class="field-hint">Fotografia principal em proporção vertical/retrato destacando as joias com iluminação natural.</span>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="stage_product_desc">Descrição Curta da Peça</label>
-                    <input type="text" id="stage_product_desc" name="stage_product_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('stage_product_desc', 'Prata nobre e quartzo verde natural em concha mineral.')) ?>"
-                           placeholder="Prata nobre e quartzo verde natural em concha mineral.">
+                    <label for="hero_editorial_sec_img" style="font-weight: 600; color: #caa15c;">Quadro Editorial Secundário Sobreposto (Lifestyle & Joia em Uso)</label>
+                    <div style="display: flex; gap: 10px; margin-top: 6px;">
+                        <input type="text" id="hero_editorial_sec_img" name="hero_editorial_sec_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('hero_editorial_sec_img', '/assets/images/testimonials/lifestyle-wrist.jpeg')) ?>"
+                               placeholder="/assets/images/testimonials/lifestyle-wrist.jpeg">
+                        <label class="btn-admin-gold" style="padding: 0 16px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.8rem;">
+                            <span>📁 Upload</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadEditorialImage(this, 'hero_editorial_sec_img')">
+                        </label>
+                    </div>
+                    <span class="field-hint">Fotografia complementar sobreposta (ex: modelo com a peça no pulso ou detalhe artesanal autêntico).</span>
                 </div>
             </div>
         </div>
@@ -1212,6 +1116,40 @@ async function uploadHeroEditorBg(input) {
         if (data.success && data.url) {
             document.getElementById('hero_bg_image').value = data.url;
             alert(data.message || 'Imagem de fundo do Hero enviada com sucesso!');
+        } else {
+            alert(data.error || 'Erro ao enviar imagem.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar ao servidor: ' + err.message);
+    }
+}
+
+async function uploadEditorialImage(input, targetId) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('bg_file', file);
+    formData.append('target_key', targetId);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    if (csrfToken) formData.append('_csrf_token', csrfToken);
+
+    try {
+        const res = await fetch('/admin/temas/upload-bg', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) targetEl.value = data.url;
+            alert(data.message || 'Imagem editorial enviada com sucesso! Clique em Salvar para publicar.');
         } else {
             alert(data.error || 'Erro ao enviar imagem.');
         }

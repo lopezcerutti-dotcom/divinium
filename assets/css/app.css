@@ -511,251 +511,140 @@ body.luxury-theme {
 }
 
 /* ==============================================================================
-   PALCO DE DESTAQUE DO PRODUTO (HERO SHOWCASE STAGE)
+   COMPOSIÇÃO VISUAL EDITORIAL DE LUXO (HAUTE JOAILLERIE EDITORIAL SHOWCASE)
    ============================================================================== */
 .hero-stage {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
-.stage-frame {
+.hero-editorial-composition {
     position: relative;
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
     height: 520px;
-    border-radius: 24px;
-    background: radial-gradient(circle at 50% 30%, rgba(42, 37, 32, 0.85) 0%, rgba(16, 14, 13, 0.98) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(197, 168, 128, 0.1);
-    overflow: hidden;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease, border-color 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.stage-frame:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 55px rgba(197, 168, 128, 0.18);
-    border-color: rgba(197, 168, 128, 0.35);
-}
-
-.stage-halo {
+.editorial-ambient-glow {
     position: absolute;
-    top: 25%;
+    top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 260px;
-    height: 260px;
-    background: radial-gradient(circle, rgba(197, 168, 128, 0.25) 0%, rgba(197, 168, 128, 0.04) 50%, transparent 70%);
-    filter: blur(40px);
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(212, 186, 136, 0.22) 0%, rgba(197, 168, 128, 0.05) 50%, transparent 75%);
+    filter: blur(55px);
     pointer-events: none;
     z-index: 1;
 }
 
-/* Cantos Ornamentais */
+/* Quadro Editorial Principal (Still-Life de Alta Joalheria) */
+.editorial-frame-main {
+    position: relative;
+    width: 360px;
+    height: 480px;
+    border-radius: 24px;
+    background: radial-gradient(circle at 50% 30%, rgba(38, 34, 30, 0.9) 0%, rgba(16, 14, 13, 0.98) 100%);
+    border: 1px solid rgba(212, 186, 136, 0.28);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 50px rgba(212, 186, 136, 0.1);
+    overflow: hidden;
+    z-index: 2;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.7s ease, border-color 0.4s ease;
+}
+
+.editorial-frame-main:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: 0 38px 85px rgba(0, 0, 0, 0.85), 0 0 65px rgba(212, 186, 136, 0.22);
+    border-color: rgba(212, 186, 136, 0.5);
+}
+
+/* Cantos Ornamentais de Alta Joalheria */
 .stage-corner {
     position: absolute;
     width: 14px;
     height: 14px;
     z-index: 4;
     pointer-events: none;
-    border-color: rgba(197, 168, 128, 0.4);
+    border-color: rgba(212, 186, 136, 0.45);
 }
 .corner-tl { top: 14px; left: 14px; border-top: 1.5px solid; border-left: 1.5px solid; }
 .corner-tr { top: 14px; right: 14px; border-top: 1.5px solid; border-right: 1.5px solid; }
 .corner-bl { bottom: 14px; left: 14px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
 .corner-br { bottom: 14px; right: 14px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
 
-.stage-top-pill {
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 4;
-    background: rgba(18, 16, 14, 0.78);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(197, 168, 128, 0.25);
-    padding: 5px 14px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    color: var(--gold-accent);
-}
-
-.pulse-indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 8px #4ade80;
-    animation: pulseLight 2s infinite;
-}
-@keyframes pulseLight {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
-}
-
-.stage-media-wrap {
-    position: relative;
-    z-index: 2;
+.editorial-media-wrap {
     width: 100%;
     height: 100%;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 }
 
-.stage-main-img {
+.editorial-main-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 18%;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    object-position: center 20%;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.stage-frame:hover .stage-main-img {
-    transform: scale(1.05);
+.editorial-frame-main:hover .editorial-main-img {
+    transform: scale(1.04);
 }
 
-/* Card Flutuante de Compra Imediata (Glassmorphism Sexy e Compacto na base) */
-.stage-glass-card {
+/* Quadro Editorial Secundário Sobreposto (Lifestyle & Presença Autoral) */
+.editorial-frame-floating {
     position: absolute;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 5;
-    background: rgba(18, 16, 14, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(212, 186, 136, 0.3);
-    border-radius: 14px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    bottom: -12px;
+    left: 8px;
+    width: 200px;
+    height: 250px;
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 30%, rgba(35, 30, 26, 0.95) 0%, rgba(14, 12, 11, 0.98) 100%);
+    border: 1px solid rgba(212, 186, 136, 0.35);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(212, 186, 136, 0.15);
+    overflow: hidden;
+    z-index: 3;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease, border-color 0.4s ease;
 }
 
-.stage-glass-card:hover {
-    border-color: rgba(212, 186, 136, 0.5);
-    background: rgba(18, 16, 14, 0.75);
+.editorial-frame-floating:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 30px 65px rgba(0, 0, 0, 0.9), 0 0 45px rgba(212, 186, 136, 0.28);
+    border-color: rgba(212, 186, 136, 0.65);
 }
 
-.glass-info {
-    flex-grow: 1;
+.editorial-floating-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-eyebrow {
-    font-size: 0.6rem;
-    letter-spacing: 0.16em;
-    color: var(--gold-accent);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 2px;
+.editorial-frame-floating:hover .editorial-floating-img {
+    transform: scale(1.06);
 }
 
-.glass-title {
-    font-family: var(--font-serif);
-    font-size: 1.18rem;
-    color: #ffffff;
-    margin-bottom: 2px;
-    line-height: 1.2;
-}
-
-.glass-desc {
-    font-size: 0.72rem;
-    color: var(--text-light-muted);
-    margin-bottom: 4px;
-    line-height: 1.25;
-}
-
-.glass-pricing {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.glass-pricing .price-main {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #ffffff;
-}
-
-.glass-pricing .price-pix {
-    font-size: 0.72rem;
-    color: #4ade80;
-    font-weight: 600;
-}
-
-.stage-buy-btn {
-    background: linear-gradient(135deg, #ebd5a0, #d4ba88);
-    border: none;
-    color: #121110;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    transition: var(--transition);
-    box-shadow: 0 4px 14px rgba(212, 186, 136, 0.3);
-}
-
-.stage-buy-btn:hover {
-    background: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.4);
-}
-
-/* Mini Badges Flutuantes */
-.stage-floater {
+/* Detalhe de Geometria Dourada Nobre */
+.editorial-accent-accent {
     position: absolute;
-    z-index: 5;
-    background: rgba(18, 16, 14, 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 8px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
-    transition: transform 0.4s ease;
-}
-
-.floater-top-left {
-    top: 48px;
-    left: -14px;
-    animation: floatAnimA 5s ease-in-out infinite alternate;
-}
-
-.floater-bottom-right {
-    top: 130px;
-    right: -14px;
-    animation: floatAnimB 6s ease-in-out infinite alternate;
-}
-
-@keyframes floatAnimA {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-8px); }
-}
-
-@keyframes floatAnimB {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-10px); }
+    top: -10px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    border-top: 1.5px solid rgba(212, 186, 136, 0.35);
+    border-right: 1.5px solid rgba(212, 186, 136, 0.35);
+    border-radius: 0 16px 0 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .floater-icon {
@@ -1625,9 +1514,17 @@ body.luxury-theme {
     .hero-subtitle {
         font-size: 0.92rem;
     }
-    .stage-frame {
-        max-width: 380px;
-        height: 380px;
+    .hero-editorial-composition {
+        max-width: 440px;
+        height: 490px;
+    }
+    .editorial-frame-main {
+        width: 330px;
+        height: 450px;
+    }
+    .editorial-frame-floating {
+        width: 180px;
+        height: 230px;
     }
 }
 
@@ -1649,24 +1546,26 @@ body.luxury-theme {
     .hero-subtitle {
         margin: 0 auto 20px;
     }
-    .hero-mineral-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .mineral-pills-row {
-        justify-content: center;
-    }
     .hero-cta-group {
         justify-content: center;
     }
     .hero-trust-strip {
         justify-content: center;
     }
-    .stage-frame {
-        max-width: 380px;
-        height: 380px;
+    .hero-editorial-composition {
+        max-width: 420px;
+        height: 470px;
         margin: 0 auto;
+    }
+    .editorial-frame-main {
+        width: 310px;
+        height: 430px;
+    }
+    .editorial-frame-floating {
+        width: 170px;
+        height: 220px;
+        left: 0;
+        bottom: -10px;
     }
     .about-grid, .heritage-grid {
         grid-template-columns: 1fr;
@@ -1691,17 +1590,24 @@ body.luxury-theme {
     .hero-title {
         font-size: 2.5rem;
     }
-    .stage-frame {
-        max-width: 100%;
-        height: 460px;
+    .hero-editorial-composition {
+        max-width: 320px;
+        height: 390px;
+        margin: 0 auto;
     }
-    .stage-glass-card {
-        padding: 12px 14px;
-        bottom: 12px;
-        left: 12px;
-        right: 12px;
+    .editorial-frame-main {
+        width: 250px;
+        height: 350px;
+        border-radius: 18px;
     }
-    .stage-floater {
+    .editorial-frame-floating {
+        width: 140px;
+        height: 175px;
+        border-radius: 14px;
+        left: 0;
+        bottom: 0;
+    }
+    .editorial-accent-accent {
         display: none;
     }
     .section-serif-title, .services-main-title {

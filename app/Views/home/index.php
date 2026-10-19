@@ -33,64 +33,6 @@ use App\Models\Setting;
                 <?= \App\Core\View::e(Setting::get('hero_subtitle', 'A nobreza da prata de lei 925 entrelaçada à vibração autêntica de gemas minerais raras. Braceletes CAMINHOS: um mesmo design, diferentes formas de expressar a sua presença.')) ?>
             </p>
 
-            <!-- Seletor Interativo de Gemas (Paleta Mineral Sexy) -->
-            <div class="hero-mineral-box">
-                <span class="mineral-box-label"><?= \App\Core\View::e(Setting::get('hero_mineral_box_label', 'Escolha sua sintonia mineral:')) ?></span>
-                <div class="mineral-pills-row" role="radiogroup" aria-label="Selecione o mineral">
-                    <button class="mineral-pill active" 
-                            data-stone="verde" 
-                            data-title="<?= \App\Core\View::e(Setting::get('stone_verde_title', 'Bracelete Caminhos • Quartzo Verde')) ?>" 
-                            data-desc="<?= \App\Core\View::e(Setting::get('stone_verde_desc', 'Prata nobre e quartzo verde natural em concha mineral.')) ?>" 
-                            data-price="R$ 380,00" 
-                            data-pix="ou R$ 361,00 no Pix (5% OFF)" 
-                            data-img="/assets/images/hero/featured-green-shell.jpg" 
-                            data-id="cam-verde"
-                            data-cents="38000">
-                        <span class="mineral-dot" style="background: radial-gradient(circle, #3d865b, #153f28);"></span>
-                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_verde_name', 'Quartzo Verde')) ?></span>
-                    </button>
-                    
-                    <button class="mineral-pill" 
-                            data-stone="madreperola" 
-                            data-title="<?= \App\Core\View::e(Setting::get('stone_madre_title', 'Bracelete Caminhos • Madrepérola')) ?>" 
-                            data-desc="<?= \App\Core\View::e(Setting::get('stone_madre_desc', 'Prata nobre e nácar natural de madrepérola com brilho perolado.')) ?>" 
-                            data-price="R$ 380,00" 
-                            data-pix="ou R$ 361,00 no Pix (5% OFF)" 
-                            data-img="/assets/images/products/bracelete-madreperola.jpg" 
-                            data-id="cam-madre"
-                            data-cents="38000">
-                        <span class="mineral-dot" style="background: radial-gradient(circle, #fcf8ee, #dfcca2);"></span>
-                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_madre_name', 'Madrepérola')) ?></span>
-                    </button>
-                    
-                    <button class="mineral-pill" 
-                            data-stone="vermelho" 
-                            data-title="<?= \App\Core\View::e(Setting::get('stone_verm_title', 'Bracelete Caminhos • Jaspe Vermelho')) ?>" 
-                            data-desc="<?= \App\Core\View::e(Setting::get('stone_verm_desc', 'Prata nobre e jaspe vermelho mineral de presença intensa e terrosa.')) ?>" 
-                            data-price="R$ 380,00" 
-                            data-pix="ou R$ 361,00 no Pix (5% OFF)" 
-                            data-img="/assets/images/products/bracelete-vermelho.jpg" 
-                            data-id="cam-verm"
-                            data-cents="38000">
-                        <span class="mineral-dot" style="background: radial-gradient(circle, #c53030, #631212);"></span>
-                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_verm_name', 'Jaspe Vermelho')) ?></span>
-                    </button>
-                    
-                    <button class="mineral-pill" 
-                            data-stone="onix" 
-                            data-title="<?= \App\Core\View::e(Setting::get('stone_onix_title', 'Bracelete Caminhos • Ônix Negro')) ?>" 
-                            data-desc="<?= \App\Core\View::e(Setting::get('stone_onix_desc', 'Prata nobre e ônix negro de acabamento mineral espelhado.')) ?>" 
-                            data-price="R$ 380,00" 
-                            data-pix="ou R$ 361,00 no Pix (5% OFF)" 
-                            data-img="/assets/images/products/bracelete-onix.jpg" 
-                            data-id="cam-onix"
-                            data-cents="38000">
-                        <span class="mineral-dot" style="background: radial-gradient(circle, #2b2b2b, #0c0c0c);"></span>
-                        <span class="mineral-name"><?= \App\Core\View::e(Setting::get('stone_onix_name', 'Ônix Negro')) ?></span>
-                    </button>
-                </div>
-            </div>
-
             <!-- Grupo de Ações Principais (Botões de Alta Conversão) -->
             <div class="hero-cta-group">
                 <a href="<?= \App\Core\View::e(Setting::get('hero_cta_primary_link', '/loja')) ?>" class="btn-hero-gold">
@@ -120,53 +62,41 @@ use App\Models\Setting;
             </div>
         </div>
 
-        <!-- Coluna Direita: O PALCO DE DESTAQUE DO PRODUTO (HERO SHOWCASE STAGE) -->
+        <!-- Coluna Direita: COMPOSIÇÃO VISUAL EDITORIAL DE LUXO (SEM TEXTOS SOBREPOSTOS) -->
         <div class="hero-stage">
-            <div class="stage-frame">
-                <!-- Efeito Iluminação Radial de Fundo -->
-                <div class="stage-halo"></div>
+            <div class="hero-editorial-composition">
+                <!-- Efeito Atmosférico de Iluminação Suave -->
+                <div class="editorial-ambient-glow"></div>
 
-                <!-- Detalhes de Canto Ornamentais (Alta Joalheria) -->
-                <div class="stage-corner corner-tl"></div>
-                <div class="stage-corner corner-tr"></div>
-                <div class="stage-corner corner-bl"></div>
-                <div class="stage-corner corner-br"></div>
+                <!-- Detalhes de Acabamento Arquitetônico -->
+                <div class="editorial-accent-accent"></div>
 
-                <!-- Tag Superior Flutuante -->
-                <div class="stage-top-pill">
-                    <span class="pulse-indicator"></span>
-                    <span><?= \App\Core\View::e(Setting::get('stage_top_tag', 'PEÇA EM DESTAQUE')) ?></span>
-                </div>
+                <!-- Quadro Editorial Principal (Still-Life de Alta Joalheria) -->
+                <div class="editorial-frame editorial-frame-main">
+                    <div class="stage-corner corner-tl"></div>
+                    <div class="stage-corner corner-tr"></div>
+                    <div class="stage-corner corner-bl"></div>
+                    <div class="stage-corner corner-br"></div>
 
-                <!-- Imagem do Produto em Destaque Absoluto (Grande e Nítida) -->
-                <div class="stage-media-wrap">
-                    <img id="heroSpotlightImg" 
-                         src="<?= \App\Core\View::e(Setting::get('stage_product_image', '/assets/images/hero/featured-green-shell.jpg')) ?>" 
-                         alt="Bracelete Caminhos Quartzo Verde"
-                         class="stage-main-img"
-                         loading="eager"
-                         onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
-                </div>
-
-                <!-- Card Flutuante de Compra Imediata (Glassmorphism Sexy) -->
-                <div class="stage-glass-card">
-                    <div class="glass-info">
-                        <span class="glass-eyebrow" id="heroSpotlightTag"><?= \App\Core\View::e(Setting::get('stage_card_eyebrow', 'EDIÇÃO AUTORAL DIVINIUM')) ?></span>
-                        <h3 class="glass-title" id="heroSpotlightTitle"><?= \App\Core\View::e(Setting::get('stage_product_title', 'Bracelete Caminhos • Verde')) ?></h3>
-                        <p class="glass-desc" id="heroSpotlightDesc"><?= \App\Core\View::e(Setting::get('stage_product_desc', 'Prata nobre e quartzo verde natural em concha mineral.')) ?></p>
-                        
-                        <div class="glass-pricing">
-                            <span class="price-main" id="heroSpotlightPrice"><?= \App\Core\View::e(Setting::get('stage_product_price', 'R$ 380,00')) ?></span>
-                            <span class="price-pix" id="heroSpotlightPix"><?= \App\Core\View::e(Setting::get('stage_product_pix', 'ou R$ 361,00 no Pix (5% OFF)')) ?></span>
-                        </div>
+                    <div class="editorial-media-wrap">
+                        <img src="<?= \App\Core\View::e(Setting::get('hero_editorial_main_img', '/assets/images/hero/featured-green-shell.jpg')) ?>" 
+                             alt="Joia Autoral DIVINIUM"
+                             class="editorial-main-img"
+                             loading="eager"
+                             onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
                     </div>
-
-                    <button class="stage-buy-btn" id="heroQuickBuyBtn" onclick="addToCart('cam-verde', 'Bracelete Caminhos Quartzo Verde', 38000)" aria-label="Adicionar à sacola">
-                        <span>Garantir</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
                 </div>
 
+                <!-- Quadro Editorial Secundário Sobreposto (Lifestyle & Presença Autoral) -->
+                <div class="editorial-frame editorial-frame-floating">
+                    <div class="editorial-media-wrap">
+                        <img src="<?= \App\Core\View::e(Setting::get('hero_editorial_sec_img', '/assets/images/testimonials/lifestyle-wrist.jpeg')) ?>" 
+                             alt="Design de Joia DIVINIUM em Uso"
+                             class="editorial-floating-img"
+                             loading="eager"
+                             onerror="this.onerror=null; this.src='/assets/images/testimonials/lifestyle-wrist.jpeg';">
+                    </div>
+                </div>
             </div>
         </div>
 
