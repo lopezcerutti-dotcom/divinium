@@ -190,6 +190,10 @@ class AdminController
             $imageUrl = '/assets/images/hero/featured-green-shell.jpg';
         }
 
+        $showBadge = isset($_POST['show_badge']) ? ((int) $_POST['show_badge'] ? 1 : 0) : 1;
+        $showSpecs = isset($_POST['show_specs']) ? ((int) $_POST['show_specs'] ? 1 : 0) : 1;
+        $showDescription = isset($_POST['show_description']) ? ((int) $_POST['show_description'] ? 1 : 0) : 1;
+
         try {
             if ($id !== null && $id > 0) {
                 $stmt = $this->pdo->prepare('
@@ -197,14 +201,16 @@ class AdminController
                         name = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
                         colors = ?, variants_json = ?, price_cents = ?, promotional_price_cents = ?, 
                         stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
-                        short_description = ?, description = ?, image_url = ?, is_active = ?, is_featured = ?
+                        short_description = ?, description = ?, image_url = ?, show_badge = ?, 
+                        show_specs = ?, show_description = ?, is_active = ?, is_featured = ?
                     WHERE id = ?
                 ');
                 $stmt->execute([
                     $name, $categoryId, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, 
                     $stock, $stockStatus, $status, $sortOrder, 
-                    $shortDescription, $description, $imageUrl, $isActive, $isFeatured, $id
+                    $shortDescription, $description, $imageUrl, $showBadge, 
+                    $showSpecs, $showDescription, $isActive, $isFeatured, $id
                 ]);
                 $productId = $id;
             } else {
@@ -214,19 +220,19 @@ class AdminController
                         uuid, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
                         colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
                         stock_status, status, sort_order, short_description, description, image_url, 
-                        is_active, is_featured
+                        show_badge, show_specs, show_description, is_active, is_featured
                     ) VALUES (
                         ?, ?, ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?, 
-                        ?, ?
+                        ?, ?, ?, ?, ?
                     )
                 ');
                 $stmt->execute([
                     $uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
                     $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
-                    $isActive, $isFeatured
+                    $showBadge, $showSpecs, $showDescription, $isActive, $isFeatured
                 ]);
                 $productId = (int) $this->pdo->lastInsertId();
             }
@@ -358,12 +364,14 @@ class AdminController
                     uuid, category_id, sku, name, slug, short_description, description, 
                     materials, stone_mineral, dimensions, colors, variants_json, 
                     price_cents, promotional_price_cents, stock_quantity, stock_status, 
-                    status, sort_order, image_url, external_url, is_active, is_featured
+                    status, sort_order, image_url, external_url, show_badge, show_specs, 
+                    show_description, is_active, is_featured
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?, 
                     ?, ?, ?, ?, ?, 
                     ?, ?, ?, ?, 
-                    ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, 
+                    ?, ?, ?
                 )
             ');
 
@@ -388,6 +396,9 @@ class AdminController
                 ((int) ($prod['sort_order'] ?? 0)) + 1,
                 $prod['image_url'] ?? null,
                 $prod['external_url'] ?? null,
+                $prod['show_badge'] ?? 1,
+                $prod['show_specs'] ?? 1,
+                $prod['show_description'] ?? 1,
                 $newActive,
                 0
             ]);

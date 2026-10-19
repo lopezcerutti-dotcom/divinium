@@ -469,6 +469,32 @@
                     <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #d4ba88;">
                     <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar esta joia no topo da Vitrine Principal</label>
                 </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px; margin-top: 14px;">
+                    <label style="color: #d4ba88; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
+                        👁️ Opções Individuais de Exibição no Card (/loja)
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
+                            <input type="hidden" name="show_badge" value="0">
+                            <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <span>Exibir selos flutuantes na foto (Prata 925 / Sob Encomenda / Canais)</span>
+                        </label>
+                        <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Desmarque para ocultar selos que cubram detalhes ou ocupem espaço excessivo na fotografia desta peça.</span>
+
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
+                            <input type="hidden" name="show_specs" value="0">
+                            <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <span>Exibir tags de especificações (Materiais, Medidas e SKU)</span>
+                        </label>
+
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
+                            <input type="hidden" name="show_description" value="0">
+                            <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <span>Exibir descrição resumida da peça no card</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <!-- ABA 2: PREÇO & ESTOQUE -->
@@ -1186,6 +1212,9 @@ function openNewProductModal(e) {
     document.getElementById('prodPrice').value = '380,00';
     document.getElementById('prodStock').value = '10';
     document.getElementById('statusPublished').checked = true;
+    document.getElementById('prodShowBadge').checked = true;
+    document.getElementById('prodShowSpecs').checked = true;
+    document.getElementById('prodShowDescription').checked = true;
     document.getElementById('imagePreviewBox').src = '/assets/images/hero/featured-green-shell.jpg';
     document.getElementById('productModalTitle').innerText = 'Cadastrar Nova Joia';
 
@@ -1245,6 +1274,10 @@ function editProduct(product) {
     }
 
     document.getElementById('prodFeatured').checked = product.is_featured == 1;
+
+    document.getElementById('prodShowBadge').checked = (product.show_badge === undefined || product.show_badge === null || product.show_badge == 1);
+    document.getElementById('prodShowSpecs').checked = (product.show_specs === undefined || product.show_specs === null || product.show_specs == 1);
+    document.getElementById('prodShowDescription').checked = (product.show_description === undefined || product.show_description === null || product.show_description == 1);
 
     document.getElementById('prodImage').value = product.image_url || '';
     updateImagePreview(product.image_url || '/assets/images/hero/featured-green-shell.jpg');

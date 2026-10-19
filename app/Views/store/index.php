@@ -2,7 +2,8 @@
 /**
  * VIEW: LOJA & BOUTIQUE OFICIAL DIVINIUM
  * Totalmente personalizável via Painel Administrativo (/admin/boutique e /admin/produtos).
- * Suporte a múltiplos canais de venda por produto com preços e botões independentes.
+ * Suporte a múltiplos canais de venda por produto com preços e botões independentes,
+ * e controle individual de visibilidade para todos os elementos.
  */
 use App\Models\Setting;
 use App\Core\View;
@@ -48,34 +49,48 @@ if (!function_exists('getPlatformEmoji')) {
     <div class="store-hero-glow"></div>
     <div class="container store-hero-container">
         
+        <?php if (Setting::get('store_hero_badge_visible', '1') === '1'): ?>
         <div class="store-hero-badge">
             <span class="badge-sparkle">✦</span>
             <span><?= View::e(Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CANAIS HOMOLOGADOS')) ?></span>
         </div>
+        <?php endif; ?>
 
+        <?php if (Setting::get('store_hero_title_visible', '1') === '1'): ?>
         <h1 class="store-hero-title">
             <?= View::e(Setting::get('store_hero_title', 'Joias Autorais &')) ?> <span class="gold-gradient-glow"><?= View::e(Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?></span>
         </h1>
+        <?php endif; ?>
 
+        <?php if (Setting::get('store_hero_subtitle_visible', '1') === '1'): ?>
         <p class="store-hero-subtitle">
             <?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?>
         </p>
+        <?php endif; ?>
 
         <!-- Faixa de Garantia & Confiança da Boutique -->
         <?php if (Setting::get('store_trust_visible', '1') === '1'): ?>
         <div class="store-trust-badges">
+            <?php if (Setting::get('store_badge_1_visible', '1') === '1'): ?>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 <span><?= View::e(Setting::get('store_badge_1', 'Compra 100% Protegida • Garantia Oficial')) ?></span>
             </div>
+            <?php endif; ?>
+
+            <?php if (Setting::get('store_badge_2_visible', '1') === '1'): ?>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 <span><?= View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?></span>
             </div>
+            <?php endif; ?>
+
+            <?php if (Setting::get('store_badge_3_visible', '1') === '1'): ?>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                 <span><?= View::e(Setting::get('store_badge_3', 'Envio Rápido e Seguro para todo o Brasil')) ?></span>
             </div>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
 
@@ -88,12 +103,15 @@ if (!function_exists('getPlatformEmoji')) {
     <div class="container">
         
         <!-- Barra de Filtros de Coleções / Minerais -->
+        <?php if (Setting::get('store_filter_bar_visible', '1') === '1'): ?>
         <div class="store-filter-bar">
             <div class="filter-pills-wrap">
+                <?php if (Setting::get('store_filter_all_visible', '1') === '1'): ?>
                 <button class="store-filter-pill active" data-filter="all" onclick="filterStore('all', this)">
                     <span><?= View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?></span>
                     <span class="count-pill"><?= count($products ?? []) ?></span>
                 </button>
+                <?php endif; ?>
                 
                 <?php if (!empty($categories)): ?>
                     <?php foreach ($categories as $cat): ?>
@@ -111,6 +129,7 @@ if (!function_exists('getPlatformEmoji')) {
             </div>
             <?php endif; ?>
         </div>
+        <?php endif; ?>
 
         <!-- Grade de Produtos -->
         <?php if (!empty($products)): ?>
@@ -154,6 +173,27 @@ if (!function_exists('getPlatformEmoji')) {
                         $colors = trim($prod['colors'] ?? '');
                         $sku = trim($prod['sku'] ?? '');
                         $stockStatus = $prod['stock_status'] ?? 'in_stock';
+
+                        // Controles de visibilidade por produto e globais
+                        $showProdBadge = (int) ($prod['show_badge'] ?? 1);
+                        $showProdSpecs = (int) ($prod['show_specs'] ?? 1);
+                        $showProdDesc = (int) ($prod['show_description'] ?? 1);
+
+                        $showGlobalMetalBadge = Setting::get('store_card_badge_metal_visible', '1') === '1';
+                        $showGlobalChannelBadge = Setting::get('store_card_channel_badge_visible', '1') === '1';
+                        $showGlobalMineral = Setting::get('store_card_mineral_visible', '1') === '1';
+                        $showGlobalDesc = Setting::get('store_card_desc_visible', '1') === '1';
+                        $showGlobalSpecs = Setting::get('store_card_specs_visible', '1') === '1';
+                        $showGlobalPix = Setting::get('store_pix_discount_visible', '1') === '1';
+                        $showGlobalInstallments = Setting::get('store_installments_visible', '1') === '1';
+                        $showGlobalMultiChannel = Setting::get('store_multi_channel_visible', '1') === '1';
+
+                        // Decide se a barra de badges flutuante deve aparecer
+                        $hasBadgesToRender = $showProdBadge === 1 && (
+                            $showGlobalMetalBadge ||
+                            $showGlobalChannelBadge ||
+                            in_array($stockStatus, ['preorder', 'out_of_stock'])
+                        );
                     ?>
                     
                     <article class="store-product-card" data-category="<?= $filterClass ?>" data-track-product-id="<?= $prod['id'] ?>" data-track-product-name="<?= View::e($prod['name']) ?>">
@@ -173,26 +213,30 @@ if (!function_exists('getPlatformEmoji')) {
                                  class="store-card-img"
                                  onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
                             
-                            <!-- Badges Flutuantes -->
+                            <!-- Badges Flutuantes (Respeita configuração individual do produto e global) -->
+                            <?php if ($hasBadgesToRender): ?>
                             <div class="card-badges-top">
                                 <?php if ($stockStatus === 'preorder'): ?>
                                     <span class="badge-metal badge-stock-preorder">Sob Encomenda</span>
                                 <?php elseif ($stockStatus === 'out_of_stock'): ?>
                                     <span class="badge-metal badge-stock-out">Indisponível</span>
-                                <?php else: ?>
+                                <?php elseif ($showGlobalMetalBadge): ?>
                                     <span class="badge-metal"><?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?></span>
                                 <?php endif; ?>
 
-                                <?php if (count($links) > 1): ?>
-                                    <span class="badge-shopee-tag" style="background: rgba(212,186,136,0.9); color: #0d0c0b; font-weight: 700;">
-                                        ✦ <?= count($links) ?> Canais Oficiais
-                                    </span>
-                                <?php else: ?>
-                                    <span class="badge-shopee-tag platform-tag-<?= $platformSlug ?>">
-                                        <?= View::e($primaryPlatform) ?> ↗
-                                    </span>
+                                <?php if ($showGlobalChannelBadge): ?>
+                                    <?php if (count($links) > 1): ?>
+                                        <span class="badge-shopee-tag" style="background: rgba(212,186,136,0.9); color: #0d0c0b; font-weight: 700;">
+                                            ✦ <?= count($links) ?> Canais Oficiais
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge-shopee-tag platform-tag-<?= $platformSlug ?>">
+                                            <?= View::e($primaryPlatform) ?> ↗
+                                        </span>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
+                            <?php endif; ?>
 
                             <div class="card-hover-overlay">
                                 <span class="overlay-cta-text">
@@ -204,10 +248,12 @@ if (!function_exists('getPlatformEmoji')) {
 
                         <!-- Informações do Produto -->
                         <div class="store-card-body">
+                            <?php if ($showGlobalMineral): ?>
                             <div class="store-card-mineral">
                                 <span class="mineral-indicator-dot"></span>
                                 <span class="mineral-text"><?= View::e($mineralName) ?></span>
                             </div>
+                            <?php endif; ?>
 
                             <h3 class="store-card-title">
                                 <a href="<?= View::e($primaryUrl) ?>" 
@@ -220,12 +266,14 @@ if (!function_exists('getPlatformEmoji')) {
                                 </a>
                             </h3>
 
+                            <?php if ($showProdDesc === 1 && $showGlobalDesc): ?>
                             <p class="store-card-desc">
                                 <?= View::e($prod['short_description'] ?: ($prod['description'] ?: 'Joia autoral em prata legítima 925 com lapidação mineral e acabamento artesanal contemporâneo.')) ?>
                             </p>
+                            <?php endif; ?>
 
                             <!-- Especificações Técnicas (Materiais, Medidas, SKU) -->
-                            <?php if ($materials || $dimensions || $colors || $sku): ?>
+                            <?php if ($showProdSpecs === 1 && $showGlobalSpecs && ($materials || $dimensions || $colors || $sku)): ?>
                                 <div class="store-card-specs">
                                     <?php if ($materials): ?>
                                         <span class="spec-chip" title="Materiais">💎 <?= View::e($materials) ?></span>
@@ -246,11 +294,15 @@ if (!function_exists('getPlatformEmoji')) {
                             <div class="store-card-pricing">
                                 <div class="price-main-row">
                                     <span class="price-value">R$ <?= $basePriceFormatted ?></span>
+                                    <?php if ($showGlobalPix): ?>
                                     <span class="price-pix">R$ <?= $pixPriceFormatted ?> <?= View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?></span>
+                                    <?php endif; ?>
                                 </div>
+                                <?php if ($showGlobalInstallments): ?>
                                 <div class="price-installments">
                                     <span>Até 6x sem juros de R$ <?= number_format(($basePriceCents / 6) / 100, 2, ',', '.') ?> nos canais oficiais</span>
                                 </div>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Botão Principal de Compra (com Preço Específico da Plataforma) -->
@@ -293,7 +345,7 @@ if (!function_exists('getPlatformEmoji')) {
                             <?php endif; ?>
 
                             <!-- Canais de Venda Adicionais (Links Independentes com seus respectivos Preços) -->
-                            <?php if (count($links) > 1): ?>
+                            <?php if ($showGlobalMultiChannel && count($links) > 1): ?>
                                 <div class="store-card-channels">
                                     <span class="channels-title"><?= View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?></span>
                                     <div class="channels-grid">
@@ -334,11 +386,17 @@ if (!function_exists('getPlatformEmoji')) {
         <?php else: ?>
             <div class="store-empty-state">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <?php if (Setting::get('store_empty_title_visible', '1') === '1'): ?>
                 <h3><?= View::e(Setting::get('store_empty_title', 'Nenhuma Joia Disponível no Catálogo')) ?></h3>
+                <?php endif; ?>
+                <?php if (Setting::get('store_empty_desc_visible', '1') === '1'): ?>
                 <p><?= View::e(Setting::get('store_empty_desc', 'Nossas coleções estão sendo atualizadas nos bastidores. Experimente outro filtro ou volte em instantes.')) ?></p>
+                <?php endif; ?>
+                <?php if (Setting::get('store_empty_btn_visible', '1') === '1'): ?>
                 <a href="<?= View::e(Setting::get('store_empty_url', '/')) ?>" class="btn-store-back">
                     <?= View::e(Setting::get('store_empty_btn', 'Voltar à Página Inicial')) ?>
                 </a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 
@@ -351,49 +409,70 @@ if (!function_exists('getPlatformEmoji')) {
     <div class="container reasons-container">
         
         <div class="reasons-header">
+            <?php if (Setting::get('store_reasons_eyebrow_visible', '1') === '1'): ?>
             <span class="reasons-eyebrow"><?= View::e(Setting::get('store_reasons_eyebrow', 'TRANSPARÊNCIA & CONVENIÊNCIA')) ?></span>
+            <?php endif; ?>
+
+            <?php if (Setting::get('store_reasons_title_visible', '1') === '1'): ?>
             <h2 class="reasons-title">
                 <?= View::e(Setting::get('store_reasons_title', 'Sua Experiência Segura em')) ?> 
                 <span class="gold-gradient-glow"><?= View::e(Setting::get('store_reasons_highlight', 'Nossos Canais Oficiais')) ?></span>
             </h2>
+            <?php endif; ?>
+
+            <?php if (Setting::get('store_reasons_desc_visible', '1') === '1'): ?>
             <p class="reasons-desc">
                 <?= View::e(Setting::get('store_reasons_desc', 'Para oferecer os melhores cupons de frete, proteção estendida ao consumidor e máxima velocidade de entrega, hospedamos a finalização das nossas vendas nos principais ecossistemas homologados do Brasil.')) ?>
             </p>
+            <?php endif; ?>
         </div>
 
         <div class="reasons-grid">
+            <?php if (Setting::get('store_reason_1_visible', '1') === '1'): ?>
             <div class="reason-card">
                 <div class="reason-icon"><?= View::e(Setting::get('store_reason_1_icon', '🛡️')) ?></div>
                 <h3><?= View::e(Setting::get('store_reason_1_title', 'Garantia de Entrega Estendida')) ?></h3>
                 <p><?= View::e(Setting::get('store_reason_1_desc', 'Seu pagamento só é liberado à Divinium após você receber o pacote em casa e conferir a perfeição da sua joia.')) ?></p>
             </div>
+            <?php endif; ?>
 
+            <?php if (Setting::get('store_reason_2_visible', '1') === '1'): ?>
             <div class="reason-card">
                 <div class="reason-icon"><?= View::e(Setting::get('store_reason_2_icon', '🎫')) ?></div>
                 <h3><?= View::e(Setting::get('store_reason_2_title', 'Cupons de Frete & Descontos')) ?></h3>
                 <p><?= View::e(Setting::get('store_reason_2_desc', 'Aproveite os cupons de frete grátis, moedas e cashback para obter vantagens exclusivas na sua compra.')) ?></p>
             </div>
+            <?php endif; ?>
 
+            <?php if (Setting::get('store_reason_3_visible', '1') === '1'): ?>
             <div class="reason-card">
                 <div class="reason-icon"><?= View::e(Setting::get('store_reason_3_icon', '💎')) ?></div>
                 <h3><?= View::e(Setting::get('store_reason_3_title', 'Autenticidade & Prata 925')) ?></h3>
                 <p><?= View::e(Setting::get('store_reason_3_desc', 'Todas as peças enviadas acompanham o certificado oficial de autenticidade da Divinium e estojo nobre aveludado.')) ?></p>
             </div>
+            <?php endif; ?>
 
+            <?php if (Setting::get('store_reason_4_visible', '1') === '1'): ?>
             <div class="reason-card">
                 <div class="reason-icon"><?= View::e(Setting::get('store_reason_4_icon', '💬')) ?></div>
                 <h3><?= View::e(Setting::get('store_reason_4_title', 'Atendimento & Concierge VIP')) ?></h3>
                 <p><?= View::e(Setting::get('store_reason_4_desc', 'Dúvidas sobre o modelo ou tamanho? Nosso atendimento via WhatsApp ou chat responde em poucos minutos.')) ?></p>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Concierge WhatsApp -->
         <?php if (Setting::get('store_whatsapp_visible', '1') === '1'): ?>
         <div class="store-whatsapp-cta">
             <div class="whatsapp-cta-content">
+                <?php if (Setting::get('store_whatsapp_title_visible', '1') === '1'): ?>
                 <h3><?= View::e(Setting::get('store_whatsapp_title', 'Precisa de ajuda para escolher sua joia?')) ?></h3>
+                <?php endif; ?>
+                <?php if (Setting::get('store_whatsapp_desc_visible', '1') === '1'): ?>
                 <p><?= View::e(Setting::get('store_whatsapp_desc', 'Fale diretamente com nossa consultora de gemas minerais antes de concluir sua compra.')) ?></p>
+                <?php endif; ?>
             </div>
+            <?php if (Setting::get('store_whatsapp_btn_visible', '1') === '1'): ?>
             <a href="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999?text=Ol%C3%A1,%20estou%20na%20loja%20da%20Divinium%20e%20gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20uma%20joia')) ?>" 
                target="_blank" 
                rel="noopener noreferrer" 
@@ -401,6 +480,7 @@ if (!function_exists('getPlatformEmoji')) {
                 <span><?= View::e(Setting::get('store_whatsapp_btn', 'Conversar no WhatsApp')) ?></span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
             </a>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
 

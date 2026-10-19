@@ -149,6 +149,9 @@ class Database
                     sort_order INTEGER DEFAULT 0,
                     image_url VARCHAR(500) NULL,
                     external_url VARCHAR(500) NULL,
+                    show_badge INTEGER DEFAULT 1,
+                    show_specs INTEGER DEFAULT 1,
+                    show_description INTEGER DEFAULT 1,
                     is_active INTEGER DEFAULT 1,
                     is_featured INTEGER DEFAULT 0
                 );
@@ -242,6 +245,9 @@ class Database
                 'image_url' => 'VARCHAR(500) NULL',
                 'external_url' => 'VARCHAR(500) NULL',
                 'promotional_price_cents' => 'INTEGER NULL',
+                'show_badge' => 'INTEGER NOT NULL DEFAULT 1',
+                'show_specs' => 'INTEGER NOT NULL DEFAULT 1',
+                'show_description' => 'INTEGER NOT NULL DEFAULT 1',
             ];
 
             $existingCols = [];

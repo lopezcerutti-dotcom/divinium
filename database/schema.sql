@@ -206,6 +206,9 @@ CREATE TABLE IF NOT EXISTS `products` (
     `stock_status` VARCHAR(30) NOT NULL DEFAULT 'in_stock',
     `status` VARCHAR(20) NOT NULL DEFAULT 'published',
     `sort_order` INT NOT NULL DEFAULT 0,
+    `show_badge` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_specs` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_description` TINYINT(1) NOT NULL DEFAULT 1,
     `is_featured` TINYINT(1) NOT NULL DEFAULT 0, -- Destaque na Home de Branding
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
     `external_url` VARCHAR(500) NULL, -- Link de venda externa principal (legado/fallback)

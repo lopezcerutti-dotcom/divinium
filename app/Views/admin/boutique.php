@@ -2,8 +2,27 @@
 /**
  * VIEW: PERSONALIZAR BOUTIQUE DIVINIUM (/loja)
  * QUIET LUXURY BOUTIQUE VISUAL CUSTOMIZER
+ * Com controles individuais de Exibição / Ocultação para cada elemento.
  */
 use App\Models\Setting;
+use App\Core\View;
+
+/**
+ * Helper reutilizável para renderizar o interruptor Exibir / Ocultar
+ */
+$renderToggle = function(string $key, string $default = '1'): string {
+    $val = Setting::get($key, $default);
+    $isVisible = ($val === '1' || $val === 1 || $val === true);
+    $class = $isVisible ? 'is-visible' : 'is-hidden';
+    $label = $isVisible ? 'Exibindo' : 'Oculto';
+    $checked = $isVisible ? 'checked' : '';
+    return '
+    <label class="element-toggle-switch ' . $class . '" title="Exibir ou ocultar este elemento na loja pública">
+        <input type="hidden" name="' . $key . '" value="0">
+        <input type="checkbox" name="' . $key . '" value="1" ' . $checked . ' onchange="handleToggleSwitch(this)">
+        <span class="toggle-text">' . $label . '</span>
+    </label>';
+};
 ?>
 
 <div class="landing-editor-container">
@@ -12,7 +31,7 @@ use App\Models\Setting;
     <div class="editor-header-bar">
         <div class="editor-header-info">
             <h2>Personalizar Boutique & Vitrine Oficial</h2>
-            <p>Edite 100% dos elementos visuais, chamadas, selos, filtros e textos da Boutique DIVINIUM (/loja).</p>
+            <p>Edite 100% dos elementos visuais, chamadas, selos, filtros e textos da Boutique DIVINIUM (/loja), com opção individual de exibição ou ocultação.</p>
         </div>
         <div class="editor-header-actions">
             <a href="/loja" target="_blank" class="btn-admin-secondary">
@@ -62,35 +81,45 @@ use App\Models\Setting;
             </div>
 
             <div class="form-grid">
-                <div class="form-checkbox-row full-width">
-                    <input type="checkbox" id="store_hero_visible" name="store_hero_visible" value="1" 
-                           <?= Setting::get('store_hero_visible', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                    <label for="store_hero_visible" style="color: #ffffff; cursor: pointer; font-weight: 500;">Exibir o Hero Header no topo da Boutique</label>
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Exibir Cabeçalho Hero da Boutique</label>
+                        <?= $renderToggle('store_hero_visible') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Ao ocultar, a vitrine inicia diretamente pelo catálogo de joias.</span>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_hero_badge">Selo Superior da Boutique (Badge)</label>
+                <div class="form-group full-width <?= Setting::get('store_hero_badge_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_hero_badge">Selo Superior da Boutique (Badge)</label>
+                        <?= $renderToggle('store_hero_badge_visible') ?>
+                    </div>
                     <input type="text" id="store_hero_badge" name="store_hero_badge" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CANAIS HOMOLOGADOS')) ?>">
+                           value="<?= View::e(Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CANAIS HOMOLOGADOS')) ?>">
                     <span class="field-hint">Pequeno distintivo com brilho diamantino exibido acima do título principal.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="store_hero_title">Título Principal (Primeira Parte)</label>
+                <div class="form-group <?= Setting::get('store_hero_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_hero_title">Título Principal (Primeira Parte)</label>
+                        <?= $renderToggle('store_hero_title_visible') ?>
+                    </div>
                     <input type="text" id="store_hero_title" name="store_hero_title" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_title', 'Joias Autorais &')) ?>">
+                           value="<?= View::e(Setting::get('store_hero_title', 'Joias Autorais &')) ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('store_hero_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_hero_highlight">Destaque em Ouro (Segunda Parte)</label>
                     <input type="text" id="store_hero_highlight" name="store_hero_highlight" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?>">
+                           value="<?= View::e(Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_hero_subtitle">Subtítulo / Descrição Conceitual</label>
-                    <textarea id="store_hero_subtitle" name="store_hero_subtitle" class="form-textarea" rows="3"><?= \App\Core\View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
+                <div class="form-group full-width <?= Setting::get('store_hero_subtitle_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_hero_subtitle">Subtítulo / Descrição Conceitual</label>
+                        <?= $renderToggle('store_hero_subtitle_visible') ?>
+                    </div>
+                    <textarea id="store_hero_subtitle" name="store_hero_subtitle" class="form-textarea" rows="3"><?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
                 </div>
             </div>
         </div>
@@ -108,29 +137,39 @@ use App\Models\Setting;
             </div>
 
             <div class="form-grid">
-                <div class="form-checkbox-row full-width">
-                    <input type="checkbox" id="store_trust_visible" name="store_trust_visible" value="1" 
-                           <?= Setting::get('store_trust_visible', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                    <label for="store_trust_visible" style="color: #ffffff; cursor: pointer; font-weight: 500;">Exibir faixa de selos de confiança</label>
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Exibir Faixa Completa de Selos de Confiança</label>
+                        <?= $renderToggle('store_trust_visible') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Ativa ou desativa todo o bloco de garantias abaixo do cabeçalho.</span>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_badge_1">Selo 1: Proteção e Compra Garantida</label>
+                <div class="form-group full-width <?= Setting::get('store_badge_1_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_badge_1">Selo 1: Proteção e Compra Garantida</label>
+                        <?= $renderToggle('store_badge_1_visible') ?>
+                    </div>
                     <input type="text" id="store_badge_1" name="store_badge_1" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_1', 'Compra 100% Protegida • Garantia Oficial')) ?>">
+                           value="<?= View::e(Setting::get('store_badge_1', 'Compra 100% Protegida • Garantia Oficial')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_badge_2">Selo 2: Autenticidade do Metal</label>
+                <div class="form-group full-width <?= Setting::get('store_badge_2_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_badge_2">Selo 2: Autenticidade do Metal</label>
+                        <?= $renderToggle('store_badge_2_visible') ?>
+                    </div>
                     <input type="text" id="store_badge_2" name="store_badge_2" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?>">
+                           value="<?= View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_badge_3">Selo 3: Logística e Entrega</label>
+                <div class="form-group full-width <?= Setting::get('store_badge_3_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_badge_3">Selo 3: Logística e Entrega</label>
+                        <?= $renderToggle('store_badge_3_visible') ?>
+                    </div>
                     <input type="text" id="store_badge_3" name="store_badge_3" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_3', 'Envio Rápido e Seguro para todo o Brasil')) ?>">
+                           value="<?= View::e(Setting::get('store_badge_3', 'Envio Rápido e Seguro para todo o Brasil')) ?>">
                 </div>
             </div>
         </div>
@@ -142,47 +181,114 @@ use App\Models\Setting;
             <div class="section-card-header">
                 <div class="section-icon">✦</div>
                 <div>
-                    <h3>Filtros do Catálogo & Textos dos Cards</h3>
-                    <p>Controle os rótulos de navegação por coleções e as mensagens de preços nos cards das joias.</p>
+                    <h3>Filtros do Catálogo & Elementos dos Cards</h3>
+                    <p>Controle os rótulos de navegação por coleções e a visibilidade de selos, descrições, pílulas e preços nos cards das joias.</p>
                 </div>
             </div>
 
             <div class="form-grid">
-                <div class="form-group">
-                    <label for="store_filter_all">Rótulo da Pílula Principal (Todos)</label>
+                <!-- Filtros Principais -->
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Exibir Barra de Filtros de Coleções</label>
+                        <?= $renderToggle('store_filter_bar_visible') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Permite aos visitantes filtrarem joias por categorias na vitrine.</span>
+                </div>
+
+                <div class="form-group <?= Setting::get('store_filter_all_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_filter_all">Pílula 'Todas as Peças'</label>
+                        <?= $renderToggle('store_filter_all_visible') ?>
+                    </div>
                     <input type="text" id="store_filter_all" name="store_filter_all" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?>">
+                           value="<?= View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="store_card_badge_metal">Texto do Selo de Metal no Card</label>
-                    <input type="text" id="store_card_badge_metal" name="store_card_badge_metal" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>">
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="store_info_pill_text">Texto da Pílula Informativa (Ao lado dos filtros)</label>
+                <div class="form-group full-width <?= Setting::get('store_info_pill_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_info_pill_text">Pílula Informativa de Segurança (Ao lado dos filtros)</label>
+                        <?= $renderToggle('store_info_pill_visible') ?>
+                    </div>
                     <input type="text" id="store_info_pill_text" name="store_info_pill_text" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_info_pill_text', 'Escolha seu canal de compra favorito com segurança')) ?>">
+                           value="<?= View::e(Setting::get('store_info_pill_text', 'Escolha seu canal de compra favorito com segurança')) ?>">
                 </div>
 
-                <div class="form-checkbox-row full-width">
-                    <input type="checkbox" id="store_info_pill_visible" name="store_info_pill_visible" value="1" 
-                           <?= Setting::get('store_info_pill_visible', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                    <label for="store_info_pill_visible" style="color: #ded7cf; cursor: pointer;">Exibir pílula informativa na barra de filtros</label>
+                <!-- Elementos dos Cards de Produtos -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 16px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        👁️ Elementos Visuais Globais dos Cards de Produtos
+                    </h4>
+                    <span class="field-hint">Defina a visibilidade geral dos elementos nos cards. Lembre-se que cada joia também possui controles individuais no cadastro de produtos.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="store_pix_discount_label">Rótulo de Preço no Pix</label>
+                <div class="form-group <?= Setting::get('store_card_badge_metal_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_card_badge_metal">Selo de Metal Flutuante no Card</label>
+                        <?= $renderToggle('store_card_badge_metal_visible') ?>
+                    </div>
+                    <input type="text" id="store_card_badge_metal" name="store_card_badge_metal" class="form-input" 
+                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>">
+                    <span class="field-hint">Selo sobreposto à foto do produto.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Selo Flutuante do Canal (Shopee ↗ / Canais Oficiais)</label>
+                        <?= $renderToggle('store_card_channel_badge_visible') ?>
+                    </div>
+                    <span class="field-hint">Pílula sobreposta à foto indicando o canal principal ou a contagem de canais homologados.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Indicador Mineral da Joia (Ponto Dourado + Nome)</label>
+                        <?= $renderToggle('store_card_mineral_visible') ?>
+                    </div>
+                    <span class="field-hint">Exibe a gema mineral lapidada logo acima do título do produto.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Descrição Resumida no Card</label>
+                        <?= $renderToggle('store_card_desc_visible') ?>
+                    </div>
+                    <span class="field-hint">Oculte se preferir um card mais limpo e minimalista, focado na foto e no preço.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Tags de Especificações (Medidas, Materiais, SKU)</label>
+                        <?= $renderToggle('store_card_specs_visible') ?>
+                    </div>
+                    <span class="field-hint">Chips informativos de materiais nobres, dimensões e código interno.</span>
+                </div>
+
+                <div class="form-group <?= Setting::get('store_pix_discount_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_pix_discount_label">Preço com Desconto no Pix</label>
+                        <?= $renderToggle('store_pix_discount_visible') ?>
+                    </div>
                     <input type="text" id="store_pix_discount_label" name="store_pix_discount_label" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?>">
+                           value="<?= View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="store_multi_channel_label">Rótulo de Outros Canais de Venda</label>
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Condição de Parcelamento ("Até 6x sem juros")</label>
+                        <?= $renderToggle('store_installments_visible') ?>
+                    </div>
+                    <span class="field-hint">Mensagem informativa de parcelamento abaixo do preço principal.</span>
+                </div>
+
+                <div class="form-group full-width <?= Setting::get('store_multi_channel_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_multi_channel_label">Canais Secundários de Venda (Pílulas Independentes)</label>
+                        <?= $renderToggle('store_multi_channel_visible') ?>
+                    </div>
                     <input type="text" id="store_multi_channel_label" name="store_multi_channel_label" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?>">
+                           value="<?= View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?>">
+                    <span class="field-hint">Exibe links secundários para Mercado Livre, Amazon, TikTok Shop ou WhatsApp.</span>
                 </div>
             </div>
         </div>
@@ -200,71 +306,93 @@ use App\Models\Setting;
             </div>
 
             <div class="form-grid">
-                <div class="form-checkbox-row full-width">
-                    <input type="checkbox" id="store_reasons_visible" name="store_reasons_visible" value="1" 
-                           <?= Setting::get('store_reasons_visible', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                    <label for="store_reasons_visible" style="color: #ffffff; cursor: pointer; font-weight: 500;">Exibir a Seção Editorial completa na Boutique</label>
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Exibir a Seção Editorial completa na Boutique</label>
+                        <?= $renderToggle('store_reasons_visible') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Ativa ou desativa todo o bloco de transparência ao final da página.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="store_reasons_eyebrow">Sobretítulo (Eyebrow)</label>
+                <div class="form-group <?= Setting::get('store_reasons_eyebrow_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_reasons_eyebrow">Sobretítulo (Eyebrow)</label>
+                        <?= $renderToggle('store_reasons_eyebrow_visible') ?>
+                    </div>
                     <input type="text" id="store_reasons_eyebrow" name="store_reasons_eyebrow" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_reasons_eyebrow', 'TRANSPARÊNCIA & CONVENIÊNCIA')) ?>">
+                           value="<?= View::e(Setting::get('store_reasons_eyebrow', 'TRANSPARÊNCIA & CONVENIÊNCIA')) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="store_reasons_title">Título da Seção</label>
+                <div class="form-group <?= Setting::get('store_reasons_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_reasons_title">Título da Seção</label>
+                        <?= $renderToggle('store_reasons_title_visible') ?>
+                    </div>
                     <input type="text" id="store_reasons_title" name="store_reasons_title" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_reasons_title', 'Sua Experiência Segura em')) ?>">
+                           value="<?= View::e(Setting::get('store_reasons_title', 'Sua Experiência Segura em')) ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('store_reasons_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_reasons_highlight">Destaque em Degradê Dourado</label>
                     <input type="text" id="store_reasons_highlight" name="store_reasons_highlight" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_reasons_highlight', 'Nossos Canais Oficiais')) ?>">
+                           value="<?= View::e(Setting::get('store_reasons_highlight', 'Nossos Canais Oficiais')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_reasons_desc">Descrição Editorial</label>
-                    <textarea id="store_reasons_desc" name="store_reasons_desc" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_reasons_desc', 'Para oferecer os melhores cupons de frete, proteção estendida ao consumidor e máxima velocidade de entrega, conectamos nossa boutique aos principais ecossistemas homologados.')) ?></textarea>
-                </div>
-
-                <!-- 4 Cards de Vantagens -->
-                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                    <label>Card 1: Ícone & Título</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                        <input type="text" name="store_reason_1_icon" class="form-input" style="width: 60px;" value="<?= \App\Core\View::e(Setting::get('store_reason_1_icon', '🛡️')) ?>">
-                        <input type="text" name="store_reason_1_title" class="form-input" value="<?= \App\Core\View::e(Setting::get('store_reason_1_title', 'Garantia de Entrega Estendida')) ?>">
+                <div class="form-group full-width <?= Setting::get('store_reasons_desc_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_reasons_desc">Descrição Editorial</label>
+                        <?= $renderToggle('store_reasons_desc_visible') ?>
                     </div>
-                    <textarea name="store_reason_1_desc" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_reason_1_desc', 'Seu pagamento só é liberado à Divinium após você receber o pacote em casa e conferir a perfeição da sua joia.')) ?></textarea>
+                    <textarea id="store_reasons_desc" name="store_reasons_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reasons_desc', 'Para oferecer os melhores cupons de frete, proteção estendida ao consumidor e máxima velocidade de entrega, conectamos nossa boutique aos principais ecossistemas homologados.')) ?></textarea>
                 </div>
 
-                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                    <label>Card 2: Ícone & Título</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                        <input type="text" name="store_reason_2_icon" class="form-input" style="width: 60px;" value="<?= \App\Core\View::e(Setting::get('store_reason_2_icon', '🎫')) ?>">
-                        <input type="text" name="store_reason_2_title" class="form-input" value="<?= \App\Core\View::e(Setting::get('store_reason_2_title', 'Cupons de Frete & Descontos')) ?>">
+                <!-- 4 Cards de Vantagens Individuais -->
+                <div class="form-group <?= Setting::get('store_reason_1_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Card 1: Garantia Estendida</label>
+                        <?= $renderToggle('store_reason_1_visible') ?>
                     </div>
-                    <textarea name="store_reason_2_desc" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_reason_2_desc', 'Aproveite cupons de frete grátis, cashback e vantagens exclusivas nos canais homologados.')) ?></textarea>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" name="store_reason_1_icon" class="form-input" style="width: 60px;" value="<?= View::e(Setting::get('store_reason_1_icon', '🛡️')) ?>">
+                        <input type="text" name="store_reason_1_title" class="form-input" value="<?= View::e(Setting::get('store_reason_1_title', 'Garantia de Entrega Estendida')) ?>">
+                    </div>
+                    <textarea name="store_reason_1_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reason_1_desc', 'Seu pagamento só é liberado à Divinium após você receber o pacote em casa e conferir a perfeição da sua joia.')) ?></textarea>
                 </div>
 
-                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                    <label>Card 3: Ícone & Título</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                        <input type="text" name="store_reason_3_icon" class="form-input" style="width: 60px;" value="<?= \App\Core\View::e(Setting::get('store_reason_3_icon', '💎')) ?>">
-                        <input type="text" name="store_reason_3_title" class="form-input" value="<?= \App\Core\View::e(Setting::get('store_reason_3_title', 'Autenticidade & Prata 925')) ?>">
+                <div class="form-group <?= Setting::get('store_reason_2_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Card 2: Cupons & Cashback</label>
+                        <?= $renderToggle('store_reason_2_visible') ?>
                     </div>
-                    <textarea name="store_reason_3_desc" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_reason_3_desc', 'Todas as peças enviadas acompanham o certificado oficial de autenticidade da Divinium e estojo nobre.')) ?></textarea>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" name="store_reason_2_icon" class="form-input" style="width: 60px;" value="<?= View::e(Setting::get('store_reason_2_icon', '🎫')) ?>">
+                        <input type="text" name="store_reason_2_title" class="form-input" value="<?= View::e(Setting::get('store_reason_2_title', 'Cupons de Frete & Descontos')) ?>">
+                    </div>
+                    <textarea name="store_reason_2_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reason_2_desc', 'Aproveite cupons de frete grátis, cashback e vantagens exclusivas nos canais homologados.')) ?></textarea>
                 </div>
 
-                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                    <label>Card 4: Ícone & Título</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                        <input type="text" name="store_reason_4_icon" class="form-input" style="width: 60px;" value="<?= \App\Core\View::e(Setting::get('store_reason_4_icon', '💬')) ?>">
-                        <input type="text" name="store_reason_4_title" class="form-input" value="<?= \App\Core\View::e(Setting::get('store_reason_4_title', 'Atendimento & Concierge VIP')) ?>">
+                <div class="form-group <?= Setting::get('store_reason_3_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Card 3: Autenticidade & Prata 925</label>
+                        <?= $renderToggle('store_reason_3_visible') ?>
                     </div>
-                    <textarea name="store_reason_4_desc" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_reason_4_desc', 'Dúvidas sobre o modelo ou tamanho? Nosso atendimento via WhatsApp ou chat responde em minutos.')) ?></textarea>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" name="store_reason_3_icon" class="form-input" style="width: 60px;" value="<?= View::e(Setting::get('store_reason_3_icon', '💎')) ?>">
+                        <input type="text" name="store_reason_3_title" class="form-input" value="<?= View::e(Setting::get('store_reason_3_title', 'Autenticidade & Prata 925')) ?>">
+                    </div>
+                    <textarea name="store_reason_3_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reason_3_desc', 'Todas as peças enviadas acompanham o certificado oficial de autenticidade da Divinium e estojo nobre.')) ?></textarea>
+                </div>
+
+                <div class="form-group <?= Setting::get('store_reason_4_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Card 4: Atendimento VIP</label>
+                        <?= $renderToggle('store_reason_4_visible') ?>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <input type="text" name="store_reason_4_icon" class="form-input" style="width: 60px;" value="<?= View::e(Setting::get('store_reason_4_icon', '💬')) ?>">
+                        <input type="text" name="store_reason_4_title" class="form-input" value="<?= View::e(Setting::get('store_reason_4_title', 'Atendimento & Concierge VIP')) ?>">
+                    </div>
+                    <textarea name="store_reason_4_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reason_4_desc', 'Dúvidas sobre o modelo ou tamanho? Nosso atendimento via WhatsApp ou chat responde em minutos.')) ?></textarea>
                 </div>
             </div>
         </div>
@@ -282,35 +410,45 @@ use App\Models\Setting;
             </div>
 
             <div class="form-grid">
-                <div class="form-checkbox-row full-width">
-                    <input type="checkbox" id="store_whatsapp_visible" name="store_whatsapp_visible" value="1" 
-                           <?= Setting::get('store_whatsapp_visible', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                    <label for="store_whatsapp_visible" style="color: #ffffff; cursor: pointer; font-weight: 500;">Exibir banner do Concierge WhatsApp na Boutique</label>
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Exibir Banner do Concierge WhatsApp na Boutique</label>
+                        <?= $renderToggle('store_whatsapp_visible') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Ativa ou desativa a caixa de atendimento com botão direto para WhatsApp.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="store_whatsapp_title">Título da Chamada</label>
+                <div class="form-group <?= Setting::get('store_whatsapp_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_whatsapp_title">Título da Chamada</label>
+                        <?= $renderToggle('store_whatsapp_title_visible') ?>
+                    </div>
                     <input type="text" id="store_whatsapp_title" name="store_whatsapp_title" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_whatsapp_title', 'Precisa de ajuda para escolher sua joia?')) ?>">
+                           value="<?= View::e(Setting::get('store_whatsapp_title', 'Precisa de ajuda para escolher sua joia?')) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="store_whatsapp_btn">Texto do Botão de Contato</label>
+                <div class="form-group <?= Setting::get('store_whatsapp_btn_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_whatsapp_btn">Texto do Botão de Contato</label>
+                        <?= $renderToggle('store_whatsapp_btn_visible') ?>
+                    </div>
                     <input type="text" id="store_whatsapp_btn" name="store_whatsapp_btn" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_whatsapp_btn', 'Conversar no WhatsApp')) ?>">
+                           value="<?= View::e(Setting::get('store_whatsapp_btn', 'Conversar no WhatsApp')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_whatsapp_desc">Descrição do Atendimento</label>
+                <div class="form-group full-width <?= Setting::get('store_whatsapp_desc_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_whatsapp_desc">Descrição do Atendimento</label>
+                        <?= $renderToggle('store_whatsapp_desc_visible') ?>
+                    </div>
                     <input type="text" id="store_whatsapp_desc" name="store_whatsapp_desc" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_whatsapp_desc', 'Fale diretamente com nossa consultora de gemas minerais antes de concluir sua compra.')) ?>">
+                           value="<?= View::e(Setting::get('store_whatsapp_desc', 'Fale diretamente com nossa consultora de gemas minerais antes de concluir sua compra.')) ?>">
                 </div>
 
                 <div class="form-group full-width">
                     <label for="store_whatsapp_url">Link Completo ou Número do WhatsApp</label>
                     <input type="text" id="store_whatsapp_url" name="store_whatsapp_url" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999?text=Ol%C3%A1,%20estou%20na%20loja%20da%20Divinium%20e%20gostaria%20de%20tirar%20d%C3%BAvidas')) ?>">
+                           value="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999?text=Ol%C3%A1,%20estou%20na%20loja%20da%20Divinium%20e%20gostaria%20de%20tirar%20d%C3%BAvidas')) ?>">
                     <span class="field-hint">Pode ser URL completa com mensagem personalizada ou número internacional (ex: 5511999999999).</span>
                 </div>
             </div>
@@ -329,28 +467,37 @@ use App\Models\Setting;
             </div>
 
             <div class="form-grid">
-                <div class="form-group full-width">
-                    <label for="store_empty_title">Título da Mensagem Vazia</label>
+                <div class="form-group full-width <?= Setting::get('store_empty_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_empty_title">Título da Mensagem Vazia</label>
+                        <?= $renderToggle('store_empty_title_visible') ?>
+                    </div>
                     <input type="text" id="store_empty_title" name="store_empty_title" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_empty_title', 'Nenhuma Joia Disponível nesta Seleção')) ?>">
+                           value="<?= View::e(Setting::get('store_empty_title', 'Nenhuma Joia Disponível nesta Seleção')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="store_empty_desc">Texto Explicativo</label>
+                <div class="form-group full-width <?= Setting::get('store_empty_desc_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_empty_desc">Texto Explicativo</label>
+                        <?= $renderToggle('store_empty_desc_visible') ?>
+                    </div>
                     <input type="text" id="store_empty_desc" name="store_empty_desc" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_empty_desc', 'Nossas coleções estão sendo atualizadas nos bastidores. Experimente outro filtro ou volte em instantes.')) ?>">
+                           value="<?= View::e(Setting::get('store_empty_desc', 'Nossas coleções estão sendo atualizadas nos bastidores. Experimente outro filtro ou volte em instantes.')) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="store_empty_btn">Texto do Botão de Retorno</label>
+                <div class="form-group <?= Setting::get('store_empty_btn_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_empty_btn">Texto do Botão de Retorno</label>
+                        <?= $renderToggle('store_empty_btn_visible') ?>
+                    </div>
                     <input type="text" id="store_empty_btn" name="store_empty_btn" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_empty_btn', 'Voltar à Página Inicial')) ?>">
+                           value="<?= View::e(Setting::get('store_empty_btn', 'Voltar à Página Inicial')) ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="store_empty_url">Destino do Botão</label>
                     <input type="text" id="store_empty_url" name="store_empty_url" class="form-input" 
-                           value="<?= \App\Core\View::e(Setting::get('store_empty_url', '/')) ?>">
+                           value="<?= View::e(Setting::get('store_empty_url', '/')) ?>">
                 </div>
             </div>
         </div>
@@ -359,7 +506,7 @@ use App\Models\Setting;
         <div class="editor-save-dock">
             <div class="save-dock-inner">
                 <div class="save-dock-status">
-                    <span>💡 Todas as alterações salvas são refletidas instantaneamente na Boutique.</span>
+                    <span>💡 Todas as preferências de exibição e conteúdo salvas são refletidas instantaneamente na Boutique.</span>
                 </div>
                 <button type="submit" class="btn-admin-gold" id="saveBoutiqueBtn">
                     <span>Salvar Alterações da Boutique</span>
@@ -380,6 +527,28 @@ function switchBoutiqueSection(sectionId, btn) {
     }
     if (btn) {
         btn.classList.add('active');
+    }
+}
+
+function handleToggleSwitch(chk) {
+    const parentLabel = chk.closest('.element-toggle-switch');
+    const textSpan = parentLabel ? parentLabel.querySelector('.toggle-text') : null;
+    const formGroup = chk.closest('.form-group');
+
+    if (chk.checked) {
+        if (parentLabel) {
+            parentLabel.classList.add('is-visible');
+            parentLabel.classList.remove('is-hidden');
+        }
+        if (textSpan) textSpan.textContent = 'Exibindo';
+        if (formGroup) formGroup.classList.remove('is-dimmed');
+    } else {
+        if (parentLabel) {
+            parentLabel.classList.remove('is-visible');
+            parentLabel.classList.add('is-hidden');
+        }
+        if (textSpan) textSpan.textContent = 'Oculto';
+        if (formGroup) formGroup.classList.add('is-dimmed');
     }
 }
 

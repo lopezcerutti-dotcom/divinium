@@ -1498,5 +1498,109 @@ body.admin-theme {
     border-color: rgba(255, 255, 255, 0.05);
 }
 
+/* ==============================================================================
+   INTERRUPTOR EXIBIR / OCULTAR ELEMENTO (ESTILO QUIET LUXURY)
+   ============================================================================== */
+.field-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+
+.field-label-row label:first-child {
+    margin-bottom: 0 !important;
+}
+
+.element-toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #ded7cf;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+.element-toggle-switch:hover {
+    border-color: rgba(212, 186, 136, 0.4);
+    background: rgba(212, 186, 136, 0.08);
+}
+
+.element-toggle-switch input[type="checkbox"] {
+    position: relative;
+    width: 30px;
+    height: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease;
+    flex-shrink: 0;
+    vertical-align: middle;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.element-toggle-switch input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    top: 1px;
+    left: 2px;
+    background: #ffffff;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.element-toggle-switch input[type="checkbox"]:checked {
+    background: #d4ba88;
+    border-color: #d4ba88;
+}
+
+.element-toggle-switch input[type="checkbox"]:checked::before {
+    transform: translateX(13px);
+    background: #0d0c0b;
+}
+
+.element-toggle-switch .toggle-text {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+.element-toggle-switch.is-visible .toggle-text {
+    color: #4ade80;
+}
+
+.element-toggle-switch.is-hidden .toggle-text {
+    color: #f87171;
+}
+
+.form-group.is-dimmed {
+    opacity: 0.75;
+}
+
+.form-group.is-dimmed .form-input,
+.form-group.is-dimmed .form-textarea {
+    opacity: 0.55;
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+
 
 
