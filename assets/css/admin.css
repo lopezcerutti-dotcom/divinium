@@ -1068,3 +1068,261 @@ body.admin-theme {
     font-weight: 600;
 }
 
+/* ==============================================================================
+   PRODUTOS & LINKS DE PLATAFORMAS (MULTI-CANAIS)
+   ============================================================================== */
+.modal-tabs {
+    display: flex;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    overflow-x: auto;
+}
+
+.modal-tab-btn {
+    background: transparent;
+    border: none;
+    color: #a8a096;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.modal-tab-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-tab-btn.active {
+    color: #d4ba88;
+    background: rgba(212, 186, 136, 0.12);
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 #d4ba88;
+}
+
+.modal-tab-pane {
+    display: none;
+    animation: fadeInTab 0.25s ease;
+}
+
+.modal-tab-pane.active {
+    display: block;
+}
+
+/* Status Badges */
+.badge-status.status-published {
+    background: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.badge-status.status-draft {
+    background: rgba(250, 204, 21, 0.12);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.3);
+}
+
+.badge-status.status-hidden {
+    background: rgba(156, 163, 175, 0.12);
+    color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+/* Mini tags de canais na tabela */
+.platform-links-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 200px;
+}
+
+.platform-mini-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ded7cf;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.platform-mini-tag:hover {
+    background: rgba(212, 186, 136, 0.15);
+    border-color: rgba(212, 186, 136, 0.4);
+    color: #ffffff;
+}
+
+.platform-mini-tag.tag-shopee {
+    border-color: rgba(238, 77, 45, 0.4);
+    color: #ff7043;
+}
+
+.platform-mini-tag.tag-mercadolivre {
+    border-color: rgba(255, 214, 0, 0.4);
+    color: #ffd600;
+}
+
+.platform-mini-tag.tag-amazon {
+    border-color: rgba(255, 153, 0, 0.4);
+    color: #ffb74d;
+}
+
+.platform-mini-tag.tag-tiktok {
+    border-color: rgba(254, 44, 85, 0.4);
+    color: #ff5252;
+}
+
+.platform-mini-tag.tag-whatsapp {
+    border-color: rgba(37, 211, 102, 0.4);
+    color: #25d366;
+}
+
+/* Card do Link Repeater */
+.platform-link-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    position: relative;
+}
+
+.platform-link-card:hover {
+    border-color: rgba(212, 186, 136, 0.3);
+}
+
+.platform-link-card.is-inactive {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.platform-link-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.platform-link-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #ded7cf;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.platform-link-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-remove-link {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-remove-link:hover {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.btn-test-link {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #b5ada3;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-test-link:hover {
+    color: #ffffff;
+    border-color: #d4ba88;
+}
+
+.btn-add-platform-link {
+    background: rgba(212, 186, 136, 0.08);
+    border: 1px dashed rgba(212, 186, 136, 0.35);
+    color: #d4ba88;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.btn-add-platform-link:hover {
+    background: rgba(212, 186, 136, 0.16);
+    border-color: #d4ba88;
+}
+
+.btn-table-duplicate {
+    color: #60a5fa !important;
+}
+
+.btn-table-duplicate:hover {
+    background: rgba(96, 165, 250, 0.12) !important;
+}
+
+/* Seletor de Status */
+.status-radio-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.status-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: #ded7cf;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.status-radio-label:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.status-radio-label input[type="radio"]:checked + span {
+    color: #d4ba88;
+    font-weight: 600;
+}
+
+

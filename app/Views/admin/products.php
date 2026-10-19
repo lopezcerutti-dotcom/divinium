@@ -127,14 +127,14 @@
         <table class="admin-table" id="productsTable">
             <thead>
                 <tr>
-                    <th style="width: 64px; text-align: center;">Foto</th>
+                    <th style="width: 58px; text-align: center;">Foto</th>
                     <th>Joia & SKU</th>
-                    <th>Gema / Mineral</th>
+                    <th>Gema / Materiais</th>
                     <th>Categoria</th>
-                    <th>Preço (R$)</th>
-                    <th>Pix (-5%)</th>
+                    <th>Preço Base (R$)</th>
+                    <th>Canais de Venda & Links</th>
                     <th>Estoque</th>
-                    <th>Link Shopee</th>
+                    <th style="text-align: center; width: 60px;">Ordem</th>
                     <th>Status</th>
                     <th style="text-align: right; padding-right: 20px;">Ações</th>
                 </tr>
@@ -144,16 +144,29 @@
                     <?php foreach ($products as $p): ?>
                         <?php 
                             $stock = (int) ($p['stock_quantity'] ?? 0);
-                            $stockClass = $stock > 3 ? 'stock-in' : ($stock > 0 ? 'stock-low' : 'stock-out');
-                            $stockText = $stock > 3 ? ($stock . ' un.') : ($stock > 0 ? ($stock . ' un. • Baixo') : 'Esgotado');
+                            $stockStatus = $p['stock_status'] ?? 'in_stock';
+                            if ($stockStatus === 'out_of_stock' || $stock <= 0) {
+                                $stockClass = 'stock-out';
+                                $stockText = 'Esgotado';
+                            } elseif ($stockStatus === 'made_to_order') {
+                                $stockClass = 'stock-low';
+                                $stockText = 'Sob Encomenda';
+                            } else {
+                                $stockClass = $stock > 3 ? 'stock-in' : 'stock-low';
+                                $stockText = $stock . ' un.';
+                            }
+
                             $categoryName = $p['category_name'] ?? 'Coleção Autoral';
+                            $status = $p['status'] ?? (!empty($p['is_active']) ? 'published' : 'hidden');
+                            $statusClass = 'status-' . $status;
+                            $statusLabel = $status === 'published' ? 'Publicado' : ($status === 'draft' ? 'Rascunho' : 'Oculto');
                         ?>
                         <tr id="product-row-<?= $p['id'] ?>" 
                             data-name="<?= strtolower(\App\Core\View::e($p['name'] ?? '')) ?>" 
                             data-sku="<?= strtolower(\App\Core\View::e($p['sku'] ?? '')) ?>" 
                             data-stone="<?= strtolower(\App\Core\View::e($p['stone_mineral'] ?? '')) ?>" 
                             data-category="<?= \App\Core\View::e($categoryName) ?>" 
-                            data-status="<?= !empty($p['is_active']) ? 'ativo' : 'oculto' ?>" 
+                            data-status="<?= $status === 'published' ? 'ativo' : 'oculto' ?>" 
                             data-stock="<?= $stock ?>">
                             
                             <td style="text-align: center; padding-left: 18px;">
@@ -169,6 +182,9 @@
                             <td>
                                 <strong style="color: #ffffff; font-size: 0.92rem; display: block; margin-bottom: 2px;">
                                     <?= \App\Core\View::e($p['name']) ?>
+                                    <?php if (!empty($p['is_featured'])): ?>
+                                        <span style="color: #d4ba88; font-size: 0.72rem; margin-left: 4px;" title="Destaque na vitrine">✦</span>
+                                    <?php endif; ?>
                                 </strong>
                                 <span style="font-family: monospace; font-size: 0.72rem; color: #a8a096; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;">
                                     <?= \App\Core\View::e($p['sku'] ?? 'DIV-AUT') ?>
@@ -176,10 +192,15 @@
                             </td>
 
                             <td>
-                                <span class="stone-pill">
+                                <span class="stone-pill" style="margin-bottom: 4px; display: inline-flex;">
                                     <span class="stone-dot"></span>
-                                    <?= \App\Core\View::e($p['stone_mineral'] ?? 'Mineral Puro') ?>
+                                    <?= \App\Core\View::e($p['stone_mineral'] ?: 'Mineral Puro') ?>
                                 </span>
+                                <?php if (!empty($p['materials'])): ?>
+                                    <div style="font-size: 0.72rem; color: #8e8880; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        <?= \App\Core\View::e($p['materials']) ?>
+                                    </div>
+                                <?php endif; ?>
                             </td>
 
                             <td>
@@ -192,12 +213,37 @@
                                 <strong style="color: #ede7df;">
                                     R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?>
                                 </strong>
+                                <?php if (!empty($p['promotional_price_cents'])): ?>
+                                    <div style="font-size: 0.72rem; color: #34d399;">
+                                        De: R$ <?= number_format($p['promotional_price_cents'] / 100, 2, ',', '.') ?>
+                                    </div>
+                                <?php endif; ?>
                             </td>
 
                             <td>
-                                <strong style="color: #34d399; font-size: 0.88rem;">
-                                    R$ <?= number_format((($p['promotional_price_cents'] ?? ($p['price_cents'] ?? 0) * 0.95) / 100), 2, ',', '.') ?>
-                                </strong>
+                                <?php if (!empty($p['links'])): ?>
+                                    <div class="platform-links-list">
+                                        <?php foreach ($p['links'] as $lnk): ?>
+                                            <?php 
+                                                $platSlug = strtolower(preg_replace('/[^a-z0-9]/', '', $lnk['platform_name'] ?? 'shopee'));
+                                                $linkPriceFormatted = number_format(($lnk['price_cents'] ?? ($p['price_cents'] ?? 0)) / 100, 2, ',', '.');
+                                            ?>
+                                            <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="_blank" rel="noopener noreferrer" 
+                                               class="platform-mini-tag tag-<?= $platSlug ?>" 
+                                               title="<?= \App\Core\View::e($lnk['button_text'] ?? $lnk['platform_name']) ?> — R$ <?= $linkPriceFormatted ?>">
+                                                <span><?= \App\Core\View::e($lnk['platform_name']) ?>: R$ <?= $linkPriceFormatted ?></span>
+                                                <span>↗</span>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php elseif (!empty($p['external_url'])): ?>
+                                    <a href="<?= \App\Core\View::e($p['external_url']) ?>" target="_blank" rel="noopener noreferrer" class="platform-mini-tag tag-shopee">
+                                        <span>Shopee: R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?></span>
+                                        <span>↗</span>
+                                    </a>
+                                <?php else: ?>
+                                    <span style="color: #6b655c; font-size: 0.74rem;">—</span>
+                                <?php endif; ?>
                             </td>
 
                             <td>
@@ -206,29 +252,26 @@
                                 </span>
                             </td>
 
-                            <td>
-                                <?php if (!empty($p['external_url'])): ?>
-                                    <a href="<?= \App\Core\View::e($p['external_url']) ?>" target="_blank" rel="noopener noreferrer" class="shopee-badge">
-                                        <span>↗ Shopee</span>
-                                    </a>
-                                <?php else: ?>
-                                    <span style="color: #6b655c; font-size: 0.74rem;">—</span>
-                                <?php endif; ?>
+                            <td style="text-align: center; color: #a8a096; font-size: 0.82rem;">
+                                <?= (int) ($p['sort_order'] ?? 0) ?>
                             </td>
 
                             <td>
-                                <span class="badge-status <?= !empty($p['is_active']) ? 'badge-active' : 'badge-inactive' ?>" id="status-badge-<?= $p['id'] ?>">
-                                    <?= !empty($p['is_active']) ? 'Exibido' : 'Oculto' ?>
+                                <span class="badge-status <?= $statusClass ?>" id="status-badge-<?= $p['id'] ?>">
+                                    <?= $statusLabel ?>
                                 </span>
                             </td>
 
                             <td style="text-align: right; padding-right: 20px;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)" title="Alternar visibilidade na loja">
-                                        <?= !empty($p['is_active']) ? 'Ocultar' : 'Exibir' ?>
+                                    <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)" title="Alternar status na loja">
+                                        <?= $status === 'published' ? 'Ocultar' : 'Publicar' ?>
                                     </button>
-                                    <button class="btn-table-action" onclick='editProduct(<?= json_encode($p, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT) ?>)' title="Editar detalhes">
+                                    <button class="btn-table-action" onclick='editProduct(<?= json_encode($p, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>)' title="Editar detalhes e canais">
                                         Editar
+                                    </button>
+                                    <button class="btn-table-action btn-table-duplicate" onclick="duplicateProduct(<?= $p['id'] ?>)" title="Duplicar joia e canais de venda">
+                                        Duplicar
                                     </button>
                                     <button class="btn-table-action btn-delete" onclick="deleteProduct(<?= $p['id'] ?>)" title="Excluir produto">
                                         Excluir
@@ -264,77 +307,215 @@
     </div>
 </div>
 
-<!-- MODAL DE CADASTRO / EDIÇÃO DE PRODUTO -->
+<!-- MODAL COMPLETO DE CADASTRO / EDIÇÃO DE PRODUTO & MULTI-CANAIS -->
 <div class="modal-overlay" id="productModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 820px; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header">
-            <h3 class="modal-title" id="productModalTitle">Cadastrar Nova Joia</h3>
+            <div>
+                <h3 class="modal-title" id="productModalTitle">Cadastrar Nova Joia</h3>
+                <p style="font-size: 0.78rem; color: #a8a096; margin: 2px 0 0;">Gestão autoral de características, estoque e canais de venda independentes</p>
+            </div>
             <button class="close-modal-btn" onclick="closeProductModal()">&times;</button>
         </div>
 
-        <form id="productForm" onsubmit="handleProductSubmit(event)">
+        <!-- ABAS DO MODAL -->
+        <div class="modal-tabs">
+            <button type="button" class="modal-tab-btn active" id="tabBtnGeneral" onclick="switchProductTab('general')">
+                <span>✦ Informações da Joia</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnPricing" onclick="switchProductTab('pricing')">
+                <span>🏷️ Preço & Estoque</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnLinks" onclick="switchProductTab('links')">
+                <span>🔗 Canais de Venda Externos</span>
+                <span id="linksCountBadge" style="background: rgba(212, 186, 136, 0.2); color: #d4ba88; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">0</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnMedia" onclick="switchProductTab('media')">
+                <span>🖼️ Fotos & Detalhes</span>
+            </button>
+        </div>
+
+        <form id="productForm" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding-right: 6px; flex: 1;">
             <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
             <input type="hidden" name="id" id="prodId" value="">
+            <input type="hidden" name="links" id="prodLinksJson" value="[]">
 
-            <div class="form-group">
-                <label for="prodName">Nome da Joia *</label>
-                <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos • Quartzo Verde">
-            </div>
-
-            <div class="form-row-2">
+            <!-- ABA 1: INFORMAÇÕES DA JOIA -->
+            <div id="productTabGeneral" class="modal-tab-pane active">
                 <div class="form-group">
-                    <label for="prodMineral">Gema Mineral / Pedra</label>
-                    <input type="text" id="prodMineral" name="stone_mineral" class="form-input" placeholder="Ex: Quartzo Verde, Madrepérola...">
+                    <label for="prodName">Nome da Joia *</label>
+                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos — Concha Verde Esmeralda">
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodSku">SKU / Código Interno</label>
+                        <input type="text" id="prodSku" name="sku" class="form-input" placeholder="Ex: DIV-BRAC-ESM (auto gerado se vazio)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodCategory">Categoria / Coleção</label>
+                        <select id="prodCategory" name="category_id" class="form-select">
+                            <option value="">Selecione uma categoria...</option>
+                            <?php foreach ($categories ?? [] as $cat): ?>
+                                <option value="<?= $cat['id'] ?>"><?= \App\Core\View::e($cat['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodMineral">Gema Mineral / Pedra</label>
+                        <input type="text" id="prodMineral" name="stone_mineral" class="form-input" placeholder="Ex: Concha Verde Esmeralda, Ônix, Madrepérola...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodMaterials">Materiais Nobres</label>
+                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Prata de Lei 925, Resina Nobre condutora">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodDimensions">Medidas & Dimensões</label>
+                        <input type="text" id="prodDimensions" name="dimensions" class="form-input" placeholder="Ex: Diâmetro 2,5 cm • Aro ajustável 14 ao 22">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodColors">Cores & Acabamentos</label>
+                        <input type="text" id="prodColors" name="colors" class="form-input" placeholder="Ex: Prata Espelhada, Verde Esmeralda, Ônix Preto">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodVariants">Variantes / Tamanhos</label>
+                        <input type="text" id="prodVariants" name="variants_json" class="form-input" placeholder="Ex: Tamanho Único Regulável, ou 16, 18, 20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodSortOrder">Ordem de Exibição na Loja</label>
+                        <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0 (menor aparece primeiro)">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="prodCategory">Categoria / Coleção</label>
-                    <select id="prodCategory" name="category_id" class="form-select">
-                        <option value="">Selecione uma categoria...</option>
-                        <?php foreach ($categories ?? [] as $cat): ?>
-                            <option value="<?= $cat['id'] ?>"><?= \App\Core\View::e($cat['name']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label>Status de Exibição na Boutique</label>
+                    <div class="status-radio-group">
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusPublished" value="published" checked>
+                            <span style="color: #4ade80;">● Publicado (Visível na Boutique)</span>
+                        </label>
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusDraft" value="draft">
+                            <span style="color: #facc15;">● Rascunho</span>
+                        </label>
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusHidden" value="hidden">
+                            <span style="color: #9ca3af;">● Oculto</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-checkbox-row">
+                    <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                    <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar esta joia no topo da Vitrine Principal</label>
                 </div>
             </div>
 
-            <div class="form-row-2">
+            <!-- ABA 2: PREÇO & ESTOQUE -->
+            <div id="productTabPricing" class="modal-tab-pane">
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodPrice">Preço de Referência Oficial (R$) *</label>
+                        <input type="text" id="prodPrice" name="price" class="form-input" required placeholder="380,00" onkeyup="formatCurrencyLive(this)">
+                        <span class="field-hint">Preço base da joia. Cada canal externo pode ter seu próprio valor.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodPromotionalPrice">Preço Promocional / Comparativo (R$)</label>
+                        <input type="text" id="prodPromotionalPrice" name="promotional_price" class="form-input" placeholder="450,00" onkeyup="formatCurrencyLive(this)">
+                        <span class="field-hint">Valor riscado "De: R$ ..." para destacar promoção.</span>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodStock">Estoque Físico Total</label>
+                        <input type="number" id="prodStock" name="stock_quantity" class="form-input" value="10" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodStockStatus">Disponibilidade da Peça</label>
+                        <select id="prodStockStatus" name="stock_status" class="form-select">
+                            <option value="in_stock">Pronta Entrega (Envio Imediato)</option>
+                            <option value="made_to_order">Sob Encomenda Artesanal</option>
+                            <option value="out_of_stock">Esgotado no Momento</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: CANAIS DE VENDA EXTERNOS (MULTI-LINKS) -->
+            <div id="productTabLinks" class="modal-tab-pane">
+                <div style="background: rgba(212, 186, 136, 0.05); border: 1px solid rgba(212, 186, 136, 0.2); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.9rem;">Canais de Venda com Preços Independentes</strong>
+                            <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
+                                Adicione quantos canais quiser (Shopee, Mercado Livre, Amazon, TikTok Shop, WhatsApp...). Cada botão de compra no site exibirá seu preço específico e direcionará para o link configurado!
+                            </p>
+                        </div>
+                        <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
+                            <span>+ Adicionar Canal</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Container dinâmico dos cards de links -->
+                <div id="productLinksContainer">
+                    <!-- Renderizado dinamicamente via JS -->
+                </div>
+
+                <button type="button" class="btn-add-platform-link" onclick="addNewPlatformLink()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>+ Adicionar Outro Canal de Venda (Shopee, Mercado Livre, Amazon...)</span>
+                </button>
+            </div>
+
+            <!-- ABA 4: FOTOS & DETALHES -->
+            <div id="productTabMedia" class="modal-tab-pane">
                 <div class="form-group">
-                    <label for="prodPrice">Preço Normal (R$) *</label>
-                    <input type="text" id="prodPrice" name="price" class="form-input" required placeholder="380,00">
+                    <label for="prodImage">URL da Imagem Principal</label>
+                    <input type="text" id="prodImage" name="image_url" class="form-input" placeholder="/assets/images/hero/featured-green-shell.jpg" oninput="updateImagePreview(this.value)">
+                    <span class="field-hint">Use imagens em /assets/images/ ou URL externa HTTPS de alta resolução.</span>
+                </div>
+
+                <div class="form-row-2" style="align-items: center;">
+                    <div class="form-group">
+                        <label for="prodImageFile">Ou Enviar Nova Foto do Computador</label>
+                        <input type="file" id="prodImageFile" name="image_file" class="form-input" accept="image/*" onchange="previewUploadedImage(this)">
+                    </div>
+                    <div style="text-align: center;">
+                        <img id="imagePreviewBox" src="/assets/images/hero/featured-green-shell.jpg" alt="Preview" style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="prodStock">Estoque Físico</label>
-                    <input type="number" id="prodStock" name="stock_quantity" class="form-input" value="10" min="0">
+                    <label for="prodShortDesc">Breve Resumo (1 linha)</label>
+                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral em prata legítima 925 com lapidação mineral e acabamento artesanal.">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="prodShopee">Link da Joia na Shopee / Loja Externa</label>
-                <input type="url" id="prodShopee" name="external_url" class="form-input" placeholder="https://shopee.com.br/produto-exemplo-divinium...">
-                <span style="font-size: 0.72rem; color: #d4ba88;">Clientes serão direcionados a este link para finalizar a compra com garantia Shopee.</span>
-            </div>
-
-            <div class="form-group">
-                <label for="prodImage">URL da Imagem / Foto</label>
-                <input type="text" id="prodImage" name="image_url" class="form-input" placeholder="/assets/images/hero/featured-green-shell.jpg">
-                <span style="font-size: 0.72rem; color: #8e8880;">Use imagens em /assets/images/products/ ou link externo.</span>
-            </div>
-
-            <div class="form-group">
-                <label for="prodDesc">Descrição da Peça</label>
-                <textarea id="prodDesc" name="description" class="form-textarea" rows="2" placeholder="Prata nobre 925 e gema mineral pura lapidada manualmente."></textarea>
-            </div>
-
-            <div class="form-checkbox-row">
-                <input type="checkbox" id="prodActive" name="is_active" value="1" checked style="width: 18px; height: 18px; accent-color: #d4ba88;">
-                <label for="prodActive" style="margin: 0; cursor: pointer;">Exibir imediatamente na loja pública</label>
+                <div class="form-group">
+                    <label for="prodDesc">Descrição Completa e Detalhes da Peça</label>
+                    <textarea id="prodDesc" name="description" class="form-textarea" rows="4" placeholder="Descreva os detalhes da lapidação, autenticidade, cuidados e a exclusividade artesanal da peça..."></textarea>
+                </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn-admin-secondary" onclick="closeProductModal()">Cancelar</button>
-                <button type="submit" class="btn-admin-gold" id="saveProdBtn">Salvar Joia</button>
+                <button type="submit" class="btn-admin-gold" id="saveProdBtn">Salvar Joia & Canais</button>
             </div>
         </form>
     </div>
@@ -546,14 +727,250 @@ function filterCatalog() {
 }
 
 /* ==============================================================================
-   CONTROLE DO MODAL DE PRODUTOS
+   CONTROLE DO MODAL DE PRODUTOS & MULTI-CANAIS
    ============================================================================== */
+let currentProductLinks = [];
+
+function switchProductTab(tabId) {
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.modal-tab-pane').forEach(pane => pane.classList.remove('active'));
+
+    const tabBtn = document.getElementById('tabBtn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+    const tabPane = document.getElementById('productTab' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+
+    if (tabBtn) tabBtn.classList.add('active');
+    if (tabPane) tabPane.classList.add('active');
+}
+
+function updateLinksBadge() {
+    const badge = document.getElementById('linksCountBadge');
+    if (badge) {
+        badge.innerText = currentProductLinks.length;
+    }
+}
+
+function renderPlatformLinks() {
+    const container = document.getElementById('productLinksContainer');
+    if (!container) return;
+
+    if (currentProductLinks.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 24px 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; color: #8e8880; font-size: 0.82rem;">
+                Nenhum canal de venda cadastrado ainda. Clique em "<strong>+ Adicionar Canal</strong>" para vincular à Shopee, Mercado Livre, Amazon, etc.
+            </div>
+        `;
+        updateLinksBadge();
+        return;
+    }
+
+    let html = '';
+    currentProductLinks.forEach((link, idx) => {
+        const plat = link.platform_name || 'Shopee';
+        const url = link.url || '';
+        const price = link.price !== undefined ? link.price : (link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : '');
+        const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + plat));
+        const isActive = link.is_active != 0;
+        const sortOrder = link.sort_order !== undefined ? link.sort_order : idx;
+
+        const isCustomPlat = !['Shopee', 'Mercado Livre', 'Amazon', 'TikTok Shop', 'WhatsApp', 'Loja Oficial'].includes(plat);
+
+        html += `
+            <div class="platform-link-card ${isActive ? '' : 'is-inactive'}" id="linkCard_${idx}">
+                <div class="platform-link-header">
+                    <div class="platform-link-title">
+                        <span style="font-size: 1.1rem;">${getPlatformIcon(plat)}</span>
+                        <span>Canal #${idx + 1}: <strong>${escapeHtml(plat)}</strong></span>
+                        ${!isActive ? '<span style="font-size: 0.7rem; color: #9ca3af; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px;">Inativo</span>' : ''}
+                    </div>
+                    <div class="platform-link-actions">
+                        ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="btn-test-link" title="Testar link no navegador">↗ Testar</a>` : ''}
+                        <button type="button" class="btn-remove-link" onclick="removePlatformLink(${idx})" title="Remover este canal">✕ Remover</button>
+                    </div>
+                </div>
+
+                <div class="form-row-2" style="margin-bottom: 12px;">
+                    <div class="form-group">
+                        <label>Plataforma / Canal *</label>
+                        <select class="form-select link-platform-select" onchange="handlePlatformChange(${idx}, this.value)">
+                            <option value="Shopee" ${plat === 'Shopee' ? 'selected' : ''}>Shopee</option>
+                            <option value="Mercado Livre" ${plat === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
+                            <option value="Amazon" ${plat === 'Amazon' ? 'selected' : ''}>Amazon</option>
+                            <option value="TikTok Shop" ${plat === 'TikTok Shop' ? 'selected' : ''}>TikTok Shop</option>
+                            <option value="WhatsApp" ${plat === 'WhatsApp' ? 'selected' : ''}>WhatsApp / Atendimento VIP</option>
+                            <option value="Loja Oficial" ${plat === 'Loja Oficial' ? 'selected' : ''}>Loja Oficial</option>
+                            <option value="Outro" ${isCustomPlat ? 'selected' : ''}>Outra Plataforma...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="customPlatGroup_${idx}" style="${isCustomPlat ? '' : 'display: none;'}">
+                        <label>Nome da Plataforma Personalizada</label>
+                        <input type="text" class="form-input link-custom-plat" value="${escapeHtml(plat)}" placeholder="Ex: Elo7, Enjoei, Instagram..." oninput="updateLinkData(${idx}, 'platform_name', this.value)">
+                    </div>
+
+                    <div class="form-group" style="${isCustomPlat ? 'grid-column: 1 / -1;' : ''}">
+                        <label>URL de Destino do Produto *</label>
+                        <input type="url" class="form-input link-url" value="${escapeHtml(url)}" placeholder="https://shopee.com.br/produto-exemplo..." required oninput="updateLinkData(${idx}, 'url', this.value)">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="margin: 0;">Preço Específico neste Canal (R$)</label>
+                            <button type="button" onclick="copyBasePriceToLink(${idx})" style="background: none; border: none; color: #d4ba88; font-size: 0.72rem; cursor: pointer; text-decoration: underline;">
+                                Usar Preço Base
+                            </button>
+                        </div>
+                        <input type="text" class="form-input link-price" value="${escapeHtml(price)}" placeholder="380,00" onkeyup="formatCurrencyLive(this)" oninput="updateLinkData(${idx}, 'price', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Texto do Botão de Compra</label>
+                        <input type="text" class="form-input link-btn-text" value="${escapeHtml(btnText)}" placeholder="Ex: Comprar na Shopee Oficial" oninput="updateLinkData(${idx}, 'button_text', this.value)">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ded7cf; cursor: pointer; margin: 0;">
+                        <input type="checkbox" class="link-is-active" ${isActive ? 'checked' : ''} onchange="updateLinkData(${idx}, 'is_active', this.checked ? 1 : 0); renderPlatformLinks();" style="accent-color: #d4ba88;">
+                        <span>Canal ativo e visível na Boutique pública</span>
+                    </label>
+
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 0.74rem; color: #8e8880;">Ordem:</span>
+                        <input type="number" class="form-input" style="width: 60px; padding: 4px 8px; font-size: 0.8rem;" value="${sortOrder}" oninput="updateLinkData(${idx}, 'sort_order', parseInt(this.value, 10) || 0)">
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    updateLinksBadge();
+}
+
+function getPlatformIcon(plat) {
+    plat = (plat || '').toLowerCase();
+    if (plat.includes('shopee')) return '🟠';
+    if (plat.includes('mercado')) return '🟡';
+    if (plat.includes('amazon')) return '⚪';
+    if (plat.includes('tiktok')) return '🎵';
+    if (plat.includes('whatsapp') || plat.includes('wa.me')) return '🟢';
+    return '✦';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function updateLinkData(idx, field, value) {
+    if (currentProductLinks[idx]) {
+        currentProductLinks[idx][field] = value;
+    }
+}
+
+function handlePlatformChange(idx, newPlat) {
+    if (!currentProductLinks[idx]) return;
+
+    if (newPlat === 'Outro') {
+        currentProductLinks[idx].platform_name = '';
+        currentProductLinks[idx].button_text = 'Comprar Joia';
+    } else {
+        currentProductLinks[idx].platform_name = newPlat;
+        currentProductLinks[idx].button_text = newPlat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + newPlat);
+    }
+    renderPlatformLinks();
+}
+
+function copyBasePriceToLink(idx) {
+    const basePrice = document.getElementById('prodPrice')?.value || '380,00';
+    if (currentProductLinks[idx]) {
+        currentProductLinks[idx].price = basePrice;
+        renderPlatformLinks();
+    }
+}
+
+function addNewPlatformLink(data = null) {
+    const basePrice = document.getElementById('prodPrice')?.value || '380,00';
+    const newLink = data || {
+        platform_name: currentProductLinks.length === 0 ? 'Shopee' : (currentProductLinks.length === 1 ? 'Mercado Livre' : 'Amazon'),
+        url: '',
+        price: basePrice,
+        button_text: '',
+        is_active: 1,
+        sort_order: currentProductLinks.length
+    };
+    if (!newLink.button_text) {
+        newLink.button_text = newLink.platform_name === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + newLink.platform_name);
+    }
+    currentProductLinks.push(newLink);
+    renderPlatformLinks();
+}
+
+function removePlatformLink(idx) {
+    currentProductLinks.splice(idx, 1);
+    renderPlatformLinks();
+}
+
+function formatCurrencyLive(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value === '') {
+        input.value = '';
+        return;
+    }
+    value = (parseInt(value, 10) / 100).toFixed(2) + '';
+    value = value.replace('.', ',');
+    value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    input.value = value;
+}
+
+function updateImagePreview(url) {
+    const preview = document.getElementById('imagePreviewBox');
+    if (preview && url) {
+        preview.src = url;
+    }
+}
+
+function previewUploadedImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('imagePreviewBox');
+            if (preview) preview.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 function openNewProductModal(e) {
     if (e) e.preventDefault();
     document.getElementById('productForm').reset();
     document.getElementById('prodId').value = '';
-    document.getElementById('prodShopee').value = '';
+    document.getElementById('prodPrice').value = '380,00';
+    document.getElementById('prodStock').value = '10';
+    document.getElementById('statusPublished').checked = true;
+    document.getElementById('imagePreviewBox').src = '/assets/images/hero/featured-green-shell.jpg';
     document.getElementById('productModalTitle').innerText = 'Cadastrar Nova Joia';
+
+    currentProductLinks = [
+        {
+            platform_name: 'Shopee',
+            url: '',
+            price: '380,00',
+            button_text: 'Comprar na Shopee Oficial',
+            is_active: 1,
+            sort_order: 0
+        }
+    ];
+
+    switchProductTab('general');
+    renderPlatformLinks();
     document.getElementById('productModal').classList.add('active');
 }
 
@@ -562,17 +979,73 @@ function closeProductModal() {
 }
 
 function editProduct(product) {
+    document.getElementById('productForm').reset();
     document.getElementById('prodId').value = product.id;
     document.getElementById('prodName').value = product.name || '';
-    document.getElementById('prodMineral').value = product.stone_mineral || '';
+    document.getElementById('prodSku').value = product.sku || '';
     document.getElementById('prodCategory').value = product.category_id || '';
-    document.getElementById('prodPrice').value = ((product.price_cents || 38000) / 100).toFixed(2).replace('.', ',');
-    document.getElementById('prodStock').value = product.stock_quantity || 10;
-    document.getElementById('prodShopee').value = product.external_url || '';
-    document.getElementById('prodImage').value = product.image_url || '';
-    document.getElementById('prodDesc').value = product.description || '';
-    document.getElementById('prodActive').checked = product.is_active == 1;
+    document.getElementById('prodMineral').value = product.stone_mineral || '';
+    document.getElementById('prodMaterials').value = product.materials || '';
+    document.getElementById('prodDimensions').value = product.dimensions || '';
+    document.getElementById('prodColors').value = product.colors || '';
+    document.getElementById('prodVariants').value = product.variants_json || '';
+    document.getElementById('prodSortOrder').value = product.sort_order || 0;
 
+    const priceVal = ((product.price_cents || 38000) / 100).toFixed(2).replace('.', ',');
+    document.getElementById('prodPrice').value = priceVal;
+
+    if (product.promotional_price_cents) {
+        document.getElementById('prodPromotionalPrice').value = ((product.promotional_price_cents) / 100).toFixed(2).replace('.', ',');
+    } else {
+        document.getElementById('prodPromotionalPrice').value = '';
+    }
+
+    document.getElementById('prodStock').value = product.stock_quantity !== undefined ? product.stock_quantity : 10;
+    document.getElementById('prodStockStatus').value = product.stock_status || 'in_stock';
+
+    // Status Radio
+    const prodStatus = product.status || (product.is_active == 1 ? 'published' : 'hidden');
+    if (prodStatus === 'draft') {
+        document.getElementById('statusDraft').checked = true;
+    } else if (prodStatus === 'hidden') {
+        document.getElementById('statusHidden').checked = true;
+    } else {
+        document.getElementById('statusPublished').checked = true;
+    }
+
+    document.getElementById('prodFeatured').checked = product.is_featured == 1;
+
+    document.getElementById('prodImage').value = product.image_url || '';
+    updateImagePreview(product.image_url || '/assets/images/hero/featured-green-shell.jpg');
+
+    document.getElementById('prodShortDesc').value = product.short_description || '';
+    document.getElementById('prodDesc').value = product.description || '';
+
+    // Links de Plataformas
+    if (Array.isArray(product.links) && product.links.length > 0) {
+        currentProductLinks = product.links.map(l => ({
+            platform_name: l.platform_name || 'Shopee',
+            url: l.url || '',
+            price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : priceVal,
+            button_text: l.button_text || '',
+            is_active: l.is_active !== undefined ? l.is_active : 1,
+            sort_order: l.sort_order || 0
+        }));
+    } else if (product.external_url) {
+        currentProductLinks = [{
+            platform_name: 'Shopee',
+            url: product.external_url,
+            price: priceVal,
+            button_text: 'Comprar na Shopee Oficial',
+            is_active: 1,
+            sort_order: 0
+        }];
+    } else {
+        currentProductLinks = [];
+    }
+
+    switchProductTab('general');
+    renderPlatformLinks();
     document.getElementById('productModalTitle').innerText = 'Editar: ' + product.name;
     document.getElementById('productModal').classList.add('active');
 }
@@ -587,7 +1060,10 @@ async function handleProductSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('saveProdBtn');
     btn.disabled = true;
-    btn.innerText = 'Salvando...';
+    btn.innerText = 'Salvando Joia & Canais...';
+
+    // Serializar links para o input oculto
+    document.getElementById('prodLinksJson').value = JSON.stringify(currentProductLinks);
 
     const formData = new FormData(document.getElementById('productForm'));
     const csrfToken = getCsrfToken();
@@ -611,12 +1087,46 @@ async function handleProductSubmit(e) {
         } else {
             alert(data.error || 'Erro ao gravar produto.');
             btn.disabled = false;
-            btn.innerText = 'Salvar Joia';
+            btn.innerText = 'Salvar Joia & Canais';
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);
         btn.disabled = false;
-        btn.innerText = 'Salvar Joia';
+        btn.innerText = 'Salvar Joia & Canais';
+    }
+}
+
+async function duplicateProduct(id) {
+    if (!confirm('Deseja criar uma cópia desta joia com todos os seus canais de venda externos configurados?')) {
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', id);
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+        formData.append('_csrf_token', csrfToken);
+    }
+
+    try {
+        const response = await fetch('/admin/produtos/duplicar', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert(data.message || 'Produto duplicado com sucesso!');
+            window.location.reload();
+        } else {
+            alert(data.error || 'Erro ao duplicar produto.');
+        }
+    } catch (err) {
+        alert('Erro ao comunicar com o servidor: ' + err.message);
     }
 }
 
@@ -641,14 +1151,16 @@ async function toggleProductStatus(id) {
         const data = await response.json();
         if (data.success) {
             window.location.reload();
+        } else {
+            alert(data.error || 'Erro ao alterar status.');
         }
     } catch (err) {
-        alert('Erro ao alterar status.');
+        alert('Erro ao alterar status: ' + err.message);
     }
 }
 
 async function deleteProduct(id) {
-    if (!confirm('Tem certeza de que deseja excluir este produto do catálogo?')) {
+    if (!confirm('Tem certeza de que deseja excluir esta joia e todos os seus canais de venda vinculados?')) {
         return;
     }
 
@@ -678,7 +1190,7 @@ async function deleteProduct(id) {
             alert(data.error || 'Erro ao excluir.');
         }
     } catch (err) {
-        alert('Erro ao excluir produto.');
+        alert('Erro ao excluir produto: ' + err.message);
     }
 }
 

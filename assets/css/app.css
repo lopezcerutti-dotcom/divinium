@@ -2261,28 +2261,141 @@ body.luxury-theme {
     color: #8e8880;
 }
 
+/* 13.3.1 BOTÕES DE AÇÃO POR PLATAFORMA & CANAIS DE VENDA */
+.btn-platform-action,
 .btn-shopee-action {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%);
-    color: #ffffff;
-    text-decoration: none;
+    justify-content: space-between;
+    gap: 10px;
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 0.88rem;
     font-weight: 600;
-    letter-spacing: 0.03em;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
 }
 
+.btn-platform-action:hover,
+.btn-shopee-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.platform-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.platform-btn-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.platform-btn-price-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding-left: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Variantes visuais de cada plataforma */
+.platform-btn-shopee,
+.btn-shopee-action {
+    background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
+}
+.platform-btn-shopee:hover,
 .btn-shopee-action:hover {
     background: linear-gradient(135deg, #ff5722 0%, #f4511e 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(238, 77, 45, 0.5);
+    box-shadow: 0 6px 22px rgba(238, 77, 45, 0.5);
     color: #ffffff;
+}
+
+.platform-btn-mercado-livre {
+    background: linear-gradient(135deg, #ffe600 0%, #ffd000 100%);
+    color: #18181b;
+    box-shadow: 0 4px 14px rgba(255, 230, 0, 0.3);
+}
+.platform-btn-mercado-livre .platform-btn-price-tag {
+    border-left-color: rgba(24, 24, 27, 0.2);
+    color: #18181b;
+}
+.platform-btn-mercado-livre:hover {
+    background: linear-gradient(135deg, #fff033 0%, #ffe600 100%);
+    box-shadow: 0 6px 20px rgba(255, 230, 0, 0.45);
+    color: #000000;
+}
+
+.platform-btn-amazon {
+    background: linear-gradient(135deg, #232f3e 0%, #131921 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 153, 0, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+.platform-btn-amazon .platform-btn-price-tag {
+    color: #ff9900;
+    border-left-color: rgba(255, 153, 0, 0.3);
+}
+.platform-btn-amazon:hover {
+    border-color: #ff9900;
+    box-shadow: 0 6px 20px rgba(255, 153, 0, 0.3);
+    color: #ffffff;
+}
+
+.platform-btn-tiktok-shop {
+    background: linear-gradient(135deg, #0f0f10 0%, #000000 100%);
+    color: #ffffff;
+    border: 1px solid rgba(254, 44, 85, 0.4);
+    box-shadow: 0 4px 14px rgba(254, 44, 85, 0.2);
+}
+.platform-btn-tiktok-shop:hover {
+    border-color: #25f4ee;
+    box-shadow: 0 6px 20px rgba(37, 244, 238, 0.3);
+    color: #ffffff;
+}
+
+.platform-btn-whatsapp {
+    background: linear-gradient(135deg, #128c7e 0%, #25d366 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+.platform-btn-whatsapp:hover {
+    background: linear-gradient(135deg, #25d366 0%, #20ba5c 100%);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    color: #ffffff;
+}
+
+.platform-btn-default,
+.platform-btn-loja-oficial {
+    background: linear-gradient(135deg, #d4ba88 0%, #b89758 100%);
+    color: #0d0c0b;
+    box-shadow: 0 4px 14px rgba(212, 186, 136, 0.3);
+}
+.platform-btn-default .platform-btn-price-tag,
+.platform-btn-loja-oficial .platform-btn-price-tag {
+    border-left-color: rgba(13, 12, 11, 0.25);
+    color: #0d0c0b;
+}
+.platform-btn-default:hover,
+.platform-btn-loja-oficial:hover {
+    background: linear-gradient(135deg, #e0c99a 0%, #c9a96e 100%);
+    box-shadow: 0 6px 20px rgba(212, 186, 136, 0.45);
+    color: #0d0c0b;
 }
 
 .shopee-icon-svg {
@@ -2291,10 +2404,116 @@ body.luxury-theme {
 
 .arrow-ext-svg {
     transition: transform 0.2s ease;
+    flex-shrink: 0;
 }
 
+.btn-platform-action:hover .arrow-ext-svg,
 .btn-shopee-action:hover .arrow-ext-svg {
     transform: translate(2px, -2px);
+}
+
+/* 13.3.2 CANAIS SECUNDÁRIOS DE VENDA */
+.store-card-channels {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.channels-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8e8880;
+    margin-bottom: 6px;
+}
+
+.channels-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.store-channel-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ded7cf;
+    font-size: 0.78rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.store-channel-pill:hover {
+    background: rgba(212, 186, 136, 0.08);
+    border-color: rgba(212, 186, 136, 0.35);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.channel-pill-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.channel-pill-icon {
+    font-size: 0.85rem;
+}
+
+.channel-pill-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #d4ba88;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 13.3.3 ESPECIFICAÇÕES DA JOIA (MATERIAIS, MEDIDAS, SKU) */
+.store-card-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.spec-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.7rem;
+    color: #b8b1a7;
+}
+
+.store-card-sku {
+    font-size: 0.68rem;
+    color: #7a746c;
+    letter-spacing: 0.05em;
+    font-family: monospace;
+}
+
+.badge-stock-preorder {
+    background: rgba(212, 186, 136, 0.15);
+    border: 1px solid rgba(212, 186, 136, 0.4);
+    color: #d4ba88;
+}
+
+.badge-stock-out {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
 }
 
 /* 13.4 POR QUE COMPRAR VIA SHOPEE */

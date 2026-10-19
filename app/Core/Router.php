@@ -192,11 +192,14 @@ class Router
         $this->get('/admin/metricas', [\App\Controllers\AdminController::class, 'metrics'], $adminAuth);
         $this->get('/admin/produtos', [\App\Controllers\AdminController::class, 'products'], $adminAuth);
         $this->post('/admin/produtos/salvar', [\App\Controllers\AdminController::class, 'saveProduct'], $adminAuth);
+        $this->post('/admin/produtos/duplicar', [\App\Controllers\AdminController::class, 'duplicateProduct'], $adminAuth);
         $this->post('/admin/produtos/toggle', [\App\Controllers\AdminController::class, 'toggleProduct'], $adminAuth);
         $this->post('/admin/produtos/excluir', [\App\Controllers\AdminController::class, 'deleteProduct'], $adminAuth);
         $this->get('/admin/categorias', [\App\Controllers\AdminController::class, 'categories'], $adminAuth);
         $this->post('/admin/categorias/salvar', [\App\Controllers\AdminController::class, 'saveCategory'], $adminAuth);
         $this->post('/admin/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);
+        $this->get('/admin/boutique', [\App\Controllers\AdminController::class, 'boutique'], $adminAuth);
+        $this->post('/admin/boutique/salvar', [\App\Controllers\AdminController::class, 'saveBoutique'], $adminAuth);
         $this->get('/admin/landing-page', [\App\Controllers\AdminController::class, 'landingPage'], $adminAuth);
         $this->post('/admin/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
         $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);

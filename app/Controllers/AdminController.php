@@ -58,6 +58,9 @@ class AdminController
     /**
      * Gestão de Produtos
      */
+    /**
+     * Gestão de Produtos & Links de Venda Externa
+     */
     public function products(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -65,20 +68,50 @@ class AdminController
         }
 
         $totalProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
-        $activeProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products WHERE is_active = 1')->fetchColumn();
+        $activeProducts = (int) $this->pdo->query("SELECT COUNT(*) FROM products WHERE (status = 'published' OR (status IS NULL AND is_active = 1))")->fetchColumn();
         $totalCategories = (int) $this->pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn();
         $totalStock = (int) $this->pdo->query('SELECT COALESCE(SUM(stock_quantity), 0) FROM products')->fetchColumn();
 
-        $productsStmt = $this->pdo->query('SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC');
-        $products = $productsStmt->fetchAll();
+        $productsStmt = $this->pdo->query('
+            SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id 
+            ORDER BY p.sort_order ASC, p.id DESC
+        ');
+        $products = $productsStmt ? $productsStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
 
-        $categories = $this->pdo->query('SELECT * FROM categories ORDER BY name ASC')->fetchAll();
+        // Carregar links de plataformas para cada produto
+        $linksStmt = $this->pdo->query('SELECT * FROM product_links ORDER BY sort_order ASC, id ASC');
+        $allLinks = $linksStmt ? $linksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+        $linksByProduct = [];
+        foreach ($allLinks as $l) {
+            $linksByProduct[(int) $l['product_id']][] = $l;
+        }
+
+        foreach ($products as &$p) {
+            $p['links'] = $linksByProduct[(int) $p['id']] ?? [];
+            if (empty($p['links']) && !empty($p['external_url'])) {
+                $p['links'] = [[
+                    'id' => 0,
+                    'product_id' => $p['id'],
+                    'platform_name' => 'Shopee',
+                    'url' => $p['external_url'],
+                    'price_cents' => $p['price_cents'] ?? 38000,
+                    'button_text' => 'Comprar na Shopee Oficial',
+                    'is_active' => 1,
+                    'sort_order' => 0
+                ]];
+            }
+        }
+        unset($p);
+
+        $categories = $this->pdo->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC')->fetchAll(\PDO::FETCH_ASSOC);
 
         $blingService = new BlingService($this->pdo);
         $blingConfig = $blingService->getConfig();
 
         View::render('admin/products', [
-            'pageTitle' => 'Catálogo de Joias & Estoque',
+            'pageTitle' => 'Catálogo de Joias & Canais de Venda',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador'],
             'totalProducts' => $totalProducts,
             'activeProducts' => $activeProducts,
@@ -91,7 +124,7 @@ class AdminController
     }
 
     /**
-     * Salvar Produto (Novo ou Edição)
+     * Salvar Produto (Novo ou Edição) com Campos Independentes e Multi-Links
      */
     public function saveProduct(): void
     {
@@ -99,19 +132,35 @@ class AdminController
         $name = trim((string) ($_POST['name'] ?? ''));
         $categoryId = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
         $stoneMineral = trim((string) ($_POST['stone_mineral'] ?? ''));
+        $materials = trim((string) ($_POST['materials'] ?? ''));
+        $dimensions = trim((string) ($_POST['dimensions'] ?? ''));
+        $colors = trim((string) ($_POST['colors'] ?? ''));
+        $variantsJson = trim((string) ($_POST['variants_json'] ?? ''));
+
         $price = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) ($_POST['price'] ?? '0'));
         $priceCents = (int) round($price * 100);
         if ($priceCents <= 0 && !empty($_POST['price_cents'])) {
             $priceCents = (int) $_POST['price_cents'];
         }
-        $promotionalPriceCents = !empty($_POST['promotional_price']) ? (int) round((float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], $_POST['promotional_price']) * 100) : (int) round($priceCents * 0.95);
+
+        $promotionalPrice = !empty($_POST['promotional_price']) 
+            ? (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) $_POST['promotional_price']) 
+            : 0;
+        $promotionalPriceCents = $promotionalPrice > 0 ? (int) round($promotionalPrice * 100) : (int) round($priceCents * 0.95);
+
         $stock = isset($_POST['stock_quantity']) ? (int) $_POST['stock_quantity'] : 10;
+        $stockStatus = trim((string) ($_POST['stock_status'] ?? 'in_stock'));
         $shortDescription = trim((string) ($_POST['short_description'] ?? ''));
         $description = trim((string) ($_POST['description'] ?? ''));
         $imageUrl = trim((string) ($_POST['image_url'] ?? ''));
-        $externalUrl = trim((string) ($_POST['external_url'] ?? ''));
-        $isActive = isset($_POST['is_active']) ? 1 : 0;
-        $isFeatured = isset($_POST['is_featured']) ? 1 : 0;
+        $sortOrder = isset($_POST['sort_order']) ? (int) $_POST['sort_order'] : 0;
+        $isFeatured = !empty($_POST['is_featured']) ? 1 : 0;
+
+        $status = trim((string) ($_POST['status'] ?? 'published'));
+        if (!in_array($status, ['published', 'draft', 'hidden'], true)) {
+            $status = (!empty($_POST['is_active']) && $_POST['is_active'] == '1') ? 'published' : 'hidden';
+        }
+        $isActive = ($status === 'published') ? 1 : 0;
 
         if ($name === '') {
             $this->respond(['success' => false, 'error' => 'O nome do produto é obrigatório.'], 422);
@@ -119,13 +168,13 @@ class AdminController
         }
 
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name), '-'));
-        $sku = !empty($_POST['sku']) ? trim($_POST['sku']) : 'DIV-' . strtoupper(substr($slug, 0, 8)) . '-' . rand(10, 99);
+        $sku = !empty($_POST['sku']) ? trim($_POST['sku']) : 'DIV-' . strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $slug), 0, 8)) . '-' . rand(10, 99);
 
         // Upload de imagem caso enviado arquivo
         if (!empty($_FILES['image_file']['tmp_name']) && is_uploaded_file($_FILES['image_file']['tmp_name'])) {
             $ext = strtolower(pathinfo($_FILES['image_file']['name'], PATHINFO_EXTENSION));
-            if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
-                $uploadDir = BASE_PATH . '/public_html/assets/images/products';
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'avif'], true)) {
+                $uploadDir = BASE_PATH . '/assets/images/products';
                 if (!is_dir($uploadDir)) {
                     @mkdir($uploadDir, 0755, true);
                 }
@@ -143,22 +192,243 @@ class AdminController
 
         try {
             if ($id !== null && $id > 0) {
-                $stmt = $this->pdo->prepare('UPDATE products SET name = ?, category_id = ?, stone_mineral = ?, price_cents = ?, promotional_price_cents = ?, stock_quantity = ?, short_description = ?, description = ?, image_url = ?, external_url = ?, is_active = ?, is_featured = ? WHERE id = ?');
-                $stmt->execute([$name, $categoryId, $stoneMineral, $priceCents, $promotionalPriceCents, $stock, $shortDescription, $description, $imageUrl, $externalUrl, $isActive, $isFeatured, $id]);
+                $stmt = $this->pdo->prepare('
+                    UPDATE products SET 
+                        name = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
+                        colors = ?, variants_json = ?, price_cents = ?, promotional_price_cents = ?, 
+                        stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
+                        short_description = ?, description = ?, image_url = ?, is_active = ?, is_featured = ?
+                    WHERE id = ?
+                ');
+                $stmt->execute([
+                    $name, $categoryId, $stoneMineral, $materials, $dimensions, 
+                    $colors, $variantsJson, $priceCents, $promotionalPriceCents, 
+                    $stock, $stockStatus, $status, $sortOrder, 
+                    $shortDescription, $description, $imageUrl, $isActive, $isFeatured, $id
+                ]);
+                $productId = $id;
             } else {
                 $uuid = 'prod-' . uniqid();
-                $stmt = $this->pdo->prepare('INSERT INTO products (uuid, category_id, name, slug, sku, stone_mineral, price_cents, promotional_price_cents, stock_quantity, short_description, description, image_url, external_url, is_active, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                $stmt->execute([$uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $priceCents, $promotionalPriceCents, $stock, $shortDescription, $description, $imageUrl, $externalUrl, $isActive, $isFeatured]);
+                $stmt = $this->pdo->prepare('
+                    INSERT INTO products (
+                        uuid, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
+                        colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
+                        stock_status, status, sort_order, short_description, description, image_url, 
+                        is_active, is_featured
+                    ) VALUES (
+                        ?, ?, ?, ?, ?, ?, ?, ?, 
+                        ?, ?, ?, ?, ?, 
+                        ?, ?, ?, ?, ?, ?, 
+                        ?, ?
+                    )
+                ');
+                $stmt->execute([
+                    $uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
+                    $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
+                    $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
+                    $isActive, $isFeatured
+                ]);
+                $productId = (int) $this->pdo->lastInsertId();
             }
 
-            $this->respond(['success' => true, 'message' => 'Produto gravado com sucesso!']);
+            // Processar links externos de plataformas (sem limite fixo)
+            $rawLinks = $_POST['links'] ?? [];
+            if (is_string($rawLinks)) {
+                $rawLinks = json_decode($rawLinks, true) ?: [];
+            }
+
+            $validLinks = [];
+            $primaryExternalUrl = '';
+
+            if (is_array($rawLinks)) {
+                foreach ($rawLinks as $idx => $linkItem) {
+                    $u = trim((string) ($linkItem['url'] ?? ''));
+                    if ($u === '') {
+                        continue;
+                    }
+                    if (!preg_match('#^https?://#i', $u)) {
+                        $u = 'https://' . $u;
+                    }
+                    // Validar formato de URL
+                    if (!filter_var($u, FILTER_VALIDATE_URL)) {
+                        continue;
+                    }
+
+                    $plat = trim((string) ($linkItem['platform_name'] ?? 'Shopee'));
+                    if ($plat === '') {
+                        $plat = 'Shopee';
+                    }
+
+                    $lPrice = 0;
+                    if (isset($linkItem['price']) && $linkItem['price'] !== '') {
+                        $lPrice = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) $linkItem['price']);
+                    }
+                    $lPriceCents = $lPrice > 0 ? (int) round($lPrice * 100) : $priceCents;
+
+                    $btnText = trim((string) ($linkItem['button_text'] ?? ''));
+                    if ($btnText === '') {
+                        $btnText = $plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' . $plat);
+                    }
+
+                    $lActive = isset($linkItem['is_active']) ? ((int) $linkItem['is_active'] ? 1 : 0) : 1;
+                    $lSort = isset($linkItem['sort_order']) ? (int) $linkItem['sort_order'] : (int) $idx;
+
+                    $validLinks[] = [
+                        'platform_name' => $plat,
+                        'url' => $u,
+                        'price_cents' => $lPriceCents,
+                        'button_text' => $btnText,
+                        'is_active' => $lActive,
+                        'sort_order' => $lSort,
+                    ];
+
+                    if ($primaryExternalUrl === '' && $lActive === 1) {
+                        $primaryExternalUrl = $u;
+                    }
+                }
+            }
+
+            // Excluir links anteriores e re-inserir links atualizados com segurança
+            $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$productId]);
+
+            if (!empty($validLinks)) {
+                $insLink = $this->pdo->prepare('
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ');
+                foreach ($validLinks as $vl) {
+                    $insLink->execute([
+                        $productId,
+                        $vl['platform_name'],
+                        $vl['url'],
+                        $vl['price_cents'],
+                        $vl['button_text'],
+                        $vl['is_active'],
+                        $vl['sort_order']
+                    ]);
+                }
+            }
+
+            // Atualizar external_url legado na tabela products para compatibilidade retroativa
+            if ($primaryExternalUrl !== '') {
+                $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $productId]);
+            }
+
+            $this->respond([
+                'success' => true, 
+                'message' => 'Joia e canais de venda salvos com sucesso!',
+                'product_id' => $productId
+            ]);
         } catch (\Throwable $e) {
             $this->respond(['success' => false, 'error' => 'Erro ao salvar produto: ' . $e->getMessage()], 500);
         }
     }
 
     /**
-     * Alternar Ativo/Inativo de Produto
+     * Duplicar Produto (com todos os links associados e status Rascunho)
+     */
+    public function duplicateProduct(): void
+    {
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            $this->respond(['success' => false, 'error' => 'ID inválido.'], 422);
+            return;
+        }
+
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM products WHERE id = ?');
+            $stmt->execute([$id]);
+            $prod = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$prod) {
+                $this->respond(['success' => false, 'error' => 'Produto original não encontrado.'], 404);
+                return;
+            }
+
+            $newName = $prod['name'] . ' (Cópia)';
+            $newUuid = 'prod-' . uniqid();
+            $slugBase = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $newName), '-'));
+            $newSlug = $slugBase . '-' . rand(100, 999);
+            $newSku = ($prod['sku'] ?? 'DIV-AUT') . '-COP' . rand(10, 99);
+            $newStatus = 'draft';
+            $newActive = 0;
+
+            $insProd = $this->pdo->prepare('
+                INSERT INTO products (
+                    uuid, category_id, sku, name, slug, short_description, description, 
+                    materials, stone_mineral, dimensions, colors, variants_json, 
+                    price_cents, promotional_price_cents, stock_quantity, stock_status, 
+                    status, sort_order, image_url, external_url, is_active, is_featured
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?, 
+                    ?, ?, ?, ?, ?, 
+                    ?, ?, ?, ?, 
+                    ?, ?, ?, ?, ?, ?
+                )
+            ');
+
+            $insProd->execute([
+                $newUuid,
+                $prod['category_id'],
+                $newSku,
+                $newName,
+                $newSlug,
+                $prod['short_description'] ?? null,
+                $prod['description'] ?? null,
+                $prod['materials'] ?? null,
+                $prod['stone_mineral'] ?? null,
+                $prod['dimensions'] ?? null,
+                $prod['colors'] ?? null,
+                $prod['variants_json'] ?? null,
+                $prod['price_cents'] ?? 38000,
+                $prod['promotional_price_cents'] ?? null,
+                $prod['stock_quantity'] ?? 10,
+                $prod['stock_status'] ?? 'in_stock',
+                $newStatus,
+                ((int) ($prod['sort_order'] ?? 0)) + 1,
+                $prod['image_url'] ?? null,
+                $prod['external_url'] ?? null,
+                $newActive,
+                0
+            ]);
+
+            $newId = (int) $this->pdo->lastInsertId();
+
+            // Duplicar todos os canais / links associados
+            $linksStmt = $this->pdo->prepare('SELECT * FROM product_links WHERE product_id = ? ORDER BY sort_order ASC');
+            $linksStmt->execute([$id]);
+            $origLinks = $linksStmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            if (!empty($origLinks)) {
+                $insLink = $this->pdo->prepare('
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ');
+                foreach ($origLinks as $ol) {
+                    $insLink->execute([
+                        $newId,
+                        $ol['platform_name'],
+                        $ol['url'],
+                        $ol['price_cents'],
+                        $ol['button_text'],
+                        $ol['is_active'],
+                        $ol['sort_order']
+                    ]);
+                }
+            }
+
+            $this->respond([
+                'success' => true, 
+                'message' => 'Joia duplicada com sucesso em modo Rascunho!', 
+                'new_id' => $newId
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao duplicar produto: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Alternar Visibilidade / Status do Produto (Publicado / Oculto)
      */
     public function toggleProduct(): void
     {
@@ -168,15 +438,28 @@ class AdminController
             return;
         }
 
-        $stmt = $this->pdo->prepare('UPDATE products SET is_active = CASE WHEN is_active = 1 THEN 0 ELSE 1 END WHERE id = ?');
-        $stmt->execute([$id]);
+        try {
+            $prod = $this->pdo->query("SELECT is_active, status FROM products WHERE id = $id")->fetch(\PDO::FETCH_ASSOC);
+            if (!$prod) {
+                $this->respond(['success' => false, 'error' => 'Produto não encontrado.'], 404);
+                return;
+            }
 
-        $newStatus = $this->pdo->query("SELECT is_active FROM products WHERE id = $id")->fetchColumn();
-        $this->respond(['success' => true, 'is_active' => (int) $newStatus]);
+            $currentlyPublished = (!empty($prod['is_active']) && ($prod['status'] ?? 'published') === 'published');
+            $newActive = $currentlyPublished ? 0 : 1;
+            $newStatus = $newActive === 1 ? 'published' : 'hidden';
+
+            $stmt = $this->pdo->prepare('UPDATE products SET is_active = ?, status = ? WHERE id = ?');
+            $stmt->execute([$newActive, $newStatus, $id]);
+
+            $this->respond(['success' => true, 'is_active' => $newActive, 'status' => $newStatus]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao alternar status: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Excluir Produto
+     * Excluir Produto e seus Links Associados
      */
     public function deleteProduct(): void
     {
@@ -186,10 +469,14 @@ class AdminController
             return;
         }
 
-        $stmt = $this->pdo->prepare('DELETE FROM products WHERE id = ?');
-        $stmt->execute([$id]);
+        try {
+            $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$id]);
+            $this->pdo->prepare('DELETE FROM products WHERE id = ?')->execute([$id]);
 
-        $this->respond(['success' => true, 'message' => 'Produto removido com sucesso.']);
+            $this->respond(['success' => true, 'message' => 'Produto e seus canais foram removidos com sucesso.']);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao excluir produto: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -295,6 +582,44 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar alterações: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Editor Visual de Elementos da Boutique (/loja)
+     */
+    public function boutique(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $settings = \App\Models\Setting::getAll();
+
+        View::render('admin/boutique', [
+            'pageTitle' => 'Personalizar Boutique DIVINIUM',
+            'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
+            'settings' => $settings,
+        ], 'admin');
+    }
+
+    /**
+     * Salvar alterações dos Elementos da Boutique
+     */
+    public function saveBoutique(): void
+    {
+        try {
+            \App\Models\Setting::setMany($_POST);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Elementos da Boutique atualizados com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar elementos da Boutique: ' . $e->getMessage()
             ], 500);
         }
     }

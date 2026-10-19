@@ -197,16 +197,41 @@ CREATE TABLE IF NOT EXISTS `products` (
     `height_cm` INT UNSIGNED NOT NULL DEFAULT 0,
     `width_cm` INT UNSIGNED NOT NULL DEFAULT 0,
     `length_cm` INT UNSIGNED NOT NULL DEFAULT 0,
+    `materials` VARCHAR(255) NULL,
+    `dimensions` VARCHAR(150) NULL,
+    `colors` VARCHAR(255) NULL,
+    `variants_json` TEXT NULL,
+    `stone_mineral` VARCHAR(150) NULL,
+    `image_url` VARCHAR(500) NULL,
+    `stock_status` VARCHAR(30) NOT NULL DEFAULT 'in_stock',
+    `status` VARCHAR(20) NOT NULL DEFAULT 'published',
+    `sort_order` INT NOT NULL DEFAULT 0,
     `is_featured` TINYINT(1) NOT NULL DEFAULT 0, -- Destaque na Home de Branding
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-    `external_url` VARCHAR(500) NULL, -- Link de venda externa (Shopee / Marketplace)
+    `external_url` VARCHAR(500) NULL, -- Link de venda externa principal (legado/fallback)
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL,
     CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL,
     INDEX `idx_products_slug` (`slug`),
     INDEX `idx_products_active_featured` (`is_active`, `is_featured`),
+    INDEX `idx_products_status_sort` (`status`, `sort_order`),
     INDEX `idx_products_sku` (`sku`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `product_links` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `product_id` BIGINT UNSIGNED NOT NULL,
+    `platform_name` VARCHAR(100) NOT NULL,
+    `url` VARCHAR(500) NOT NULL,
+    `price_cents` INT UNSIGNED NULL,
+    `button_text` VARCHAR(100) NULL,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_product_links_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+    INDEX `idx_product_links_sort` (`product_id`, `sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `product_images` (

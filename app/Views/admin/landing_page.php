@@ -1010,6 +1010,92 @@ use App\Models\Setting;
             </div>
         </div>
 
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: TEXTOS & ELEMENTOS DA BOUTIQUE (/loja) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-store">
+            <div class="section-card-header">
+                <div class="section-icon">🛍️</div>
+                <div>
+                    <h3>Textos & Chamadas da Boutique (/loja)</h3>
+                    <p>Configure os títulos e elementos da vitrine oficial. Você também pode acessar o módulo completo em <a href="/admin/boutique" style="color: #d4ba88; text-decoration: underline;">Personalizar Boutique</a>.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.08); border: 1px solid rgba(212, 186, 136, 0.25); border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <strong style="color: #f7f4ee; display: block; margin-bottom: 2px;">💎 Central Executiva da Boutique & Catálogo</strong>
+                        <span style="color: #a8a096; font-size: 0.82rem;">Gerencie selos de garantia, seção editorial, botões de múltiplos canais e produtos com links ilimitados.</span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="/admin/boutique" class="btn-admin-gold" style="font-size: 0.8rem; padding: 8px 14px;">Personalizar Boutique Completa</a>
+                        <a href="/admin/produtos" class="btn-admin-secondary" style="font-size: 0.8rem; padding: 8px 14px;">Gerenciar Produtos & Links</a>
+                    </div>
+                </div>
+
+                <div class="form-checkbox-row full-width">
+                    <input type="checkbox" id="store_hero_visible_lp" name="store_hero_visible" value="1" 
+                           <?= Setting::get('store_hero_visible', '1') === '1' ? 'checked' : '' ?>
+                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                    <label for="store_hero_visible_lp" style="color: #ffffff; cursor: pointer;">Exibir Hero no topo da Boutique (/loja)</label>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="store_hero_badge_lp">Selo Superior da Boutique (Badge)</label>
+                    <input type="text" id="store_hero_badge_lp" name="store_hero_badge" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CANAIS HOMOLOGADOS')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_hero_title_lp">Título da Loja (Primeira Parte)</label>
+                    <input type="text" id="store_hero_title_lp" name="store_hero_title" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_hero_title', 'Joias Autorais &')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_hero_highlight_lp">Destaque em Ouro</label>
+                    <input type="text" id="store_hero_highlight_lp" name="store_hero_highlight" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="store_hero_subtitle_lp">Subtítulo / Descrição Conceitual da Boutique</label>
+                    <textarea id="store_hero_subtitle_lp" name="store_hero_subtitle" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_filter_all_lp">Rótulo Filtro 'Todas'</label>
+                    <input type="text" id="store_filter_all_lp" name="store_filter_all" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_card_badge_metal_lp">Selo de Metal nos Cards</label>
+                    <input type="text" id="store_card_badge_metal_lp" name="store_card_badge_metal" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_pix_discount_label_lp">Rótulo Pix nos Cards</label>
+                    <input type="text" id="store_pix_discount_label_lp" name="store_pix_discount_label" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_multi_channel_label_lp">Rótulo 'Disponível também em:'</label>
+                    <input type="text" id="store_multi_channel_label_lp" name="store_multi_channel_label" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="store_whatsapp_url_lp">Link do Atendimento WhatsApp na Boutique</label>
+                    <input type="text" id="store_whatsapp_url_lp" name="store_whatsapp_url" class="form-input" 
+                           value="<?= \App\Core\View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999?text=Ol%C3%A1,%20estou%20na%20loja%20da%20Divinium%20e%20gostaria%20de%20tirar%20d%C3%BAvidas')) ?>">
+                </div>
+            </div>
+        </div>
+
         <!-- BARRA FIXA DE SALVAMENTO NO RODAPÉ -->
         <div class="editor-save-dock">
             <div class="save-dock-inner">
