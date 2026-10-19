@@ -145,6 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCookieBanner();
     setupHeroMineralSwitcher();
     setupAdminLoginModal();
+    setupMobileMenu();
+    setupHeaderSearch();
 
     const cartTrigger = document.getElementById('cartTrigger');
     const closeBtn = document.getElementById('closeCartDrawer');
@@ -154,6 +156,150 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
     if (overlay) overlay.addEventListener('click', closeDrawer);
 });
+
+// 5.1 CONTROLE DO MENU RESPONSIVO MOBILE (DRAWER & ACORDEÃO)
+function setupMobileMenu() {
+    const toggleBtn = document.getElementById('mobileMenuToggle');
+    const drawer = document.getElementById('mobileNavDrawer');
+    const overlay = document.getElementById('mobileNavOverlay');
+    const closeBtn = document.getElementById('closeMobileNavBtn');
+    const loginBtn = document.getElementById('mobileLoginBtn');
+    const accordionToggle = document.getElementById('mobileCollectionsToggle');
+    const accordion = document.getElementById('mobileCollectionsAccordion');
+
+    if (!toggleBtn || !drawer || !overlay) return;
+
+    function openMobileMenu() {
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+        toggleBtn.classList.add('active');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        drawer.classList.remove('active');
+        overlay.classList.remove('active');
+        toggleBtn.classList.remove('active');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    toggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (drawer.classList.contains('active')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMobileMenu();
+        });
+    }
+
+    overlay.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMobileMenu();
+    });
+
+    // Fechar ao teclar Esc
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+
+    // Acordeão de Coleções
+    if (accordionToggle && accordion) {
+        accordionToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpened = accordion.classList.toggle('active');
+            accordionToggle.setAttribute('aria-expanded', isOpened ? 'true' : 'false');
+        });
+    }
+
+    // Fechar automaticamente ao clicar em qualquer link interno
+    const navLinks = drawer.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
+
+    // Botão de login administrativo pelo menu mobile
+    if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMobileMenu();
+            const loginTrigger = document.getElementById('loginModalTrigger');
+            if (loginTrigger) {
+                loginTrigger.click();
+            } else {
+                const modalOverlay = document.getElementById('loginModalOverlay');
+                if (modalOverlay) {
+                    modalOverlay.classList.add('active');
+                    modalOverlay.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        });
+    }
+
+    // Suporte a swipe para fechar (deslizar para a esquerda)
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    drawer.addEventListener('touchstart', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }
+    }, { passive: true });
+
+    drawer.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = touchStartX - touchEndX;
+            const diffY = Math.abs(touchStartY - touchEndY);
+            // Se deslizou mais de 45px para a esquerda e menos na vertical
+            if (diffX > 45 && diffY < 60) {
+                closeMobileMenu();
+            }
+        }
+    }, { passive: true });
+
+    window.closeMobileMenu = closeMobileMenu;
+    window.openMobileMenu = openMobileMenu;
+}
+
+// 5.2 BOTÃO DE BUSCA DO CABEÇALHO (DIRECIONAMENTO INTELIGENTE)
+function setupHeaderSearch() {
+    const searchBtns = document.querySelectorAll('.search-trigger');
+    searchBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.location.pathname.startsWith('/loja')) {
+                const searchInput = document.getElementById('storeSearchInput');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                window.location.href = '/loja#showcase';
+            }
+        });
+    });
+}
 
 // 7. CONTROLE DO SELETOR DE TEMAS (SUPORTE À ÁREA ADMINISTRATIVA)
 function setupThemeToggle() {
