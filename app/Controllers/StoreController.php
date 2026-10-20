@@ -312,6 +312,15 @@ class StoreController
                 }
             }
 
+            if ($product) {
+                foreach ($defaults as $def) {
+                    if ($def['id'] !== $product['id']) {
+                        $relatedProducts[] = $def;
+                    }
+                }
+            }
+        }
+
         // Garantir que as variações sejam carregadas do seed_products.json se ainda não estiverem preenchidas
         if ($product && (empty($variations) || count($variations) <= 1)) {
             $rawModelSku = !empty($product['parent_sku']) ? $product['parent_sku'] : ($product['sku'] ?? '');
