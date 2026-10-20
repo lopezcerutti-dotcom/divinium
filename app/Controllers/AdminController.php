@@ -693,6 +693,202 @@ class AdminController
     }
 
     /**
+     * Gestão Centralizada de Coleções & Lançamentos da DIVINIUM
+     * Organizada em categorias separadas (Braceletes, Colares, Anéis, etc.)
+     */
+    public function lancamentos(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $categories = \App\Models\Collection::getCategories();
+        $collections = \App\Models\Collection::getAll();
+        $grouped = \App\Models\Collection::getGroupedByCategory();
+
+        // Buscar todos os produtos cadastrados no catálogo para vincular às coleções
+        $products = [];
+        try {
+            $stmt = $this->pdo->query("
+                SELECT p.id, p.name, p.slug, p.sku, p.price_cents, p.image_url, p.stone_mineral, p.category_id, p.is_active,
+                       c.name as category_name, c.slug as category_slug
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                ORDER BY p.sort_order ASC, p.id DESC
+            ");
+            if ($stmt) {
+                $products = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+            }
+        } catch (\Throwable $e) {
+            error_log('Erro ao carregar produtos para lançamentos: ' . $e->getMessage());
+        }
+
+        if (empty($products)) {
+            $products = \App\Controllers\StoreController::getDefaultProducts();
+        }
+
+        View::render('admin/lancamentos', [
+            'pageTitle' => 'Lançamentos & Gestão de Coleções',
+            'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
+            'categories' => $categories,
+            'collections' => $collections,
+            'grouped' => $grouped,
+            'products' => $products,
+        ], 'admin');
+    }
+
+    /**
+     * Salva ou atualiza uma coleção com todos os seus atributos
+     */
+    public function saveColecao(): void
+    {
+        try {
+            $data = $_POST;
+            if (!empty($data['products_json']) && is_string($data['products_json'])) {
+                $decodedProducts = json_decode($data['products_json'], true);
+                if (is_array($decodedProducts)) {
+                    $data['products'] = $decodedProducts;
+                }
+            }
+
+            $saved = \App\Models\Collection::save($data);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Coleção "' . ($saved['name'] ?? '') . '" salva com sucesso!',
+                'collection' => $saved
+            ]);
+        } catch (\Throwable $e) {
+            error_log('Erro ao salvar coleção: ' . $e->getMessage());
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar coleção: ' . $e->getMessage()
+            ], 200);
+        }
+    }
+
+    /**
+     * Exclui uma coleção (preservando todos os produtos intactos no catálogo)
+     */
+    public function deleteColecao(): void
+    {
+        try {
+            $id = (int) ($_POST['id'] ?? 0);
+            if ($id <= 0) {
+                $this->respond(['success' => false, 'error' => 'ID de coleção inválido.'], 200);
+                return;
+            }
+
+            \App\Models\Collection::delete($id);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Coleção excluída com sucesso. Todos os produtos vinculados foram mantidos intactos no catálogo.'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao excluir coleção: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Reordena as coleções da loja pública
+     */
+    public function reorderColecoes(): void
+    {
+        try {
+            $orderedIds = $_POST['ordered_ids'] ?? [];
+            if (is_string($orderedIds)) {
+                $orderedIds = json_decode($orderedIds, true) ?: [];
+            }
+
+            \App\Models\Collection::reorder($orderedIds);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Ordem das coleções atualizada com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao reordenar coleções: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Alterna a visibilidade (mostrar/ocultar) de uma coleção sem apagar seu conteúdo
+     */
+    public function toggleColecaoVisibility(): void
+    {
+        try {
+            $id = (int) ($_POST['id'] ?? 0);
+            if ($id <= 0) {
+                $this->respond(['success' => false, 'error' => 'ID inválido.'], 200);
+                return;
+            }
+
+            $newState = \App\Models\Collection::toggleVisibility($id);
+
+            $this->respond([
+                'success' => true,
+                'is_active' => $newState ? 1 : 0,
+                'message' => $newState ? 'Coleção ativada na loja pública.' : 'Coleção ocultada da loja pública (conteúdo preservado).'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao alternar visibilidade: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Alterna a visibilidade de um produto individual dentro de uma coleção
+     */
+    public function toggleColecaoProduto(): void
+    {
+        try {
+            $collectionId = (int) ($_POST['collection_id'] ?? 0);
+            $productId = (int) ($_POST['product_id'] ?? 0);
+
+            if ($collectionId <= 0 || $productId <= 0) {
+                $this->respond(['success' => false, 'error' => 'Parâmetros inválidos.'], 200);
+                return;
+            }
+
+            $newState = \App\Models\Collection::toggleProductVisibility($collectionId, $productId);
+
+            $this->respond([
+                'success' => true,
+                'is_active' => $newState ? 1 : 0,
+                'message' => $newState ? 'Produto exibido nesta coleção.' : 'Produto ocultado nesta coleção.'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao alternar visibilidade do produto: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Cria uma nova categoria dinamicamente para coleções
+     */
+    public function saveLancamentoCategoria(): void
+    {
+        try {
+            $name = trim((string) ($_POST['name'] ?? ''));
+            $desc = trim((string) ($_POST['description'] ?? ''));
+
+            if ($name === '') {
+                $this->respond(['success' => false, 'error' => 'O nome da categoria é obrigatório.'], 200);
+                return;
+            }
+
+            $category = \App\Models\Collection::createCategory($name, $desc);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Categoria "' . $name . '" criada com sucesso! Uma nova área independente já está disponível.',
+                'category' => $category
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao criar categoria: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
      * Dashboard de Acompanhamento (Analytics, Cliques Shopee e Métricas da Loja)
      */
     public function metrics(): void

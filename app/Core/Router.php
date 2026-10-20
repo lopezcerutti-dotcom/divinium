@@ -258,6 +258,13 @@ class Router
         $this->post('/admin/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);
         $this->get('/admin/boutique', [\App\Controllers\AdminController::class, 'boutique'], $adminAuth);
         $this->post('/admin/boutique/salvar', [\App\Controllers\AdminController::class, 'saveBoutique'], $adminAuth);
+        $this->get('/admin/lancamentos', [\App\Controllers\AdminController::class, 'lancamentos'], $adminAuth);
+        $this->post('/admin/lancamentos/salvar-colecao', [\App\Controllers\AdminController::class, 'saveColecao'], $adminAuth);
+        $this->post('/admin/lancamentos/excluir-colecao', [\App\Controllers\AdminController::class, 'deleteColecao'], $adminAuth);
+        $this->post('/admin/lancamentos/reordenar-colecoes', [\App\Controllers\AdminController::class, 'reorderColecoes'], $adminAuth);
+        $this->post('/admin/lancamentos/toggle-visibilidade', [\App\Controllers\AdminController::class, 'toggleColecaoVisibility'], $adminAuth);
+        $this->post('/admin/lancamentos/toggle-produto', [\App\Controllers\AdminController::class, 'toggleColecaoProduto'], $adminAuth);
+        $this->post('/admin/lancamentos/salvar-categoria', [\App\Controllers\AdminController::class, 'saveLancamentoCategoria'], $adminAuth);
         $this->get('/admin/landing-page', [\App\Controllers\AdminController::class, 'landingPage'], $adminAuth);
         $this->post('/admin/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
         $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);

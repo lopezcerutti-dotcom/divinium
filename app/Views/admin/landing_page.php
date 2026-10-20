@@ -62,9 +62,6 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchSection('sec-about', this)">
             <span>📜 Manifesto & Sobre</span>
         </button>
-        <button type="button" class="tab-btn" onclick="switchSection('sec-collections', this)">
-            <span>✦ Vitrine & Filtros</span>
-        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-services', this)">
             <span>🛡️ Serviços & Garantia</span>
         </button>
@@ -1317,8 +1314,18 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="section-icon">✦</div>
                 <div>
                     <h3>Vitrine de Produtos, Filtros & Card Lifestyle na Home</h3>
-                    <p>Textos da seção que apresenta o catálogo de braceletes na página principal.</p>
+                    <p>Configurações legadas de texto da vitrine. Para gerenciar coleções por categoria, utilize a nova aba Lançamentos.</p>
                 </div>
+            </div>
+
+            <div style="background: rgba(212,186,136,0.1); border: 1px solid rgba(212,186,136,0.25); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                <div>
+                    <strong style="color: #d4ba88; display: block; margin-bottom: 4px;">🚀 Gerenciamento de Coleções centralizado na aba Lançamentos</strong>
+                    <span style="color: #a8a096; font-size: 0.85rem;">Você pode criar, editar, reordenar coleções e gerenciar produtos separados por categoria (Braceletes, Colares, Anéis) na aba Lançamentos.</span>
+                </div>
+                <a href="/admin/lancamentos" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.82rem; padding: 8px 16px; text-decoration: none;">
+                    Ir para Lançamentos ↗
+                </a>
             </div>
 
             <div class="form-grid">

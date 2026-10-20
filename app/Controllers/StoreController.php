@@ -20,11 +20,8 @@ class StoreController
         try {
             $pdo = Database::getConnection();
 
-            // Buscar categorias ativas
-            $categoriesStmt = $pdo->query('SELECT * FROM categories WHERE is_active = 1 ORDER BY sort_order ASC, name ASC');
-            if ($categoriesStmt) {
-                $categories = $categoriesStmt->fetchAll() ?: [];
-            }
+            // Buscar categorias ativas integradas com coleções e lançamentos
+            $categories = \App\Models\Collection::getCategories();
 
             // Buscar produtos publicados com sua categoria ordenados por sort_order
             $productsStmt = $pdo->query("

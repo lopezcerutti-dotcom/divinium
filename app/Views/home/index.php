@@ -277,108 +277,152 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
 <!-- ======================================================================= -->
 <!-- SEÇÃO 3: VITRINE DE PRODUTOS & SLIDER (SIGNATURE SHOWCASE) -->
 <!-- ======================================================================= -->
+<?php
+use App\Models\Collection;
+use App\Models\Setting;
+use App\Core\View;
+
+$activeCollections = Collection::getActive();
+if (empty($activeCollections)) {
+    $activeCollections = Collection::getAll();
+}
+
+// Extrair categorias das coleções ativas para os filtros
+$availableCategories = [];
+foreach ($activeCollections as $c) {
+    $cSlug = !empty($c['category_slug']) ? $c['category_slug'] : 'braceletes';
+    $cName = !empty($c['category_name']) ? $c['category_name'] : 'Braceletes';
+    if (!isset($availableCategories[$cSlug])) {
+        $availableCategories[$cSlug] = $cName;
+    }
+}
+?>
 <section class="showcase-section" id="collections">
     <div class="container">
         
         <!-- Cabeçalho da Vitrine com Filtros em Pílula -->
         <div class="showcase-header">
             <div class="showcase-titles">
-                <span class="sub-label"><?= \App\Core\View::e(Setting::get('collections_tag', 'SELEÇÃO EXCLUSIVA')) ?></span>
-                <h2 class="section-serif-title"><?= \App\Core\View::e(Setting::get('collections_title', 'Braceletes CAMINHOS')) ?></h2>
+                <span class="sub-label"><?= View::e(Setting::get('collections_tag', 'SELEÇÃO EXCLUSIVA')) ?></span>
+                <h2 class="section-serif-title"><?= View::e(Setting::get('collections_title', 'Coleções & Lançamentos')) ?></h2>
             </div>
             
             <div class="showcase-filter-pills" role="tablist">
-                <button class="filter-pill active" data-filter="all"><?= \App\Core\View::e(Setting::get('filter_pill_all', 'Todas as Peças')) ?></button>
-                <button class="filter-pill" data-filter="verde"><?= \App\Core\View::e(Setting::get('filter_pill_verde', 'Quartzo Verde')) ?></button>
-                <button class="filter-pill" data-filter="madreperola"><?= \App\Core\View::e(Setting::get('filter_pill_madre', 'Madrepérola')) ?></button>
-                <button class="filter-pill" data-filter="vermelho"><?= \App\Core\View::e(Setting::get('filter_pill_verm', 'Jaspe Vermelho')) ?></button>
-                <button class="filter-pill" data-filter="onix"><?= \App\Core\View::e(Setting::get('filter_pill_onix', 'Ônix Negro')) ?></button>
+                <button class="filter-pill active" data-filter="all"><?= View::e(Setting::get('filter_pill_all', 'Todas as Peças')) ?></button>
+                <?php foreach ($availableCategories as $cSlug => $cName): ?>
+                    <button class="filter-pill" data-filter="cat-<?= View::e($cSlug) ?>"><?= View::e($cName) ?></button>
+                <?php endforeach; ?>
             </div>
         </div>
 
-        <!-- Grid de Produtos e Foto Editorial de Apoio -->
-        <div class="showcase-grid">
-            
-            <!-- Produto 1: Quartzo Verde -->
-            <div class="product-card" data-category="verde">
-                <div class="product-thumb">
-                    <img src="/assets/images/products/bracelete-verde.jpg" 
-                         alt="Bracelete Caminhos Quartzo Verde" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='/assets/images/products/bracelete-verde.png';">
-                    <span class="badge-tag">PRATA & QUARTZO VERDE</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Bracelete Caminhos • Verde</h3>
-                    <p class="product-variant">Esperança, Equilíbrio & Cura • Aro Duplo em Prata</p>
-                    <div class="product-price-box">
-                        <span class="price">R$ 380,00</span>
-                        <span class="installment">6x de R$ 63,33 sem juros | R$ 361,00 no Pix</span>
+        <!-- Grade de Coleções Ativas -->
+        <div class="collections-showcase-container">
+            <?php foreach ($activeCollections as $cIdx => $col): ?>
+                <?php
+                    $colCatSlug = !empty($col['category_slug']) ? $col['category_slug'] : 'braceletes';
+                    $colProducts = array_filter($col['products'] ?? [], function($p) {
+                        return !isset($p['is_active']) || !empty($p['is_active']);
+                    });
+                ?>
+                <div class="collection-block" data-category="cat-<?= View::e($colCatSlug) ?>" id="collection-block-<?= (int)$col['id'] ?>" style="margin-bottom: 55px;">
+                    
+                    <?php if (count($activeCollections) > 1 || !empty($col['subtitle']) || !empty($col['promo_text'])): ?>
+                    <div class="collection-block-header" style="margin-bottom: 24px;">
+                        <?php if (!empty($col['badge'])): ?>
+                            <span class="badge-tag" style="position: static; display: inline-block; margin-bottom: 8px; background: rgba(212,186,136,0.15); color: #d4ba88; border: 1px solid rgba(212,186,136,0.3);">
+                                <?= View::e($col['badge']) ?>
+                            </span>
+                        <?php endif; ?>
+                        <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--text-primary); margin: 0 0 6px;">
+                            <?= View::e(!empty($col['title']) ? $col['title'] : $col['name']) ?>
+                        </h3>
+                        <?php if (!empty($col['subtitle'])): ?>
+                            <p style="font-size: 0.95rem; color: var(--text-secondary); margin: 0 0 10px; max-width: 820px; line-height: 1.6;">
+                                <?= View::e($col['subtitle']) ?>
+                            </p>
+                        <?php endif; ?>
+                        <?php if (!empty($col['promo_text'])): ?>
+                            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(212,186,136,0.08); border: 1px solid rgba(212,186,136,0.25); color: #b8924b; font-size: 0.8rem; font-weight: 600; padding: 4px 14px; border-radius: 20px;">
+                                <span>✦</span>
+                                <span><?= View::e($col['promo_text']) ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <button class="btn-add-cart" onclick="addToCart('cam-verde', 'Bracelete Caminhos Quartzo Verde', 38000)">
-                        Adicionar à Sacola
-                    </button>
-                </div>
-            </div>
+                    <?php endif; ?>
 
-            <!-- Produto 2: Madrepérola & Nácar -->
-            <div class="product-card" data-category="madreperola">
-                <div class="product-thumb">
-                    <img src="/assets/images/products/bracelete-madreperola.jpg" 
-                         alt="Bracelete Caminhos Madrepérola" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='/assets/images/products/bracelete-madreperola.jpeg';">
-                    <span class="badge-tag">PRATA & MADREPÉROLA</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Bracelete Caminhos • Madrepérola</h3>
-                    <p class="product-variant">Serenidade, Pureza & Luz • Brilho Nacarado Natural</p>
-                    <div class="product-price-box">
-                        <span class="price">R$ 380,00</span>
-                        <span class="installment">6x de R$ 63,33 sem juros | R$ 361,00 no Pix</span>
+                    <!-- Grid de Produtos e Foto Editorial de Apoio -->
+                    <div class="showcase-grid">
+                        <?php if (!empty($colProducts)): ?>
+                            <?php foreach ($colProducts as $prod): ?>
+                                <?php
+                                    $pPriceCents = (int) ($prod['price_cents'] ?? 38000);
+                                    $pPriceFormatted = number_format($pPriceCents / 100, 2, ',', '.');
+                                    $pInstallment = number_format(($pPriceCents / 6) / 100, 2, ',', '.');
+                                    $pPix = number_format(($pPriceCents * 0.95) / 100, 2, ',', '.');
+                                    $pImg = !empty($prod['image_url']) ? $prod['image_url'] : '/assets/images/products/bracelete-verde.jpg';
+                                    $pBadge = !empty($prod['badge']) ? $prod['badge'] : 'ALTA JOALHERIA';
+                                    $pUrl = !empty($prod['url']) ? $prod['url'] : '/loja';
+                                ?>
+                                <div class="product-card" data-category="cat-<?= View::e($colCatSlug) ?>">
+                                    <div class="product-thumb">
+                                        <img src="<?= View::e($pImg) ?>" 
+                                             alt="<?= View::e($prod['name'] ?? 'Joia Divinium') ?>" 
+                                             loading="lazy"
+                                             onerror="this.onerror=null; this.src='/assets/images/products/bracelete-verde.jpg';">
+                                        <span class="badge-tag"><?= View::e($pBadge) ?></span>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name"><?= View::e($prod['name'] ?? 'Joia Divinium') ?></h3>
+                                        <p class="product-variant"><?= View::e($col['name']) ?> • Acabamento em Prata de Lei 925</p>
+                                        <div class="product-price-box">
+                                            <span class="price">R$ <?= $pPriceFormatted ?></span>
+                                            <span class="installment">6x de R$ <?= $pInstallment ?> sem juros | R$ <?= $pPix ?> no Pix</span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; margin-top: auto;">
+                                            <button type="button" class="btn-add-cart" onclick="addToCart('prod-<?= (int)($prod['id'] ?? 1) ?>', '<?= View::e(addslashes($prod['name'] ?? 'Joia')) ?>', <?= $pPriceCents ?>)">
+                                                Adicionar à Sacola
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Card Editorial Lateral da Coleção -->
+                        <div class="showcase-lifestyle-card">
+                            <div class="lifestyle-media">
+                                <img src="<?= View::e(!empty($col['image_url']) ? $col['image_url'] : '/assets/images/products/colecao-completa-espelho.jpg') ?>" 
+                                     alt="<?= View::e(!empty($col['image_alt']) ? $col['image_alt'] : $col['name']) ?>" 
+                                     loading="lazy"
+                                     onerror="this.onerror=null; this.src='/assets/images/products/colecao-completa-espelho.jpg';">
+                            </div>
+                            <div class="lifestyle-caption">
+                                <h4><?= View::e(!empty($col['title']) ? $col['title'] : $col['name']) ?></h4>
+                                <p><?= View::e(!empty($col['description']) ? $col['description'] : (!empty($col['subtitle']) ? $col['subtitle'] : 'Seis caminhos, seis vibrações. Combine mais de uma cor para expressar as diferentes nuances da sua presença.')) ?></p>
+                                
+                                <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 10px;">
+                                    <a href="<?= View::e(!empty($col['button_url']) ? $col['button_url'] : '/loja') ?>" 
+                                       target="<?= View::e($col['button_target'] ?? '_self') ?>"
+                                       class="btn-col-cta-lifestyle"
+                                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #d4ba88; color: #121110; padding: 12px 24px; border-radius: 4px; font-weight: 600; font-size: 0.86rem; text-decoration: none; letter-spacing: 0.04em; transition: all 0.25s ease;">
+                                        <span><?= View::e(!empty($col['button_text']) ? $col['button_text'] : 'Explorar Coleção') ?></span>
+                                        <span style="font-size: 0.9rem;">↗</span>
+                                    </a>
+
+                                    <?php if (!empty($col['button_secondary_text']) && !empty($col['button_secondary_url'])): ?>
+                                        <a href="<?= View::e($col['button_secondary_url']) ?>" 
+                                           target="_blank" 
+                                           style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--text-secondary); font-size: 0.82rem; text-decoration: none; padding: 4px;">
+                                            <span>💬 <?= View::e($col['button_secondary_text']) ?></span>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <button class="btn-add-cart" onclick="addToCart('cam-madre', 'Bracelete Caminhos Madrepérola', 38000)">
-                        Adicionar à Sacola
-                    </button>
                 </div>
-            </div>
-
-            <!-- Produto 3: Jaspe Vermelho -->
-            <div class="product-card" data-category="vermelho">
-                <div class="product-thumb">
-                    <img src="/assets/images/products/bracelete-vermelho.jpg" 
-                         alt="Bracelete Caminhos Jaspe Vermelho" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='/assets/images/products/bracelete-vermelho.jpg';">
-                    <span class="badge-tag">PRATA & JASPE VERMELHO</span>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Bracelete Caminhos • Vermelho</h3>
-                    <p class="product-variant">Força, Vitalidade & Paixão • Acabamento em Couro Nobre</p>
-                    <div class="product-price-box">
-                        <span class="price">R$ 380,00</span>
-                        <span class="installment">6x de R$ 63,33 sem juros | R$ 361,00 no Pix</span>
-                    </div>
-                    <button class="btn-add-cart" onclick="addToCart('cam-verm', 'Bracelete Caminhos Jaspe Vermelho', 38000)">
-                        Adicionar à Sacola
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card Editorial Lateral: Coleção Completa no Espelho -->
-            <div class="showcase-lifestyle-card">
-                <div class="lifestyle-media">
-                    <img src="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_img', '/assets/images/products/colecao-completa-espelho.jpg')) ?>" 
-                         alt="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_title', 'Harmonia Mineral no Espelho')) ?>" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='/assets/images/products/colecao-completa-espelho.png';">
-                </div>
-                <div class="lifestyle-caption">
-                    <h4><?= \App\Core\View::e(Setting::get('showcase_lifestyle_title', 'Harmonia Mineral no Espelho')) ?></h4>
-                    <p><?= \App\Core\View::e(Setting::get('showcase_lifestyle_text', 'Seis caminhos, seis vibrações. Combine mais de uma cor para expressar as diferentes nuances da sua presença.')) ?></p>
-                </div>
-            </div>
-
+            <?php endforeach; ?>
         </div>
 
         <!-- Barra de Progresso e Navegação do Slider -->

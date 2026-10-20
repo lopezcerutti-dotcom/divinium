@@ -92,6 +92,7 @@ function closeDrawer() {
 function setupFilters() {
     const pills = document.querySelectorAll('.filter-pill');
     const cards = document.querySelectorAll('.product-card');
+    const collectionBlocks = document.querySelectorAll('.collection-block');
 
     pills.forEach(pill => {
         pill.addEventListener('click', () => {
@@ -100,14 +101,25 @@ function setupFilters() {
 
             const filter = pill.getAttribute('data-filter');
 
-            cards.forEach(card => {
-                const category = card.getAttribute('data-category');
-                if (filter === 'all' || category === filter) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            if (collectionBlocks.length > 0) {
+                collectionBlocks.forEach(block => {
+                    const category = block.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        block.style.display = 'block';
+                    } else {
+                        block.style.display = 'none';
+                    }
+                });
+            } else if (cards.length > 0) {
+                cards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
         });
     });
 }
