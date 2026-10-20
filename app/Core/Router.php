@@ -84,8 +84,10 @@ class Router
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode(['error' => 'Página ou recurso não encontrado.'], JSON_UNESCAPED_UNICODE);
         } else {
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Página Não Encontrada - 404</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;"><h1>404</h1><p>A página que você está procurando não existe.</p><a href="/">Voltar à Página Inicial</a></body></html>';
+            header('Content-Type: text/html; charset=UTF-8');
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Página Não Encontrada | Divinium</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h1{letter-spacing:4px;font-weight:300;font-size:3rem;margin-bottom:10px;}p{color:#aaa;font-size:1.1rem;margin-bottom:25px;}a{color:#0d0c0b;background:#d4ba88;padding:12px 28px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:600;letter-spacing:1px;}</style></head><body><h1>404</h1><p>A joia ou página que você procura não foi encontrada.</p><a href="/">Voltar à Boutique</a></body></html>';
         }
+        exit;
     }
 
     private function executeRoute(callable|array $handler, array $middlewares, array $params): void
