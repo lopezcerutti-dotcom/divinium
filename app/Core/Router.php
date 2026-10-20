@@ -138,6 +138,28 @@ class Router
             exit;
         });
 
+        // Endpoint de Diagnóstico Seguro de Logs do Servidor
+        $this->get('/debug-logs-84j2', function (): void {
+            header('Content-Type: application/json; charset=UTF-8');
+            $readLast = function(string $file, int $lines = 40): array {
+                if (!file_exists($file) || !is_readable($file)) return [];
+                $content = @file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                return is_array($content) ? array_slice($content, -$lines) : [];
+            };
+
+            $logDir = defined('LOGS_PATH') ? LOGS_PATH : dirname(__DIR__, 2) . '/logs';
+
+            echo json_encode([
+                'exception_log' => $readLast($logDir . '/app/exception.log'),
+                'error_log' => $readLast($logDir . '/app/error.log'),
+                'database_errors' => $readLast($logDir . '/app/database_errors.log'),
+                'php_ini_error_log' => $readLast((string)ini_get('error_log')),
+                'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+                'env_app_env' => \App\Core\Env::get('APP_ENV'),
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            exit;
+        });
+
         // Rota Raiz: Home focada em Branding & Conversão
         $homeHandler = function (): void {
             \App\Core\View::render('home/index', [
