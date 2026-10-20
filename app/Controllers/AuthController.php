@@ -27,7 +27,7 @@ class AuthController
             $errorMsg = 'Por favor, informe seu e-mail e senha.';
             if ($isJson) {
                 header('Content-Type: application/json; charset=UTF-8');
-                http_response_code(422);
+                http_response_code(200);
                 echo json_encode(['success' => false, 'error' => $errorMsg]);
                 return;
             }
