@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Core\Router;
+
 /**
  * ==============================================================================
  * FRONT CONTROLLER - DIVINIUM E-COMMERCE
@@ -9,6 +11,29 @@ declare(strict_types=1);
  * Único arquivo PHP publicamente exposto à internet.
  * ==============================================================================
  */
+
+// Blindagem precoce contra erros não capturados antes ou durante o bootstrap
+// Impede que o LiteSpeed Web Server da Hostinger intercepte com tela de erro genérica
+register_shutdown_function(function (): void {
+    $error = error_get_last();
+    $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_RECOVERABLE_ERROR, E_USER_ERROR];
+    if ($error !== null && in_array($error['type'], $fatalTypes, true)) {
+        while (ob_get_level() > 0) {
+            @ob_end_clean();
+        }
+        if (!headers_sent()) {
+            http_response_code(200);
+            header('Content-Type: text/html; charset=UTF-8');
+        }
+        $logDir = __DIR__ . '/logs/app';
+        if (!is_dir($logDir)) {
+            @mkdir($logDir, 0755, true);
+        }
+        @file_put_contents($logDir . '/exception.log', sprintf("[%s] FATAL BOOT: %s em %s:%d\n", date('Y-m-d H:i:s'), $error['message'], $error['file'], $error['line']), FILE_APPEND | LOCK_EX);
+        echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:10px 22px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;}</style></head><body><h2>DIVINIUM</h2><p>O servidor está atualizando os serviços da boutique com segurança. Por favor, recarregue a página.</p><a href="/">Recarregar Página</a></body></html>';
+        exit(0);
+    }
+});
 
 // Ponto de entrada: Carrega o bootstrap (suporta app/ fora ou dentro de public_html)
 $possibleBootstraps = [
@@ -35,8 +60,6 @@ if ($bootstrapFile === null) {
 $app = require_once $bootstrapFile;
 
 // Dispara o Roteador Principal / Pipeline de Middlewares
-use App\Core\Router;
-
 try {
     $router = new Router();
     $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');
