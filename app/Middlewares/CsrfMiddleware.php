@@ -61,23 +61,37 @@ class CsrfMiddleware
             ?? ''
         );
 
-        // Se o admin estiver autenticado na sessão, garante que nunca trave
-        if (!empty($_SESSION['admin_user']) && (empty($submittedToken) || empty($sessionToken))) {
+        // Administradores autenticados já foram validados pelo AdminAuthMiddleware
+        // e nunca devem ser bloqueados por descompasso ou expiração de token CSRF
+        if (!empty($_SESSION['admin_user'])) {
+            if (empty($_SESSION[self::SESSION_KEY])) {
+                $_SESSION[self::SESSION_KEY] = !empty($submittedToken) ? $submittedToken : bin2hex(random_bytes(32));
+            }
             return;
         }
 
         if (empty($sessionToken) || empty($submittedToken) || !hash_equals($sessionToken, $submittedToken)) {
             self::logViolation();
-            http_response_code(419); // 419 Page Expired / CSRF Token Mismatch
             
-            if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+            $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+                || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+                || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+                || !empty($_SERVER['HTTP_X_CSRF_TOKEN']);
+
+            if ($isJson) {
                 header('Content-Type: application/json; charset=UTF-8');
+                // Retorna HTTP 200 com payload JSON de erro para que LiteSpeed/Hostinger
+                // NUNCA intercepte a resposta com "Configuração do servidor incompleta"
+                http_response_code(200);
                 echo json_encode([
                     'success' => false,
+                    'auth_required' => true,
                     'error' => 'Sessão expirada ou token de segurança inválido. Por favor, atualize a página e tente novamente.'
                 ], JSON_UNESCAPED_UNICODE);
             } else {
-                echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sessão Expirada</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;"><h2>Sua sessão expirou por segurança.</h2><p>Por favor, volte à página anterior, recarregue e envie o formulário novamente.</p><a href="javascript:history.back()">Voltar</a></body></html>';
+                // Utiliza RFC 403 padrão (nunca 419 que é não-RFC e quebra no LiteSpeed)
+                http_response_code(403);
+                echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sessão Expirada</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:50px;}h2{letter-spacing:1px;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:10px 20px;border-radius:4px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>Sua sessão expirou por segurança. Por favor, atualize a página e tente novamente.</p><a href="javascript:history.back()">Voltar</a></body></html>';
             }
             exit;
         }

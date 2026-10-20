@@ -1994,7 +1994,14 @@ async function handleEditorSubmit(e) {
             }
         });
 
-        const data = await response.json();
+        const rawText = await response.text();
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (jsonErr) {
+            console.error('Resposta não-JSON do servidor:', rawText);
+            throw new Error('O servidor respondeu com um formato inesperado. Se você passou muito tempo inativo, recarregue a página.');
+        }
 
         if (data.success) {
             status.innerText = '✓ Sucesso! Todos os textos e conteúdos foram atualizados ao vivo no site.';
@@ -2007,11 +2014,20 @@ async function handleEditorSubmit(e) {
                 status.style.color = '#a8a096';
             }, 2500);
         } else {
-            alert(data.error || 'Erro ao salvar configurações.');
+            const errorMsg = data.error || 'Erro ao salvar configurações.';
+            status.innerText = '✕ ' + errorMsg;
+            status.style.color = '#f87171';
+            if (data.auth_required) {
+                alert('Sua sessão de administrador expirou. Por favor, faça login novamente para salvar as alterações.');
+            } else {
+                alert(errorMsg);
+            }
             btn.disabled = false;
             btn.innerHTML = '<span>Salvar Alterações da Landing Page</span>';
         }
     } catch (err) {
+        status.innerText = '✕ ' + err.message;
+        status.style.color = '#f87171';
         alert('Erro ao processar a solicitação: ' + err.message);
         btn.disabled = false;
         btn.innerHTML = '<span>Salvar Alterações da Landing Page</span>';

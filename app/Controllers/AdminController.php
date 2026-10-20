@@ -645,10 +645,11 @@ class AdminController
                 'message' => 'Conteúdo da Landing Page atualizado com sucesso!'
             ]);
         } catch (\Throwable $e) {
+            error_log('Erro ao salvar Landing Page: ' . $e->getMessage());
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar alterações: ' . $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -683,10 +684,11 @@ class AdminController
                 'message' => 'Elementos da Boutique atualizados com sucesso!'
             ]);
         } catch (\Throwable $e) {
+            error_log('Erro ao salvar Boutique: ' . $e->getMessage());
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar elementos da Boutique: ' . $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -1131,15 +1133,17 @@ class AdminController
      */
     private function respond(array $data, int $status = 200): void
     {
-        $isJson = isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')
-            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+        $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+            || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+            || !empty($_SERVER['HTTP_X_CSRF_TOKEN']);
 
         if ($isJson) {
             header('Content-Type: application/json; charset=UTF-8');
-            // Hostinger LiteSpeed Web Server intercepta status 500 e exibe
+            // Hostinger LiteSpeed Web Server intercepta status 500 ou códigos de erro HTTP e exibe
             // "Configuração do servidor incompleta. Por favor, contate o administrador."
             // Para respostas JSON/AJAX, retornamos status 200 com payload {success: false, error: ...}
-            http_response_code($status >= 500 ? 200 : $status);
+            http_response_code($status >= 400 ? 200 : $status);
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit;
         }
