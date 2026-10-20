@@ -194,33 +194,56 @@ use App\Models\Setting;
 <!-- ======================================================================= -->
 <!-- SEÇÃO 2: MANIFESTO & HISTÓRIA (CRAFTED WITH PURPOSE) -->
 <!-- ======================================================================= -->
-<section class="about-manifesto-section" id="about">
+<?php
+// Configurações dinâmicas de cores da Seção Manifesto & Sobre a Marca
+$aboutBg = Setting::get('about_bg_color', '#0d0c0b');
+$aboutTitleColor = Setting::get('about_title_color', '#ffffff');
+$aboutTextColor = Setting::get('about_text_color', '#ded7cf');
+$aboutAccentColor = Setting::get('about_accent_color', '#d4ba88');
+$aboutTagColor = Setting::get('about_tag_color', '#d4ba88');
+$aboutCardBg = Setting::get('about_card_bg', '#161513');
+$aboutCardBorder = Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)');
+$aboutBtnColor = Setting::get('about_btn_color', '#d4ba88');
+$aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
+?>
+<section class="about-manifesto-section" id="about" style="
+    --about-bg: <?= \App\Core\View::e($aboutBg) ?>;
+    --about-title: <?= \App\Core\View::e($aboutTitleColor) ?>;
+    --about-text: <?= \App\Core\View::e($aboutTextColor) ?>;
+    --about-accent: <?= \App\Core\View::e($aboutAccentColor) ?>;
+    --about-tag: <?= \App\Core\View::e($aboutTagColor) ?>;
+    --about-card-bg: <?= \App\Core\View::e($aboutCardBg) ?>;
+    --about-card-border: <?= \App\Core\View::e($aboutCardBorder) ?>;
+    --about-btn: <?= \App\Core\View::e($aboutBtnColor) ?>;
+    --about-caption-bg: <?= \App\Core\View::e($aboutCaptionBg) ?>;
+    background-color: var(--about-bg);
+">
     <div class="container about-grid">
         
         <!-- Coluna de Texto e Manifesto -->
         <div class="about-text-column">
-            <span class="sub-label"><?= \App\Core\View::e(Setting::get('about_tag', 'MANIFESTO DIVINIUM')) ?></span>
-            <h2 class="section-serif-title">
+            <span class="sub-label" style="color: var(--about-tag);"><?= \App\Core\View::e(Setting::get('about_tag', 'MANIFESTO DIVINIUM')) ?></span>
+            <h2 class="section-serif-title" style="color: var(--about-title);">
                 <?= \App\Core\View::e(Setting::get('about_title', 'A Beleza Não Precisa Gritar Para Ser Notada')) ?>
             </h2>
             <div class="about-story-text">
-                <p>
+                <p style="color: var(--about-text);">
                     <?= \App\Core\View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade. Em um mercado de réplicas e produções em massa, escolhemos a rota da nobreza mineral.')) ?>
                 </p>
-                <p>
+                <p style="color: var(--about-text);">
                     <?= \App\Core\View::e(Setting::get('about_p2', 'Cada gema é única em suas veias, coloração e densidade. Encastoadas à mão sobre o aro duplo em prata, as pedras ganham vida e presença táctil sem jamais pesar no pulso.')) ?>
                 </p>
-                <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-secondary, #6B665F); font-style: italic;">
+                <p class="about-quote-text" style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--about-accent); font-style: italic;">
                     "<?= \App\Core\View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                 </p>
             </div>
             
             <div class="about-cta">
-                <a href="#services" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
+                <a href="#services" class="btn-outline-dark" style="border-color: var(--about-btn); color: var(--about-btn);"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
             </div>
 
             <!-- Miniatura com macro da gema -->
-            <div class="about-micro-feature">
+            <div class="about-micro-feature" style="background-color: var(--about-card-bg); border-color: var(--about-card-border);">
                 <div class="micro-thumb">
                     <img src="<?= \App\Core\View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>" 
                          alt="<?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?>" 
@@ -228,8 +251,8 @@ use App\Models\Setting;
                          onerror="this.onerror=null; this.src='/assets/images/about/macro-texture.png';">
                 </div>
                 <div class="micro-info">
-                    <strong><?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?></strong>
-                    <span><?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?></span>
+                    <strong style="color: var(--about-title);"><?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?></strong>
+                    <span style="color: var(--about-text);"><?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?></span>
                 </div>
             </div>
         </div>
@@ -242,7 +265,7 @@ use App\Models\Setting;
                      class="editorial-img" 
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/about/banner-caminhos.png';">
-                <div class="editorial-caption">
+                <div class="editorial-caption" style="background: var(--about-caption-bg); color: var(--about-accent);">
                     <span><?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?></span>
                 </div>
             </div>

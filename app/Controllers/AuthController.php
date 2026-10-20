@@ -116,7 +116,7 @@ class AuthController
             $errorMsg = 'Erro temporário ao processar login: ' . $e->getMessage();
             if ($isJson) {
                 header('Content-Type: application/json; charset=UTF-8');
-                http_response_code(500);
+                http_response_code(200);
                 echo json_encode(['success' => false, 'error' => $errorMsg]);
                 return;
             }

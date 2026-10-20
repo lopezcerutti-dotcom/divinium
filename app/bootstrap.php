@@ -172,9 +172,8 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
         exit(1);
     }
 
-    if (!headers_sent() && !$isProduction) {
-        http_response_code(500);
-    }
+    // Não definir status 500 no LiteSpeed Web Server (Hostinger) para evitar que ele
+    // intercepte a saída e substitua por 'Configuração do servidor incompleta. Por favor, contate o administrador.'
 
     if ($isProduction) {
         // Resposta opaca para o usuário final

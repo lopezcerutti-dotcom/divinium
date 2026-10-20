@@ -1142,6 +1142,56 @@ body.luxury-theme {
    ============================================================================== */
 .about-manifesto-section {
     padding: 120px 0;
+    background-color: var(--about-bg, #0d0c0b);
+    transition: background-color 0.3s ease;
+}
+
+.about-manifesto-section .sub-label {
+    color: var(--about-tag, var(--gold-accent));
+}
+
+.about-manifesto-section .section-serif-title {
+    color: var(--about-title, var(--text-primary));
+}
+
+.about-manifesto-section .section-serif-title em {
+    color: var(--about-accent, var(--gold-accent));
+}
+
+.about-manifesto-section .about-story-text p {
+    color: var(--about-text, var(--text-secondary));
+}
+
+.about-manifesto-section .about-quote-text {
+    color: var(--about-accent, var(--gold-accent));
+}
+
+.about-manifesto-section .btn-outline-dark {
+    border-color: var(--about-btn, var(--gold-accent));
+    color: var(--about-btn, var(--gold-accent));
+}
+
+.about-manifesto-section .btn-outline-dark:hover {
+    background: var(--about-btn, var(--gold-accent));
+    color: var(--about-bg, #0d0c0b);
+}
+
+.about-manifesto-section .about-micro-feature {
+    background: var(--about-card-bg, #161513);
+    border-color: var(--about-card-border, rgba(212, 186, 136, 0.25));
+}
+
+.about-manifesto-section .micro-info strong {
+    color: var(--about-title, #ffffff);
+}
+
+.about-manifesto-section .micro-info span {
+    color: var(--about-text, #ded7cf);
+}
+
+.about-manifesto-section .editorial-caption {
+    background: var(--about-caption-bg, rgba(18, 17, 16, 0.85));
+    color: var(--about-accent, var(--gold-accent));
 }
 
 .about-grid {

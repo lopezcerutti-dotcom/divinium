@@ -974,23 +974,245 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <div class="form-grid">
+                <!-- ============================================================== -->
+                <!-- PALETA DE CORES & ESTÉTICA VISUAL DO MANIFESTO -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                <span>🎨</span> 1. Cores & Estética Visual do Manifesto
+                            </h4>
+                            <span class="field-hint">Personalize as cores de fundo, tipografia, destaque dourado, botões e cards com visualização ao vivo antes de salvar.</span>
+                        </div>
+
+                        <!-- Presets Rápidos de Cores -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyAboutColorPreset('default')">
+                                <span>🖤 Ônix & Ouro (Padrão)</span>
+                            </button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyAboutColorPreset('light')">
+                                <span>🤍 Editorial Claro</span>
+                            </button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyAboutColorPreset('emerald')">
+                                <span>💚 Esmeralda & Ouro</span>
+                            </button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyAboutColorPreset('sapphire')">
+                                <span>💎 Safira Noturna</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_bg_color">Cor de Fundo da Seção</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_bg_color_picker" 
+                               value="<?= Setting::get('about_bg_color', '#0d0c0b') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_bg_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_bg_color" name="about_bg_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_bg_color', '#0d0c0b')) ?>" 
+                               placeholder="#0d0c0b"
+                               oninput="if(this.value.length===7){document.getElementById('about_bg_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Fundo principal (sugestões: #0d0c0b, #141210, #fbf9f5).</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_title_color">Cor do Título Principal</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_title_color_picker" 
+                               value="<?= Setting::get('about_title_color', '#ffffff') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_title_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_title_color" name="about_title_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_title_color', '#ffffff')) ?>" 
+                               placeholder="#ffffff"
+                               oninput="if(this.value.length===7){document.getElementById('about_title_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor da tipografia serifada de destaque.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_text_color">Cor dos Parágrafos / Textos</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_text_color_picker" 
+                               value="<?= Setting::get('about_text_color', '#ded7cf') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_text_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_text_color" name="about_text_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>" 
+                               placeholder="#ded7cf"
+                               oninput="if(this.value.length===7){document.getElementById('about_text_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor dos parágrafos descritivos da história.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_accent_color">Cor de Destaque / Ouro (Citação & Detalhes)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_accent_color_picker" 
+                               value="<?= Setting::get('about_accent_color', '#d4ba88') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_accent_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_accent_color" name="about_accent_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>" 
+                               placeholder="#d4ba88"
+                               oninput="if(this.value.length===7){document.getElementById('about_accent_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor da citação poética em itálico e toques nobres.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_tag_color">Cor da Tag / Selo Superior</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_tag_color_picker" 
+                               value="<?= Setting::get('about_tag_color', '#d4ba88') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_tag_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_tag_color" name="about_tag_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_tag_color', '#d4ba88')) ?>" 
+                               placeholder="#d4ba88"
+                               oninput="if(this.value.length===7){document.getElementById('about_tag_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor do selo 'MANIFESTO DIVINIUM' acima do título.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_btn_color">Cor do Botão de Ação (Borda & Texto)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_btn_color_picker" 
+                               value="<?= Setting::get('about_btn_color', '#d4ba88') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_btn_color').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_btn_color" name="about_btn_color" class="form-input" 
+                               value="<?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>" 
+                               placeholder="#d4ba88"
+                               oninput="if(this.value.length===7){document.getElementById('about_btn_color_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor do botão 'Conheça Nossa História'.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_card_bg">Fundo do Card da Miniatura Macro</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="about_card_bg_picker" 
+                               value="<?= Setting::get('about_card_bg', '#161513') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('about_card_bg').value = this.value; updateAboutLivePreview();">
+                        <input type="text" id="about_card_bg" name="about_card_bg" class="form-input" 
+                               value="<?= View::e(Setting::get('about_card_bg', '#161513')) ?>" 
+                               placeholder="#161513"
+                               oninput="if(this.value.length===7){document.getElementById('about_card_bg_picker').value=this.value;} updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor de fundo do card de textura mineral.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="about_card_border">Borda do Card da Miniatura Macro</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="text" id="about_card_border" name="about_card_border" class="form-input" 
+                               value="<?= View::e(Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)')) ?>" 
+                               placeholder="rgba(212, 186, 136, 0.25)"
+                               oninput="updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Ex: rgba(212, 186, 136, 0.25) ou #332d24.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="about_caption_bg">Fundo da Legenda Editorial da Foto</label>
+                    <div style="display: flex; gap: 8px; align-items: center; max-width: 450px;">
+                        <input type="text" id="about_caption_bg" name="about_caption_bg" class="form-input" 
+                               value="<?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>" 
+                               placeholder="rgba(18, 17, 16, 0.85)"
+                               oninput="updateAboutLivePreview();">
+                    </div>
+                    <span class="field-hint">Fundo translúcido da barra inferior da foto editorial lateral.</span>
+                </div>
+
+                <!-- PREVIEW AO VIVO DO MANIFESTO NO PAINEL -->
+                <div class="form-group full-width" style="margin: 10px 0 20px;">
+                    <label style="color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+                        <span>👁️</span> Pré-Visualização em Tempo Real do Manifesto
+                    </label>
+                    <div id="aboutLivePreviewContainer" style="background: <?= View::e(Setting::get('about_bg_color', '#0d0c0b')) ?>; border: 1px solid rgba(212,186,136,0.3); border-radius: 12px; padding: 26px; transition: background 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center;">
+                            <!-- Coluna de Textos -->
+                            <div>
+                                <span id="aboutPreviewTag" style="display: inline-block; font-size: 0.72rem; letter-spacing: 0.15em; font-weight: 600; text-transform: uppercase; color: <?= View::e(Setting::get('about_tag_color', '#d4ba88')) ?>; margin-bottom: 8px;">
+                                    <?= View::e(Setting::get('about_tag', 'MANIFESTO DIVINIUM')) ?>
+                                </span>
+                                <h3 id="aboutPreviewTitle" style="font-family: serif; font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; font-weight: normal; color: <?= View::e(Setting::get('about_title_color', '#ffffff')) ?>;">
+                                    <?= View::e(Setting::get('about_title', 'A Beleza Não Precisa Gritar Para Ser Notada')) ?>
+                                </h3>
+                                <p id="aboutPreviewP1" style="font-size: 0.84rem; line-height: 1.6; margin: 0 0 10px; color: <?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>;">
+                                    <?= View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade...')) ?>
+                                </p>
+                                <p id="aboutPreviewQuote" style="font-family: serif; font-style: italic; font-size: 1.05rem; margin: 0 0 16px; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>;">
+                                    "<?= View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
+                                </p>
+                                <div style="margin-bottom: 16px;">
+                                    <span id="aboutPreviewBtn" style="display: inline-block; padding: 7px 20px; font-size: 0.76rem; border: 1px solid <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; color: <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; border-radius: 20px; letter-spacing: 0.05em; font-weight: 500;">
+                                        <?= View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?>
+                                    </span>
+                                </div>
+                                <!-- Mini Card -->
+                                <div id="aboutPreviewCard" style="display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 8px; background: <?= View::e(Setting::get('about_card_bg', '#161513')) ?>; border: 1px solid <?= View::e(Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)')) ?>; max-width: 320px;">
+                                    <div style="width: 44px; height: 44px; border-radius: 6px; overflow: hidden; flex-shrink: 0; background: #222;">
+                                        <img src="<?= View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/about/macro-texture.png'">
+                                    </div>
+                                    <div>
+                                        <strong id="aboutPreviewCardTitle" style="display: block; font-size: 0.8rem; color: <?= View::e(Setting::get('about_title_color', '#ffffff')) ?>;">
+                                            <?= View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?>
+                                        </strong>
+                                        <span id="aboutPreviewCardDesc" style="font-size: 0.7rem; color: <?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>;">
+                                            <?= View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina.')) ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coluna Imagem Editorial -->
+                            <div style="position: relative; border-radius: 8px; overflow: hidden; height: 280px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+                                <img src="<?= View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/about/banner-caminhos.png'">
+                                <div id="aboutPreviewCaption" style="position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.65rem; text-align: center; letter-spacing: 0.1em; font-weight: 600; background: <?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>;">
+                                    <?= View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- 2. TEXTOS, CHAMADAS E FOTOS DO MANIFESTO -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                        <span>✍️</span> 2. Textos, Chamadas & Imagens do Manifesto
+                    </h4>
+                    <span class="field-hint">Altere o conteúdo editorial do Manifesto Divinium.</span>
+                </div>
+
                 <div class="form-group">
                     <label for="about_tag">Tag da Seção</label>
                     <input type="text" id="about_tag" name="about_tag" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_tag', 'MANIFESTO DIVINIUM')) ?>"
-                           placeholder="MANIFESTO DIVINIUM">
+                           placeholder="MANIFESTO DIVINIUM"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="about_title">Título Principal do Manifesto</label>
                     <input type="text" id="about_title" name="about_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_title', 'A Beleza Não Precisa Gritar Para Ser Notada')) ?>"
-                           placeholder="A Beleza Não Precisa Gritar Para Ser Notada">
+                           placeholder="A Beleza Não Precisa Gritar Para Ser Notada"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <div class="form-group full-width">
                     <label for="about_p1">Primeiro Parágrafo do Manifesto</label>
-                    <textarea id="about_p1" name="about_p1" class="form-textarea" rows="3"><?= \App\Core\View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade. Em um mercado de réplicas e produções em massa, escolhemos a rota da nobreza mineral.')) ?></textarea>
+                    <textarea id="about_p1" name="about_p1" class="form-textarea" rows="3" oninput="updateAboutLivePreview()"><?= \App\Core\View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade. Em um mercado de réplicas e produções em massa, escolhemos a rota da nobreza mineral.')) ?></textarea>
                 </div>
 
                 <div class="form-group full-width">
@@ -1002,27 +1224,31 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="about_quote">Frase / Pergunta Poética de Destaque</label>
                     <input type="text" id="about_quote" name="about_quote" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
-                           placeholder="Qual delas conversa com você hoje?">
+                           placeholder="Qual delas conversa com você hoje?"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="about_cta_text">Texto do Botão de Ação</label>
                     <input type="text" id="about_cta_text" name="about_cta_text" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?>"
-                           placeholder="Conheça Nossa História">
+                           placeholder="Conheça Nossa História"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <!-- Foto e Macro do Sobre -->
                 <div class="form-group">
                     <label for="about_micro_title">Título da Miniatura Macro</label>
                     <input type="text" id="about_micro_title" name="about_micro_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('about_micro_title', 'Textura Mineral Autêntica')) ?>"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="about_micro_desc">Descrição da Miniatura Macro</label>
                     <input type="text" id="about_micro_desc" name="about_micro_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?>"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <div class="form-group">
@@ -1040,7 +1266,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width">
                     <label for="about_editorial_caption">Legenda da Foto Editorial</label>
                     <input type="text" id="about_editorial_caption" name="about_editorial_caption" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>"
+                           oninput="updateAboutLivePreview()">
                 </div>
 
                 <!-- Pilares Conceituais -->
@@ -2159,6 +2386,141 @@ function updateMobileMenuLivePreview() {
     }
 }
 
+function updateAboutLivePreview() {
+    const getVal = (id, def) => document.getElementById(id)?.value || def;
+
+    const bg = getVal('about_bg_color', '#0d0c0b');
+    const title = getVal('about_title_color', '#ffffff');
+    const text = getVal('about_text_color', '#ded7cf');
+    const accent = getVal('about_accent_color', '#d4ba88');
+    const tag = getVal('about_tag_color', '#d4ba88');
+    const cardBg = getVal('about_card_bg', '#161513');
+    const cardBorder = getVal('about_card_border', 'rgba(212, 186, 136, 0.25)');
+    const btn = getVal('about_btn_color', '#d4ba88');
+    const captionBg = getVal('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
+
+    const previewContainer = document.getElementById('aboutLivePreviewContainer');
+    if (previewContainer) {
+        previewContainer.style.background = bg;
+    }
+
+    const previewTag = document.getElementById('aboutPreviewTag');
+    if (previewTag) {
+        previewTag.textContent = getVal('about_tag', 'MANIFESTO DIVINIUM');
+        previewTag.style.color = tag;
+    }
+
+    const previewTitle = document.getElementById('aboutPreviewTitle');
+    if (previewTitle) {
+        previewTitle.textContent = getVal('about_title', 'A Beleza Não Precisa Gritar Para Ser Notada');
+        previewTitle.style.color = title;
+    }
+
+    const previewP1 = document.getElementById('aboutPreviewP1');
+    if (previewP1) {
+        previewP1.textContent = getVal('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade...');
+        previewP1.style.color = text;
+    }
+
+    const previewQuote = document.getElementById('aboutPreviewQuote');
+    if (previewQuote) {
+        previewQuote.textContent = '"' + getVal('about_quote', 'Qual delas conversa com você hoje?') + '"';
+        previewQuote.style.color = accent;
+    }
+
+    const previewBtn = document.getElementById('aboutPreviewBtn');
+    if (previewBtn) {
+        previewBtn.textContent = getVal('about_cta_text', 'Conheça Nossa História');
+        previewBtn.style.color = btn;
+        previewBtn.style.borderColor = btn;
+    }
+
+    const previewCard = document.getElementById('aboutPreviewCard');
+    if (previewCard) {
+        previewCard.style.backgroundColor = cardBg;
+        previewCard.style.borderColor = cardBorder;
+    }
+
+    const previewCardTitle = document.getElementById('aboutPreviewCardTitle');
+    if (previewCardTitle) {
+        previewCardTitle.textContent = getVal('about_micro_title', 'Textura Mineral Autêntica');
+        previewCardTitle.style.color = title;
+    }
+
+    const previewCardDesc = document.getElementById('aboutPreviewCardDesc');
+    if (previewCardDesc) {
+        previewCardDesc.textContent = getVal('about_micro_desc', 'Fragmentos minerais nobres preservados com resina.');
+        previewCardDesc.style.color = text;
+    }
+
+    const previewCaption = document.getElementById('aboutPreviewCaption');
+    if (previewCaption) {
+        previewCaption.textContent = getVal('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR');
+        previewCaption.style.backgroundColor = captionBg;
+        previewCaption.style.color = accent;
+    }
+}
+
+function applyAboutColorPreset(preset) {
+    const presets = {
+        'default': {
+            about_bg_color: '#0d0c0b',
+            about_title_color: '#ffffff',
+            about_text_color: '#ded7cf',
+            about_accent_color: '#d4ba88',
+            about_tag_color: '#d4ba88',
+            about_card_bg: '#161513',
+            about_card_border: 'rgba(212, 186, 136, 0.25)',
+            about_btn_color: '#d4ba88',
+            about_caption_bg: 'rgba(18, 17, 16, 0.85)'
+        },
+        'light': {
+            about_bg_color: '#fbf9f5',
+            about_title_color: '#1a1918',
+            about_text_color: '#55514c',
+            about_accent_color: '#9c7a3c',
+            about_tag_color: '#9c7a3c',
+            about_card_bg: '#f0ede6',
+            about_card_border: 'rgba(156, 122, 60, 0.3)',
+            about_btn_color: '#1a1918',
+            about_caption_bg: 'rgba(251, 249, 245, 0.9)'
+        },
+        'emerald': {
+            about_bg_color: '#071510',
+            about_title_color: '#ffffff',
+            about_text_color: '#d2dfd8',
+            about_accent_color: '#e5c98d',
+            about_tag_color: '#4ade80',
+            about_card_bg: '#0e221b',
+            about_card_border: 'rgba(74, 222, 128, 0.25)',
+            about_btn_color: '#e5c98d',
+            about_caption_bg: 'rgba(7, 21, 16, 0.9)'
+        },
+        'sapphire': {
+            about_bg_color: '#0a101d',
+            about_title_color: '#ffffff',
+            about_text_color: '#cbd5e1',
+            about_accent_color: '#93c5fd',
+            about_tag_color: '#60a5fa',
+            about_card_bg: '#131d31',
+            about_card_border: 'rgba(96, 165, 250, 0.3)',
+            about_btn_color: '#93c5fd',
+            about_caption_bg: 'rgba(10, 16, 29, 0.9)'
+        }
+    };
+
+    const config = presets[preset] || presets['default'];
+    for (const [key, val] of Object.entries(config)) {
+        const textInput = document.getElementById(key);
+        if (textInput) textInput.value = val;
+        const pickerInput = document.getElementById(key + '_picker');
+        if (pickerInput && val.startsWith('#') && val.length === 7) {
+            pickerInput.value = val;
+        }
+    }
+    updateAboutLivePreview();
+}
+
 // Suporte a abertura direta de abas por URL (ex: ?tab=sec-mobile-menu ou #sec-mobile-menu)
 function checkInitialEditorTab() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -2170,6 +2532,7 @@ function checkInitialEditorTab() {
         }
     }
     updateMobileMenuLivePreview();
+    updateAboutLivePreview();
 }
 
 if (document.readyState === 'loading') {

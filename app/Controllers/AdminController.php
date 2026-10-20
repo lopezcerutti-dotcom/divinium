@@ -1136,7 +1136,10 @@ class AdminController
 
         if ($isJson) {
             header('Content-Type: application/json; charset=UTF-8');
-            http_response_code($status);
+            // Hostinger LiteSpeed Web Server intercepta status 500 e exibe
+            // "Configuração do servidor incompleta. Por favor, contate o administrador."
+            // Para respostas JSON/AJAX, retornamos status 200 com payload {success: false, error: ...}
+            http_response_code($status >= 500 ? 200 : $status);
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit;
         }

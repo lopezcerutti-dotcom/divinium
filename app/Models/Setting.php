@@ -92,18 +92,72 @@ class Setting
      *
      * @param array<string, mixed> $data
      */
+    /**
+     * Salva múltiplas configurações em lote de forma atômica e rápida.
+     *
+     * @param array<string, mixed> $data
+     */
     public static function setMany(array $data): bool
     {
-        $success = true;
-        foreach ($data as $key => $value) {
-            if (is_string($key) && !str_starts_with($key, '_')) {
-                $val = is_scalar($value) ? (string) $value : json_encode($value, JSON_UNESCAPED_UNICODE);
-                if (!self::set($key, $val)) {
-                    $success = false;
+        try {
+            $pdo = Database::getConnection();
+            $inTx = false;
+            try {
+                $inTx = $pdo->beginTransaction();
+            } catch (\Throwable $txErr) {
+                // Algum driver pode não suportar ou já estar em transação
+            }
+
+            $check = $pdo->prepare('SELECT COUNT(*) FROM settings WHERE key_name = :key_name');
+            $update = $pdo->prepare('UPDATE settings SET value = :value WHERE key_name = :key_name');
+            $insert = $pdo->prepare('INSERT INTO settings (key_name, value) VALUES (:key_name, :value)');
+
+            if (self::$cache === null) {
+                self::$cache = [];
+            }
+
+            foreach ($data as $key => $value) {
+                if (is_string($key) && !str_starts_with($key, '_')) {
+                    $val = is_scalar($value) ? (string) $value : json_encode($value, JSON_UNESCAPED_UNICODE);
+
+                    $check->execute(['key_name' => $key]);
+                    $exists = ((int) $check->fetchColumn()) > 0;
+
+                    if ($exists) {
+                        $update->execute(['value' => $val, 'key_name' => $key]);
+                    } else {
+                        $insert->execute(['key_name' => $key, 'value' => $val]);
+                    }
+
+                    self::$cache[$key] = $val;
                 }
             }
+
+            if ($inTx && $pdo->inTransaction()) {
+                $pdo->commit();
+            }
+
+            return true;
+        } catch (\Throwable $e) {
+            if (isset($pdo) && $pdo->inTransaction()) {
+                try {
+                    $pdo->rollBack();
+                } catch (\Throwable $rbErr) {}
+            }
+            error_log('Erro ao salvar lote de configurações: ' . $e->getMessage());
+
+            // Fallback seguro chave a chave
+            $fallbackSuccess = true;
+            foreach ($data as $k => $v) {
+                if (is_string($k) && !str_starts_with($k, '_')) {
+                    $val = is_scalar($v) ? (string) $v : json_encode($v, JSON_UNESCAPED_UNICODE);
+                    if (!self::set($k, $val)) {
+                        $fallbackSuccess = false;
+                    }
+                }
+            }
+            return $fallbackSuccess;
         }
-        return $success;
     }
 
     /**

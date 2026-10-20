@@ -193,6 +193,13 @@ class Database
         if ($ensured) {
             return;
         }
+        $ensured = true;
+
+        // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v3_ensured.flag';
+        if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
+            return;
+        }
 
         try {
             $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -385,6 +392,11 @@ class Database
             }
 
             $ensured = true;
+            $cacheDir = dirname($flagFile);
+            if (!is_dir($cacheDir)) {
+                @mkdir($cacheDir, 0755, true);
+            }
+            @touch($flagFile);
         } catch (\Throwable $e) {
             error_log('Database::ensureSchema warning: ' . $e->getMessage());
         }
