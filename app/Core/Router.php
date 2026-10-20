@@ -194,6 +194,27 @@ class Router
             exit;
         });
 
+        // Endpoint de Diagnóstico Direto dos Últimos Erros
+        $this->get('/api/last-error', function (): void {
+            header('Content-Type: text/plain; charset=UTF-8');
+            $logDir = defined('LOGS_PATH') ? LOGS_PATH : dirname(__DIR__, 2) . '/logs';
+            $files = [
+                $logDir . '/app/fatal_last.log',
+                $logDir . '/app/exception.log',
+                $logDir . '/app/error.log'
+            ];
+            foreach ($files as $file) {
+                if (file_exists($file) && is_readable($file)) {
+                    $lines = @file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+                    if (!empty($lines)) {
+                        echo "=== " . basename($file) . " ===\n";
+                        echo implode("\n", array_slice($lines, -25)) . "\n\n";
+                    }
+                }
+            }
+            exit;
+        });
+
         // Rota Raiz: Home focada em Branding & Conversão
         $homeHandler = function (): void {
             \App\Core\View::render('home/index', [

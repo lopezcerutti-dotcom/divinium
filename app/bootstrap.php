@@ -196,6 +196,42 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
     exit(0);
 });
 
+// Handler de Encerramento (Captura Erros Fatais do PHP antes que o LiteSpeed Hostinger intercepte)
+register_shutdown_function(function () use ($isProduction): void {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+        $timestamp = date('Y-m-d H:i:s');
+        $logMessage = sprintf(
+            "[%s] FATAL ERROR: %s em %s:%d\n",
+            $timestamp,
+            $error['message'],
+            $error['file'],
+            $error['line']
+        );
+        @file_put_contents(LOGS_PATH . '/app/exception.log', $logMessage, FILE_APPEND | LOCK_EX);
+        @file_put_contents(LOGS_PATH . '/app/fatal_last.log', $logMessage, LOCK_EX);
+
+        if (php_sapi_name() === 'cli') {
+            exit(1);
+        }
+
+        // Não emitir HTTP 500 no LiteSpeed / Hostinger para evitar 'Configuração do servidor incompleta'
+        if (!headers_sent()) {
+            http_response_code(200);
+            header('Content-Type: text/html; charset=UTF-8');
+        }
+
+        if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+            echo json_encode([
+                'success' => false,
+                'error' => 'Ocorreu uma instabilidade temporária no servidor. Por favor, tente novamente.'
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:10px 22px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>A boutique está inicializando os serviços com segurança.</p><p><a href="/">Atualizar Página</a></p></body></html>';
+        }
+    }
+});
+
 // 6. BLINDAGEM DE SESSÃO PHP (Apenas para requisições Web)
 if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE && !headers_sent()) {
     try {

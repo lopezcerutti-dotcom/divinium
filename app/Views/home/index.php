@@ -4,6 +4,8 @@
  * Estruturada com as imagens e mensagens dinâmicas da marca.
  */
 use App\Models\Setting;
+use App\Core\View;
+use App\Models\Collection;
 ?>
 
 <!-- ======================================================================= -->
@@ -278,13 +280,9 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
 <!-- SEÇÃO 3: VITRINE DE PRODUTOS & SLIDER (SIGNATURE SHOWCASE) -->
 <!-- ======================================================================= -->
 <?php
-use App\Models\Collection;
-use App\Models\Setting;
-use App\Core\View;
-
-$activeCollections = Collection::getActive();
+$activeCollections = \App\Models\Collection::getActive();
 if (empty($activeCollections)) {
-    $activeCollections = Collection::getAll();
+    $activeCollections = \App\Models\Collection::getAll();
 }
 
 // Extrair categorias das coleções ativas para os filtros
