@@ -165,7 +165,7 @@ class AdminController
         $isActive = ($status === 'published') ? 1 : 0;
 
         if ($name === '') {
-            $this->respond(['success' => false, 'error' => 'O nome do produto é obrigatório.'], 422);
+            $this->respond(['success' => false, 'error' => 'O nome do produto é obrigatório.'], 200);
             return;
         }
 
@@ -393,7 +393,7 @@ class AdminController
             $prod = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if (!$prod) {
-                $this->respond(['success' => false, 'error' => 'Produto original não encontrado.'], 404);
+                $this->respond(['success' => false, 'error' => 'Produto original não encontrado.'], 200);
                 return;
             }
 
@@ -489,7 +489,7 @@ class AdminController
                 'new_id' => $newId
             ]);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao duplicar produto: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao duplicar produto: ' . $e->getMessage()], 200);
         }
     }
 
@@ -500,14 +500,14 @@ class AdminController
     {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id <= 0) {
-            $this->respond(['success' => false, 'error' => 'ID inválido.'], 422);
+            $this->respond(['success' => false, 'error' => 'ID inválido.'], 200);
             return;
         }
 
         try {
             $prod = $this->pdo->query("SELECT is_active, status FROM products WHERE id = $id")->fetch(\PDO::FETCH_ASSOC);
             if (!$prod) {
-                $this->respond(['success' => false, 'error' => 'Produto não encontrado.'], 404);
+                $this->respond(['success' => false, 'error' => 'Produto não encontrado.'], 200);
                 return;
             }
 
@@ -520,7 +520,7 @@ class AdminController
 
             $this->respond(['success' => true, 'is_active' => $newActive, 'status' => $newStatus]);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao alternar status: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao alternar status: ' . $e->getMessage()], 200);
         }
     }
 
@@ -531,7 +531,7 @@ class AdminController
     {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id <= 0) {
-            $this->respond(['success' => false, 'error' => 'ID inválido.'], 422);
+            $this->respond(['success' => false, 'error' => 'ID inválido.'], 200);
             return;
         }
 
@@ -541,7 +541,7 @@ class AdminController
 
             $this->respond(['success' => true, 'message' => 'Produto e seus canais foram removidos com sucesso.']);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao excluir produto: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao excluir produto: ' . $e->getMessage()], 200);
         }
     }
 
@@ -575,7 +575,7 @@ class AdminController
         $isActive = isset($_POST['is_active']) ? 1 : 0;
 
         if ($name === '') {
-            $this->respond(['success' => false, 'error' => 'O nome da categoria é obrigatório.'], 422);
+            $this->respond(['success' => false, 'error' => 'O nome da categoria é obrigatório.'], 200);
             return;
         }
 
@@ -1414,6 +1414,7 @@ class AdminController
             $_SESSION['flash_success'] = $data['message'];
         }
 
+        http_response_code(200);
         header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/admin'));
         exit;
     }
