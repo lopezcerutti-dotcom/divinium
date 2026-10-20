@@ -257,25 +257,17 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                         $showGlobalSpecs = Setting::get('store_card_specs_visible', '1') === '1';
                         $showGlobalPix = Setting::get('store_pix_discount_visible', '1') === '1';
                         $showGlobalInstallments = Setting::get('store_installments_visible', '1') === '1';
-                        $showGlobalMultiChannel = Setting::get('store_multi_channel_visible', '1') === '1';
-
-                        // Decide se a barra de badges flutuante deve aparecer
-                        $hasBadgesToRender = $showProdBadge === 1 && (
-                            $showGlobalMetalBadge ||
-                            $showGlobalChannelBadge ||
-                            in_array($stockStatus, ['preorder', 'out_of_stock'])
-                        );
+                        $detailUrl = '/produto/' . (!empty($prod['slug']) ? $prod['slug'] : ('joia-' . $prod['id']));
                     ?>
                     
                     <article class="store-product-card" data-category="<?= $filterClass ?>" data-track-product-id="<?= $prod['id'] ?>" data-track-product-name="<?= View::e($prod['name']) ?>">
-                        <!-- Imagem do Produto com Link para a Página de Detalhes da Joia -->
-                        <a href="<?= View::e($cardUrl) ?>" 
-                           target="<?= $cardTarget ?>" 
+                        <!-- Imagem do Modelo com Link para a Página de Detalhes -->
+                        <a href="<?= View::e($detailUrl) ?>" 
                            class="store-card-media"
                            data-track-product-id="<?= $prod['id'] ?>"
                            data-track-product-name="<?= View::e($prod['name']) ?>"
                            data-track-source="store_media_detail"
-                           title="Conhecer <?= View::e($prod['name']) ?> na DIVINIUM">
+                           title="Conhecer <?= View::e($prod['name']) ?>">
                             
                             <img src="<?= View::e($prod['image_url'] ?: '/assets/images/hero/featured-green-shell.jpg') ?>" 
                                  alt="<?= View::e($prod['name']) ?>"
@@ -283,160 +275,50 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                  class="store-card-img"
                                  onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
                             
-                            <!-- Badges Flutuantes (Respeita configuração individual do produto e global) -->
-                            <?php if ($hasBadgesToRender): ?>
+                            <?php if (!empty($prod['variations_count']) && (int)$prod['variations_count'] > 1): ?>
                             <div class="card-badges-top">
-                                <?php if ($stockStatus === 'preorder'): ?>
-                                    <span class="badge-metal badge-stock-preorder">Sob Encomenda</span>
-                                <?php elseif ($stockStatus === 'out_of_stock'): ?>
-                                    <span class="badge-metal badge-stock-out">Indisponível</span>
-                                <?php elseif ($showGlobalMetalBadge): ?>
-                                    <span class="badge-metal"><?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?></span>
-                                <?php endif; ?>
-
-                                <?php if ($showGlobalChannelBadge): ?>
-                                    <?php if (count($validLinks) > 1): ?>
-                                        <span class="badge-shopee-tag" style="background: rgba(212,186,136,0.92); color: #0d0c0b; font-weight: 700;">
-                                            ✦ <?= count($validLinks) ?> Opções de Compra
-                                        </span>
-                                    <?php elseif (count($validLinks) === 1): ?>
-                                        <span class="badge-shopee-tag">
-                                            ✦ <?= View::e($validLinks[0]['platform_name'] ?? 'Canal Oficial') ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="badge-shopee-tag">
-                                            ✦ Exclusivo
-                                        </span>
-                                    <?php endif; ?>
-                                <?php endif; ?>
+                                <span class="badge-metal">✦ <?= (int)$prod['variations_count'] ?> Pedras Minerais</span>
                             </div>
                             <?php endif; ?>
 
                             <div class="card-hover-overlay">
                                 <span class="overlay-cta-text">
-                                    <span>Conhecer Detalhes da Joia</span>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    <span>Conhecer a Peça</span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </span>
                             </div>
                         </a>
 
-                        <!-- Informações do Produto -->
-                        <div class="store-card-body">
-                            <?php if ($showGlobalMineral): ?>
-                            <div class="store-card-mineral">
-                                <span class="mineral-indicator-dot"></span>
-                                <span class="mineral-text"><?= View::e($mineralName) ?></span>
-                            </div>
-                            <?php endif; ?>
-
-                            <h3 class="store-card-title">
-                                <a href="<?= View::e($cardUrl) ?>" 
-                                   target="<?= $cardTarget ?>"
+                        <!-- Informações do Card: Somente Imagem, Nome do Modelo, Preço e Botão Discreto -->
+                        <div class="store-card-body-clean">
+                            <h3 class="store-card-title-clean">
+                                <a href="<?= View::e($detailUrl) ?>" 
                                    data-track-product-id="<?= $prod['id'] ?>"
                                    data-track-product-name="<?= View::e($prod['name']) ?>"
                                    data-track-source="store_title_detail"
-                                   title="Ver detalhes de <?= View::e($prod['name']) ?>">
+                                   title="<?= View::e($prod['name']) ?>">
                                     <?= View::e($prod['name']) ?>
                                 </a>
                             </h3>
 
-                            <?php if ($showProdDesc === 1 && $showGlobalDesc): ?>
-                            <p class="store-card-desc">
-                                <?= View::e($prod['short_description'] ?: ($prod['description'] ?: 'Joia autoral em prata legítima 925 com lapidação mineral e acabamento artesanal contemporâneo.')) ?>
-                            </p>
-                            <?php endif; ?>
-
-                            <!-- Especificações Técnicas (Materiais, Medidas, SKU) -->
-                            <?php if ($showProdSpecs === 1 && $showGlobalSpecs && ($materials || $dimensions || $colors || $sku)): ?>
-                                <div class="store-card-specs">
-                                    <?php if ($materials): ?>
-                                        <span class="spec-chip" title="Materiais">💎 <?= View::e($materials) ?></span>
-                                    <?php endif; ?>
-                                    <?php if ($dimensions): ?>
-                                        <span class="spec-chip" title="Medidas / Dimensões">📐 <?= View::e($dimensions) ?></span>
-                                    <?php endif; ?>
-                                    <?php if ($colors): ?>
-                                        <span class="spec-chip" title="Cor / Acabamento">🎨 <?= View::e($colors) ?></span>
-                                    <?php endif; ?>
-                                    <?php if ($sku): ?>
-                                        <span class="spec-chip store-card-sku" title="SKU / Código Interno">#<?= View::e($sku) ?></span>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <!-- Preços e Condições -->
-                            <div class="store-card-pricing">
-                                <div class="price-main-row">
-                                    <span class="price-value">R$ <?= $basePriceFormatted ?></span>
-                                    <?php if ($showGlobalPix): ?>
-                                    <span class="price-pix">R$ <?= $pixPriceFormatted ?> <?= View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <?php if ($showGlobalInstallments): ?>
-                                <div class="price-installments">
-                                    <span>Até 6x sem juros de R$ <?= number_format(($basePriceCents / 6) / 100, 2, ',', '.') ?> nos canais oficiais</span>
-                                </div>
+                            <!-- Preço Correspondente -->
+                            <div class="store-card-price-clean">
+                                <?php if (!empty($prod['variations_count']) && (int)$prod['variations_count'] > 1): ?>
+                                    <span class="price-prefix">A partir de</span>
                                 <?php endif; ?>
+                                <span>R$ <?= $basePriceFormatted ?></span>
                             </div>
 
-                            <!-- Botão Principal do Card: Conhecer a Joia na Boutique DIVINIUM -->
-                            <?php 
-                                $cardBtnText = Setting::get('store_card_btn_text', 'Conhecer Joia & Opções');
-                                $cardBtnAttrs = getButtonColorAndSizeAttrs(Setting::get('store_btn_default_color', 'default'), Setting::get('store_btn_default_size', 'md'));
-                            ?>
-                            <a href="<?= View::e($cardUrl) ?>" 
-                               target="<?= $cardTarget ?>" 
-                               class="btn-platform-action btn-card-explore <?= $cardBtnAttrs['class'] ?>"
-                               style="<?= $cardBtnAttrs['style'] ?>"
+                            <!-- Botão Discreto para Conhecer a Peça -->
+                            <a href="<?= View::e($detailUrl) ?>" 
+                               class="btn-card-discreet"
                                data-track-product-id="<?= $prod['id'] ?>"
                                data-track-product-name="<?= View::e($prod['name']) ?>"
                                data-track-source="store_btn_explore"
-                               title="Conhecer <?= View::e($prod['name']) ?> e opções de compra">
-                                <div class="platform-btn-content">
-                                    <span class="gold-sparkle" style="color: #d4ba88; font-size: 1.1rem;">✦</span>
-                                    <span class="platform-btn-text"><?= View::e($cardBtnText) ?></span>
-                                </div>
-                                <div class="platform-btn-price-tag">
-                                    <span>R$ <?= $basePriceFormatted ?></span>
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="arrow-ext-svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                                </div>
+                               title="Conhecer <?= View::e($prod['name']) ?> na DIVINIUM">
+                                <span>Conhecer a Peça</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                             </a>
-
-                            <!-- Canais de Venda Padronizados e Imparciais (Pílulas Equivalentes) -->
-                            <?php if ($showGlobalMultiChannel && !empty($validLinks)): ?>
-                                <div class="store-card-channels">
-                                    <span class="channels-title"><?= View::e(Setting::get('store_multi_channel_label', 'Opções de compra homologadas:')) ?></span>
-                                    <div class="channels-grid-impartial">
-                                        <?php foreach ($validLinks as $secLink): 
-                                            $secPriceCents = !empty($secLink['price_cents']) ? (int)$secLink['price_cents'] : $basePriceCents;
-                                            $secPriceFormatted = number_format($secPriceCents / 100, 2, ',', '.');
-                                            $secPlatform = !empty($secLink['platform_name']) ? $secLink['platform_name'] : 'Canal Parceiro';
-                                            $secPlatformSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $secPlatform));
-                                            $secBtnText = !empty($secLink['button_text']) ? $secLink['button_text'] : $secPlatform;
-                                            $secTarget = !empty($secLink['target']) && $secLink['target'] === '_self' ? '_self' : '_blank';
-                                        ?>
-                                            <a href="<?= View::e($secLink['url']) ?>" 
-                                               target="<?= $secTarget ?>" 
-                                               rel="noopener noreferrer" 
-                                               class="store-channel-pill-impartial platform-pill-<?= $secPlatformSlug ?>"
-                                               data-track-product-id="<?= $prod['id'] ?>"
-                                               data-track-product-name="<?= View::e($prod['name']) ?>"
-                                               data-track-source="store_pill_<?= $secPlatformSlug ?>"
-                                               title="<?= View::e($secBtnText) ?> - R$ <?= $secPriceFormatted ?>">
-                                                <div class="channel-pill-left">
-                                                    <span class="channel-pill-icon"><?= getPlatformEmoji($secPlatform) ?></span>
-                                                    <span class="channel-pill-name"><?= View::e($secPlatform) ?></span>
-                                                </div>
-                                                <div class="channel-pill-price">
-                                                    <span>R$ <?= $secPriceFormatted ?></span>
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                                </div>
-                                            </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
                         </div>
                     </article>
                 <?php endforeach; ?>

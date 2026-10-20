@@ -196,7 +196,7 @@ class Database
         $ensured = true;
 
         // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
-        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v5_ensured.flag';
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v7_ensured.flag';
         if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
             return;
         }
@@ -335,6 +335,7 @@ class Database
                 'custom_target_url' => 'VARCHAR(500) NULL',
                 'detail_layout' => "VARCHAR(50) NOT NULL DEFAULT 'default'",
                 'show_channels' => 'INTEGER NOT NULL DEFAULT 1',
+                'parent_sku' => 'VARCHAR(60) NULL',
             ];
 
             $existingCols = [];
@@ -366,6 +367,32 @@ class Database
                         // Coluna já existia ou adicionada concorrentemente
                     }
                 }
+            }
+
+            // Sincronizar parent_sku e image_url a partir do catálogo oficial verificado
+            try {
+                $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
+                if (file_exists($seedFile)) {
+                    $jsonContent = @file_get_contents($seedFile);
+                    $seedData = json_decode((string)$jsonContent, true);
+                    if (is_array($seedData) && !empty($seedData)) {
+                        $upStmt = $pdo->prepare("UPDATE products SET parent_sku = :parent_sku, image_url = :image_url WHERE sku = :sku");
+                        foreach ($seedData as $sp) {
+                            $spSku = trim((string)($sp['sku'] ?? ''));
+                            $spParent = trim((string)($sp['parent_sku'] ?? ''));
+                            $spImg = trim((string)($sp['image_url'] ?? ''));
+                            if ($spSku !== '') {
+                                $upStmt->execute([
+                                    ':parent_sku' => ($spParent !== '' && $spParent !== $spSku) ? $spParent : null,
+                                    ':image_url'  => $spImg,
+                                    ':sku'        => $spSku,
+                                ]);
+                            }
+                        }
+                    }
+                }
+            } catch (\Throwable $syncEx) {
+                // Silencioso se ocorrer qualquer erro de I/O
             }
 
             // Auto-preenchimento de slugs ausentes nos produtos existentes

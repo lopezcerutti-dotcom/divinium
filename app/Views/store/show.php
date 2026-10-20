@@ -38,6 +38,35 @@ if (!function_exists('getPlatformIconSvgShow')) {
     }
 }
 
+if (!function_exists('getStoneColorDot')) {
+    function getStoneColorDot(string $stone): string {
+        $st = mb_strtolower(trim($stone));
+        if (str_contains($st, 'amazonita')) return '#30c7b5';
+        if (str_contains($st, 'ametista')) return '#9b59b6';
+        if (str_contains($st, 'coral')) return '#e74c3c';
+        if (str_contains($st, 'cornalina')) return '#d35400';
+        if (str_contains($st, 'estrela')) return '#1a237e';
+        if (str_contains($st, 'howlita')) return '#00bcd4';
+        if (str_contains($st, 'madrepérola') || str_contains($st, 'madreperola')) {
+            if (str_contains($st, 'preta')) return '#212121';
+            if (str_contains($st, 'verde')) return '#27ae60';
+            if (str_contains($st, 'roxa')) return '#8e44ad';
+            if (str_contains($st, 'vermelha')) return '#c0392b';
+            if (str_contains($st, 'celeste')) return '#29b6f6';
+            return '#f5f5f0'; // Perolada nobre
+        }
+        if (str_contains($st, 'olho de tigre')) return '#b7791f';
+        if (str_contains($st, 'ônix') || str_contains($st, 'onix')) return '#181818';
+        if (str_contains($st, 'sol')) return '#f39c12';
+        if (str_contains($st, 'verde') || str_contains($st, 'quartzo verde')) return '#2e7d32';
+        if (str_contains($st, 'sodalita')) return '#283593';
+        if (str_contains($st, 'azul')) return '#1e88e5';
+        if (str_contains($st, 'rosa')) return '#f48fb1';
+        if (str_contains($st, 'vermelho') || str_contains($st, 'jaspe')) return '#b71c1c';
+        return '#d4ba88';
+    }
+}
+
 // Extrair propriedades do produto com fallbacks elegantes
 $prodId = (int) ($product['id'] ?? 0);
 $prodName = (string) ($product['name'] ?? 'Joia Autoral DIVINIUM');
@@ -58,6 +87,36 @@ $promotionalPriceCents = !empty($product['promotional_price_cents']) ? (int) $pr
 $promotionalPriceFormatted = $promotionalPriceCents ? number_format($promotionalPriceCents / 100, 2, ',', '.') : null;
 $pixPriceFormatted = number_format(($basePriceCents * 0.95) / 100, 2, ',', '.');
 $installmentVal = number_format(($basePriceCents / 6) / 100, 2, ',', '.');
+
+// Identificar variação inicial se houver variações para este modelo
+$initialVariation = null;
+if (!empty($variations) && is_array($variations)) {
+    $targetSku = $selectedSku ?? ($product['sku'] ?? '');
+    foreach ($variations as $var) {
+        if (!empty($targetSku) && ($var['sku'] ?? '') === $targetSku) {
+            $initialVariation = $var;
+            break;
+        }
+    }
+    if (!$initialVariation && !empty($variations[0])) {
+        $initialVariation = $variations[0];
+    }
+}
+
+if ($initialVariation) {
+    if (!empty($initialVariation['sku'])) $prodSku = $initialVariation['sku'];
+    if (!empty($initialVariation['stone_mineral'])) $prodMineral = $initialVariation['stone_mineral'];
+    if (!empty($initialVariation['image_url'])) $prodImageUrl = $initialVariation['image_url'];
+    if (!empty($initialVariation['price_cents'])) {
+        $basePriceCents = (int)$initialVariation['price_cents'];
+        $basePriceFormatted = number_format($basePriceCents / 100, 2, ',', '.');
+        $pixPriceFormatted = number_format(($basePriceCents * 0.95) / 100, 2, ',', '.');
+        $installmentVal = number_format(($basePriceCents / 6) / 100, 2, ',', '.');
+    }
+    if (isset($initialVariation['has_stock'])) {
+        $prodStockStatus = $initialVariation['has_stock'] ? 'in_stock' : 'out_of_stock';
+    }
+}
 
 // Controles de visibilidade (preferência do produto prevalece sobre configuração geral)
 $showProdBadge = isset($product['show_badge']) ? ((int) $product['show_badge'] === 1) : true;
@@ -208,6 +267,54 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         </div>
                         <?php endif; ?>
                     </div>
+
+                    <!-- ============================================================== -->
+                    <!-- SELETOR DE PEDRAS MINERAIS / VARIAÇÕES DA JOIA (AUTORAL DIVINIUM) -->
+                    <!-- ============================================================== -->
+                    <?php if (!empty($variations) && count($variations) > 1): ?>
+                    <div class="product-variations-section" id="seletor-variacoes">
+                        <div class="variations-header">
+                            <div class="variations-title">
+                                <span>Pedra Mineral:</span>
+                                <strong class="selected-stone-name" id="selectedStoneName"><?= View::e($prodMineral ?: 'Selecione a pedra') ?></strong>
+                            </div>
+                            <span class="variations-count-badge">✦ <?= count($variations) ?> Opções de Gemas</span>
+                        </div>
+
+                        <div class="variations-chips-grid" id="variationsGrid" role="radiogroup" aria-label="Selecione a pedra mineral">
+                            <?php foreach ($variations as $var): 
+                                $vSku = (string)($var['sku'] ?? '');
+                                $vName = (string)($var['name'] ?? '');
+                                $vStone = (string)($var['stone_mineral'] ?? $vName);
+                                $vPriceCents = (int)($var['price_cents'] ?? $basePriceCents);
+                                $vPriceFormatted = number_format($vPriceCents / 100, 2, ',', '.');
+                                $vImg = !empty($var['image_url']) ? $var['image_url'] : $prodImageUrl;
+                                $vStock = !empty($var['has_stock']) || (!isset($var['has_stock']) && ($var['stock_status'] ?? '') !== 'out_of_stock');
+                                $vUrl = !empty($var['external_url']) ? $var['external_url'] : ('https://shopee.com.br/search?keyword=' . urlencode('Divinium ' . $vName));
+                                $isActive = ($vSku === $prodSku);
+                                $dotColor = getStoneColorDot($vStone);
+                            ?>
+                                <button type="button" 
+                                        class="variation-chip <?= $isActive ? 'active' : '' ?> <?= !$vStock ? 'variation-out-stock' : '' ?>"
+                                        role="radio"
+                                        aria-checked="<?= $isActive ? 'true' : 'false' ?>"
+                                        data-sku="<?= View::e($vSku) ?>"
+                                        data-name="<?= View::e($vName) ?>"
+                                        data-stone="<?= View::e($vStone) ?>"
+                                        data-price-formatted="R$ <?= $vPriceFormatted ?>"
+                                        data-price-cents="<?= $vPriceCents ?>"
+                                        data-image="<?= View::e($vImg) ?>"
+                                        data-stock="<?= $vStock ? 'in_stock' : 'out_of_stock' ?>"
+                                        data-url="<?= View::e($vUrl) ?>"
+                                        onclick="selectProductVariation(this)"
+                                        title="<?= View::e($vStone) ?> - R$ <?= $vPriceFormatted ?><?= !$vStock ? ' (Sob Encomenda)' : '' ?>">
+                                    <span class="stone-dot" style="background-color: <?= $dotColor ?>;"></span>
+                                    <span class="stone-label"><?= View::e($vStone) ?></span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                     <!-- ============================================================== -->
                     <!-- PAINEL DE COMPRA PADRONIZADO E IMPARCIAL (TODOS OS CANAIS EQUIVALENTES) -->
@@ -476,6 +583,93 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
 <!-- Script de Interatividade & Feedback ao Copiar Link -->
 <script>
+function selectProductVariation(btn) {
+    if (!btn) return;
+    
+    // Atualizar classe ativa
+    document.querySelectorAll('.variation-chip').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-checked', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-checked', 'true');
+    
+    const sku = btn.getAttribute('data-sku');
+    const name = btn.getAttribute('data-name');
+    const stone = btn.getAttribute('data-stone');
+    const priceFormatted = btn.getAttribute('data-price-formatted');
+    const priceCents = parseInt(btn.getAttribute('data-price-cents') || '0', 10);
+    const imgUrl = btn.getAttribute('data-image');
+    const stock = btn.getAttribute('data-stock');
+    const extUrl = btn.getAttribute('data-url');
+    
+    // 1. Atualizar nome da pedra mineral selecionada
+    const stoneDisplay = document.getElementById('selectedStoneName');
+    if (stoneDisplay && stone) {
+        stoneDisplay.textContent = stone;
+    }
+    
+    // 2. Atualizar foto com transição suave
+    const mainImg = document.getElementById('productMainImage');
+    if (mainImg && imgUrl && mainImg.getAttribute('src') !== imgUrl) {
+        mainImg.style.opacity = '0.3';
+        mainImg.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => {
+            mainImg.src = imgUrl;
+            mainImg.onload = () => { mainImg.style.opacity = '1'; };
+            setTimeout(() => { mainImg.style.opacity = '1'; }, 200);
+        }, 150);
+    }
+    
+    // 3. Atualizar preço principal
+    const priceEl = document.querySelector('.price-current-large');
+    if (priceEl && priceFormatted) {
+        priceEl.textContent = priceFormatted;
+    }
+    
+    // 4. Atualizar desconto no Pix
+    const pixEl = document.querySelector('.price-pix-badge span:last-child');
+    if (pixEl && priceCents > 0) {
+        const pixVal = (priceCents * 0.95) / 100;
+        pixEl.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' no Pix (-5%)';
+    }
+    
+    // 5. Atualizar SKU / Código da Joia
+    const skuDisplay = document.querySelector('.media-sku-text strong');
+    if (skuDisplay && sku) {
+        skuDisplay.textContent = '#' + sku;
+    }
+    
+    // 6. Atualizar Badge Mineral na foto
+    const badgeMineral = document.querySelector('.badge-mineral');
+    if (badgeMineral && stone) {
+        badgeMineral.textContent = '✦ ' + stone;
+    }
+    
+    // 7. Atualizar Badge de Disponibilidade
+    const badgeStock = document.querySelector('.product-media-badges .media-badge:first-child');
+    if (badgeStock) {
+        if (stock === 'out_of_stock') {
+            badgeStock.className = 'media-badge badge-preorder';
+            badgeStock.textContent = 'Sob Encomenda';
+        } else {
+            badgeStock.className = 'media-badge badge-metal';
+            badgeStock.textContent = 'Prata de Lei 925';
+        }
+    }
+    
+    // 8. Atualizar botões de canais de compra (Shopee e outros)
+    if (extUrl) {
+        document.querySelectorAll('.btn-channel-impartial').forEach(cBtn => {
+            cBtn.href = extUrl;
+            const pVal = cBtn.querySelector('.channel-price-val');
+            if (pVal && priceFormatted) {
+                pVal.textContent = priceFormatted;
+            }
+        });
+    }
+}
+
 function copyProductLink(url) {
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url).then(function() {
