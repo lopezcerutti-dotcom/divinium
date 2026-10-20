@@ -2884,6 +2884,212 @@ body.luxury-theme {
     transform: translate(2px, -2px);
 }
 
+/* Modificadores de Tamanho dos Botões */
+.btn-size-sm {
+    padding: 8px 12px !important;
+    font-size: 0.78rem !important;
+}
+.btn-size-sm .platform-btn-price-tag {
+    font-size: 0.94rem !important;
+    padding-left: 6px !important;
+}
+.btn-size-sm .shopee-icon-svg {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.btn-size-md {
+    padding: 12px 16px;
+    font-size: 0.88rem;
+}
+
+.btn-size-lg {
+    padding: 15px 22px !important;
+    font-size: 0.98rem !important;
+    border-radius: 9px !important;
+}
+.btn-size-lg .platform-btn-price-tag {
+    font-size: 1.18rem !important;
+    padding-left: 10px !important;
+}
+.btn-size-lg .shopee-icon-svg {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.btn-size-full {
+    width: 100% !important;
+    justify-content: space-between !important;
+}
+
+/* Modificadores de Cores dos Botões */
+.btn-color-gold {
+    background: linear-gradient(135deg, #d4ba88 0%, #b89758 100%) !important;
+    color: #0d0c0b !important;
+    border: 1px solid rgba(212, 186, 136, 0.6) !important;
+    box-shadow: 0 4px 14px rgba(212, 186, 136, 0.35) !important;
+}
+.btn-color-gold .platform-btn-price-tag {
+    border-left-color: rgba(13, 12, 11, 0.25) !important;
+    color: #0d0c0b !important;
+}
+.btn-color-gold:hover {
+    background: linear-gradient(135deg, #e0c99a 0%, #c9a96e 100%) !important;
+    color: #0d0c0b !important;
+    box-shadow: 0 6px 20px rgba(212, 186, 136, 0.5) !important;
+}
+
+.btn-color-dark {
+    background: linear-gradient(135deg, #1f1c19 0%, #0d0c0b 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(212, 186, 136, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+}
+.btn-color-dark .platform-btn-price-tag {
+    border-left-color: rgba(255, 255, 255, 0.2) !important;
+    color: #d4ba88 !important;
+}
+.btn-color-dark:hover {
+    background: linear-gradient(135deg, #2b2723 0%, #151311 100%) !important;
+    border-color: #d4ba88 !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 22px rgba(212, 186, 136, 0.25) !important;
+}
+
+.btn-color-silver {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 14px rgba(203, 213, 225, 0.35) !important;
+}
+.btn-color-silver .platform-btn-price-tag {
+    border-left-color: rgba(15, 23, 42, 0.25) !important;
+    color: #0f172a !important;
+}
+.btn-color-silver:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+    color: #0f172a !important;
+    box-shadow: 0 6px 20px rgba(203, 213, 225, 0.5) !important;
+}
+
+.btn-color-shopee {
+    background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35) !important;
+}
+.btn-color-shopee .platform-btn-price-tag {
+    border-left-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+.btn-color-shopee:hover {
+    background: linear-gradient(135deg, #ff5722 0%, #f4511e 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 22px rgba(238, 77, 45, 0.5) !important;
+}
+
+.btn-color-mercadolivre {
+    background: linear-gradient(135deg, #ffe600 0%, #ffd000 100%) !important;
+    color: #18181b !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 4px 14px rgba(255, 230, 0, 0.3) !important;
+}
+.btn-color-mercadolivre .platform-btn-price-tag {
+    border-left-color: rgba(24, 24, 27, 0.2) !important;
+    color: #18181b !important;
+}
+.btn-color-mercadolivre:hover {
+    background: linear-gradient(135deg, #fff033 0%, #ffe600 100%) !important;
+    color: #000000 !important;
+    box-shadow: 0 6px 20px rgba(255, 230, 0, 0.45) !important;
+}
+
+.btn-color-amazon {
+    background: linear-gradient(135deg, #232f3e 0%, #131921 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 153, 0, 0.5) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+}
+.btn-color-amazon .platform-btn-price-tag {
+    border-left-color: rgba(255, 153, 0, 0.4) !important;
+    color: #ff9900 !important;
+}
+.btn-color-amazon:hover {
+    border-color: #ff9900 !important;
+    box-shadow: 0 6px 20px rgba(255, 153, 0, 0.35) !important;
+    color: #ffffff !important;
+}
+
+.btn-color-whatsapp {
+    background: linear-gradient(135deg, #128c7e 0%, #25d366 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35) !important;
+}
+.btn-color-whatsapp .platform-btn-price-tag {
+    border-left-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+.btn-color-whatsapp:hover {
+    background: linear-gradient(135deg, #25d366 0%, #20ba5c 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
+}
+
+.btn-color-emerald {
+    background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
+}
+.btn-color-emerald .platform-btn-price-tag {
+    border-left-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+.btn-color-emerald:hover {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+}
+
+.btn-color-rose {
+    background: linear-gradient(135deg, #be185d 0%, #fb7185 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(251, 113, 133, 0.4) !important;
+    box-shadow: 0 4px 14px rgba(251, 113, 133, 0.3) !important;
+}
+.btn-color-rose .platform-btn-price-tag {
+    border-left-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+.btn-color-rose:hover {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(251, 113, 133, 0.45) !important;
+}
+
+/* Aplicação a canais secundários de venda */
+.store-channel-pill.btn-color-gold {
+    background: rgba(212, 186, 136, 0.12) !important;
+    border-color: rgba(212, 186, 136, 0.5) !important;
+    color: #d4ba88 !important;
+}
+.store-channel-pill.btn-color-silver {
+    background: rgba(226, 232, 240, 0.12) !important;
+    border-color: rgba(226, 232, 240, 0.5) !important;
+    color: #e2e8f0 !important;
+}
+.store-channel-pill.btn-color-emerald {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    color: #10b981 !important;
+}
+.store-channel-pill.btn-color-rose {
+    background: rgba(251, 113, 133, 0.12) !important;
+    border-color: rgba(251, 113, 133, 0.4) !important;
+    color: #fb7185 !important;
+}
+
 /* 13.3.2 CANAIS SECUNDÁRIOS DE VENDA */
 .store-card-channels {
     margin-top: 12px;

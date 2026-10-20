@@ -281,6 +281,43 @@ class Database
                 }
             }
 
+            // 2.1 Garantir novas colunas em product_links (cor e tamanho do botão)
+            $neededLinkCols = [
+                'button_color' => "VARCHAR(50) DEFAULT 'default'",
+                'button_size' => "VARCHAR(20) DEFAULT 'md'"
+            ];
+
+            $existingLinkCols = [];
+            if ($driver === 'sqlite') {
+                $stmt = $pdo->query("PRAGMA table_info(product_links)");
+                if ($stmt) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $existingLinkCols[] = strtolower($row['name']);
+                    }
+                }
+            } else {
+                $stmt = $pdo->query("SHOW COLUMNS FROM `product_links`");
+                if ($stmt) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $existingLinkCols[] = strtolower($row['Field']);
+                    }
+                }
+            }
+
+            foreach ($neededLinkCols as $col => $definition) {
+                if (!in_array(strtolower($col), $existingLinkCols, true)) {
+                    try {
+                        if ($driver === 'sqlite') {
+                            $pdo->exec("ALTER TABLE product_links ADD COLUMN {$col} {$definition}");
+                        } else {
+                            $pdo->exec("ALTER TABLE `product_links` ADD COLUMN `{$col}` {$definition}");
+                        }
+                    } catch (\Throwable $ex) {
+                        // Coluna já existia ou adicionada concorrentemente
+                    }
+                }
+            }
+
             // 3. Migração automática e retrocompatibilidade para produtos existentes:
             // Se um produto tiver external_url e ainda não tiver registros em product_links,
             // adiciona o link na tabela product_links

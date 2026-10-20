@@ -98,6 +98,8 @@ class AdminController
                     'url' => $p['external_url'],
                     'price_cents' => $p['price_cents'] ?? 38000,
                     'button_text' => 'Comprar na Shopee Oficial',
+                    'button_color' => 'default',
+                    'button_size' => 'md',
                     'is_active' => 1,
                     'sort_order' => 0
                 ]];
@@ -276,6 +278,14 @@ class AdminController
                         $btnText = $plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' . $plat);
                     }
 
+                    $btnColor = trim((string) ($linkItem['button_color'] ?? 'default'));
+                    if ($btnColor === '') $btnColor = 'default';
+
+                    $btnSize = trim((string) ($linkItem['button_size'] ?? 'md'));
+                    if (!in_array($btnSize, ['sm', 'md', 'lg', 'full'], true)) {
+                        $btnSize = 'md';
+                    }
+
                     $lActive = isset($linkItem['is_active']) ? ((int) $linkItem['is_active'] ? 1 : 0) : 1;
                     $lSort = isset($linkItem['sort_order']) ? (int) $linkItem['sort_order'] : (int) $idx;
 
@@ -284,6 +294,8 @@ class AdminController
                         'url' => $u,
                         'price_cents' => $lPriceCents,
                         'button_text' => $btnText,
+                        'button_color' => $btnColor,
+                        'button_size' => $btnSize,
                         'is_active' => $lActive,
                         'sort_order' => $lSort,
                     ];
@@ -299,8 +311,8 @@ class AdminController
 
             if (!empty($validLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($validLinks as $vl) {
                     $insLink->execute([
@@ -309,6 +321,8 @@ class AdminController
                         $vl['url'],
                         $vl['price_cents'],
                         $vl['button_text'],
+                        $vl['button_color'],
+                        $vl['button_size'],
                         $vl['is_active'],
                         $vl['sort_order']
                     ]);
@@ -412,8 +426,8 @@ class AdminController
 
             if (!empty($origLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($origLinks as $ol) {
                     $insLink->execute([
@@ -422,6 +436,8 @@ class AdminController
                         $ol['url'],
                         $ol['price_cents'],
                         $ol['button_text'],
+                        $ol['button_color'] ?? 'default',
+                        $ol['button_size'] ?? 'md',
                         $ol['is_active'],
                         $ol['sort_order']
                     ]);

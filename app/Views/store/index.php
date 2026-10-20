@@ -41,6 +41,42 @@ if (!function_exists('getPlatformEmoji')) {
         return '✦';
     }
 }
+
+if (!function_exists('getButtonColorAndSizeAttrs')) {
+    function getButtonColorAndSizeAttrs(?string $color, ?string $size): array {
+        $color = trim((string)$color);
+        $size = trim((string)$size);
+        if ($size === '' || !in_array($size, ['sm', 'md', 'lg', 'full'])) {
+            $size = Setting::get('store_btn_default_size', 'md');
+        }
+        if ($color === '' || $color === 'default') {
+            $color = Setting::get('store_btn_default_color', 'default');
+        }
+
+        $classes = ['btn-size-' . $size];
+        $inlineStyle = '';
+
+        if ($color !== 'default' && $color !== '') {
+            if (str_starts_with($color, '#')) {
+                // Cor personalizada Hexadecimal
+                $hex = ltrim($color, '#');
+                $r = hexdec(substr($hex, 0, 2));
+                $g = hexdec(substr($hex, 2, 2));
+                $b = hexdec(substr($hex, 4, 2));
+                $luminance = ($r * 0.299 + $g * 0.587 + $b * 0.114);
+                $textColor = $luminance > 160 ? '#121110' : '#ffffff';
+                $inlineStyle = "background: {$color} !important; border-color: {$color} !important; color: {$textColor} !important;";
+            } else {
+                $classes[] = 'btn-color-' . $color;
+            }
+        }
+
+        return [
+            'class' => implode(' ', $classes),
+            'style' => $inlineStyle
+        ];
+    }
+}
 ?>
 
 <!-- 1. HERO HEADER DA BOUTIQUE -->
@@ -154,6 +190,8 @@ if (!function_exists('getPlatformEmoji')) {
                                     'url' => $prod['external_url'],
                                     'price_cents' => $basePriceCents,
                                     'button_text' => 'Comprar na Shopee Oficial',
+                                    'button_color' => 'default',
+                                    'button_size' => 'md',
                                     'is_active' => 1
                                 ]
                             ];
@@ -306,11 +344,14 @@ if (!function_exists('getPlatformEmoji')) {
                             </div>
 
                             <!-- Botão Principal de Compra (com Preço Específico da Plataforma) -->
-                            <?php if ($primaryLink): ?>
+                            <?php if ($primaryLink): 
+                                $btnAttrs = getButtonColorAndSizeAttrs($primaryLink['button_color'] ?? null, $primaryLink['button_size'] ?? null);
+                            ?>
                                 <a href="<?= View::e($primaryUrl) ?>" 
                                    target="_blank" 
                                    rel="noopener noreferrer" 
-                                   class="btn-platform-action platform-btn-<?= $platformSlug ?>"
+                                   class="btn-platform-action platform-btn-<?= $platformSlug ?> <?= $btnAttrs['class'] ?>"
+                                   style="<?= $btnAttrs['style'] ?>"
                                    data-track-product-id="<?= $prod['id'] ?>"
                                    data-track-product-name="<?= View::e($prod['name']) ?>"
                                    data-track-source="store_<?= $platformSlug ?>"
@@ -324,11 +365,14 @@ if (!function_exists('getPlatformEmoji')) {
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="arrow-ext-svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                     </div>
                                 </a>
-                            <?php else: ?>
+                            <?php else: 
+                                $btnAttrs = getButtonColorAndSizeAttrs(null, null);
+                            ?>
                                 <a href="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999')) ?>" 
                                    target="_blank" 
                                    rel="noopener noreferrer" 
-                                   class="btn-platform-action platform-btn-whatsapp"
+                                   class="btn-platform-action platform-btn-whatsapp <?= $btnAttrs['class'] ?>"
+                                   style="<?= $btnAttrs['style'] ?>"
                                    data-track-product-id="<?= $prod['id'] ?>"
                                    data-track-product-name="<?= View::e($prod['name']) ?>"
                                    data-track-source="store_whatsapp"
@@ -356,11 +400,13 @@ if (!function_exists('getPlatformEmoji')) {
                                             $secPlatform = !empty($secLink['platform_name']) ? $secLink['platform_name'] : 'Canal Parceiro';
                                             $secPlatformSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $secPlatform));
                                             $secBtnText = !empty($secLink['button_text']) ? $secLink['button_text'] : $secPlatform;
+                                            $secAttrs = getButtonColorAndSizeAttrs($secLink['button_color'] ?? null, 'sm');
                                         ?>
                                             <a href="<?= View::e($secLink['url']) ?>" 
                                                target="_blank" 
                                                rel="noopener noreferrer" 
-                                               class="store-channel-pill platform-pill-<?= $secPlatformSlug ?>"
+                                               class="store-channel-pill platform-pill-<?= $secPlatformSlug ?> <?= $secAttrs['class'] ?>"
+                                               style="<?= $secAttrs['style'] ?>"
                                                data-track-product-id="<?= $prod['id'] ?>"
                                                data-track-product-name="<?= View::e($prod['name']) ?>"
                                                data-track-source="store_<?= $secPlatformSlug ?>"

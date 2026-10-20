@@ -290,6 +290,42 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?>">
                     <span class="field-hint">Exibe links secundários para Mercado Livre, Amazon, TikTok Shop ou WhatsApp.</span>
                 </div>
+
+                <!-- Estilo Padrão dos Botões de Compra -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; padding-top: 16px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🎨 Estilo Padrão dos Botões de Compra da Vitrine
+                    </h4>
+                    <span class="field-hint">Defina a cor e o tamanho padrão para os botões de compra. Cada produto também pode ter botões com cores e tamanhos personalizados na aba de Produtos.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_btn_default_color" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Cor Padrão dos Botões</label>
+                    <select id="store_btn_default_color" name="store_btn_default_color" class="form-input">
+                        <option value="default" <?= Setting::get('store_btn_default_color', 'default') === 'default' ? 'selected' : '' ?>>Automático por Plataforma (Shopee Laranja, ML Amarelo...)</option>
+                        <option value="gold" <?= Setting::get('store_btn_default_color') === 'gold' ? 'selected' : '' ?>>👑 Ouro Imperial DIVINIUM (#D4BA88)</option>
+                        <option value="dark" <?= Setting::get('store_btn_default_color') === 'dark' ? 'selected' : '' ?>>🖤 Ônix Nobre (#121110 com Dourado)</option>
+                        <option value="silver" <?= Setting::get('store_btn_default_color') === 'silver' ? 'selected' : '' ?>>🪙 Prata de Lei 925 (#E2E8F0)</option>
+                        <option value="emerald" <?= Setting::get('store_btn_default_color') === 'emerald' ? 'selected' : '' ?>>💎 Verde Esmeralda (#10B981)</option>
+                        <option value="rose" <?= Setting::get('store_btn_default_color') === 'rose' ? 'selected' : '' ?>>🌸 Rose Gold (#FB7185)</option>
+                        <option value="shopee" <?= Setting::get('store_btn_default_color') === 'shopee' ? 'selected' : '' ?>>🟠 Shopee Oficial (#EE4D2D)</option>
+                        <option value="mercadolivre" <?= Setting::get('store_btn_default_color') === 'mercadolivre' ? 'selected' : '' ?>>🟡 Mercado Livre (#FFE600)</option>
+                        <option value="amazon" <?= Setting::get('store_btn_default_color') === 'amazon' ? 'selected' : '' ?>>📦 Amazon (#FF9900)</option>
+                        <option value="whatsapp" <?= Setting::get('store_btn_default_color') === 'whatsapp' ? 'selected' : '' ?>>🟢 WhatsApp VIP (#25D366)</option>
+                    </select>
+                    <span class="field-hint">Aparência aplicada quando o link estiver configurado como 'Cor Padrão do Canal'.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_btn_default_size" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Tamanho Padrão dos Botões</label>
+                    <select id="store_btn_default_size" name="store_btn_default_size" class="form-input">
+                        <option value="sm" <?= Setting::get('store_btn_default_size') === 'sm' ? 'selected' : '' ?>>Compacto (Pequeno / Discreto)</option>
+                        <option value="md" <?= Setting::get('store_btn_default_size', 'md') === 'md' ? 'selected' : '' ?>>Médio Padrão (Recomendado)</option>
+                        <option value="lg" <?= Setting::get('store_btn_default_size') === 'lg' ? 'selected' : '' ?>>Grande (Destaque Nobre)</option>
+                        <option value="full" <?= Setting::get('store_btn_default_size') === 'full' ? 'selected' : '' ?>>Largura Total (100% do Card)</option>
+                    </select>
+                    <span class="field-hint">Tamanho aplicado a links que utilizam a dimensão padrão da loja.</span>
+                </div>
             </div>
         </div>
 

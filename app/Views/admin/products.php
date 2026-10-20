@@ -1031,6 +1031,11 @@ function renderPlatformLinks() {
 
         const isCustomPlat = !['Shopee', 'Mercado Livre', 'Amazon', 'TikTok Shop', 'WhatsApp', 'Loja Oficial'].includes(plat);
 
+        const btnColor = link.button_color || 'default';
+        const btnSize = link.button_size || 'md';
+        const isCustomColor = (btnColor && btnColor.startsWith('#'));
+        const customColorHex = isCustomColor ? btnColor : '#d4ba88';
+
         html += `
             <div class="platform-link-card ${isActive ? '' : 'is-inactive'}" id="linkCard_${idx}">
                 <div class="platform-link-header">
@@ -1061,7 +1066,7 @@ function renderPlatformLinks() {
 
                     <div class="form-group" id="customPlatGroup_${idx}" style="${isCustomPlat ? '' : 'display: none;'}">
                         <label>Nome da Plataforma Personalizada</label>
-                        <input type="text" class="form-input link-custom-plat" value="${escapeHtml(plat)}" placeholder="Ex: Elo7, Enjoei, Instagram..." oninput="updateLinkData(${idx}, 'platform_name', this.value)">
+                        <input type="text" class="form-input link-custom-plat" value="${escapeHtml(plat)}" placeholder="Ex: Elo7, Enjoei, Instagram..." oninput="updateLinkData(${idx}, 'platform_name', this.value); updateLiveButtonPreview(${idx});">
                     </div>
 
                     <div class="form-group" style="${isCustomPlat ? 'grid-column: 1 / -1;' : ''}">
@@ -1078,13 +1083,58 @@ function renderPlatformLinks() {
                                 Usar Preço Base
                             </button>
                         </div>
-                        <input type="text" class="form-input link-price" value="${escapeHtml(price)}" placeholder="380,00" onkeyup="formatCurrencyLive(this)" oninput="updateLinkData(${idx}, 'price', this.value)">
+                        <input type="text" class="form-input link-price" value="${escapeHtml(price)}" placeholder="380,00" onkeyup="formatCurrencyLive(this)" oninput="updateLinkData(${idx}, 'price', this.value); updateLiveButtonPreview(${idx});">
                     </div>
 
                     <div class="form-group">
                         <label>Texto do Botão de Compra</label>
-                        <input type="text" class="form-input link-btn-text" value="${escapeHtml(btnText)}" placeholder="Ex: Comprar na Shopee Oficial" oninput="updateLinkData(${idx}, 'button_text', this.value)">
+                        <input type="text" class="form-input link-btn-text" value="${escapeHtml(btnText)}" placeholder="Ex: Comprar na Shopee Oficial" oninput="updateLinkData(${idx}, 'button_text', this.value); updateLiveButtonPreview(${idx});">
                     </div>
+                </div>
+
+                <!-- Customização Visual: Cor e Tamanho do Botão de Compra -->
+                <div class="form-row-2" style="margin-top: 10px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 0.76rem; color: #d4ba88; display: flex; align-items: center; justify-content: space-between;">
+                            <span>🎨 Cor do Botão de Compra</span>
+                            ${isCustomColor ? `<span style="font-size: 0.68rem; color: #a8a096;">Hex: ${escapeHtml(btnColor)}</span>` : ''}
+                        </label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <select class="form-select link-btn-color" style="font-size: 0.78rem; flex: 1;" onchange="handleButtonColorChange(${idx}, this.value)">
+                                <option value="default" ${btnColor === 'default' ? 'selected' : ''}>✦ Padrão do Canal / Tema</option>
+                                <option value="gold" ${btnColor === 'gold' ? 'selected' : ''}>👑 Ouro Imperial (#D4BA88)</option>
+                                <option value="dark" ${btnColor === 'dark' ? 'selected' : ''}>🖤 Ônix Nobre (#121110)</option>
+                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Prata de Lei 925 (#E2E8F0)</option>
+                                <option value="shopee" ${btnColor === 'shopee' ? 'selected' : ''}>🟠 Laranja Shopee (#EE4D2D)</option>
+                                <option value="mercadolivre" ${btnColor === 'mercadolivre' ? 'selected' : ''}>🟡 Amarelo Mercado Livre (#FFE600)</option>
+                                <option value="amazon" ${btnColor === 'amazon' ? 'selected' : ''}>📦 Âmbar Amazon (#FF9900)</option>
+                                <option value="whatsapp" ${btnColor === 'whatsapp' ? 'selected' : ''}>🟢 Verde WhatsApp (#25D366)</option>
+                                <option value="emerald" ${btnColor === 'emerald' ? 'selected' : ''}>💎 Verde Esmeralda (#10B981)</option>
+                                <option value="rose" ${btnColor === 'rose' ? 'selected' : ''}>🌸 Rose Gold (#FB7185)</option>
+                                <option value="custom" ${isCustomColor ? 'selected' : ''}>🎨 Cor Personalizada (Hex)...</option>
+                            </select>
+                            <div id="customColorPickerWrap_${idx}" style="display: ${isCustomColor ? 'flex' : 'none'}; align-items: center; gap: 6px;">
+                                <input type="color" value="${customColorHex}" style="width: 32px; height: 32px; padding: 0; border: none; border-radius: 6px; cursor: pointer; background: none;" onchange="handleCustomColorPicker(${idx}, this.value)" title="Escolher cor visualmente">
+                                <input type="text" class="form-input" style="width: 82px; font-size: 0.78rem; padding: 6px 8px; text-transform: uppercase;" value="${isCustomColor ? btnColor : ''}" placeholder="#D4BA88" oninput="handleCustomColorText(${idx}, this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 0.76rem; color: #d4ba88;">📐 Tamanho do Botão de Compra</label>
+                        <select class="form-select link-btn-size" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'button_size', this.value); updateLiveButtonPreview(${idx});">
+                            <option value="sm" ${btnSize === 'sm' ? 'selected' : ''}>▫️ Compacto / Pequeno</option>
+                            <option value="md" ${btnSize === 'md' ? 'selected' : ''}>◻️ Padrão / Médio (Recomendado)</option>
+                            <option value="lg" ${btnSize === 'lg' ? 'selected' : ''}>◼️ Grande / Destaque</option>
+                            <option value="full" ${btnSize === 'full' ? 'selected' : ''}>↔️ Largura Total (Expandido 100%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Pré-visualização ao Vivo do Botão no Painel -->
+                <div style="margin-top: 10px; padding: 10px 14px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <span style="font-size: 0.72rem; color: #8e8880; text-transform: uppercase; letter-spacing: 0.05em;">Pré-visualização do Botão:</span>
+                    <div id="btnPreviewBox_${idx}" style="min-width: 200px;"></div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
@@ -1104,6 +1154,7 @@ function renderPlatformLinks() {
 
     container.innerHTML = html;
     updateLinksBadge();
+    currentProductLinks.forEach((_, i) => updateLiveButtonPreview(i));
 }
 
 function getPlatformIcon(plat) {
@@ -1145,6 +1196,137 @@ function handlePlatformChange(idx, newPlat) {
     renderPlatformLinks();
 }
 
+function handleButtonColorChange(idx, val) {
+    if (!currentProductLinks[idx]) return;
+    if (val === 'custom') {
+        currentProductLinks[idx].button_color = '#d4ba88';
+    } else {
+        currentProductLinks[idx].button_color = val;
+    }
+    renderPlatformLinks();
+}
+
+function handleCustomColorPicker(idx, hex) {
+    if (!currentProductLinks[idx]) return;
+    currentProductLinks[idx].button_color = hex;
+    const txt = document.querySelector(`#customColorPickerWrap_${idx} input[type="text"]`);
+    if (txt) txt.value = hex.toUpperCase();
+    updateLiveButtonPreview(idx);
+}
+
+function handleCustomColorText(idx, hex) {
+    if (!currentProductLinks[idx]) return;
+    if (!hex.startsWith('#')) hex = '#' + hex;
+    currentProductLinks[idx].button_color = hex;
+    if (hex.length === 7) {
+        const picker = document.querySelector(`#customColorPickerWrap_${idx} input[type="color"]`);
+        if (picker) picker.value = hex;
+    }
+    updateLiveButtonPreview(idx);
+}
+
+function updateLiveButtonPreview(idx) {
+    const box = document.getElementById('btnPreviewBox_' + idx);
+    if (!box || !currentProductLinks[idx]) return;
+
+    const link = currentProductLinks[idx];
+    const plat = link.platform_name || 'Shopee';
+    const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + plat));
+    const price = link.price || '380,00';
+    const color = link.button_color || 'default';
+    const size = link.button_size || 'md';
+
+    let bgStyle = '';
+    let textColor = '#ffffff';
+    let borderColor = 'transparent';
+    let padding = '8px 14px';
+    let fontSize = '0.82rem';
+
+    if (size === 'sm') {
+        padding = '6px 10px';
+        fontSize = '0.74rem';
+    } else if (size === 'lg') {
+        padding = '12px 18px';
+        fontSize = '0.92rem';
+    } else if (size === 'full') {
+        padding = '10px 16px';
+        fontSize = '0.86rem';
+    }
+
+    if (color === 'gold') {
+        bgStyle = 'linear-gradient(135deg, #d4ba88 0%, #b89758 100%)';
+        textColor = '#0d0c0b';
+        borderColor = 'rgba(212, 186, 136, 0.6)';
+    } else if (color === 'dark') {
+        bgStyle = 'linear-gradient(135deg, #1f1c19 0%, #0d0c0b 100%)';
+        textColor = '#ffffff';
+        borderColor = 'rgba(212, 186, 136, 0.4)';
+    } else if (color === 'silver') {
+        bgStyle = 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)';
+        textColor = '#0f172a';
+        borderColor = '#cbd5e1';
+    } else if (color === 'shopee') {
+        bgStyle = 'linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%)';
+        textColor = '#ffffff';
+    } else if (color === 'mercadolivre') {
+        bgStyle = 'linear-gradient(135deg, #ffe600 0%, #ffd000 100%)';
+        textColor = '#18181b';
+    } else if (color === 'amazon') {
+        bgStyle = 'linear-gradient(135deg, #232f3e 0%, #131921 100%)';
+        textColor = '#ffffff';
+        borderColor = '#ff9900';
+    } else if (color === 'whatsapp') {
+        bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
+        textColor = '#ffffff';
+    } else if (color === 'emerald') {
+        bgStyle = 'linear-gradient(135deg, #065f46 0%, #10b981 100%)';
+        textColor = '#ffffff';
+    } else if (color === 'rose') {
+        bgStyle = 'linear-gradient(135deg, #be185d 0%, #fb7185 100%)';
+        textColor = '#ffffff';
+    } else if (color.startsWith('#')) {
+        bgStyle = color;
+        borderColor = color;
+        const hex = color.replace('#', '');
+        if (hex.length >= 6) {
+            const r = parseInt(hex.substr(0, 2), 16) || 0;
+            const g = parseInt(hex.substr(2, 2), 16) || 0;
+            const b = parseInt(hex.substr(4, 2), 16) || 0;
+            const lum = r * 0.299 + g * 0.587 + b * 0.114;
+            textColor = lum > 160 ? '#121110' : '#ffffff';
+        }
+    } else {
+        // default / canal
+        const p = plat.toLowerCase();
+        if (p.includes('shopee')) {
+            bgStyle = 'linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%)';
+        } else if (p.includes('mercado')) {
+            bgStyle = 'linear-gradient(135deg, #ffe600 0%, #ffd000 100%)';
+            textColor = '#18181b';
+        } else if (p.includes('amazon')) {
+            bgStyle = 'linear-gradient(135deg, #232f3e 0%, #131921 100%)';
+            borderColor = '#ff9900';
+        } else if (p.includes('whatsapp')) {
+            bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
+        } else {
+            bgStyle = 'linear-gradient(135deg, #d4ba88 0%, #b89758 100%)';
+            textColor = '#0d0c0b';
+        }
+    }
+
+    box.innerHTML = `
+        <div style="background: ${bgStyle}; color: ${textColor}; border: 1px solid ${borderColor}; padding: ${padding}; border-radius: 8px; font-size: ${fontSize}; font-weight: 600; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; width: ${size === 'full' ? '100%' : 'auto'}; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <span>${getPlatformIcon(plat)}</span>
+                <span>${escapeHtml(btnText)}</span>
+            </div>
+            <div style="border-left: 1px solid rgba(255,255,255,0.25); padding-left: 8px; font-family:'Cormorant Garamond',serif; font-size: 1.05em; font-weight: 700;">
+                R$ ${escapeHtml(price)}
+            </div>
+        </div>
+    `;
+}
+
 function copyBasePriceToLink(idx) {
     const basePrice = document.getElementById('prodPrice')?.value || '380,00';
     if (currentProductLinks[idx]) {
@@ -1160,6 +1342,8 @@ function addNewPlatformLink(data = null) {
         url: '',
         price: basePrice,
         button_text: '',
+        button_color: 'default',
+        button_size: 'md',
         is_active: 1,
         sort_order: currentProductLinks.length
     };
@@ -1224,6 +1408,8 @@ function openNewProductModal(e) {
             url: '',
             price: '380,00',
             button_text: 'Comprar na Shopee Oficial',
+            button_color: 'default',
+            button_size: 'md',
             is_active: 1,
             sort_order: 0
         }
@@ -1292,6 +1478,8 @@ function editProduct(product) {
             url: l.url || '',
             price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : priceVal,
             button_text: l.button_text || '',
+            button_color: l.button_color || 'default',
+            button_size: l.button_size || 'md',
             is_active: l.is_active !== undefined ? l.is_active : 1,
             sort_order: l.sort_order || 0
         }));
@@ -1301,6 +1489,8 @@ function editProduct(product) {
             url: product.external_url,
             price: priceVal,
             button_text: 'Comprar na Shopee Oficial',
+            button_color: 'default',
+            button_size: 'md',
             is_active: 1,
             sort_order: 0
         }];
