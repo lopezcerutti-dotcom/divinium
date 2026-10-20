@@ -122,19 +122,53 @@ class Router
         $this->get('/health', function (): void {
             header('Content-Type: application/json; charset=UTF-8');
             $dbStatus = 'unknown';
+            $tables = [];
+            $settingsTest = 'not_tested';
             try {
                 $pdo = Database::getConnection();
                 $dbDriver = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
                 $dbStatus = 'connected (' . $dbDriver . ')';
+
+                if ($dbDriver === 'sqlite') {
+                    $stmt = $pdo->query("SELECT name FROM sqlite_master WHERE type='table'");
+                    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                        $tables[] = $row['name'];
+                    }
+                } else {
+                    $stmt = $pdo->query("SHOW TABLES");
+                    while ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+                        $tables[] = $row[0];
+                    }
+                }
+
+                // Testar escrita e leitura em settings
+                $setRes = \App\Models\Setting::set('__health_check_test', date('Y-m-d H:i:s'));
+                $getVal = \App\Models\Setting::get('__health_check_test');
+                $settingsTest = ($setRes && $getVal) ? 'ok' : 'write_or_read_failed';
+
             } catch (\Throwable $e) {
                 $dbStatus = 'error: ' . $e->getMessage();
+                $settingsTest = 'error: ' . $e->getMessage();
             }
+
+            $readLast = function(string $file, int $lines = 25): array {
+                if (!file_exists($file) || !is_readable($file)) return [];
+                $content = @file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                return is_array($content) ? array_slice($content, -$lines) : [];
+            };
+
+            $logDir = defined('LOGS_PATH') ? LOGS_PATH : dirname(__DIR__, 2) . '/logs';
+
             echo json_encode([
                 'status' => 'ok',
                 'php_version' => PHP_VERSION,
                 'db' => $dbStatus,
+                'tables' => $tables,
+                'settings_test' => $settingsTest,
+                'recent_exceptions' => $readLast($logDir . '/app/exception.log'),
+                'recent_errors' => $readLast($logDir . '/app/error.log'),
                 'time' => date('Y-m-d H:i:s')
-            ], JSON_UNESCAPED_UNICODE);
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit;
         });
 
