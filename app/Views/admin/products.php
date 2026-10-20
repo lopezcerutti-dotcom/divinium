@@ -291,6 +291,10 @@
 
                             <td style="text-align: right; padding-right: 20px;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
+                                    <?php $pSlug = !empty($p['slug']) ? $p['slug'] : \App\Controllers\StoreController::slugify($p['name'] ?? ('joia-' . $p['id'])); ?>
+                                    <a href="/produto/<?= urlencode($pSlug) ?>" target="_blank" class="btn-table-action" title="Ver página exclusiva da joia na Boutique" style="text-decoration: none; color: #d4ba88; border-color: rgba(212,186,136,0.3);">
+                                        Ver ↗
+                                    </a>
                                     <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)" title="Alternar status na loja">
                                         <?= $status === 'published' ? 'Ocultar' : 'Publicar' ?>
                                     </button>
@@ -391,7 +395,18 @@
             <div id="productTabGeneral" class="modal-tab-pane active">
                 <div class="form-group">
                     <label for="prodName">Nome da Joia *</label>
-                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos — Concha Verde Esmeralda">
+                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos — Concha Verde Esmeralda" oninput="handleNameInput(this)">
+                </div>
+
+                <div class="form-group">
+                    <label for="prodSlug">URL Própria da Joia (Slug / Link Amigável) *</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #9e978e; font-size: 0.8rem; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap;">
+                            divinium.com.br/produto/
+                        </span>
+                        <input type="text" id="prodSlug" name="slug" class="form-input" placeholder="bracelete-caminhos-concha-verde" oninput="handleSlugInput(this)">
+                    </div>
+                    <span class="field-hint">Link permanente e exclusivo desta joia na Boutique para compartilhamento direto.</span>
                 </div>
 
                 <div class="form-row-2">
@@ -470,11 +485,39 @@
                     <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar esta joia no topo da Vitrine Principal</label>
                 </div>
 
+                <!-- Painel de Navegação, Card e Página de Detalhes -->
                 <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px; margin-top: 14px;">
                     <label style="color: #d4ba88; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
-                        👁️ Opções Individuais de Exibição no Card (/loja)
+                        👁️ Navegação Individual do Card & Página de Detalhes
                     </label>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                    
+                    <div class="form-row-2" style="margin-bottom: 12px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="prodCardBehavior" style="font-size: 0.78rem;">Ao Clicar no Card desta Joia</label>
+                            <select id="prodCardBehavior" name="card_click_behavior" class="form-select" onchange="toggleCustomUrlGroup(this.value)">
+                                <option value="default">Padrão da Loja (Herança Geral da Boutique)</option>
+                                <option value="detail">💎 Abrir Página de Detalhes Interna (/produto/{slug})</option>
+                                <option value="external">↗ Abrir 1º Canal Externo Direto</option>
+                                <option value="custom">🔗 URL Personalizada Específica</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="prodDetailLayout" style="font-size: 0.78rem;">Disposição dos Botões de Compra</label>
+                            <select id="prodDetailLayout" name="detail_layout" class="form-select">
+                                <option value="default">Padrão da Boutique</option>
+                                <option value="list">Lista Vertical Padronizada</option>
+                                <option value="grid">Grade Lado a Lado (2 Colunas)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="customTargetUrlGroup" style="display: none; margin-bottom: 12px;">
+                        <label for="prodCustomTargetUrl" style="font-size: 0.78rem;">URL de Destino Personalizada</label>
+                        <input type="url" id="prodCustomTargetUrl" name="custom_target_url" class="form-input" placeholder="https://...">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_badge" value="0">
                             <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
@@ -485,13 +528,19 @@
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_specs" value="0">
                             <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
-                            <span>Exibir tags de especificações (Materiais, Medidas e SKU)</span>
+                            <span>Exibir especificações técnicas (Materiais, Medidas e SKU)</span>
                         </label>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_description" value="0">
                             <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
                             <span>Exibir descrição resumida da peça no card</span>
+                        </label>
+
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
+                            <input type="hidden" name="show_channels" value="0">
+                            <input type="checkbox" id="prodShowChannels" name="show_channels" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <span>Exibir painel de canais de compra na página de detalhes</span>
                         </label>
                     </div>
                 </div>
@@ -1026,6 +1075,7 @@ function renderPlatformLinks() {
         const url = link.url || '';
         const price = link.price !== undefined ? link.price : (link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : '');
         const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + plat));
+        const target = link.target || '_blank';
         const isActive = link.is_active != 0;
         const sortOrder = link.sort_order !== undefined ? link.sort_order : idx;
 
@@ -1045,7 +1095,7 @@ function renderPlatformLinks() {
                         ${!isActive ? '<span style="font-size: 0.7rem; color: #9ca3af; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px;">Inativo</span>' : ''}
                     </div>
                     <div class="platform-link-actions">
-                        ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="btn-test-link" title="Testar link no navegador">↗ Testar</a>` : ''}
+                        ${url ? `<a href="${escapeHtml(url)}" target="${escapeHtml(target)}" rel="noopener noreferrer" class="btn-test-link" title="Testar link no navegador">↗ Testar</a>` : ''}
                         <button type="button" class="btn-remove-link" onclick="removePlatformLink(${idx})" title="Remover este canal">✕ Remover</button>
                     </div>
                 </div>
@@ -1092,11 +1142,11 @@ function renderPlatformLinks() {
                     </div>
                 </div>
 
-                <!-- Customização Visual: Cor e Tamanho do Botão de Compra -->
-                <div class="form-row-2" style="margin-top: 10px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <!-- Customização Visual: Cor, Tamanho e Destino do Botão de Compra -->
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-top: 10px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label style="font-size: 0.76rem; color: #d4ba88; display: flex; align-items: center; justify-content: space-between;">
-                            <span>🎨 Cor do Botão de Compra</span>
+                            <span>🎨 Cor do Botão</span>
                             ${isCustomColor ? `<span style="font-size: 0.68rem; color: #a8a096;">Hex: ${escapeHtml(btnColor)}</span>` : ''}
                         </label>
                         <div style="display: flex; gap: 8px; align-items: center;">
@@ -1121,12 +1171,20 @@ function renderPlatformLinks() {
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #d4ba88;">📐 Tamanho do Botão de Compra</label>
+                        <label style="font-size: 0.76rem; color: #d4ba88;">📐 Tamanho</label>
                         <select class="form-select link-btn-size" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'button_size', this.value); updateLiveButtonPreview(${idx});">
                             <option value="sm" ${btnSize === 'sm' ? 'selected' : ''}>▫️ Compacto / Pequeno</option>
                             <option value="md" ${btnSize === 'md' ? 'selected' : ''}>◻️ Padrão / Médio (Recomendado)</option>
                             <option value="lg" ${btnSize === 'lg' ? 'selected' : ''}>◼️ Grande / Destaque</option>
-                            <option value="full" ${btnSize === 'full' ? 'selected' : ''}>↔️ Largura Total (Expandido 100%)</option>
+                            <option value="full" ${btnSize === 'full' ? 'selected' : ''}>↔️ Largura Total (100%)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 0.76rem; color: #d4ba88;">↗️ Abertura do Link</label>
+                        <select class="form-select link-target" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'target', this.value)">
+                            <option value="_blank" ${target === '_blank' ? 'selected' : ''}>↗ Nova Aba (_blank)</option>
+                            <option value="_self" ${target === '_self' ? 'selected' : ''}>↳ Mesma Aba (_self)</option>
                         </select>
                     </div>
                 </div>
@@ -1335,6 +1393,37 @@ function copyBasePriceToLink(idx) {
     }
 }
 
+function generateSlug(text) {
+    return (text || '')
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 100);
+}
+
+function handleNameInput(input) {
+    const id = document.getElementById('prodId').value;
+    const slugInput = document.getElementById('prodSlug');
+    if (!id || !slugInput.dataset.manual) {
+        slugInput.value = generateSlug(input.value);
+    }
+}
+
+function handleSlugInput(input) {
+    input.dataset.manual = 'true';
+    input.value = generateSlug(input.value);
+}
+
+function toggleCustomUrlGroup(val) {
+    const grp = document.getElementById('customTargetUrlGroup');
+    if (grp) {
+        grp.style.display = (val === 'custom') ? 'block' : 'none';
+    }
+}
+
 function addNewPlatformLink(data = null) {
     const basePrice = document.getElementById('prodPrice')?.value || '380,00';
     const newLink = data || {
@@ -1344,11 +1433,15 @@ function addNewPlatformLink(data = null) {
         button_text: '',
         button_color: 'default',
         button_size: 'md',
+        target: '_blank',
         is_active: 1,
         sort_order: currentProductLinks.length
     };
     if (!newLink.button_text) {
         newLink.button_text = newLink.platform_name === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + newLink.platform_name);
+    }
+    if (!newLink.target) {
+        newLink.target = '_blank';
     }
     currentProductLinks.push(newLink);
     renderPlatformLinks();
@@ -1393,6 +1486,22 @@ function openNewProductModal(e) {
     if (e) e.preventDefault();
     document.getElementById('productForm').reset();
     document.getElementById('prodId').value = '';
+    
+    const slugInput = document.getElementById('prodSlug');
+    if (slugInput) {
+        slugInput.value = '';
+        delete slugInput.dataset.manual;
+    }
+    const cardBeh = document.getElementById('prodCardBehavior');
+    if (cardBeh) cardBeh.value = 'default';
+    const customUrl = document.getElementById('prodCustomTargetUrl');
+    if (customUrl) customUrl.value = '';
+    toggleCustomUrlGroup('default');
+    const detLayout = document.getElementById('prodDetailLayout');
+    if (detLayout) detLayout.value = 'default';
+    const showCh = document.getElementById('prodShowChannels');
+    if (showCh) showCh.checked = true;
+
     document.getElementById('prodPrice').value = '380,00';
     document.getElementById('prodStock').value = '10';
     document.getElementById('statusPublished').checked = true;
@@ -1410,6 +1519,7 @@ function openNewProductModal(e) {
             button_text: 'Comprar na Shopee Oficial',
             button_color: 'default',
             button_size: 'md',
+            target: '_blank',
             is_active: 1,
             sort_order: 0
         }
@@ -1428,6 +1538,23 @@ function editProduct(product) {
     document.getElementById('productForm').reset();
     document.getElementById('prodId').value = product.id;
     document.getElementById('prodName').value = product.name || '';
+    
+    const slugInput = document.getElementById('prodSlug');
+    if (slugInput) {
+        slugInput.value = product.slug || generateSlug(product.name || '');
+        slugInput.dataset.manual = 'true';
+    }
+
+    const cardBeh = document.getElementById('prodCardBehavior');
+    if (cardBeh) cardBeh.value = product.card_click_behavior || 'default';
+    const customUrl = document.getElementById('prodCustomTargetUrl');
+    if (customUrl) customUrl.value = product.custom_target_url || '';
+    toggleCustomUrlGroup(product.card_click_behavior || 'default');
+    const detLayout = document.getElementById('prodDetailLayout');
+    if (detLayout) detLayout.value = product.detail_layout || 'default';
+    const showCh = document.getElementById('prodShowChannels');
+    if (showCh) showCh.checked = (product.show_channels === undefined || product.show_channels === null || product.show_channels == 1);
+
     document.getElementById('prodSku').value = product.sku || '';
     document.getElementById('prodCategory').value = product.category_id || '';
     document.getElementById('prodMineral').value = product.stone_mineral || '';
@@ -1480,6 +1607,7 @@ function editProduct(product) {
             button_text: l.button_text || '',
             button_color: l.button_color || 'default',
             button_size: l.button_size || 'md',
+            target: l.target || '_blank',
             is_active: l.is_active !== undefined ? l.is_active : 1,
             sort_order: l.sort_order || 0
         }));
@@ -1491,6 +1619,7 @@ function editProduct(product) {
             button_text: 'Comprar na Shopee Oficial',
             button_color: 'default',
             button_size: 'md',
+            target: '_blank',
             is_active: 1,
             sort_order: 0
         }];

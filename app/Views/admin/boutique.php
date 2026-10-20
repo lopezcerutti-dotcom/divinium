@@ -54,6 +54,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-catalog', this)">
             <span>✦ Filtros & Cards</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-detail', this)">
+            <span>💎 Detalhes da Joia & Canais</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-reasons', this)">
             <span>💎 Seção Editorial</span>
         </button>
@@ -326,6 +329,165 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </select>
                     <span class="field-hint">Tamanho aplicado a links que utilizam a dimensão padrão da loja.</span>
                 </div>
+
+                <!-- Comportamento de Clique nos Cards -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; padding-top: 16px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🎯 Comportamento de Clique nos Cards da Boutique
+                    </h4>
+                    <span class="field-hint">Defina para onde o cliente é direcionado ao clicar na foto, no título ou no card da joia. Cada produto também pode ter exceção individual cadastrada.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_card_click_behavior" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Ao Clicar no Card da Joia</label>
+                    <select id="store_card_click_behavior" name="store_card_click_behavior" class="form-input">
+                        <option value="detail" <?= Setting::get('store_card_click_behavior', 'detail') === 'detail' ? 'selected' : '' ?>>💎 Abrir Página de Detalhes da Joia na Boutique DIVINIUM (Padrão Recomendado)</option>
+                        <option value="external" <?= Setting::get('store_card_click_behavior') === 'external' ? 'selected' : '' ?>>↗ Redirecionar diretamente para o primeiro canal externo cadastrado</option>
+                    </select>
+                    <span class="field-hint">Na opção recomendada, o cliente primeiro conhece a história, especificações e fotos da joia, e só depois escolhe o canal de compra.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_card_btn_text" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Texto do Botão Principal do Card</label>
+                    <input type="text" id="store_card_btn_text" name="store_card_btn_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_card_btn_text', 'Conhecer Joia & Opções')) ?>" placeholder="Conhecer Joia & Opções">
+                    <span class="field-hint">Texto de convite exibido no botão nobre da vitrine.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: PÁGINA DE DETALHES DA JOIA & CANAIS DE COMPRA (/produto/{slug}) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="bsec-detail">
+            <div class="section-card-header">
+                <div class="section-icon">💎</div>
+                <div>
+                    <h3>Página de Detalhes da Joia & Canais de Compra</h3>
+                    <p>Controle a disposição, títulos, seções informativas e imparcialidade dos botões na visualização individual do produto (/produto/{slug}).</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                
+                <!-- Layout e Imparcialidade dos Botões -->
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.2);">
+                    <h4 style="color: #d4ba88; margin: 0 0 6px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        ⚖️ Imparcialidade & Disposição dos Canais de Venda
+                    </h4>
+                    <p style="margin: 0; font-size: 0.82rem; color: #b5ada3;">
+                        Padroniza todos os canais cadastrados (Shopee, Mercado Livre, Amazon, TikTok Shop, WhatsApp, Loja Oficial) para que tenham a mesma nobreza, tipografia e destaque visual equivalente.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_detail_button_layout" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Disposição dos Botões de Compra</label>
+                    <select id="store_detail_button_layout" name="store_detail_button_layout" class="form-input">
+                        <option value="list" <?= Setting::get('store_detail_button_layout', 'list') === 'list' ? 'selected' : '' ?>>📋 Lista Vertical Padronizada (Padrão Quiet Luxury)</option>
+                        <option value="grid" <?= Setting::get('store_detail_button_layout') === 'grid' ? 'selected' : '' ?>>🔲 Grade Lado a Lado (2 Colunas)</option>
+                    </select>
+                    <span class="field-hint">Organização visual das opções de compra na página do produto.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Forçar Imparcialidade Visual dos Canais</label>
+                        <?= $renderToggle('store_detail_impartial_buttons', '1') ?>
+                    </div>
+                    <span class="field-hint">Garante mesmo tamanho, tipografia, bordas e destaque estético para todos os canais de venda.</span>
+                </div>
+
+                <!-- Textos Informativos dos Canais -->
+                <div class="form-group full-width <?= Setting::get('store_detail_channels_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_detail_channels_title">Título da Seção de Compra</label>
+                        <?= $renderToggle('store_detail_channels_title_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_detail_channels_title" name="store_detail_channels_title" class="form-input" 
+                           value="<?= View::e(Setting::get('store_detail_channels_title', 'Escolha onde deseja adquirir sua joia:')) ?>">
+                    <span class="field-hint">Chamada principal exibida logo acima da lista de canais de venda.</span>
+                </div>
+
+                <div class="form-group full-width <?= Setting::get('store_detail_channels_subtitle_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_detail_channels_subtitle">Subtítulo Informativo de Confiança</label>
+                        <?= $renderToggle('store_detail_channels_subtitle_visible', '1') ?>
+                    </div>
+                    <textarea id="store_detail_channels_subtitle" name="store_detail_channels_subtitle" class="form-textarea" rows="2"><?= View::e(Setting::get('store_detail_channels_subtitle', 'Selecione seu canal oficial de preferência. Todos contam com garantia de autenticidade, embalagem exclusiva e compra 100% protegida.')) ?></textarea>
+                </div>
+
+                <!-- Seções Informativas da Página de Detalhes -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        👁️ Visibilidade de Seções na Página de Detalhes
+                    </h4>
+                    <span class="field-hint">Ative ou desative seções complementares da página da joia.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Ficha Técnica & Especificações da Joia</label>
+                        <?= $renderToggle('store_detail_show_specs', '1') ?>
+                    </div>
+                    <span class="field-hint">Exibe tabela com materiais, medidas, gema mineral e código interno.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Card de Garantia & Autenticidade DIVINIUM</label>
+                        <?= $renderToggle('store_detail_show_guarantee', '1') ?>
+                    </div>
+                    <span class="field-hint">Exibe o selo de Prata de Lei 925 com garantia vitalícia e estojo de presente.</span>
+                </div>
+
+                <div class="form-group <?= Setting::get('store_detail_guarantee_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_detail_guarantee_title">Título da Garantia</label>
+                        <?= $renderToggle('store_detail_guarantee_title_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_detail_guarantee_title" name="store_detail_guarantee_title" class="form-input" 
+                           value="<?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?>">
+                </div>
+
+                <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
+                    <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de prata de lei 925, estojo de presente aveludado e garantia vitalícia contra defeitos no metal.')) ?>">
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Joias Relacionadas da Mesma Coleção</label>
+                        <?= $renderToggle('store_detail_show_related', '1') ?>
+                    </div>
+                    <span class="field-hint">Exibe carrossel/grade com outras joias da mesma categoria ao final da página.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Botão de Compartilhamento da URL Própria</label>
+                        <?= $renderToggle('store_detail_show_share', '1') ?>
+                    </div>
+                    <span class="field-hint">Permite copiar o link direto da joia ou compartilhar no WhatsApp.</span>
+                </div>
+
+                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Destaque de Desconto no Pix na Página de Detalhes</label>
+                        <?= $renderToggle('store_detail_show_pix_discount', '1') ?>
+                    </div>
+                    <span class="field-hint">Exibe o selo de 5% de desconto no Pix junto ao valor principal.</span>
+                </div>
+
+                <div class="form-group full-width <?= Setting::get('store_detail_show_installments', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="store_detail_installments_text">Texto Informativo de Parcelamento</label>
+                        <?= $renderToggle('store_detail_show_installments', '1') ?>
+                    </div>
+                    <input type="text" id="store_detail_installments_text" name="store_detail_installments_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_detail_installments_text', 'Em até 6x sem juros nos canais oficiais homologados')) ?>">
+                </div>
+
             </div>
         </div>
 

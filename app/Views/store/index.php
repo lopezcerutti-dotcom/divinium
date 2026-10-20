@@ -181,29 +181,62 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                         $mineralName = !empty($prod['stone_mineral']) ? $prod['stone_mineral'] : (!empty($prod['category_name']) ? $prod['category_name'] : 'Mineral Natural');
                         
                         // Active Links & Independent Platform Pricing
-                        $links = !empty($prod['links']) && is_array($prod['links']) ? $prod['links'] : [];
-                        if (empty($links) && !empty($prod['external_url'])) {
-                            $links = [
+                        $rawLinks = !empty($prod['links']) && is_array($prod['links']) ? $prod['links'] : [];
+                        $validLinks = [];
+                        foreach ($rawLinks as $rl) {
+                            $u = trim((string)($rl['url'] ?? ''));
+                            $isActive = isset($rl['is_active']) ? ((int)$rl['is_active'] === 1) : true;
+                            if ($u !== '' && $isActive) {
+                                $validLinks[] = $rl;
+                            }
+                        }
+
+                        if (empty($validLinks) && !empty($prod['external_url'])) {
+                            $platAuto = 'Shopee';
+                            $uAuto = (string)$prod['external_url'];
+                            if (stripos($uAuto, 'mercadolivre') !== false || stripos($uAuto, 'mercado_livre') !== false) {
+                                $platAuto = 'Mercado Livre';
+                            } elseif (stripos($uAuto, 'amazon') !== false) {
+                                $platAuto = 'Amazon';
+                            } elseif (stripos($uAuto, 'tiktok') !== false) {
+                                $platAuto = 'TikTok Shop';
+                            } elseif (stripos($uAuto, 'wa.me') !== false || stripos($uAuto, 'whatsapp') !== false) {
+                                $platAuto = 'WhatsApp';
+                            }
+                            $validLinks = [
                                 [
                                     'id' => 0,
-                                    'platform_name' => 'Shopee',
+                                    'platform_name' => $platAuto,
                                     'url' => $prod['external_url'],
                                     'price_cents' => $basePriceCents,
-                                    'button_text' => 'Comprar na Shopee Oficial',
+                                    'button_text' => 'Comprar na ' . $platAuto,
                                     'button_color' => 'default',
                                     'button_size' => 'md',
+                                    'target' => '_blank',
                                     'is_active' => 1
                                 ]
                             ];
                         }
                         
-                        $primaryLink = !empty($links) ? $links[0] : null;
-                        $primaryUrl = $primaryLink ? $primaryLink['url'] : 'https://shopee.com.br/search?keyword=' . urlencode('Divinium ' . ($prod['name'] ?? 'joia'));
-                        $primaryPlatform = $primaryLink && !empty($primaryLink['platform_name']) ? $primaryLink['platform_name'] : 'Shopee';
-                        $platformSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $primaryPlatform));
-                        $primaryPriceCents = ($primaryLink && !empty($primaryLink['price_cents'])) ? (int)$primaryLink['price_cents'] : $basePriceCents;
-                        $primaryPriceFormatted = number_format($primaryPriceCents / 100, 2, ',', '.');
-                        $primaryBtnText = ($primaryLink && !empty($primaryLink['button_text'])) ? $primaryLink['button_text'] : ('Comprar na ' . $primaryPlatform);
+                        // Resolução de URL Própria e Comportamento de Clique do Card
+                        $prodSlug = !empty($prod['slug']) ? $prod['slug'] : ('joia-' . $prod['id']);
+                        $detailUrl = '/produto/' . $prodSlug;
+                        
+                        $prodBehavior = $prod['card_click_behavior'] ?? 'default';
+                        $globalBehavior = Setting::get('store_card_click_behavior', 'detail'); // 'detail' é o padrão
+                        $cardBehavior = ($prodBehavior !== 'default' && !empty($prodBehavior)) ? $prodBehavior : $globalBehavior;
+
+                        if ($cardBehavior === 'custom' && !empty($prod['custom_target_url'])) {
+                            $cardUrl = $prod['custom_target_url'];
+                            $cardTarget = '_blank';
+                        } elseif ($cardBehavior === 'external' && !empty($validLinks)) {
+                            $cardUrl = $validLinks[0]['url'];
+                            $cardTarget = !empty($validLinks[0]['target']) ? $validLinks[0]['target'] : '_blank';
+                        } else {
+                            // Padrão DIVINIUM: Abre a página de detalhes da própria loja
+                            $cardUrl = $detailUrl;
+                            $cardTarget = '_self';
+                        }
                         
                         // Specs / Details
                         $materials = trim($prod['materials'] ?? '');
@@ -235,15 +268,14 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                     ?>
                     
                     <article class="store-product-card" data-category="<?= $filterClass ?>" data-track-product-id="<?= $prod['id'] ?>" data-track-product-name="<?= View::e($prod['name']) ?>">
-                        <!-- Imagem do Produto com Link Direto para o Canal Principal -->
-                        <a href="<?= View::e($primaryUrl) ?>" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
+                        <!-- Imagem do Produto com Link para a Página de Detalhes da Joia -->
+                        <a href="<?= View::e($cardUrl) ?>" 
+                           target="<?= $cardTarget ?>" 
                            class="store-card-media"
                            data-track-product-id="<?= $prod['id'] ?>"
                            data-track-product-name="<?= View::e($prod['name']) ?>"
-                           data-track-source="store_media_<?= $platformSlug ?>"
-                           title="Ver <?= View::e($prod['name']) ?> na <?= View::e($primaryPlatform) ?>">
+                           data-track-source="store_media_detail"
+                           title="Conhecer <?= View::e($prod['name']) ?> na DIVINIUM">
                             
                             <img src="<?= View::e($prod['image_url'] ?: '/assets/images/hero/featured-green-shell.jpg') ?>" 
                                  alt="<?= View::e($prod['name']) ?>"
@@ -263,13 +295,17 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                 <?php endif; ?>
 
                                 <?php if ($showGlobalChannelBadge): ?>
-                                    <?php if (count($links) > 1): ?>
-                                        <span class="badge-shopee-tag" style="background: rgba(212,186,136,0.9); color: #0d0c0b; font-weight: 700;">
-                                            ✦ <?= count($links) ?> Canais Oficiais
+                                    <?php if (count($validLinks) > 1): ?>
+                                        <span class="badge-shopee-tag" style="background: rgba(212,186,136,0.92); color: #0d0c0b; font-weight: 700;">
+                                            ✦ <?= count($validLinks) ?> Opções de Compra
+                                        </span>
+                                    <?php elseif (count($validLinks) === 1): ?>
+                                        <span class="badge-shopee-tag">
+                                            ✦ <?= View::e($validLinks[0]['platform_name'] ?? 'Canal Oficial') ?>
                                         </span>
                                     <?php else: ?>
-                                        <span class="badge-shopee-tag platform-tag-<?= $platformSlug ?>">
-                                            <?= View::e($primaryPlatform) ?> ↗
+                                        <span class="badge-shopee-tag">
+                                            ✦ Exclusivo
                                         </span>
                                     <?php endif; ?>
                                 <?php endif; ?>
@@ -278,8 +314,8 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
 
                             <div class="card-hover-overlay">
                                 <span class="overlay-cta-text">
-                                    <span><?= View::e($primaryBtnText) ?></span>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Conhecer Detalhes da Joia</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </span>
                             </div>
                         </a>
@@ -294,12 +330,12 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                             <?php endif; ?>
 
                             <h3 class="store-card-title">
-                                <a href="<?= View::e($primaryUrl) ?>" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer"
+                                <a href="<?= View::e($cardUrl) ?>" 
+                                   target="<?= $cardTarget ?>"
                                    data-track-product-id="<?= $prod['id'] ?>"
                                    data-track-product-name="<?= View::e($prod['name']) ?>"
-                                   data-track-source="store_title_<?= $platformSlug ?>">
+                                   data-track-source="store_title_detail"
+                                   title="Ver detalhes de <?= View::e($prod['name']) ?>">
                                     <?= View::e($prod['name']) ?>
                                 </a>
                             </h3>
@@ -343,84 +379,60 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Botão Principal de Compra (com Preço Específico da Plataforma) -->
-                            <?php if ($primaryLink): 
-                                $btnAttrs = getButtonColorAndSizeAttrs($primaryLink['button_color'] ?? null, $primaryLink['button_size'] ?? null);
+                            <!-- Botão Principal do Card: Conhecer a Joia na Boutique DIVINIUM -->
+                            <?php 
+                                $cardBtnText = Setting::get('store_card_btn_text', 'Conhecer Joia & Opções');
+                                $cardBtnAttrs = getButtonColorAndSizeAttrs(Setting::get('store_btn_default_color', 'default'), Setting::get('store_btn_default_size', 'md'));
                             ?>
-                                <a href="<?= View::e($primaryUrl) ?>" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
-                                   class="btn-platform-action platform-btn-<?= $platformSlug ?> <?= $btnAttrs['class'] ?>"
-                                   style="<?= $btnAttrs['style'] ?>"
-                                   data-track-product-id="<?= $prod['id'] ?>"
-                                   data-track-product-name="<?= View::e($prod['name']) ?>"
-                                   data-track-source="store_<?= $platformSlug ?>"
-                                   title="<?= View::e($primaryBtnText) ?>">
-                                    <div class="platform-btn-content">
-                                        <?= getPlatformIconSvg($primaryPlatform) ?>
-                                        <span class="platform-btn-text"><?= View::e($primaryBtnText) ?></span>
-                                    </div>
-                                    <div class="platform-btn-price-tag">
-                                        <span>R$ <?= $primaryPriceFormatted ?></span>
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="arrow-ext-svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                    </div>
-                                </a>
-                            <?php else: 
-                                $btnAttrs = getButtonColorAndSizeAttrs(null, null);
-                            ?>
-                                <a href="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999')) ?>" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer" 
-                                   class="btn-platform-action platform-btn-whatsapp <?= $btnAttrs['class'] ?>"
-                                   style="<?= $btnAttrs['style'] ?>"
-                                   data-track-product-id="<?= $prod['id'] ?>"
-                                   data-track-product-name="<?= View::e($prod['name']) ?>"
-                                   data-track-source="store_whatsapp"
-                                   title="Consultar disponibilidade via WhatsApp VIP">
-                                    <div class="platform-btn-content">
-                                        <?= getPlatformIconSvg('whatsapp') ?>
-                                        <span class="platform-btn-text">Consultar no WhatsApp</span>
-                                    </div>
-                                    <div class="platform-btn-price-tag">
-                                        <span>R$ <?= $basePriceFormatted ?></span>
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="arrow-ext-svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                    </div>
-                                </a>
-                            <?php endif; ?>
+                            <a href="<?= View::e($cardUrl) ?>" 
+                               target="<?= $cardTarget ?>" 
+                               class="btn-platform-action btn-card-explore <?= $cardBtnAttrs['class'] ?>"
+                               style="<?= $cardBtnAttrs['style'] ?>"
+                               data-track-product-id="<?= $prod['id'] ?>"
+                               data-track-product-name="<?= View::e($prod['name']) ?>"
+                               data-track-source="store_btn_explore"
+                               title="Conhecer <?= View::e($prod['name']) ?> e opções de compra">
+                                <div class="platform-btn-content">
+                                    <span class="gold-sparkle" style="color: #d4ba88; font-size: 1.1rem;">✦</span>
+                                    <span class="platform-btn-text"><?= View::e($cardBtnText) ?></span>
+                                </div>
+                                <div class="platform-btn-price-tag">
+                                    <span>R$ <?= $basePriceFormatted ?></span>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="arrow-ext-svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                </div>
+                            </a>
 
-                            <!-- Canais de Venda Adicionais (Links Independentes com seus respectivos Preços) -->
-                            <?php if ($showGlobalMultiChannel && count($links) > 1): ?>
+                            <!-- Canais de Venda Padronizados e Imparciais (Pílulas Equivalentes) -->
+                            <?php if ($showGlobalMultiChannel && !empty($validLinks)): ?>
                                 <div class="store-card-channels">
-                                    <span class="channels-title"><?= View::e(Setting::get('store_multi_channel_label', 'Disponível também em:')) ?></span>
-                                    <div class="channels-grid">
-                                        <?php for ($i = 1; $i < count($links); $i++): 
-                                            $secLink = $links[$i];
+                                    <span class="channels-title"><?= View::e(Setting::get('store_multi_channel_label', 'Opções de compra homologadas:')) ?></span>
+                                    <div class="channels-grid-impartial">
+                                        <?php foreach ($validLinks as $secLink): 
                                             $secPriceCents = !empty($secLink['price_cents']) ? (int)$secLink['price_cents'] : $basePriceCents;
                                             $secPriceFormatted = number_format($secPriceCents / 100, 2, ',', '.');
                                             $secPlatform = !empty($secLink['platform_name']) ? $secLink['platform_name'] : 'Canal Parceiro';
                                             $secPlatformSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $secPlatform));
                                             $secBtnText = !empty($secLink['button_text']) ? $secLink['button_text'] : $secPlatform;
-                                            $secAttrs = getButtonColorAndSizeAttrs($secLink['button_color'] ?? null, 'sm');
+                                            $secTarget = !empty($secLink['target']) && $secLink['target'] === '_self' ? '_self' : '_blank';
                                         ?>
                                             <a href="<?= View::e($secLink['url']) ?>" 
-                                               target="_blank" 
+                                               target="<?= $secTarget ?>" 
                                                rel="noopener noreferrer" 
-                                               class="store-channel-pill platform-pill-<?= $secPlatformSlug ?> <?= $secAttrs['class'] ?>"
-                                               style="<?= $secAttrs['style'] ?>"
+                                               class="store-channel-pill-impartial platform-pill-<?= $secPlatformSlug ?>"
                                                data-track-product-id="<?= $prod['id'] ?>"
                                                data-track-product-name="<?= View::e($prod['name']) ?>"
-                                               data-track-source="store_<?= $secPlatformSlug ?>"
-                                               title="<?= View::e($secBtnText) ?>">
+                                               data-track-source="store_pill_<?= $secPlatformSlug ?>"
+                                               title="<?= View::e($secBtnText) ?> - R$ <?= $secPriceFormatted ?>">
                                                 <div class="channel-pill-left">
                                                     <span class="channel-pill-icon"><?= getPlatformEmoji($secPlatform) ?></span>
-                                                    <span class="channel-pill-name"><?= View::e($secBtnText) ?></span>
+                                                    <span class="channel-pill-name"><?= View::e($secPlatform) ?></span>
                                                 </div>
                                                 <div class="channel-pill-price">
                                                     <span>R$ <?= $secPriceFormatted ?></span>
-                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                                 </div>
                                             </a>
-                                        <?php endfor; ?>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>

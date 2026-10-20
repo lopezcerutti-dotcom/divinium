@@ -48,6 +48,9 @@ class StoreController
                 }
 
                 foreach ($products as &$prod) {
+                    if (empty($prod['slug'])) {
+                        $prod['slug'] = self::slugify((string)($prod['name'] ?? ('joia-' . $prod['id'])));
+                    }
                     $prod['links'] = $linksByProduct[(int) $prod['id']] ?? [];
                     if (empty($prod['links']) && !empty($prod['external_url'])) {
                         $prod['links'] = [
@@ -58,6 +61,9 @@ class StoreController
                                 'url' => $prod['external_url'],
                                 'price_cents' => $prod['price_cents'] ?? 38000,
                                 'button_text' => 'Comprar na Shopee Oficial',
+                                'button_color' => 'default',
+                                'button_size' => 'md',
+                                'target' => '_blank',
                                 'is_active' => 1,
                                 'sort_order' => 0
                             ]
@@ -93,6 +99,162 @@ class StoreController
     }
 
     /**
+     * Página de Detalhes da Joia (/produto/{slug} ou /loja/{slug})
+     * Experiência Quiet Luxury com visualização completa e canais de venda imparciais
+     *
+     * @param array<string, string> $params
+     */
+    public function show(array $params = []): void
+    {
+        $rawSlug = trim((string) ($params['slug'] ?? ''));
+        if ($rawSlug === '') {
+            header('Location: /loja');
+            exit;
+        }
+
+        $product = null;
+        $links = [];
+        $relatedProducts = [];
+
+        try {
+            $pdo = Database::getConnection();
+
+            $isNumeric = is_numeric($rawSlug);
+            $sql = "
+                SELECT p.*, c.name as category_name, c.slug as category_slug 
+                FROM products p 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE (p.slug = :slug " . ($isNumeric ? "OR p.id = :num_id" : "") . ")
+                  AND (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1))
+                LIMIT 1
+            ";
+            $stmt = $pdo->prepare($sql);
+            $bindings = ['slug' => $rawSlug];
+            if ($isNumeric) {
+                $bindings['num_id'] = (int) $rawSlug;
+            }
+            $stmt->execute($bindings);
+            $product = $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+
+            if ($product) {
+                if (empty($product['slug'])) {
+                    $product['slug'] = self::slugify((string)$product['name']);
+                }
+
+                // Buscar canais de venda ativos e ordenados
+                $linksStmt = $pdo->prepare('
+                    SELECT * FROM product_links 
+                    WHERE product_id = ? AND is_active = 1 
+                    ORDER BY sort_order ASC, id ASC
+                ');
+                $linksStmt->execute([(int)$product['id']]);
+                $links = $linksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
+                // Se não houver canais em product_links mas houver external_url cadastrada
+                if (empty($links) && !empty($product['external_url'])) {
+                    $platName = 'Shopee';
+                    $u = (string)$product['external_url'];
+                    if (stripos($u, 'mercadolivre') !== false || stripos($u, 'mercado_livre') !== false) {
+                        $platName = 'Mercado Livre';
+                    } elseif (stripos($u, 'amazon') !== false) {
+                        $platName = 'Amazon';
+                    } elseif (stripos($u, 'tiktok') !== false) {
+                        $platName = 'TikTok Shop';
+                    } elseif (stripos($u, 'wa.me') !== false || stripos($u, 'whatsapp') !== false) {
+                        $platName = 'WhatsApp';
+                    }
+                    $links = [
+                        [
+                            'id' => 0,
+                            'product_id' => $product['id'],
+                            'platform_name' => $platName,
+                            'url' => $product['external_url'],
+                            'price_cents' => $product['price_cents'] ?? 38000,
+                            'button_text' => 'Comprar na ' . $platName,
+                            'button_color' => 'default',
+                            'button_size' => 'md',
+                            'target' => '_blank',
+                            'is_active' => 1,
+                            'sort_order' => 0
+                        ]
+                    ];
+                }
+
+                // Buscar joias relacionadas (mesma categoria)
+                $catId = (int) ($product['category_id'] ?? 0);
+                $relSql = "
+                    SELECT p.*, c.name as category_name 
+                    FROM products p 
+                    LEFT JOIN categories c ON p.category_id = c.id 
+                    WHERE p.id != ? 
+                      AND (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1))
+                      " . ($catId > 0 ? "AND p.category_id = " . $catId : "") . "
+                    ORDER BY p.is_featured DESC, p.sort_order ASC, p.id DESC 
+                    LIMIT 4
+                ";
+                $relStmt = $pdo->prepare($relSql);
+                $relStmt->execute([(int)$product['id']]);
+                $relatedProducts = $relStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                foreach ($relatedProducts as &$rp) {
+                    if (empty($rp['slug'])) {
+                        $rp['slug'] = self::slugify((string)($rp['name'] ?? 'joia-' . $rp['id']));
+                    }
+                }
+                unset($rp);
+            }
+        } catch (\Throwable $e) {
+            error_log('Erro ao buscar produto: ' . $e->getMessage());
+        }
+
+        // Fallback resiliente: Catálogo de demonstração caso ainda não haja banco configurado
+        if (!$product) {
+            $defaults = self::getDefaultProducts();
+            foreach ($defaults as $def) {
+                $defSlug = $def['slug'] ?? self::slugify($def['name']);
+                if ($defSlug === $rawSlug || (string)$def['id'] === $rawSlug) {
+                    $product = $def;
+                    $links = $def['links'] ?? [];
+                    break;
+                }
+            }
+
+            if ($product) {
+                foreach ($defaults as $def) {
+                    if ($def['id'] !== $product['id']) {
+                        $relatedProducts[] = $def;
+                    }
+                }
+            }
+        }
+
+        // Se ainda assim o produto não existe, redireciona suavemente para a vitrine
+        if (!$product) {
+            header('Location: /loja');
+            exit;
+        }
+
+        View::render('store/show', [
+            'pageTitle' => ($product['name'] ?? 'Joia Autoral') . ' | Boutique DIVINIUM',
+            'pageDescription' => !empty($product['short_description']) 
+                ? $product['short_description'] 
+                : (!empty($product['description']) ? substr(strip_tags((string)$product['description']), 0, 160) : 'Conheça todos os detalhes desta joia exclusiva DIVINIUM.'),
+            'product' => $product,
+            'links' => $links,
+            'relatedProducts' => $relatedProducts
+        ]);
+    }
+
+    /**
+     * Helper para gerar slugs amigáveis e limpos
+     */
+    public static function slugify(string $text): string
+    {
+        $text = preg_replace('~[^\pL\d]+~u', '-', mb_strtolower($text));
+        $text = trim(preg_replace('~[^-\w]+~', '', $text), '-');
+        return !empty($text) ? $text : 'joia';
+    }
+
+    /**
      * Catálogo fallback de alta definição com as joias Divinium
      *
      * @return array<int, array<string, mixed>>
@@ -103,6 +265,7 @@ class StoreController
             [
                 'id' => 1,
                 'name' => 'Bracelete Caminhos — Concha Verde Esmeralda',
+                'slug' => 'bracelete-caminhos-concha-verde',
                 'description' => 'Prata de Lei 925 com incrustação artesanal de concha verde esmeralda e acabamento espelhado.',
                 'stone_mineral' => 'Concha Verde Natural',
                 'sku' => 'DIV-CAM-01',
@@ -143,6 +306,7 @@ class StoreController
             [
                 'id' => 2,
                 'name' => 'Bracelete Caminhos — Madrepérola Branca',
+                'slug' => 'bracelete-caminhos-madreperola',
                 'description' => 'A pureza atemporal da madrepérola natural harmonizada com o brilho da prata 925.',
                 'stone_mineral' => 'Madrepérola Pura',
                 'sku' => 'DIV-CAM-02',
@@ -183,6 +347,7 @@ class StoreController
             [
                 'id' => 3,
                 'name' => 'Bracelete Caminhos — Ônix Preto Absoluto',
+                'slug' => 'bracelete-caminhos-onix',
                 'description' => 'Contraste poderoso e elegância sóbria com gema natural de ônix preto e prata de lei.',
                 'stone_mineral' => 'Ônix Preto Natural',
                 'sku' => 'DIV-CAM-03',
@@ -223,6 +388,7 @@ class StoreController
             [
                 'id' => 4,
                 'name' => 'Bracelete Caminhos — Coral Vermelho Imperial',
+                'slug' => 'bracelete-caminhos-coral-vermelho',
                 'description' => 'Vibratilidade e distinção mineral em tom carmim profundo esculpido à mão.',
                 'stone_mineral' => 'Coral Vermelho',
                 'sku' => 'DIV-CAM-04',
@@ -253,6 +419,7 @@ class StoreController
             [
                 'id' => 5,
                 'name' => 'Bracelete Caminhos — Rose Gold & Quartzo',
+                'slug' => 'bracelete-caminhos-rose-gold',
                 'description' => 'Banhado em ouro rosé nobre com acabamento acetinado de alta joalheria.',
                 'stone_mineral' => 'Ouro Rosé & Cristal',
                 'sku' => 'DIV-CAM-05',
@@ -293,6 +460,7 @@ class StoreController
             [
                 'id' => 6,
                 'name' => 'Coleção Completa — Caixa Exclusiva de Espelho',
+                'slug' => 'colecao-completa-espelho',
                 'description' => 'Estojo com a tríade autoral da Coleção Caminhos em estojo nobre aveludado.',
                 'stone_mineral' => 'Coleção Tríade Mineral',
                 'sku' => 'DIV-SET-01',

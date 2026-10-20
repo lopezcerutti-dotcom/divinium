@@ -150,8 +150,10 @@ class Router
         $this->get('/index.php', $homeHandler);
         $this->get('/index', $homeHandler);
 
-        // Rota da Loja Oficial com Vitrine e Redirecionamento Shopee
+        // Rota da Loja Oficial com Vitrine e Páginas de Detalhes das Joias
         $this->get('/loja', [\App\Controllers\StoreController::class, 'index']);
+        $this->get('/produto/{slug}', [\App\Controllers\StoreController::class, 'show']);
+        $this->get('/loja/{slug}', [\App\Controllers\StoreController::class, 'show']);
 
         // Rota de Rastreamento de Cliques da Shopee (Analytics)
         $this->post('/api/track/click', function (): void {

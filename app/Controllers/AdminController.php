@@ -169,7 +169,16 @@ class AdminController
             return;
         }
 
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name), '-'));
+        $rawSlug = trim((string) ($_POST['slug'] ?? ''));
+        if ($rawSlug !== '') {
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $rawSlug), '-'));
+        } else {
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name), '-'));
+        }
+        if ($slug === '') {
+            $slug = 'joia-' . ($id ?? time());
+        }
+
         $sku = !empty($_POST['sku']) ? trim($_POST['sku']) : 'DIV-' . strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $slug), 0, 8)) . '-' . rand(10, 99);
 
         // Upload de imagem caso enviado arquivo
@@ -196,23 +205,36 @@ class AdminController
         $showSpecs = isset($_POST['show_specs']) ? ((int) $_POST['show_specs'] ? 1 : 0) : 1;
         $showDescription = isset($_POST['show_description']) ? ((int) $_POST['show_description'] ? 1 : 0) : 1;
 
+        $cardClickBehavior = trim((string) ($_POST['card_click_behavior'] ?? 'default'));
+        if (!in_array($cardClickBehavior, ['default', 'detail', 'external', 'custom'], true)) {
+            $cardClickBehavior = 'default';
+        }
+        $customTargetUrl = trim((string) ($_POST['custom_target_url'] ?? ''));
+        $detailLayout = trim((string) ($_POST['detail_layout'] ?? 'default'));
+        if (!in_array($detailLayout, ['default', 'list', 'grid'], true)) {
+            $detailLayout = 'default';
+        }
+        $showChannels = isset($_POST['show_channels']) ? ((int) $_POST['show_channels'] ? 1 : 0) : 1;
+
         try {
             if ($id !== null && $id > 0) {
                 $stmt = $this->pdo->prepare('
                     UPDATE products SET 
-                        name = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
+                        name = ?, slug = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
                         colors = ?, variants_json = ?, price_cents = ?, promotional_price_cents = ?, 
                         stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
                         short_description = ?, description = ?, image_url = ?, show_badge = ?, 
-                        show_specs = ?, show_description = ?, is_active = ?, is_featured = ?
+                        show_specs = ?, show_description = ?, card_click_behavior = ?, custom_target_url = ?,
+                        detail_layout = ?, show_channels = ?, is_active = ?, is_featured = ?
                     WHERE id = ?
                 ');
                 $stmt->execute([
-                    $name, $categoryId, $stoneMineral, $materials, $dimensions, 
+                    $name, $slug, $categoryId, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, 
                     $stock, $stockStatus, $status, $sortOrder, 
                     $shortDescription, $description, $imageUrl, $showBadge, 
-                    $showSpecs, $showDescription, $isActive, $isFeatured, $id
+                    $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
+                    $detailLayout, $showChannels, $isActive, $isFeatured, $id
                 ]);
                 $productId = $id;
             } else {
@@ -222,19 +244,22 @@ class AdminController
                         uuid, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
                         colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
                         stock_status, status, sort_order, short_description, description, image_url, 
-                        show_badge, show_specs, show_description, is_active, is_featured
+                        show_badge, show_specs, show_description, card_click_behavior, custom_target_url,
+                        detail_layout, show_channels, is_active, is_featured
                     ) VALUES (
                         ?, ?, ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?, 
-                        ?, ?, ?, ?, ?
+                        ?, ?, ?, ?, ?,
+                        ?, ?, ?, ?
                     )
                 ');
                 $stmt->execute([
                     $uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
                     $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
-                    $showBadge, $showSpecs, $showDescription, $isActive, $isFeatured
+                    $showBadge, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
+                    $detailLayout, $showChannels, $isActive, $isFeatured
                 ]);
                 $productId = (int) $this->pdo->lastInsertId();
             }
@@ -286,6 +311,11 @@ class AdminController
                         $btnSize = 'md';
                     }
 
+                    $lTarget = trim((string) ($linkItem['target'] ?? '_blank'));
+                    if (!in_array($lTarget, ['_blank', '_self'], true)) {
+                        $lTarget = '_blank';
+                    }
+
                     $lActive = isset($linkItem['is_active']) ? ((int) $linkItem['is_active'] ? 1 : 0) : 1;
                     $lSort = isset($linkItem['sort_order']) ? (int) $linkItem['sort_order'] : (int) $idx;
 
@@ -296,6 +326,7 @@ class AdminController
                         'button_text' => $btnText,
                         'button_color' => $btnColor,
                         'button_size' => $btnSize,
+                        'target' => $lTarget,
                         'is_active' => $lActive,
                         'sort_order' => $lSort,
                     ];
@@ -311,8 +342,8 @@ class AdminController
 
             if (!empty($validLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($validLinks as $vl) {
                     $insLink->execute([
@@ -323,6 +354,7 @@ class AdminController
                         $vl['button_text'],
                         $vl['button_color'],
                         $vl['button_size'],
+                        $vl['target'],
                         $vl['is_active'],
                         $vl['sort_order']
                     ]);
@@ -379,12 +411,14 @@ class AdminController
                     materials, stone_mineral, dimensions, colors, variants_json, 
                     price_cents, promotional_price_cents, stock_quantity, stock_status, 
                     status, sort_order, image_url, external_url, show_badge, show_specs, 
-                    show_description, is_active, is_featured
+                    show_description, card_click_behavior, custom_target_url, detail_layout, 
+                    show_channels, is_active, is_featured
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?, 
                     ?, ?, ?, ?, ?, 
                     ?, ?, ?, ?, 
                     ?, ?, ?, ?, ?, ?, 
+                    ?, ?, ?, ?, 
                     ?, ?, ?
                 )
             ');
@@ -413,6 +447,10 @@ class AdminController
                 $prod['show_badge'] ?? 1,
                 $prod['show_specs'] ?? 1,
                 $prod['show_description'] ?? 1,
+                $prod['card_click_behavior'] ?? 'default',
+                $prod['custom_target_url'] ?? null,
+                $prod['detail_layout'] ?? 'default',
+                $prod['show_channels'] ?? 1,
                 $newActive,
                 0
             ]);
@@ -426,8 +464,8 @@ class AdminController
 
             if (!empty($origLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($origLinks as $ol) {
                     $insLink->execute([
@@ -438,6 +476,7 @@ class AdminController
                         $ol['button_text'],
                         $ol['button_color'] ?? 'default',
                         $ol['button_size'] ?? 'md',
+                        $ol['target'] ?? '_blank',
                         $ol['is_active'],
                         $ol['sort_order']
                     ]);

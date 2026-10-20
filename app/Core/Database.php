@@ -248,6 +248,11 @@ class Database
                 'show_badge' => 'INTEGER NOT NULL DEFAULT 1',
                 'show_specs' => 'INTEGER NOT NULL DEFAULT 1',
                 'show_description' => 'INTEGER NOT NULL DEFAULT 1',
+                'slug' => 'VARCHAR(255) NULL',
+                'card_click_behavior' => "VARCHAR(50) NOT NULL DEFAULT 'default'",
+                'custom_target_url' => 'VARCHAR(500) NULL',
+                'detail_layout' => "VARCHAR(50) NOT NULL DEFAULT 'default'",
+                'show_channels' => 'INTEGER NOT NULL DEFAULT 1',
             ];
 
             $existingCols = [];
@@ -281,10 +286,29 @@ class Database
                 }
             }
 
-            // 2.1 Garantir novas colunas em product_links (cor e tamanho do botão)
+            // Auto-preenchimento de slugs ausentes nos produtos existentes
+            try {
+                $prodsWithoutSlug = $pdo->query("SELECT id, name, slug FROM products WHERE slug IS NULL OR slug = ''");
+                if ($prodsWithoutSlug) {
+                    $updateSlugStmt = $pdo->prepare("UPDATE products SET slug = ? WHERE id = ?");
+                    while ($pRow = $prodsWithoutSlug->fetch(PDO::FETCH_ASSOC)) {
+                        $baseSlug = preg_replace('~[^\pL\d]+~u', '-', mb_strtolower((string)$pRow['name']));
+                        $baseSlug = trim(preg_replace('~[^-\w]+~', '', $baseSlug), '-');
+                        if (empty($baseSlug)) {
+                            $baseSlug = 'joia-' . $pRow['id'];
+                        }
+                        $updateSlugStmt->execute([$baseSlug, $pRow['id']]);
+                    }
+                }
+            } catch (\Throwable $slugEx) {
+                // Silencioso
+            }
+
+            // 2.1 Garantir novas colunas em product_links (cor, tamanho e target do botão)
             $neededLinkCols = [
                 'button_color' => "VARCHAR(50) DEFAULT 'default'",
-                'button_size' => "VARCHAR(20) DEFAULT 'md'"
+                'button_size' => "VARCHAR(20) DEFAULT 'md'",
+                'target' => "VARCHAR(20) DEFAULT '_blank'",
             ];
 
             $existingLinkCols = [];
