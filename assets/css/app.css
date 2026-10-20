@@ -331,6 +331,33 @@ body.luxury-theme {
     transform: translateX(0);
 }
 
+.mobile-nav-drawer.position-right {
+    left: auto !important;
+    right: 0 !important;
+    border-right: none !important;
+    border-left: 1px solid var(--mobile-nav-accent, rgba(212, 186, 136, 0.25)) !important;
+    transform: translateX(100%);
+}
+
+.mobile-nav-drawer.position-right.active {
+    transform: translateX(0);
+}
+
+.mobile-nav-header-badge {
+    display: inline-block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mobile-nav-accent, #d4ba88);
+    background: rgba(212, 186, 136, 0.12);
+    border: 1px solid var(--mobile-nav-accent, rgba(212, 186, 136, 0.3));
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    width: fit-content;
+}
+
 .mobile-nav-header {
     display: flex;
     align-items: center;

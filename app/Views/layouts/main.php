@@ -88,10 +88,12 @@
         <div class="container header-inner">
             
             <!-- Menu Hambúrguer (Mobile) -->
+            <?php if (\App\Models\Setting::get('mobile_menu_enabled', '1') === '1'): ?>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="mobileNavDrawer">
                 <span></span>
                 <span></span>
             </button>
+            <?php endif; ?>
 
             <!-- Links de Navegação (Desktop Esquerda) -->
             <nav class="nav-links left-nav" aria-label="Navegação Principal">
@@ -140,78 +142,158 @@
     </header>
 
     <!-- 2.1 GAVETA LATERAL DO MENU MOBILE (DRAWER RESPONSIVO) -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true"></div>
-    <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Menu de Navegação Principal" aria-hidden="true">
+    <?php if (\App\Models\Setting::get('mobile_menu_enabled', '1') === '1'): 
+        $navBg = \App\Models\Setting::get('mobile_nav_bg_color', '');
+        $navTextColor = \App\Models\Setting::get('mobile_nav_text_color', '');
+        $navAccent = \App\Models\Setting::get('mobile_nav_accent_color', '');
+        $navPos = \App\Models\Setting::get('mobile_nav_position', 'left');
+        $navWidth = \App\Models\Setting::get('mobile_nav_drawer_width', '360px');
+        $navBlur = \App\Models\Setting::get('mobile_nav_backdrop_blur', '8px');
+
+        $drawerStyles = [];
+        if ($navBg) $drawerStyles[] = "background: {$navBg} !important;";
+        if ($navTextColor) $drawerStyles[] = "color: {$navTextColor} !important;";
+        if ($navWidth && $navWidth !== '360px') $drawerStyles[] = "max-width: {$navWidth} !important;";
+        if ($navAccent) {
+            $drawerStyles[] = "--mobile-nav-accent: {$navAccent};";
+        }
+        $drawerStyleAttr = !empty($drawerStyles) ? 'style="' . implode(' ', $drawerStyles) . '"' : '';
+        $overlayStyleAttr = ($navBlur && $navBlur !== '8px') ? 'style="backdrop-filter: blur(' . $navBlur . '); -webkit-backdrop-filter: blur(' . $navBlur . ');"' : '';
+    ?>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true" <?= $overlayStyleAttr ?>></div>
+    <aside class="mobile-nav-drawer <?= $navPos === 'right' ? 'position-right' : '' ?>" id="mobileNavDrawer" aria-label="Menu de Navegação Principal" aria-hidden="true" <?= $drawerStyleAttr ?>>
         <div class="mobile-nav-header">
-            <div class="mobile-nav-brand">
-                <span class="logo-text"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
-                <span class="logo-sub"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_sub', 'HAUTE JOAILLERIE')) ?></span>
-            </div>
+            <?php if (\App\Models\Setting::get('mobile_nav_show_brand', '1') === '1'): ?>
+                <div class="mobile-nav-brand">
+                    <?php if (\App\Models\Setting::get('mobile_nav_show_header_badge', '0') === '1'): ?>
+                        <span class="mobile-nav-header-badge"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_header_badge', 'JOALHERIA AUTORAL')) ?></span>
+                    <?php endif; ?>
+                    <span class="logo-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_logo_text', \App\Models\Setting::get('header_logo_text', 'DIVINIUM'))) ?></span>
+                    <span class="logo-sub"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_logo_sub', \App\Models\Setting::get('header_logo_sub', 'HAUTE JOAILLERIE'))) ?></span>
+                </div>
+            <?php else: ?>
+                <div></div>
+            <?php endif; ?>
             <button type="button" class="close-mobile-nav-btn" id="closeMobileNavBtn" aria-label="Fechar Menu">&times;</button>
         </div>
 
         <div class="mobile-nav-body">
             <nav class="mobile-nav-links" aria-label="Links de Navegação Mobile">
-                <a href="/" class="mobile-nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>">
-                    <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_home', 'Início')) ?></span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_home_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_home_url', '/')) ?>" class="mobile-nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_home_text', \App\Models\Setting::get('nav_link_home', 'Início'))) ?></span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
 
-                <a href="/loja" class="mobile-nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>">
-                    <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_store', 'Boutique / Loja')) ?></span>
-                    <span class="mobile-nav-badge">Exclusivo</span>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_store_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_store_url', '/loja')) ?>" class="mobile-nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_store_text', \App\Models\Setting::get('nav_link_store', 'Boutique / Loja'))) ?></span>
+                        <?php if (\App\Models\Setting::get('mobile_nav_store_badge_visible', '1') === '1'): ?>
+                            <span class="mobile-nav-badge"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_store_badge_text', 'Exclusivo')) ?></span>
+                        <?php endif; ?>
+                    </a>
+                <?php endif; ?>
 
                 <!-- Acordeão Coleções -->
-                <div class="mobile-nav-accordion" id="mobileCollectionsAccordion">
-                    <button type="button" class="mobile-accordion-toggle" id="mobileCollectionsToggle" aria-expanded="false">
-                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_collections', 'Coleções')) ?></span>
-                        <svg class="accordion-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                    </button>
-                    <div class="mobile-accordion-content" id="mobileCollectionsContent">
-                        <a href="/loja" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all', 'Ver Todas as Peças')) ?></a>
-                        <a href="/loja#braceletes" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos')) ?></a>
-                        <a href="/loja#colares" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?></a>
-                        <a href="/loja#aneis" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings', 'Anéis & Alianças')) ?></a>
+                <?php if (\App\Models\Setting::get('mobile_nav_collections_visible', '1') === '1'): ?>
+                    <div class="mobile-nav-accordion" id="mobileCollectionsAccordion">
+                        <button type="button" class="mobile-accordion-toggle" id="mobileCollectionsToggle" aria-expanded="false">
+                            <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_collections_text', \App\Models\Setting::get('nav_link_collections', 'Coleções'))) ?></span>
+                            <svg class="accordion-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        </button>
+                        <div class="mobile-accordion-content" id="mobileCollectionsContent">
+                            <?php if (\App\Models\Setting::get('mobile_nav_sub_all_visible', '1') === '1'): ?>
+                                <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_all_url', '/loja')) ?>" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_all_text', \App\Models\Setting::get('nav_sub_all', 'Ver Todas as Peças'))) ?></a>
+                            <?php endif; ?>
+                            <?php if (\App\Models\Setting::get('mobile_nav_sub_bracelets_visible', '1') === '1'): ?>
+                                <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_bracelets_url', '/loja#braceletes')) ?>" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_bracelets_text', \App\Models\Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos'))) ?></a>
+                            <?php endif; ?>
+                            <?php if (\App\Models\Setting::get('mobile_nav_sub_necklaces_visible', '1') === '1'): ?>
+                                <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_necklaces_url', '/loja#colares')) ?>" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_necklaces_text', \App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes'))) ?></a>
+                            <?php endif; ?>
+                            <?php if (\App\Models\Setting::get('mobile_nav_sub_rings_visible', '1') === '1'): ?>
+                                <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_rings_url', '/loja#aneis')) ?>" class="mobile-subnav-link">✦ <?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_sub_rings_text', \App\Models\Setting::get('nav_sub_rings', 'Anéis & Alianças'))) ?></a>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
-                <a href="/#about" class="mobile-nav-link">
-                    <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_about', 'Sobre')) ?></span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_about_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_about_url', '/#about')) ?>" class="mobile-nav-link">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_about_text', \App\Models\Setting::get('nav_link_about', 'Sobre'))) ?></span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
 
-                <a href="/#services" class="mobile-nav-link">
-                    <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_services', 'Garantia & Serviços')) ?></span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_services_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_services_url', '/#services')) ?>" class="mobile-nav-link">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_services_text', \App\Models\Setting::get('nav_link_services', 'Garantia & Serviços'))) ?></span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
 
-                <a href="/minha-conta/favoritos" class="mobile-nav-link">
-                    <span class="mobile-nav-link-text" style="display: flex; align-items: center; gap: 8px;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        Lista de Desejos
-                    </span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_wishlist_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_wishlist_url', '/minha-conta/favoritos')) ?>" class="mobile-nav-link">
+                        <span class="mobile-nav-link-text" style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_wishlist_text', 'Lista de Desejos')) ?>
+                        </span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('mobile_nav_custom1_visible', '0') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom1_url', '/loja')) ?>" class="mobile-nav-link">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom1_text', 'Rastrear Pedido')) ?></span>
+                        <?php if (\App\Models\Setting::get('mobile_nav_custom1_badge')): ?>
+                            <span class="mobile-nav-badge"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom1_badge')) ?></span>
+                        <?php endif; ?>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('mobile_nav_custom2_visible', '0') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom2_url', '/#services')) ?>" class="mobile-nav-link">
+                        <span class="mobile-nav-link-text"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom2_text', 'Atendimento & FAQ')) ?></span>
+                        <?php if (\App\Models\Setting::get('mobile_nav_custom2_badge')): ?>
+                            <span class="mobile-nav-badge"><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_custom2_badge')) ?></span>
+                        <?php endif; ?>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                <?php endif; ?>
             </nav>
 
             <div class="mobile-nav-footer">
-                <a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank" rel="noopener" class="mobile-nav-whatsapp">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                    <span>Concierge VIP via WhatsApp</span>
-                </a>
+                <?php if (\App\Models\Setting::get('mobile_nav_whatsapp_visible', '1') === '1'): 
+                    $waTarget = \App\Models\Setting::get('mobile_nav_whatsapp_url', '');
+                    if (!$waTarget || !str_starts_with($waTarget, 'http')) {
+                        $rawWa = \App\Models\Setting::get('hero_whatsapp_number', '5511999999999');
+                        $waTarget = 'https://wa.me/' . preg_replace('/[^0-9]/', '', $rawWa);
+                    }
+                ?>
+                    <a href="<?= \App\Core\View::e($waTarget) ?>" target="_blank" rel="noopener" class="mobile-nav-whatsapp">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        <span><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_whatsapp_text', 'Concierge VIP via WhatsApp')) ?></span>
+                    </a>
+                <?php endif; ?>
 
-                <button type="button" class="mobile-nav-login-btn" id="mobileLoginBtn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    <span>Entrar no Painel Administrativo</span>
-                </button>
+                <?php if (\App\Models\Setting::get('mobile_nav_login_visible', '1') === '1'): ?>
+                    <button type="button" class="mobile-nav-login-btn" id="mobileLoginBtn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_login_text', 'Entrar no Painel Administrativo')) ?></span>
+                    </button>
+                <?php endif; ?>
 
-                <div class="mobile-nav-perk">
-                    <small>✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras</small>
-                </div>
+                <?php if (\App\Models\Setting::get('mobile_nav_perk_visible', '1') === '1'): ?>
+                    <div class="mobile-nav-perk">
+                        <small><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?></small>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </aside>
+    <?php endif; ?>
 
     <!-- 3. GAVETA LATERAL DO CARRINHO (CART DRAWER) -->
     <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>

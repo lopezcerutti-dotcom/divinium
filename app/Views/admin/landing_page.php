@@ -50,6 +50,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchSection('sec-header-cart', this)">
             <span>🧭 Topo & Sacola</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-mobile-menu', this)">
+            <span>📱 Menu Mobile</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-hero', this)">
             <span>👑 Hero & Títulos</span>
         </button>
@@ -254,6 +257,536 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= \App\Core\View::e(Setting::get('cookie_banner_btn', 'Prosseguir')) ?>"
                            placeholder="Prosseguir">
                 </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: MENU RESPONSIVO MOBILE (DRAWER & CELULAR) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-mobile-menu">
+            <div class="section-card-header">
+                <div class="section-icon">📱</div>
+                <div>
+                    <h3>Menu Responsivo do Celular (Gaveta & Navegação Mobile)</h3>
+                    <p>Personalize cada detalhe da experiência móvel: links, acordeão de coleções, botões de ação, selos, frases de rodapé e cores.</p>
+                </div>
+            </div>
+
+            <!-- Painel Informativo com Atalho -->
+            <div style="margin-bottom: 24px; padding: 14px 18px; background: rgba(212, 186, 136, 0.06); border-radius: 10px; border: 1px solid rgba(212, 186, 136, 0.2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div style="font-size: 0.85rem; color: #ded7cf; line-height: 1.4;">
+                    <strong style="color: #d4ba88;">✦ Controle Total no Celular:</strong> 
+                    Cada link, botão e selo possui um interruptor individual <em>Exibindo / Oculto</em>. Você pode ocultar itens sem perder o que escreveu.
+                </div>
+                <a href="/#mobileNavDrawer" target="_blank" class="btn-admin-secondary" style="font-size: 0.8rem; padding: 6px 14px;">
+                    <span>↗ Abrir Loja no Celular</span>
+                </a>
+            </div>
+
+            <div class="form-grid">
+
+                <!-- 1. COMPORTAMENTO GERAL -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        ⚙️ 1. Comportamento & Abertura da Gaveta
+                    </h4>
+                </div>
+
+                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label style="color: #ffffff; font-weight: 600; font-size: 0.9rem;">Ativar Menu Hambúrguer & Gaveta no Celular</label>
+                        <?= $renderToggle('mobile_menu_enabled') ?>
+                    </div>
+                    <span class="field-hint" style="margin-top: 2px;">Quando desativado, o botão hambúrguer de duas linhas e a gaveta lateral ficam totalmente ocultos.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile_nav_position">Posição de Abertura da Gaveta</label>
+                    <select id="mobile_nav_position" name="mobile_nav_position" class="form-input" onchange="updateMobileMenuLivePreview()">
+                        <option value="left" <?= Setting::get('mobile_nav_position', 'left') === 'left' ? 'selected' : '' ?>>Deslizar da Esquerda (Padrão Sofisticado)</option>
+                        <option value="right" <?= Setting::get('mobile_nav_position') === 'right' ? 'selected' : '' ?>>Deslizar da Direita</option>
+                    </select>
+                    <span class="field-hint">Lado da tela de onde a gaveta de navegação surge suavemente.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile_nav_drawer_width">Largura Máxima no Celular</label>
+                    <select id="mobile_nav_drawer_width" name="mobile_nav_drawer_width" class="form-input" onchange="updateMobileMenuLivePreview()">
+                        <option value="320px" <?= Setting::get('mobile_nav_drawer_width') === '320px' ? 'selected' : '' ?>>Compacta (320px)</option>
+                        <option value="360px" <?= Setting::get('mobile_nav_drawer_width', '360px') === '360px' ? 'selected' : '' ?>>Equilibrada - Padrão Divinium (360px)</option>
+                        <option value="400px" <?= Setting::get('mobile_nav_drawer_width') === '400px' ? 'selected' : '' ?>>Ampla (400px)</option>
+                        <option value="100%" <?= Setting::get('mobile_nav_drawer_width') === '100%' ? 'selected' : '' ?>>Tela Cheia (100% de largura)</option>
+                    </select>
+                    <span class="field-hint">Dimensão da gaveta quando expandida no smartphone.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="mobile_nav_backdrop_blur">Intensidade do Desfoque de Fundo (Backdrop Blur)</label>
+                    <select id="mobile_nav_backdrop_blur" name="mobile_nav_backdrop_blur" class="form-input">
+                        <option value="0px" <?= Setting::get('mobile_nav_backdrop_blur') === '0px' ? 'selected' : '' ?>>Sem desfoque (Fundo apenas escuro)</option>
+                        <option value="4px" <?= Setting::get('mobile_nav_backdrop_blur') === '4px' ? 'selected' : '' ?>>Sutil (4px)</option>
+                        <option value="8px" <?= Setting::get('mobile_nav_backdrop_blur', '8px') === '8px' ? 'selected' : '' ?>>Luxo Suave (8px - Padrão)</option>
+                        <option value="16px" <?= Setting::get('mobile_nav_backdrop_blur') === '16px' ? 'selected' : '' ?>>Profundo / Efeito Vidro Fosco (16px)</option>
+                    </select>
+                    <span class="field-hint">Efeito de glassmorphism aplicado ao restante da loja enquanto o menu estiver aberto.</span>
+                </div>
+
+                <!-- 2. CORES E ESTÉTICA VISUAL -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🎨 2. Paleta de Cores do Menu Mobile
+                    </h4>
+                    <span class="field-hint">Deixe o menu personalizado com tonalidades exclusivas da joalheria.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile_nav_bg_color">Cor de Fundo da Gaveta</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="mobile_nav_bg_color_picker" 
+                               value="<?= Setting::get('mobile_nav_bg_color', '#0d0c0b') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('mobile_nav_bg_color').value = this.value; updateMobileMenuLivePreview();">
+                        <input type="text" id="mobile_nav_bg_color" name="mobile_nav_bg_color" class="form-input" 
+                               value="<?= View::e(Setting::get('mobile_nav_bg_color', '#0d0c0b')) ?>" 
+                               placeholder="#0d0c0b"
+                               oninput="if(this.value.length===7){document.getElementById('mobile_nav_bg_color_picker').value=this.value;} updateMobileMenuLivePreview();">
+                    </div>
+                    <span class="field-hint">Sugestões: #0d0c0b (Ônix Nobre), #141210 (Café Diamante), #0f172a (Safira Noite).</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile_nav_text_color">Cor dos Textos e Ícones</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="mobile_nav_text_color_picker" 
+                               value="<?= Setting::get('mobile_nav_text_color', '#ded7cf') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('mobile_nav_text_color').value = this.value; updateMobileMenuLivePreview();">
+                        <input type="text" id="mobile_nav_text_color" name="mobile_nav_text_color" class="form-input" 
+                               value="<?= View::e(Setting::get('mobile_nav_text_color', '#ded7cf')) ?>" 
+                               placeholder="#ded7cf"
+                               oninput="if(this.value.length===7){document.getElementById('mobile_nav_text_color_picker').value=this.value;} updateMobileMenuLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor dos títulos dos links e chevrons na gaveta.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="mobile_nav_accent_color">Cor de Destaque / Dourado (Bordas Ativas & Selos)</label>
+                    <div style="display: flex; gap: 8px; align-items: center; max-width: 400px;">
+                        <input type="color" id="mobile_nav_accent_color_picker" 
+                               value="<?= Setting::get('mobile_nav_accent_color', '#d4ba88') ?>" 
+                               style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('mobile_nav_accent_color').value = this.value; updateMobileMenuLivePreview();">
+                        <input type="text" id="mobile_nav_accent_color" name="mobile_nav_accent_color" class="form-input" 
+                               value="<?= View::e(Setting::get('mobile_nav_accent_color', '#d4ba88')) ?>" 
+                               placeholder="#d4ba88"
+                               oninput="if(this.value.length===7){document.getElementById('mobile_nav_accent_color_picker').value=this.value;} updateMobileMenuLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor da borda lateral do link selecionado, selo 'Exclusivo' e contorno dourado.</span>
+                </div>
+
+                <!-- 3. CABEÇALHO DO MENU -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        👑 3. Cabeçalho do Menu Mobile (Marca & Selo)
+                    </h4>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="field-label-row">
+                        <label>Exibir Marca / Logotipo no Topo do Menu</label>
+                        <?= $renderToggle('mobile_nav_show_brand') ?>
+                    </div>
+                </div>
+
+                <div class="form-group <?= Setting::get('mobile_nav_show_brand', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_logo_text">Texto Principal da Marca no Menu</label>
+                    <input type="text" id="mobile_nav_logo_text" name="mobile_nav_logo_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_logo_text', Setting::get('header_logo_text', 'DIVINIUM'))) ?>"
+                           placeholder="DIVINIUM"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+
+                <div class="form-group <?= Setting::get('mobile_nav_show_brand', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_logo_sub">Subtítulo da Marca no Menu</label>
+                    <input type="text" id="mobile_nav_logo_sub" name="mobile_nav_logo_sub" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_logo_sub', Setting::get('header_logo_sub', 'HAUTE JOAILLERIE'))) ?>"
+                           placeholder="HAUTE JOAILLERIE"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+
+                <div class="form-group full-width <?= Setting::get('mobile_nav_show_header_badge', '0') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_header_badge">Selo Superior Flutuante (Opcional, acima da marca)</label>
+                        <?= $renderToggle('mobile_nav_show_header_badge', '0') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_header_badge" name="mobile_nav_header_badge" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_header_badge', 'JOALHERIA AUTORAL')) ?>"
+                           placeholder="JOALHERIA AUTORAL"
+                           oninput="updateMobileMenuLivePreview()">
+                    <span class="field-hint">Ex: 'JOALHERIA AUTORAL', 'EDIÇÃO LIMITADA' ou 'ALTA JOALHERIA'.</span>
+                </div>
+
+                <!-- 4. LINKS DE NAVEGAÇÃO -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🧭 4. Links de Navegação Mobile (Texto, URL & Exibição)
+                    </h4>
+                    <span class="field-hint">Altere o texto, destino e a visibilidade de cada link individualmente.</span>
+                </div>
+
+                <!-- Link 1: Início -->
+                <div class="form-group <?= Setting::get('mobile_nav_home_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_home_text">Link 1: Texto</label>
+                        <?= $renderToggle('mobile_nav_home_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_home_text" name="mobile_nav_home_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_home_text', Setting::get('nav_link_home', 'Início'))) ?>"
+                           placeholder="Início"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_home_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_home_url">Link 1: URL de Destino</label>
+                    <input type="text" id="mobile_nav_home_url" name="mobile_nav_home_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_home_url', '/')) ?>"
+                           placeholder="/">
+                </div>
+
+                <!-- Link 2: Loja / Boutique -->
+                <div class="form-group <?= Setting::get('mobile_nav_store_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_store_text">Link 2: Texto (Loja / Boutique)</label>
+                        <?= $renderToggle('mobile_nav_store_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_store_text" name="mobile_nav_store_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_store_text', Setting::get('nav_link_store', 'Boutique / Loja'))) ?>"
+                           placeholder="Boutique / Loja"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_store_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_store_url">Link 2: URL de Destino</label>
+                    <input type="text" id="mobile_nav_store_url" name="mobile_nav_store_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_store_url', '/loja')) ?>"
+                           placeholder="/loja">
+                </div>
+
+                <!-- Selo do Link da Loja -->
+                <div class="form-group full-width <?= Setting::get('mobile_nav_store_badge_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 12px 14px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.08);">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_store_badge_text">Etiqueta Flutuante do Link da Loja (Badge Dourado)</label>
+                        <?= $renderToggle('mobile_nav_store_badge_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_store_badge_text" name="mobile_nav_store_badge_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_store_badge_text', 'Exclusivo')) ?>"
+                           placeholder="Exclusivo"
+                           oninput="updateMobileMenuLivePreview()">
+                    <span class="field-hint">Exibido ao lado do nome 'Boutique / Loja'. Ex: 'Exclusivo', 'Novo', 'Catálogo'.</span>
+                </div>
+
+                <!-- Link 3: Acordeão de Coleções -->
+                <div class="form-group full-width <?= Setting::get('mobile_nav_collections_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(212, 186, 136, 0.04); padding: 14px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.15);">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_collections_text" style="color: #ffffff; font-weight: 600;">Link 3: Acordeão Expansível de Coleções</label>
+                        <?= $renderToggle('mobile_nav_collections_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_collections_text" name="mobile_nav_collections_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_collections_text', Setting::get('nav_link_collections', 'Coleções'))) ?>"
+                           placeholder="Coleções"
+                           oninput="updateMobileMenuLivePreview()">
+                    <span class="field-hint">Menu com seta que expande as subcategorias abaixo no celular.</span>
+
+                    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <!-- Sub-item 1 -->
+                        <div class="form-group <?= Setting::get('mobile_nav_sub_all_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                            <div class="field-label-row">
+                                <label for="mobile_nav_sub_all_text" style="font-size: 0.78rem;">Sub-item 1: Todas as Peças</label>
+                                <?= $renderToggle('mobile_nav_sub_all_visible') ?>
+                            </div>
+                            <input type="text" id="mobile_nav_sub_all_text" name="mobile_nav_sub_all_text" class="form-input" 
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_all_text', Setting::get('nav_sub_all', 'Ver Todas as Peças'))) ?>"
+                                   oninput="updateMobileMenuLivePreview()">
+                            <input type="text" name="mobile_nav_sub_all_url" class="form-input" style="margin-top: 4px; font-size: 0.78rem;"
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_all_url', '/loja')) ?>">
+                        </div>
+
+                        <!-- Sub-item 2 -->
+                        <div class="form-group <?= Setting::get('mobile_nav_sub_bracelets_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                            <div class="field-label-row">
+                                <label for="mobile_nav_sub_bracelets_text" style="font-size: 0.78rem;">Sub-item 2: Braceletes</label>
+                                <?= $renderToggle('mobile_nav_sub_bracelets_visible') ?>
+                            </div>
+                            <input type="text" id="mobile_nav_sub_bracelets_text" name="mobile_nav_sub_bracelets_text" class="form-input" 
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_bracelets_text', Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos'))) ?>"
+                                   oninput="updateMobileMenuLivePreview()">
+                            <input type="text" name="mobile_nav_sub_bracelets_url" class="form-input" style="margin-top: 4px; font-size: 0.78rem;"
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_bracelets_url', '/loja#braceletes')) ?>">
+                        </div>
+
+                        <!-- Sub-item 3 -->
+                        <div class="form-group <?= Setting::get('mobile_nav_sub_necklaces_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                            <div class="field-label-row">
+                                <label for="mobile_nav_sub_necklaces_text" style="font-size: 0.78rem;">Sub-item 3: Colares</label>
+                                <?= $renderToggle('mobile_nav_sub_necklaces_visible') ?>
+                            </div>
+                            <input type="text" id="mobile_nav_sub_necklaces_text" name="mobile_nav_sub_necklaces_text" class="form-input" 
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_necklaces_text', Setting::get('nav_sub_necklaces', 'Colares & Pingentes'))) ?>"
+                                   oninput="updateMobileMenuLivePreview()">
+                            <input type="text" name="mobile_nav_sub_necklaces_url" class="form-input" style="margin-top: 4px; font-size: 0.78rem;"
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_necklaces_url', '/loja#colares')) ?>">
+                        </div>
+
+                        <!-- Sub-item 4 -->
+                        <div class="form-group <?= Setting::get('mobile_nav_sub_rings_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                            <div class="field-label-row">
+                                <label for="mobile_nav_sub_rings_text" style="font-size: 0.78rem;">Sub-item 4: Anéis</label>
+                                <?= $renderToggle('mobile_nav_sub_rings_visible') ?>
+                            </div>
+                            <input type="text" id="mobile_nav_sub_rings_text" name="mobile_nav_sub_rings_text" class="form-input" 
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_rings_text', Setting::get('nav_sub_rings', 'Anéis & Alianças'))) ?>"
+                                   oninput="updateMobileMenuLivePreview()">
+                            <input type="text" name="mobile_nav_sub_rings_url" class="form-input" style="margin-top: 4px; font-size: 0.78rem;"
+                                   value="<?= View::e(Setting::get('mobile_nav_sub_rings_url', '/loja#aneis')) ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Link 4: Sobre -->
+                <div class="form-group <?= Setting::get('mobile_nav_about_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_about_text">Link 4: Texto (Sobre a Divinium)</label>
+                        <?= $renderToggle('mobile_nav_about_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_about_text" name="mobile_nav_about_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_about_text', Setting::get('nav_link_about', 'Sobre'))) ?>"
+                           placeholder="Sobre"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_about_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_about_url">Link 4: URL de Destino</label>
+                    <input type="text" id="mobile_nav_about_url" name="mobile_nav_about_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_about_url', '/#about')) ?>"
+                           placeholder="/#about">
+                </div>
+
+                <!-- Link 5: Garantia & Serviços -->
+                <div class="form-group <?= Setting::get('mobile_nav_services_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_services_text">Link 5: Texto (Garantia & Serviços)</label>
+                        <?= $renderToggle('mobile_nav_services_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_services_text" name="mobile_nav_services_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_services_text', Setting::get('nav_link_services', 'Garantia & Serviços'))) ?>"
+                           placeholder="Garantia & Serviços"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_services_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_services_url">Link 5: URL de Destino</label>
+                    <input type="text" id="mobile_nav_services_url" name="mobile_nav_services_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_services_url', '/#services')) ?>"
+                           placeholder="/#services">
+                </div>
+
+                <!-- Link 6: Lista de Desejos / Favoritos -->
+                <div class="form-group <?= Setting::get('mobile_nav_wishlist_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_wishlist_text">Link 6: Texto (Lista de Desejos)</label>
+                        <?= $renderToggle('mobile_nav_wishlist_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_wishlist_text" name="mobile_nav_wishlist_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_wishlist_text', 'Lista de Desejos')) ?>"
+                           placeholder="Lista de Desejos"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_wishlist_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_wishlist_url">Link 6: URL de Destino</label>
+                    <input type="text" id="mobile_nav_wishlist_url" name="mobile_nav_wishlist_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_wishlist_url', '/minha-conta/favoritos')) ?>"
+                           placeholder="/minha-conta/favoritos">
+                </div>
+
+                <!-- Link 7: Personalizado Adicional 1 -->
+                <div class="form-group <?= Setting::get('mobile_nav_custom1_visible', '0') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px;">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_custom1_text">Link Extra 1 (Ex: Rastreamento)</label>
+                        <?= $renderToggle('mobile_nav_custom1_visible', '0') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_custom1_text" name="mobile_nav_custom1_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_custom1_text', 'Rastrear Meu Pedido')) ?>"
+                           placeholder="Rastrear Meu Pedido"
+                           oninput="updateMobileMenuLivePreview()">
+                    <div style="display: flex; gap: 6px; margin-top: 6px;">
+                        <input type="text" name="mobile_nav_custom1_url" class="form-input" style="flex: 2; font-size: 0.78rem;"
+                               value="<?= View::e(Setting::get('mobile_nav_custom1_url', '/loja')) ?>" placeholder="/loja">
+                        <input type="text" name="mobile_nav_custom1_badge" class="form-input" style="flex: 1; font-size: 0.78rem;"
+                               value="<?= View::e(Setting::get('mobile_nav_custom1_badge', 'VIP')) ?>" placeholder="Badge (VIP)">
+                    </div>
+                </div>
+
+                <!-- Link 8: Personalizado Adicional 2 -->
+                <div class="form-group <?= Setting::get('mobile_nav_custom2_visible', '0') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px;">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_custom2_text">Link Extra 2 (Ex: Contato / FAQ)</label>
+                        <?= $renderToggle('mobile_nav_custom2_visible', '0') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_custom2_text" name="mobile_nav_custom2_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_custom2_text', 'Atendimento & FAQ')) ?>"
+                           placeholder="Atendimento & FAQ"
+                           oninput="updateMobileMenuLivePreview()">
+                    <div style="display: flex; gap: 6px; margin-top: 6px;">
+                        <input type="text" name="mobile_nav_custom2_url" class="form-input" style="flex: 2; font-size: 0.78rem;"
+                               value="<?= View::e(Setting::get('mobile_nav_custom2_url', '/#services')) ?>" placeholder="/#services">
+                        <input type="text" name="mobile_nav_custom2_badge" class="form-input" style="flex: 1; font-size: 0.78rem;"
+                               value="<?= View::e(Setting::get('mobile_nav_custom2_badge', '')) ?>" placeholder="Badge">
+                    </div>
+                </div>
+
+                <!-- 5. RODAPÉ E AÇÕES -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        📞 5. Rodapé & Ações da Gaveta (WhatsApp & Acesso)
+                    </h4>
+                </div>
+
+                <!-- Botão WhatsApp -->
+                <div class="form-group <?= Setting::get('mobile_nav_whatsapp_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_whatsapp_text">Botão WhatsApp: Texto</label>
+                        <?= $renderToggle('mobile_nav_whatsapp_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_whatsapp_text" name="mobile_nav_whatsapp_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_whatsapp_text', 'Concierge VIP via WhatsApp')) ?>"
+                           placeholder="Concierge VIP via WhatsApp"
+                           oninput="updateMobileMenuLivePreview()">
+                </div>
+                <div class="form-group <?= Setting::get('mobile_nav_whatsapp_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <label for="mobile_nav_whatsapp_url">Botão WhatsApp: URL / Número</label>
+                    <input type="text" id="mobile_nav_whatsapp_url" name="mobile_nav_whatsapp_url" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_whatsapp_url', Setting::get('hero_whatsapp_number', '5511999999999'))) ?>"
+                           placeholder="5511999999999 ou link completo">
+                </div>
+
+                <!-- Botão Entrar -->
+                <div class="form-group full-width <?= Setting::get('mobile_nav_login_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_login_text">Botão de Acesso / Login</label>
+                        <?= $renderToggle('mobile_nav_login_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_login_text" name="mobile_nav_login_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_login_text', 'Entrar no Painel Administrativo')) ?>"
+                           placeholder="Entrar no Painel Administrativo"
+                           oninput="updateMobileMenuLivePreview()">
+                    <span class="field-hint">Abre a janela nobre de autenticação administrativa e credenciais.</span>
+                </div>
+
+                <!-- Mensagem Perk -->
+                <div class="form-group full-width <?= Setting::get('mobile_nav_perk_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="mobile_nav_perk_text">Selo Institucional / Frase de Rodapé</label>
+                        <?= $renderToggle('mobile_nav_perk_visible') ?>
+                    </div>
+                    <input type="text" id="mobile_nav_perk_text" name="mobile_nav_perk_text" class="form-input" 
+                           value="<?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?>"
+                           placeholder="✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras"
+                           oninput="updateMobileMenuLivePreview()">
+                    <span class="field-hint">Frase final de prestígio e assinatura da marca no pé do menu.</span>
+                </div>
+
+                <!-- 6. PRÉ-VISUALIZAÇÃO EM TEMPO REAL -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 12px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 10px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between;">
+                        <span>📱 Pré-visualização Interativa do Menu no Smartphone</span>
+                        <span style="font-size: 0.72rem; color: #8e8880; font-weight: normal; text-transform: none;">Atualiza em tempo real enquanto você digita</span>
+                    </h4>
+                    
+                    <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); display: flex; justify-content: center;">
+                        <!-- Mockup de Smartphone -->
+                        <div style="width: 330px; border-radius: 28px; border: 3px solid rgba(212, 186, 136, 0.4); box-shadow: 0 16px 40px rgba(0,0,0,0.8); overflow: hidden; background: #000; display: flex; flex-direction: column;">
+                            <!-- Barra de Status do Celular -->
+                            <div style="background: #000; padding: 6px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; color: #888;">
+                                <span>9:41</span>
+                                <div style="display: flex; gap: 4px; align-items: center;">
+                                    <span>●●●●</span>
+                                    <span>5G</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Conteúdo do Menu dentro do Mockup -->
+                            <div id="mobileMenuLivePreviewDrawer" style="background: <?= Setting::get('mobile_nav_bg_color', '#0d0c0b') ?>; color: <?= Setting::get('mobile_nav_text_color', '#ded7cf') ?>; padding: 16px 18px; display: flex; flex-direction: column; min-height: 480px; justify-content: space-between;">
+                                
+                                <div>
+                                    <!-- Header do Mockup -->
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                                        <div id="previewBrandWrap">
+                                            <div id="previewHeaderBadge" style="display: <?= Setting::get('mobile_nav_show_header_badge', '0') === '1' ? 'inline-block' : 'none' ?>; font-size: 0.52rem; font-weight: 700; color: #d4ba88; border: 1px solid rgba(212,186,136,0.3); padding: 1px 6px; border-radius: 10px; margin-bottom: 3px;"><?= View::e(Setting::get('mobile_nav_header_badge', 'JOALHERIA AUTORAL')) ?></div>
+                                            <div id="previewLogoText" style="font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.15em; color: #fff;"><?= View::e(Setting::get('mobile_nav_logo_text', 'DIVINIUM')) ?></div>
+                                            <div id="previewLogoSub" style="font-size: 0.45rem; letter-spacing: 0.25em; color: #8e8880;"><?= View::e(Setting::get('mobile_nav_logo_sub', 'HAUTE JOAILLERIE')) ?></div>
+                                        </div>
+                                        <div style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #aaa;">&times;</div>
+                                    </div>
+
+                                    <!-- Links do Mockup -->
+                                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 12px;">
+                                        <div id="previewLinkHome" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; background: rgba(212, 186, 136, 0.08); border-left: 2px solid #d4ba88; color: #fff; font-size: 0.88rem;">
+                                            <span id="previewTextHome"><?= View::e(Setting::get('mobile_nav_home_text', 'Início')) ?></span>
+                                            <span style="font-size: 0.7rem; color: #d4ba88;">›</span>
+                                        </div>
+
+                                        <div id="previewLinkStore" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
+                                            <span id="previewTextStore"><?= View::e(Setting::get('mobile_nav_store_text', 'Boutique / Loja')) ?></span>
+                                            <span id="previewBadgeStore" style="font-size: 0.58rem; background: rgba(212, 186, 136, 0.15); color: #d4ba88; padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.3);"><?= View::e(Setting::get('mobile_nav_store_badge_text', 'Exclusivo')) ?></span>
+                                        </div>
+
+                                        <div id="previewLinkCollections" style="display: flex; flex-direction: column; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span id="previewTextCollections"><?= View::e(Setting::get('mobile_nav_collections_text', 'Coleções')) ?></span>
+                                                <span style="font-size: 0.7rem; color: #888;">⌵</span>
+                                            </div>
+                                            <div style="padding-left: 12px; margin-top: 4px; display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; color: #999;">
+                                                <span>✦ <span id="previewTextSubAll"><?= View::e(Setting::get('mobile_nav_sub_all_text', 'Ver Todas as Peças')) ?></span></span>
+                                                <span>✦ <span id="previewTextSubBracelets"><?= View::e(Setting::get('mobile_nav_sub_bracelets_text', 'Braceletes Exclusivos')) ?></span></span>
+                                            </div>
+                                        </div>
+
+                                        <div id="previewLinkAbout" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
+                                            <span id="previewTextAbout"><?= View::e(Setting::get('mobile_nav_about_text', 'Sobre')) ?></span>
+                                            <span style="font-size: 0.7rem; color: #888;">›</span>
+                                        </div>
+
+                                        <div id="previewLinkServices" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
+                                            <span id="previewTextServices"><?= View::e(Setting::get('mobile_nav_services_text', 'Garantia & Serviços')) ?></span>
+                                            <span style="font-size: 0.7rem; color: #888;">›</span>
+                                        </div>
+
+                                        <div id="previewLinkWishlist" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
+                                            <span>♡ <span id="previewTextWishlist"><?= View::e(Setting::get('mobile_nav_wishlist_text', 'Lista de Desejos')) ?></span></span>
+                                            <span style="font-size: 0.7rem; color: #888;">›</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Rodapé do Mockup -->
+                                <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px;">
+                                    <div id="previewBtnWhatsapp" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.3); color: #25d366; padding: 8px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;">
+                                        <span>💬</span>
+                                        <span id="previewTextWhatsapp"><?= View::e(Setting::get('mobile_nav_whatsapp_text', 'Concierge VIP via WhatsApp')) ?></span>
+                                    </div>
+
+                                    <div id="previewBtnLogin" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); color: #ded7cf; padding: 7px; border-radius: 8px; font-size: 0.74rem;">
+                                        <span>🔒</span>
+                                        <span id="previewTextLogin"><?= View::e(Setting::get('mobile_nav_login_text', 'Entrar no Painel Administrativo')) ?></span>
+                                    </div>
+
+                                    <div id="previewPerkWrap" style="text-align: center; color: #8e8880; font-size: 0.62rem; margin-top: 2px;">
+                                        <span id="previewTextPerk"><?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -1574,5 +2107,74 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCarouselSlidesManager);
 } else {
     initCarouselSlidesManager();
+}
+
+function updateMobileMenuLivePreview() {
+    const getVal = (id, def) => document.getElementById(id)?.value || def;
+
+    const bg = getVal('mobile_nav_bg_color', '#0d0c0b');
+    const txt = getVal('mobile_nav_text_color', '#ded7cf');
+    const accent = getVal('mobile_nav_accent_color', '#d4ba88');
+
+    const drawer = document.getElementById('mobileMenuLivePreviewDrawer');
+    if (drawer) {
+        drawer.style.background = bg;
+        drawer.style.color = txt;
+    }
+
+    const previewLogoText = document.getElementById('previewLogoText');
+    if (previewLogoText) previewLogoText.textContent = getVal('mobile_nav_logo_text', 'DIVINIUM');
+
+    const previewLogoSub = document.getElementById('previewLogoSub');
+    if (previewLogoSub) previewLogoSub.textContent = getVal('mobile_nav_logo_sub', 'HAUTE JOAILLERIE');
+
+    const previewHeaderBadge = document.getElementById('previewHeaderBadge');
+    if (previewHeaderBadge) {
+        previewHeaderBadge.textContent = getVal('mobile_nav_header_badge', 'JOALHERIA AUTORAL');
+        previewHeaderBadge.style.color = accent;
+        previewHeaderBadge.style.borderColor = accent;
+    }
+
+    const setPreview = (id, valId, def) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = getVal(valId, def);
+    };
+
+    setPreview('previewTextHome', 'mobile_nav_home_text', 'Início');
+    setPreview('previewTextStore', 'mobile_nav_store_text', 'Boutique / Loja');
+    setPreview('previewBadgeStore', 'mobile_nav_store_badge_text', 'Exclusivo');
+    setPreview('previewTextCollections', 'mobile_nav_collections_text', 'Coleções');
+    setPreview('previewTextSubAll', 'mobile_nav_sub_all_text', 'Ver Todas as Peças');
+    setPreview('previewTextSubBracelets', 'mobile_nav_sub_bracelets_text', 'Braceletes Exclusivos');
+    setPreview('previewTextAbout', 'mobile_nav_about_text', 'Sobre');
+    setPreview('previewTextServices', 'mobile_nav_services_text', 'Garantia & Serviços');
+    setPreview('previewTextWishlist', 'mobile_nav_wishlist_text', 'Lista de Desejos');
+    setPreview('previewTextWhatsapp', 'mobile_nav_whatsapp_text', 'Concierge VIP via WhatsApp');
+    setPreview('previewTextLogin', 'mobile_nav_login_text', 'Entrar no Painel Administrativo');
+    setPreview('previewTextPerk', 'mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras');
+
+    const previewLinkHome = document.getElementById('previewLinkHome');
+    if (previewLinkHome) {
+        previewLinkHome.style.borderLeftColor = accent;
+    }
+}
+
+// Suporte a abertura direta de abas por URL (ex: ?tab=sec-mobile-menu ou #sec-mobile-menu)
+function checkInitialEditorTab() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
+    if (tabParam) {
+        const btn = document.querySelector(`.editor-nav-tabs button[onclick*="'${tabParam}'"]`);
+        if (btn) {
+            switchSection(tabParam, btn);
+        }
+    }
+    updateMobileMenuLivePreview();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkInitialEditorTab);
+} else {
+    checkInitialEditorTab();
 }
 </script>
