@@ -48,8 +48,21 @@ try {
     }
     @file_put_contents($logDir . '/exception.log', sprintf("[%s] %s em %s:%d\n", date('Y-m-d H:i:s'), $e->getMessage(), $e->getFile(), $e->getLine()), FILE_APPEND | LOCK_EX);
 
+    while (ob_get_level() > 0) {
+        @ob_end_clean();
+    }
+
+    if (!headers_sent()) {
+        http_response_code(200);
+    }
+
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
     $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
-        || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+        || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+        || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+        || !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+        || str_contains($uri, '/salvar')
+        || str_contains($uri, '/api/');
 
     if ($isJson) {
         if (!headers_sent()) {

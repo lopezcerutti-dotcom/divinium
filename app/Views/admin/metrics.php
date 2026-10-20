@@ -418,7 +418,21 @@ async function handleMetricsConfigSubmit(e) {
                 'Accept': 'application/json'
             }
         });
-        const data = await res.json();
+        const rawText = await res.text();
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (jsonErr) {
+            console.error('Resposta não-JSON do servidor:', rawText);
+            throw new Error('O servidor respondeu com formato inesperado. Se sua sessão expirou, recarregue a página.');
+        }
+
+        if (data.auth_required) {
+            alert('Sua sessão administrativa expirou. Por favor, faça login novamente.');
+            window.location.reload();
+            return;
+        }
+
         if (data.success) {
             alert(data.message || 'Configurações de métricas e rastreamento salvas com sucesso!');
             window.location.reload();
@@ -426,7 +440,7 @@ async function handleMetricsConfigSubmit(e) {
             alert(data.error || 'Erro ao salvar configurações.');
         }
     } catch (err) {
-        alert('Erro ao conectar ao servidor: ' + err.message);
+        alert('Erro ao processar: ' + err.message);
     }
 }
 </script>

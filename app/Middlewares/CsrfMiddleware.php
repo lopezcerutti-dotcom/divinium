@@ -73,12 +73,24 @@ class CsrfMiddleware
         if (empty($sessionToken) || empty($submittedToken) || !hash_equals($sessionToken, $submittedToken)) {
             self::logViolation();
             
+            $uri = $_SERVER['REQUEST_URI'] ?? '';
             $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
                 || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
                 || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
-                || !empty($_SERVER['HTTP_X_CSRF_TOKEN']);
+                || !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+                || str_contains($uri, '/salvar')
+                || str_contains($uri, '/toggle')
+                || str_contains($uri, '/excluir')
+                || str_contains($uri, '/duplicar')
+                || str_contains($uri, '/upload-bg')
+                || str_contains($uri, '/remover-bg')
+                || str_contains($uri, '/sync')
+                || str_contains($uri, '/config');
 
             if ($isJson) {
+                while (ob_get_level() > 0) {
+                    @ob_end_clean();
+                }
                 header('Content-Type: application/json; charset=UTF-8');
                 // Retorna HTTP 200 com payload JSON de erro para que LiteSpeed/Hostinger
                 // NUNCA intercepte a resposta com "Configuração do servidor incompleta"
@@ -89,8 +101,12 @@ class CsrfMiddleware
                     'error' => 'Sessão expirada ou token de segurança inválido. Por favor, atualize a página e tente novamente.'
                 ], JSON_UNESCAPED_UNICODE);
             } else {
-                // Utiliza RFC 403 padrão (nunca 419 que é não-RFC e quebra no LiteSpeed)
-                http_response_code(403);
+                while (ob_get_level() > 0) {
+                    @ob_end_clean();
+                }
+                // Retorna 200 com página de retorno para não ser interceptada pelo LiteSpeed Hostinger
+                http_response_code(200);
+                header('Content-Type: text/html; charset=UTF-8');
                 echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sessão Expirada</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:50px;}h2{letter-spacing:1px;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:10px 20px;border-radius:4px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>Sua sessão expirou por segurança. Por favor, atualize a página e tente novamente.</p><a href="javascript:history.back()">Voltar</a></body></html>';
             }
             exit;

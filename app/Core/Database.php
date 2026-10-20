@@ -196,13 +196,88 @@ class Database
         $ensured = true;
 
         // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
-        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v3_ensured.flag';
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v5_ensured.flag';
         if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
             return;
         }
 
         try {
             $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+            // 0. Garantir existência e capacidade da tabela de configurações
+            if ($driver === 'sqlite') {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS settings (
+                        key_name VARCHAR(100) PRIMARY KEY,
+                        value TEXT NULL,
+                        is_encrypted INTEGER DEFAULT 0,
+                        description TEXT NULL
+                    );
+                ");
+            } else {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS `settings` (
+                        `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        `key_name` VARCHAR(100) NOT NULL UNIQUE,
+                        `value` MEDIUMTEXT NULL,
+                        `is_encrypted` TINYINT(1) NOT NULL DEFAULT 0,
+                        `description` VARCHAR(255) NULL,
+                        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ");
+                try {
+                    $pdo->exec("ALTER TABLE `settings` MODIFY COLUMN `value` MEDIUMTEXT NULL;");
+                } catch (\Throwable $altSettingEx) {
+                    // Silencioso se já alterado
+                }
+            }
+
+            // 0.1 Garantir tabelas de rastreamento (product_clicks e page_views)
+            if ($driver === 'sqlite') {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS product_clicks (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        product_id INTEGER NOT NULL,
+                        product_name VARCHAR(255) NOT NULL,
+                        platform_name VARCHAR(100) DEFAULT 'Shopee',
+                        source VARCHAR(50) DEFAULT 'store',
+                        ip_address VARCHAR(45) DEFAULT '127.0.0.1',
+                        user_agent VARCHAR(255) NULL,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS page_views (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        page_url VARCHAR(255) NOT NULL,
+                        ip_address VARCHAR(45) DEFAULT '127.0.0.1',
+                        user_agent VARCHAR(255) NULL,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                ");
+            } else {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS `product_clicks` (
+                        `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        `product_id` BIGINT UNSIGNED NOT NULL,
+                        `product_name` VARCHAR(255) NOT NULL,
+                        `platform_name` VARCHAR(100) DEFAULT 'Shopee',
+                        `source` VARCHAR(50) DEFAULT 'store',
+                        `ip_address` VARCHAR(45) DEFAULT '127.0.0.1',
+                        `user_agent` VARCHAR(255) NULL,
+                        `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        INDEX `idx_prod_clicks_prod` (`product_id`),
+                        INDEX `idx_prod_clicks_created` (`created_at`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                    CREATE TABLE IF NOT EXISTS `page_views` (
+                        `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        `page_url` VARCHAR(255) NOT NULL,
+                        `ip_address` VARCHAR(45) DEFAULT '127.0.0.1',
+                        `user_agent` VARCHAR(255) NULL,
+                        `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        INDEX `idx_page_views_created` (`created_at`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ");
+            }
 
             // 1. Criar tabela product_links se não existir
             if ($driver === 'sqlite') {

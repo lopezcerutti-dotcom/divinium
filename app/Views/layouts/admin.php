@@ -162,5 +162,54 @@
 
     </div>
 
+    <!-- SCRIPT PROTETOR GLOBAL DE REQUISIÇÕES ADMINISTRATIVAS -->
+    <script>
+    (function() {
+        // Blindagem do Response.prototype.json para nunca quebrar com HTML inesperado
+        const originalJson = Response.prototype.json;
+        Response.prototype.json = async function() {
+            try {
+                const text = await this.text();
+                try {
+                    const data = JSON.parse(text);
+                    if (data && data.auth_required) {
+                        alert('Sua sessão de administrador expirou. Por favor, recarregue a página para efetuar login novamente.');
+                        window.location.reload();
+                    }
+                    return data;
+                } catch (parseErr) {
+                    console.error('Resposta não-JSON interceptada:', text);
+                    return {
+                        success: false,
+                        error: 'O servidor retornou uma resposta inesperada. Por favor, recarregue a página.'
+                    };
+                }
+            } catch (err) {
+                return originalJson.call(this);
+            }
+        };
+
+        // Blindagem do fetch para sempre injetar headers AJAX e CSRF no painel
+        const originalFetch = window.fetch;
+        window.fetch = async function(resource, init) {
+            init = init || {};
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            if (!init.headers) {
+                init.headers = {};
+            }
+
+            if (init.headers instanceof Headers) {
+                if (!init.headers.has('X-Requested-With')) init.headers.set('X-Requested-With', 'XMLHttpRequest');
+                if (csrfToken && !init.headers.has('X-CSRF-TOKEN')) init.headers.set('X-CSRF-TOKEN', csrfToken);
+            } else if (!Array.isArray(init.headers) && typeof init.headers === 'object') {
+                if (!init.headers['X-Requested-With']) init.headers['X-Requested-With'] = 'XMLHttpRequest';
+                if (csrfToken && !init.headers['X-CSRF-TOKEN']) init.headers['X-CSRF-TOKEN'] = csrfToken;
+            }
+
+            return originalFetch.call(this, resource, init);
+        };
+    })();
+    </script>
 </body>
 </html>

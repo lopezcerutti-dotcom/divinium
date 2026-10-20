@@ -6,9 +6,12 @@
 # Forçar index.php como único ponto de entrada para impedir conflitos com default.php da Hostinger
 DirectoryIndex index.php
 
-# Prevenir loops de redirecionamento interno no servidor (LiteSpeed / Apache)
+# Prevenir loops e páginas padrão de erro do LiteSpeed / Hostinger ("Configuração do servidor incompleta")
 # O PHP gerencia seus próprios erros graciosamente através do bootstrap.php e Router.php
+ErrorDocument 403 /index.php
 ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
+ErrorDocument 503 /index.php
 
 # 1. DESATIVAR LISTAGEM DE DIRETÓRIOS E ASSINATURA DO SERVIDOR
 Options -Indexes -MultiViews

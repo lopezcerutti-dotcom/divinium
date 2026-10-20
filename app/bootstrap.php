@@ -172,26 +172,51 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
         exit(1);
     }
 
-    // Não definir status 500 no LiteSpeed Web Server (Hostinger) para evitar que ele
-    // intercepte a saída e substitua por 'Configuração do servidor incompleta. Por favor, contate o administrador.'
+    // Limpar buffers incompletos para garantir resposta íntegra ao navegador
+    while (ob_get_level() > 0) {
+        @ob_end_clean();
+    }
 
-    if ($isProduction) {
-        // Resposta opaca para o usuário final
-        if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+    // NUNCA emitir HTTP 500 no LiteSpeed / Hostinger para evitar que ele
+    // intercepte a saída e substitua por "Configuração do servidor incompleta. Por favor, contate o administrador."
+    if (!headers_sent()) {
+        http_response_code(200);
+    }
+
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+        || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+        || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+        || !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+        || str_contains($uri, '/salvar')
+        || str_contains($uri, '/api/');
+
+    if ($isJson) {
+        if (!headers_sent()) {
             header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode([
-                'success' => false,
-                'message' => 'Ocorreu um erro interno ao processar sua requisição. Tente novamente mais tarde.'
-            ], JSON_UNESCAPED_UNICODE);
-        } else {
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:8px 18px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;}</style></head><body><h2>DIVINIUM</h2><p>Nosso servidor está finalizando uma atualização automática momentânea.</p><p><a href="/">Recarregar Página</a></p></body></html>';
         }
+        echo json_encode([
+            'success' => false,
+            'error' => $isProduction ? 'Ocorreu um erro interno momentâneo. Por favor, recarregue a página e tente novamente.' : $e->getMessage(),
+            'details' => $isProduction ? null : [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]
+        ], JSON_UNESCAPED_UNICODE);
     } else {
-        echo "<pre style='background:#f8d7da;color:#721c24;padding:20px;border-radius:5px;'>";
-        echo "<strong>Erro de Desenvolvimento:</strong> " . htmlspecialchars($e->getMessage()) . "\n";
-        echo "<strong>Arquivo:</strong> " . htmlspecialchars($e->getFile()) . " (" . $e->getLine() . ")\n\n";
-        echo htmlspecialchars($e->getTraceAsString());
-        echo "</pre>";
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=UTF-8');
+        }
+        if ($isProduction) {
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:8px 18px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;}</style></head><body><h2>DIVINIUM</h2><p>Nosso servidor está finalizando uma atualização automática momentânea.</p><p><a href="/">Recarregar Página</a></p></body></html>';
+        } else {
+            echo "<pre style='background:#f8d7da;color:#721c24;padding:20px;border-radius:5px;'>";
+            echo "<strong>Erro de Desenvolvimento:</strong> " . htmlspecialchars($e->getMessage()) . "\n";
+            echo "<strong>Arquivo:</strong> " . htmlspecialchars($e->getFile()) . " (" . $e->getLine() . ")\n\n";
+            echo htmlspecialchars($e->getTraceAsString());
+            echo "</pre>";
+        }
     }
     exit(0);
 });
@@ -199,7 +224,8 @@ set_exception_handler(function (Throwable $e) use ($isProduction): void {
 // Handler de Encerramento (Captura Erros Fatais do PHP antes que o LiteSpeed Hostinger intercepte)
 register_shutdown_function(function () use ($isProduction): void {
     $error = error_get_last();
-    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+    $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_RECOVERABLE_ERROR, E_USER_ERROR];
+    if ($error !== null && in_array($error['type'], $fatalTypes, true)) {
         $timestamp = date('Y-m-d H:i:s');
         $logMessage = sprintf(
             "[%s] FATAL ERROR: %s em %s:%d\n",
@@ -215,13 +241,28 @@ register_shutdown_function(function () use ($isProduction): void {
             exit(1);
         }
 
-        // Não emitir HTTP 500 no LiteSpeed / Hostinger para evitar 'Configuração do servidor incompleta'
+        while (ob_get_level() > 0) {
+            @ob_end_clean();
+        }
+
+        // Não emitir HTTP 500 no LiteSpeed / Hostinger para evitar "Configuração do servidor incompleta"
         if (!headers_sent()) {
             http_response_code(200);
             header('Content-Type: text/html; charset=UTF-8');
         }
 
-        if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+            || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
+            || !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+            || str_contains($uri, '/salvar')
+            || str_contains($uri, '/api/');
+
+        if ($isJson) {
+            if (!headers_sent()) {
+                header('Content-Type: application/json; charset=UTF-8');
+            }
             echo json_encode([
                 'success' => false,
                 'error' => 'Ocorreu uma instabilidade temporária no servidor. Por favor, tente novamente.'
@@ -239,16 +280,27 @@ if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE && !heade
         @ini_set('session.use_only_cookies', '1');
         @ini_set('session.cookie_httponly', '1');
         
+        // Armazenamento isolado na pasta segura de storage do próprio site (imune a expurgo do SO/cron)
+        $sessionSavePath = STORAGE_PATH . '/sessions';
+        if (!is_dir($sessionSavePath)) {
+            @mkdir($sessionSavePath, 0755, true);
+        }
+        if (is_dir($sessionSavePath) && is_writable($sessionSavePath)) {
+            @session_save_path($sessionSavePath);
+        }
+
         // Cookie seguro somente se estiver sob HTTPS
         $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
-                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+                   (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+                   (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
         
         if ($isHttps) {
             @ini_set('session.cookie_secure', '1');
         }
 
         @session_set_cookie_params([
-            'lifetime' => (int) Env::get('SESSION_LIFETIME', 7200),
+            'lifetime' => (int) Env::get('SESSION_LIFETIME', 86400),
             'path' => '/',
             'domain' => '',
             'secure' => $isHttps,

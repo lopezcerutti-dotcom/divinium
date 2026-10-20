@@ -372,7 +372,7 @@ class AdminController
                 'product_id' => $productId
             ]);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao salvar produto: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao salvar produto: ' . $e->getMessage()], 200);
         }
     }
 
@@ -383,7 +383,7 @@ class AdminController
     {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id <= 0) {
-            $this->respond(['success' => false, 'error' => 'ID inválido.'], 422);
+            $this->respond(['success' => false, 'error' => 'ID inválido.'], 200);
             return;
         }
 
@@ -593,7 +593,7 @@ class AdminController
 
             $this->respond(['success' => true, 'message' => 'Categoria gravada com sucesso!']);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao salvar categoria: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao salvar categoria: ' . $e->getMessage()], 200);
         }
     }
 
@@ -604,7 +604,7 @@ class AdminController
     {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id <= 0) {
-            $this->respond(['success' => false, 'error' => 'ID inválido.'], 422);
+            $this->respond(['success' => false, 'error' => 'ID inválido.'], 200);
             return;
         }
 
@@ -897,83 +897,131 @@ class AdminController
             session_start();
         }
 
-        // 1. Total de Cliques na Shopee
-        $totalClicks = (int) $this->pdo->query('SELECT COUNT(*) FROM product_clicks')->fetchColumn();
-
-        // 2. Total de Visualizações de Página
-        $totalViews = (int) $this->pdo->query('SELECT COUNT(*) FROM page_views')->fetchColumn();
-        if ($totalViews === 0) {
-            $totalViews = max(100, $totalClicks * 3);
-        }
-
-        // 3. Taxa de Intenção de Compra (CTR)
-        $ctr = $totalViews > 0 ? round(($totalClicks / $totalViews) * 100, 1) : 0;
-
-        // 4. Valor Potencial Estimado (soma dos preços das joias clicadas)
-        $potentialSalesStmt = $this->pdo->query('
-            SELECT COALESCE(SUM(p.price_cents), 0) as total_cents 
-            FROM product_clicks c 
-            JOIN products p ON c.product_id = p.id
-        ');
-        $potentialSalesCents = (int) $potentialSalesStmt->fetchColumn();
-
-        // 5. Cliques dos últimos 7 dias (para o gráfico interativo SVG)
-        $dailyClicksStmt = $this->pdo->query("
-            SELECT DATE(created_at) as click_date, COUNT(*) as clicks
-            FROM product_clicks
-            WHERE created_at >= DATE('now', '-7 days')
-            GROUP BY DATE(created_at)
-            ORDER BY click_date ASC
-        ");
-        $dailyClicks = $dailyClicksStmt ? $dailyClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
-
-        // Preencher 7 dias completos com label amigável
+        $totalClicks = 0;
+        $totalViews = 100;
+        $ctr = 0.0;
+        $potentialSalesCents = 0;
         $chartDays = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $d = date('Y-m-d', strtotime("-$i days"));
-            $dayLabel = date('d/m', strtotime("-$i days"));
-            $clicks = 0;
-            foreach ($dailyClicks as $row) {
-                if (($row['click_date'] ?? '') === $d) {
-                    $clicks = (int) $row['clicks'];
-                    break;
-                }
+        $topProducts = [];
+        $categoryClicks = [];
+        $recentClicks = [];
+
+        try {
+            $driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+
+            // 1. Total de Cliques na Shopee
+            try {
+                $totalClicks = (int) $this->pdo->query('SELECT COUNT(*) FROM product_clicks')->fetchColumn();
+            } catch (\Throwable $e) {
+                $totalClicks = 0;
             }
-            $chartDays[] = ['date' => $d, 'label' => $dayLabel, 'clicks' => $clicks];
+
+            // 2. Total de Visualizações de Página
+            try {
+                $totalViews = (int) $this->pdo->query('SELECT COUNT(*) FROM page_views')->fetchColumn();
+            } catch (\Throwable $e) {
+                $totalViews = 0;
+            }
+            if ($totalViews === 0) {
+                $totalViews = max(100, $totalClicks * 3);
+            }
+
+            // 3. Taxa de Intenção de Compra (CTR)
+            $ctr = $totalViews > 0 ? round(($totalClicks / $totalViews) * 100, 1) : 0;
+
+            // 4. Valor Potencial Estimado (soma dos preços das joias clicadas)
+            try {
+                $potentialSalesStmt = $this->pdo->query('
+                    SELECT COALESCE(SUM(p.price_cents), 0) as total_cents 
+                    FROM product_clicks c 
+                    JOIN products p ON c.product_id = p.id
+                ');
+                $potentialSalesCents = (int) $potentialSalesStmt->fetchColumn();
+            } catch (\Throwable $e) {
+                $potentialSalesCents = 0;
+            }
+
+            // 5. Cliques dos últimos 7 dias (compatível com MySQL e SQLite)
+            $dateCondition = ($driver === 'sqlite')
+                ? "created_at >= DATE('now', '-7 days')"
+                : "created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+
+            $dailyClicks = [];
+            try {
+                $dailyClicksStmt = $this->pdo->query("
+                    SELECT DATE(created_at) as click_date, COUNT(*) as clicks
+                    FROM product_clicks
+                    WHERE {$dateCondition}
+                    GROUP BY DATE(created_at)
+                    ORDER BY click_date ASC
+                ");
+                $dailyClicks = $dailyClicksStmt ? $dailyClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+            } catch (\Throwable $e) {
+                $dailyClicks = [];
+            }
+
+            // Preencher 7 dias completos com label amigável
+            for ($i = 6; $i >= 0; $i--) {
+                $d = date('Y-m-d', strtotime("-$i days"));
+                $dayLabel = date('d/m', strtotime("-$i days"));
+                $clicks = 0;
+                foreach ($dailyClicks as $row) {
+                    if (($row['click_date'] ?? '') === $d) {
+                        $clicks = (int) $row['clicks'];
+                        break;
+                    }
+                }
+                $chartDays[] = ['date' => $d, 'label' => $dayLabel, 'clicks' => $clicks];
+            }
+
+            // 6. Ranking de Produtos mais Clicados para a Shopee
+            try {
+                $topProductsStmt = $this->pdo->query('
+                    SELECT p.id, p.name, p.image_url, p.price_cents, c.name as category_name, COUNT(pc.id) as clicks_count
+                    FROM products p
+                    LEFT JOIN categories c ON p.category_id = c.id
+                    LEFT JOIN product_clicks pc ON pc.product_id = p.id
+                    GROUP BY p.id, p.name, p.image_url, p.price_cents, c.name
+                    ORDER BY clicks_count DESC, p.id ASC
+                    LIMIT 10
+                ');
+                $topProducts = $topProductsStmt ? $topProductsStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+            } catch (\Throwable $e) {
+                $topProducts = [];
+            }
+
+            // 7. Cliques por Categoria
+            try {
+                $categoryClicksStmt = $this->pdo->query('
+                    SELECT c.name as category_name, COUNT(pc.id) as clicks_count
+                    FROM categories c
+                    LEFT JOIN products p ON p.category_id = c.id
+                    LEFT JOIN product_clicks pc ON pc.product_id = p.id
+                    GROUP BY c.id, c.name
+                    ORDER BY clicks_count DESC
+                ');
+                $categoryClicks = $categoryClicksStmt ? $categoryClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+            } catch (\Throwable $e) {
+                $categoryClicks = [];
+            }
+
+            // 8. Feed Recente em Tempo Real (Últimos 15 Cliques)
+            try {
+                $recentClicksStmt = $this->pdo->query('
+                    SELECT pc.*, p.price_cents, p.image_url
+                    FROM product_clicks pc
+                    LEFT JOIN products p ON pc.product_id = p.id
+                    ORDER BY pc.id DESC
+                    LIMIT 15
+                ');
+                $recentClicks = $recentClicksStmt ? $recentClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+            } catch (\Throwable $e) {
+                $recentClicks = [];
+            }
+
+        } catch (\Throwable $mainMetricsEx) {
+            error_log('Erro geral ao carregar métricas: ' . $mainMetricsEx->getMessage());
         }
-
-        // 6. Ranking de Produtos mais Clicados para a Shopee
-        $topProductsStmt = $this->pdo->query('
-            SELECT p.id, p.name, p.image_url, p.price_cents, c.name as category_name, COUNT(pc.id) as clicks_count
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            LEFT JOIN product_clicks pc ON pc.product_id = p.id
-            GROUP BY p.id
-            ORDER BY clicks_count DESC, p.id ASC
-            LIMIT 10
-        ');
-        $topProducts = $topProductsStmt ? $topProductsStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
-
-        // 7. Cliques por Categoria
-        $categoryClicksStmt = $this->pdo->query('
-            SELECT c.name as category_name, COUNT(pc.id) as clicks_count
-            FROM categories c
-            LEFT JOIN products p ON p.category_id = c.id
-            LEFT JOIN product_clicks pc ON pc.product_id = p.id
-            GROUP BY c.id
-            ORDER BY clicks_count DESC
-        ');
-        $categoryClicks = $categoryClicksStmt ? $categoryClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
-
-        // 8. Feed Recente em Tempo Real (Últimos 15 Cliques)
-        $recentClicksStmt = $this->pdo->query('
-            SELECT pc.*, p.price_cents, p.image_url
-            FROM product_clicks pc
-            LEFT JOIN products p ON pc.product_id = p.id
-            ORDER BY pc.id DESC
-            LIMIT 15
-        ');
-        $recentClicks = $recentClicksStmt ? $recentClicksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
 
         $metricsConfig = \App\Models\Setting::getAll();
 
@@ -1076,7 +1124,7 @@ class AdminController
         $theme = trim((string) ($_POST['theme_id'] ?? 'theme-gold'));
         $allowed = ['theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose', 'theme-custom'];
         if (!in_array($theme, $allowed, true)) {
-            $this->respond(['success' => false, 'error' => 'Tema inválido.'], 422);
+            $this->respond(['success' => false, 'error' => 'Tema inválido.'], 200);
             return;
         }
 
@@ -1102,7 +1150,7 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar tema personalizado: ' . $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -1113,14 +1161,14 @@ class AdminController
     {
         try {
             if (empty($_FILES['bg_file']['tmp_name']) || !is_uploaded_file($_FILES['bg_file']['tmp_name'])) {
-                $this->respond(['success' => false, 'error' => 'Nenhum arquivo de imagem foi enviado.'], 400);
+                $this->respond(['success' => false, 'error' => 'Nenhum arquivo de imagem foi enviado.'], 200);
                 return;
             }
 
             $ext = strtolower(pathinfo($_FILES['bg_file']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
             if (!in_array($ext, $allowed, true)) {
-                $this->respond(['success' => false, 'error' => 'Formato de arquivo inválido. Permitidos: JPG, PNG, WEBP, SVG.'], 400);
+                $this->respond(['success' => false, 'error' => 'Formato de arquivo inválido. Permitidos: JPG, PNG, WEBP, SVG.'], 200);
                 return;
             }
 
@@ -1139,7 +1187,7 @@ class AdminController
             $dest = $uploadDir . '/' . $filename;
 
             if (!move_uploaded_file($_FILES['bg_file']['tmp_name'], $dest)) {
-                $this->respond(['success' => false, 'error' => 'Não foi possível salvar o arquivo no servidor.'], 500);
+                $this->respond(['success' => false, 'error' => 'Não foi possível salvar o arquivo no servidor.'], 200);
                 return;
             }
 
@@ -1153,7 +1201,7 @@ class AdminController
                 'target_key' => $targetKey
             ]);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao processar upload: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao processar upload: ' . $e->getMessage()], 200);
         }
     }
 
@@ -1177,7 +1225,7 @@ class AdminController
                 'target_key' => $targetKey
             ]);
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao remover imagem: ' . $e->getMessage()], 500);
+            $this->respond(['success' => false, 'error' => 'Erro ao remover imagem: ' . $e->getMessage()], 200);
         }
     }
 
@@ -1196,7 +1244,7 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar configurações da loja: ' . $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -1215,7 +1263,7 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar parâmetros de métricas: ' . $e->getMessage()
-            ], 500);
+            ], 200);
         }
     }
 
@@ -1229,7 +1277,7 @@ class AdminController
         $redirectUri = trim((string) ($_POST['redirect_uri'] ?? ''));
 
         if ($clientId === '' || $clientSecret === '') {
-            $this->respond(['success' => false, 'error' => 'Client ID e Client Secret são obrigatórios.'], 422);
+            $this->respond(['success' => false, 'error' => 'Client ID e Client Secret são obrigatórios.'], 200);
             return;
         }
 
@@ -1253,7 +1301,7 @@ class AdminController
             header('Location: ' . $authUrl);
             exit;
         } catch (\Throwable $e) {
-            $this->respond(['success' => false, 'error' => 'Erro ao iniciar autorização Bling: ' . $e->getMessage()], 400);
+            $this->respond(['success' => false, 'error' => 'Erro ao iniciar autorização Bling: ' . $e->getMessage()], 200);
         }
     }
 
@@ -1320,7 +1368,7 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error'   => 'Erro na sincronização com Bling: ' . $e->getMessage(),
-            ], 500);
+            ], 200);
         }
     }
 
@@ -1329,17 +1377,29 @@ class AdminController
      */
     private function respond(array $data, int $status = 200): void
     {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
         $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
             || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
             || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'))
-            || !empty($_SERVER['HTTP_X_CSRF_TOKEN']);
+            || !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+            || str_contains($uri, '/salvar')
+            || str_contains($uri, '/toggle')
+            || str_contains($uri, '/excluir')
+            || str_contains($uri, '/duplicar')
+            || str_contains($uri, '/upload-bg')
+            || str_contains($uri, '/remover-bg')
+            || str_contains($uri, '/sync')
+            || str_contains($uri, '/config');
 
         if ($isJson) {
+            while (ob_get_level() > 0) {
+                @ob_end_clean();
+            }
             header('Content-Type: application/json; charset=UTF-8');
-            // Hostinger LiteSpeed Web Server intercepta status 500 ou códigos de erro HTTP e exibe
+            // Hostinger LiteSpeed Web Server intercepta status >= 400 e exibe
             // "Configuração do servidor incompleta. Por favor, contate o administrador."
-            // Para respostas JSON/AJAX, retornamos status 200 com payload {success: false, error: ...}
-            http_response_code($status >= 400 ? 200 : $status);
+            // Para respostas JSON/AJAX, retornamos sempre HTTP 200 com payload {success: false, error: ...}
+            http_response_code(200);
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
             exit;
         }

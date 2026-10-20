@@ -2062,7 +2062,21 @@ async function uploadHeroEditorBg(input) {
                 'Accept': 'application/json'
             }
         });
-        const data = await res.json();
+        const raw = await res.text();
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (jsonErr) {
+            console.error('Resposta não-JSON do upload:', raw);
+            alert('Não foi possível processar o upload da imagem. Recarregue a página.');
+            return;
+        }
+
+        if (data.auth_required) {
+            alert('Sua sessão expirou. Por favor, faça login novamente para enviar imagens.');
+            return;
+        }
+
         if (data.success && data.url) {
             document.getElementById('hero_bg_image').value = data.url;
             alert(data.message || 'Imagem de fundo do Hero enviada com sucesso!');
@@ -2095,7 +2109,21 @@ async function uploadEditorialImage(input, targetId) {
                 'Accept': 'application/json'
             }
         });
-        const data = await res.json();
+        const raw = await res.text();
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (jsonErr) {
+            console.error('Resposta não-JSON do upload:', raw);
+            alert('Não foi possível processar o upload da imagem. Recarregue a página.');
+            return;
+        }
+
+        if (data.auth_required) {
+            alert('Sua sessão expirou. Por favor, faça login novamente para enviar imagens.');
+            return;
+        }
+
         if (data.success && data.url) {
             const targetEl = document.getElementById(targetId);
             if (targetEl) targetEl.value = data.url;
@@ -2340,7 +2368,21 @@ async function uploadSlideImage(input, idx) {
                 'Accept': 'application/json'
             }
         });
-        const data = await res.json();
+        const raw = await res.text();
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (jsonErr) {
+            console.error('Resposta não-JSON do upload:', raw);
+            alert('Não foi possível processar o upload do slide. Recarregue a página.');
+            return;
+        }
+
+        if (data.auth_required) {
+            alert('Sua sessão expirou. Por favor, faça login novamente para enviar imagens.');
+            return;
+        }
+
         if (data.success && data.url) {
             updateCarouselSlide(idx, 'image_url', data.url);
             renderCarouselSlides();
