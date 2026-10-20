@@ -103,7 +103,7 @@ class AuthController
             $errorMsg = 'E-mail ou senha incorretos. Verifique suas credenciais.';
             if ($isJson) {
                 header('Content-Type: application/json; charset=UTF-8');
-                http_response_code(401);
+                http_response_code(200);
                 echo json_encode(['success' => false, 'error' => $errorMsg]);
                 return;
             }
