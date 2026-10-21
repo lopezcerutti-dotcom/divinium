@@ -1574,7 +1574,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <!-- Coluna Imagem Editorial -->
                             <div style="position: relative; border-radius: 8px; overflow: hidden; height: 280px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
                                 <img src="<?= View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/about/banner-caminhos.png'">
-                                <div id="aboutPreviewCaption" style="position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.65rem; text-align: center; letter-spacing: 0.1em; font-weight: 600; background: <?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>;">
+                                <div id="aboutPreviewCaption" style="position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.65rem; text-align: center; letter-spacing: 0.1em; font-weight: 600; background: <?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>; <?= Setting::get('about_editorial_caption_visible', '1') !== '1' ? 'display: none;' : '' ?>">
                                     <?= View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>
                                 </div>
                             </div>
@@ -1689,11 +1689,15 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </div>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="about_editorial_caption">Legenda da Foto Editorial</label>
+                <div class="form-group full-width <?= Setting::get('about_editorial_caption_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="about_editorial_caption">Legenda da Foto Editorial</label>
+                        <?= $renderToggle('about_editorial_caption_visible') ?>
+                    </div>
                     <input type="text" id="about_editorial_caption" name="about_editorial_caption" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>"
                            oninput="updateAboutLivePreview()">
+                    <span class="field-hint">Legenda translúcida com destaque mineral exibida sobre a foto editorial.</span>
                 </div>
 
                 <!-- Pilares Conceituais -->
@@ -3453,11 +3457,14 @@ function updateAboutLivePreview() {
         previewCardDesc.style.color = text;
     }
 
+    const isCaptionActive = document.querySelector('input[name="about_editorial_caption_visible"][type="checkbox"]')?.checked ?? true;
+
     const previewCaption = document.getElementById('aboutPreviewCaption');
     if (previewCaption) {
         previewCaption.textContent = getVal('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR');
         previewCaption.style.backgroundColor = captionBg;
         previewCaption.style.color = accent;
+        previewCaption.style.display = isCaptionActive ? '' : 'none';
     }
 }
 

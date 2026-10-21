@@ -288,9 +288,11 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
                      class="editorial-img" 
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/about/banner-caminhos.png';">
+                <?php if (Setting::get('about_editorial_caption_visible', '1') === '1'): ?>
                 <div class="editorial-caption" style="background: var(--about-caption-bg); color: var(--about-accent);">
                     <span><?= \App\Core\View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?></span>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
 
