@@ -194,6 +194,21 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <div class="form-grid">
+                <!-- ATALHO PARA CORES & FUNDO -->
+                <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <strong style="color: #caa15c; font-size: 0.92rem; display: block; margin-bottom: 4px;">🎨 Personalizar Cores & Fundo de Todas as Páginas</strong>
+                            <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0; line-height: 1.4;">
+                                Edite as cores da marca (fundo dark noir, superfícies de cards, ouro nobre, textos) ou aplique imagens e texturas de fundo em todas as páginas do site.
+                            </p>
+                        </div>
+                        <a href="/admin/temas" class="btn-admin-gold" style="font-size: 0.8rem; padding: 8px 14px; text-decoration: none;">
+                            <span>Abrir Cores, Fundo & Temas ↗</span>
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Modo do Logotipo -->
                 <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 10px; border: 1px solid rgba(212,186,136,0.2);">
                     <label style="font-size: 0.9rem; color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 8px;">
