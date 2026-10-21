@@ -150,7 +150,10 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                 <?php endif; ?>
                 
                 <?php if (!empty($categories)): ?>
-                    <?php foreach ($categories as $cat): ?>
+                    <?php foreach ($categories as $cat): 
+                        $slug = strtolower($cat['slug'] ?? '');
+                        if (Setting::get('store_filter_' . $slug . '_visible', '1') !== '1') continue;
+                    ?>
                         <button class="store-filter-pill" data-filter="cat-<?= $cat['id'] ?>" onclick="filterStore('cat-<?= $cat['id'] ?>', this)">
                             <span><?= View::e($cat['name']) ?></span>
                         </button>
