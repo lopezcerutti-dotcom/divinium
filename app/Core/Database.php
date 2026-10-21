@@ -489,6 +489,10 @@ class Database
                         ]);
                     }
                 }
+            } catch (\Throwable $linkEx) {
+                // Silencioso se tabela ainda não estiver populada
+            }
+
             // 7. Higienização e Correção do Catálogo de Produtos Divinium
             try {
                 $pdo->exec("UPDATE products SET name = REPLACE(name, 'ORGONOTE', 'ORGONITE'), description = REPLACE(description, 'orgonote', 'orgonite'), slug = REPLACE(slug, 'orgonote', 'orgonite') WHERE name LIKE '%ORGONOTE%' OR description LIKE '%orgonote%' OR slug LIKE '%orgonote%';");
