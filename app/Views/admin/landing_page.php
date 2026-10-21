@@ -1951,72 +1951,332 @@ $renderToggle = function(string $key, string $default = '1'): string {
         </div>
 
         <!-- ============================================================== -->
-        <!-- SEÇÃO 10: TEXTOS DA LOJA / VITRINE GERAL -->
+        <!-- SEÇÃO: BOTÕES, ESTILOS & CHAMADAS PARA AÇÃO (PILAR 8) -->
         <!-- ============================================================== -->
-        <div class="editor-section-card" id="sec-store">
+        <div class="editor-section-card" id="sec-buttons">
             <div class="section-card-header">
-                <div class="section-icon">🛍️</div>
+                <div class="section-icon">🔘</div>
                 <div>
-                    <h3>Textos da Loja / Vitrine Oficial (/loja)</h3>
-                    <p>Altere a headline da boutique, subtítulo, selos de garantia Shopee e pílulas de orientação.</p>
+                    <h3>Botões, Chamadas para Ação & Estilos de Interação</h3>
+                    <p>Configure individualmente o texto, destino, estilo e visibilidade de cada botão da Home, Boutique e Concierge.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <!-- Botões do Hero Principal -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 14px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        👑 Botões da Dobra Principal (Hero)
+                    </h4>
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="hero_primary_btn_text">Botão Primário: Texto</label>
+                        <?= $renderToggle('hero_primary_btn_visible') ?>
+                    </div>
+                    <input type="text" id="hero_primary_btn_text" name="hero_primary_btn_text" class="form-input"
+                           value="<?= View::e(Setting::get('hero_primary_btn_text', 'Conhecer a Coleção')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="hero_primary_btn_url">Botão Primário: Link de Destino</label>
+                    <input type="text" id="hero_primary_btn_url" name="hero_primary_btn_url" class="form-input"
+                           value="<?= View::e(Setting::get('hero_primary_btn_url', '/loja')) ?>"
+                           placeholder="/loja">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="hero_secondary_btn_text">Botão Secundário: Texto</label>
+                        <?= $renderToggle('hero_secondary_btn_visible') ?>
+                    </div>
+                    <input type="text" id="hero_secondary_btn_text" name="hero_secondary_btn_text" class="form-input"
+                           value="<?= View::e(Setting::get('hero_secondary_btn_text', 'Falar com Concierge VIP')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="hero_secondary_btn_url">Botão Secundário: Link de Destino</label>
+                    <input type="text" id="hero_secondary_btn_url" name="hero_secondary_btn_url" class="form-input"
+                           value="<?= View::e(Setting::get('hero_secondary_btn_url', 'https://wa.me/5511999999999')) ?>"
+                           placeholder="https://wa.me/...">
+                </div>
+
+                <!-- Botão Flutuante de WhatsApp Concierge VIP -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 0; margin: 14px 0;">
+                    <div class="field-label-row">
+                        <h4 style="color: #25D366; margin: 0; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                            <span>💬</span> Botão Flutuante de WhatsApp VIP (Fixo em Todas as Páginas)
+                        </h4>
+                        <?= $renderToggle('whatsapp_floating_enabled') ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hero_whatsapp_number">Número do WhatsApp (com DDI e DDD)</label>
+                    <input type="text" id="hero_whatsapp_number" name="hero_whatsapp_number" class="form-input"
+                           value="<?= View::e(Setting::get('hero_whatsapp_number', '5511999999999')) ?>"
+                           placeholder="Ex: 5511999999999">
+                    <span class="field-hint">Apenas números. O link será gerado automaticamente.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp_floating_label">Rótulo Exibido no Botão Flutuante</label>
+                    <input type="text" id="whatsapp_floating_label" name="whatsapp_floating_label" class="form-input"
+                           value="<?= View::e(Setting::get('whatsapp_floating_label', 'Concierge VIP')) ?>"
+                           placeholder="Concierge VIP">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="whatsapp_floating_message">Mensagem Pré-preenchida ao Abrir o WhatsApp</label>
+                    <input type="text" id="whatsapp_floating_message" name="whatsapp_floating_message" class="form-input"
+                           value="<?= View::e(Setting::get('whatsapp_floating_message', 'Olá! Gostaria de um atendimento personalizado sobre as joias autorais Divinium.')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp_floating_position">Posicionamento na Tela</label>
+                    <select id="whatsapp_floating_position" name="whatsapp_floating_position" class="form-input">
+                        <option value="right" <?= Setting::get('whatsapp_floating_position', 'right') === 'right' ? 'selected' : '' ?>>Canto Inferior Direito (Padrão)</option>
+                        <option value="left" <?= Setting::get('whatsapp_floating_position') === 'left' ? 'selected' : '' ?>>Canto Inferior Esquerdo</option>
+                    </select>
+                </div>
+
+                <!-- Botões da Boutique e Estilos Globais -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 12px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🛍️ Botões dos Cards da Vitrine & Formas Globais
+                    </h4>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_card_btn_text">Texto do Botão nos Cards da Loja</label>
+                    <input type="text" id="store_card_btn_text" name="store_card_btn_text" class="form-input"
+                           value="<?= View::e(Setting::get('store_card_btn_text', 'Ver Detalhes')) ?>"
+                           placeholder="Ver Detalhes">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_card_btn_action">Ação Primária ao Clicar no Card</label>
+                    <select id="store_card_btn_action" name="store_card_btn_action" class="form-input">
+                        <option value="product_page" <?= Setting::get('store_card_btn_action', 'product_page') === 'product_page' ? 'selected' : '' ?>>Abrir Página Individual da Joia (com variações)</option>
+                        <option value="direct_checkout" <?= Setting::get('store_card_btn_action') === 'direct_checkout' ? 'selected' : '' ?>>Ir Direto para o Checkout Seguro</option>
+                        <option value="whatsapp" <?= Setting::get('store_card_btn_action') === 'whatsapp' ? 'selected' : '' ?>>Iniciar Compra com Concierge no WhatsApp</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="theme_btn_border_radius">Arredondamento das Bordas dos Botões</label>
+                    <select id="theme_btn_border_radius" name="theme_btn_border_radius" class="form-input">
+                        <option value="0px" <?= Setting::get('theme_btn_border_radius') === '0px' ? 'selected' : '' ?>>0px — Reto Minimalista (Architectural Luxe)</option>
+                        <option value="4px" <?= Setting::get('theme_btn_border_radius', '4px') === '4px' ? 'selected' : '' ?>>4px — Sutilmente Arredondado (Padrão Joalheria)</option>
+                        <option value="8px" <?= Setting::get('theme_btn_border_radius') === '8px' ? 'selected' : '' ?>>8px — Moderado Contemporâneo</option>
+                        <option value="50px" <?= Setting::get('theme_btn_border_radius') === '50px' ? 'selected' : '' ?>>50px — Pílula Clássica Oval</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="theme_btn_text_transform">Estilo do Texto dos Botões</label>
+                    <select id="theme_btn_text_transform" name="theme_btn_text_transform" class="form-input">
+                        <option value="uppercase" <?= Setting::get('theme_btn_text_transform', 'uppercase') === 'uppercase' ? 'selected' : '' ?>>MAIÚSCULO COM RESPIRO (Quiet Luxury)</option>
+                        <option value="none" <?= Setting::get('theme_btn_text_transform') === 'none' ? 'selected' : '' ?>>Normal conforme digitado</option>
+                        <option value="capitalize" <?= Setting::get('theme_btn_text_transform') === 'capitalize' ? 'selected' : '' ?>>Primeira Letra De Cada Palavra</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: PÁGINAS INSTITUCIONAIS, CDC & POLÍTICAS (PILAR 9) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-institutional">
+            <div class="section-card-header">
+                <div class="section-icon">🏛️</div>
+                <div>
+                    <h3>Páginas Institucionais, Políticas & Informações Comerciais</h3>
+                    <p>Edite os textos legais em conformidade com o CDC e LGPD, dados empresariais e o conteúdo completo de cada página institucional.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <!-- Informações Oficiais da Empresa -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        📋 Dados Jurídicos & Comerciais (Exibidos no Rodapé e Faturas)
+                    </h4>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="footer_legal_info">Razão Social & CNPJ</label>
+                    <input type="text" id="footer_legal_info" name="footer_legal_info" class="form-input"
+                           value="<?= View::e(Setting::get('footer_legal_info', 'DIVINIUM JOIAS LTDA. • CNPJ: 00.000.000/0001-00 • São Paulo/SP - Brasil')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="footer_consumer_rights">Texto de Conformidade com o CDC (Decreto 7.962/2013)</label>
+                    <textarea id="footer_consumer_rights" name="footer_consumer_rights" class="form-textarea" rows="2"><?= View::e(Setting::get('footer_consumer_rights', 'Conforme o Decreto nº 7.962/2013 e Lei 8.078/1990 (Código de Defesa do Consumidor). Direito de arrependimento em até 7 dias corridos após o recebimento.')) ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_email">E-mail Oficial de Atendimento</label>
+                    <input type="email" id="footer_email" name="footer_email" class="form-input"
+                           value="<?= View::e(Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_operating_hours">Horário de Funcionamento</label>
+                    <input type="text" id="footer_operating_hours" name="footer_operating_hours" class="form-input"
+                           value="<?= View::e(Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="footer_instagram">Link Oficial do Instagram</label>
+                    <input type="text" id="footer_instagram" name="footer_instagram" class="form-input"
+                           value="<?= View::e(Setting::get('footer_instagram', 'https://instagram.com/divinium')) ?>">
+                </div>
+
+                <!-- Selos de Meios de Pagamento -->
+                <div class="form-group">
+                    <label for="footer_pay_badge1">Selo de Pagamento 1</label>
+                    <input type="text" id="footer_pay_badge1" name="footer_pay_badge1" class="form-input"
+                           value="<?= View::e(Setting::get('footer_pay_badge1', 'PIX (Aprovação Imediata)')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_pay_badge2">Selo de Pagamento 2</label>
+                    <input type="text" id="footer_pay_badge2" name="footer_pay_badge2" class="form-input"
+                           value="<?= View::e(Setting::get('footer_pay_badge2', 'Cartão de Crédito em até 10x')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_pay_badge3">Selo de Pagamento 3</label>
+                    <input type="text" id="footer_pay_badge3" name="footer_pay_badge3" class="form-input"
+                           value="<?= View::e(Setting::get('footer_pay_badge3', 'Boleto Bancário')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_pay_badge4">Selo de Pagamento 4</label>
+                    <input type="text" id="footer_pay_badge4" name="footer_pay_badge4" class="form-input"
+                           value="<?= View::e(Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?>">
+                </div>
+
+                <!-- Editor de Páginas Dinâmicas -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        📄 Conteúdo das Páginas Institucionais Oficiais
+                    </h4>
+                    <span class="field-hint">Personalize o texto de cada página clicando nos botões para visualizar online.</span>
+                </div>
+
+                <!-- Página 1: Trocas e Devoluções -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #ffffff;">1. Trocas e Devoluções (CDC 7 Dias)</strong>
+                        <a href="/trocas-e-devolucoes" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    </div>
+                    <input type="text" name="page_trocas_title" class="form-input" style="margin-bottom: 8px;"
+                           value="<?= View::e(Setting::get('page_trocas_title', 'Política de Trocas e Devoluções')) ?>" placeholder="Título da Página">
+                    <textarea name="page_trocas_content" class="form-textarea" rows="4" placeholder="Conteúdo da página de trocas e devoluções..."><?= View::e(Setting::get('page_trocas_content', 'Na DIVINIUM, respeitamos integralmente o Código de Defesa do Consumidor (Lei nº 8.078/1990). Você possui até 7 (sete) dias corridos a partir da data de entrega para solicitar a troca ou devolução da sua joia sem qualquer custo adicional.')) ?></textarea>
+                </div>
+
+                <!-- Página 2: Garantia e Cuidados -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #ffffff;">2. Garantia e Cuidados com a Joia</strong>
+                        <a href="/garantia-e-cuidados" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    </div>
+                    <input type="text" name="page_garantia_title" class="form-input" style="margin-bottom: 8px;"
+                           value="<?= View::e(Setting::get('page_garantia_title', 'Certificado de Garantia & Cuidados')) ?>" placeholder="Título da Página">
+                    <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia Vitalícia quanto ao teor da Prata de Lei 925 e autenticidade das pedras e cristais nobres.')) ?></textarea>
+                </div>
+
+                <!-- Página 3: LGPD & Privacidade -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #ffffff;">3. Política de Privacidade (LGPD)</strong>
+                        <a href="/politica-de-privacidade" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    </div>
+                    <input type="text" name="page_privacidade_title" class="form-input" style="margin-bottom: 8px;"
+                           value="<?= View::e(Setting::get('page_privacidade_title', 'Política de Privacidade e Proteção de Dados')) ?>" placeholder="Título da Página">
+                    <textarea name="page_privacidade_content" class="form-textarea" rows="4" placeholder="Conteúdo da política de privacidade..."><?= View::e(Setting::get('page_privacidade_content', 'A sua privacidade é sagrada para a DIVINIUM. Em conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações VIP autorizadas.')) ?></textarea>
+                </div>
+
+                <!-- Página 4: Termos de Uso -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #ffffff;">4. Termos de Uso do Site</strong>
+                        <a href="/termos-de-uso" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    </div>
+                    <input type="text" name="page_termos_title" class="form-input" style="margin-bottom: 8px;"
+                           value="<?= View::e(Setting::get('page_termos_title', 'Termos de Uso')) ?>" placeholder="Título da Página">
+                    <textarea name="page_termos_content" class="form-textarea" rows="4" placeholder="Conteúdo dos termos de uso..."><?= View::e(Setting::get('page_termos_content', 'Ao navegar e efetuar compras no ambiente digital DIVINIUM, você concorda com nossos termos operacionais de compra, prazos de confecção e modalidades de entrega.')) ?></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: SEO, METADADOS & SCRIPTS DE RASTREAMENTO (PILAR 10) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-seo">
+            <div class="section-card-header">
+                <div class="section-icon">🌐</div>
+                <div>
+                    <h3>Metadados de SEO, Títulos de Páginas & Rastreamento</h3>
+                    <p>Otimize sua joalheria para o Google, configure tags Open Graph para WhatsApp e insira códigos do Pixel e Analytics.</p>
                 </div>
             </div>
 
             <div class="form-grid">
                 <div class="form-group full-width">
-                    <label for="store_hero_badge">Tag Superior da Loja</label>
-                    <input type="text" id="store_hero_badge" name="store_hero_badge" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_badge', 'VITRINE OFICIAL DIVINIUM • CHECKOUT GARANTIDO SHOPEE')) ?>"
-                           placeholder="VITRINE OFICIAL DIVINIUM • CHECKOUT GARANTIDO SHOPEE">
-                </div>
-
-                <div class="form-group">
-                    <label for="store_hero_title">Título Principal (Parte 1)</label>
-                    <input type="text" id="store_hero_title" name="store_hero_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_title', 'Joias Autorais &')) ?>"
-                           placeholder="Joias Autorais &">
-                </div>
-
-                <div class="form-group">
-                    <label for="store_hero_highlight">Título Principal (Destaque Dourado)</label>
-                    <input type="text" id="store_hero_highlight" name="store_hero_highlight" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_hero_highlight', 'Sintonia Mineral')) ?>"
-                           placeholder="Sintonia Mineral">
+                    <label for="seo_site_title_format">Padrão do Título da Página (&lt;title&gt;)</label>
+                    <input type="text" id="seo_site_title_format" name="seo_site_title_format" class="form-input"
+                           value="<?= View::e(Setting::get('seo_site_title_format', '{title} | Divinium')) ?>"
+                           placeholder="{title} | Divinium">
+                    <span class="field-hint">Use <code>{title}</code> para o título da página atual e <code>{brand}</code> para o nome da marca.</span>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="store_hero_subtitle">Subtítulo da Loja</label>
-                    <textarea id="store_hero_subtitle" name="store_hero_subtitle" class="form-textarea" rows="3"><?= \App\Core\View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento da nossa Loja Oficial na Shopee.')) ?></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="store_badge_1">Selo de Confiança 1 (Garantia)</label>
-                    <input type="text" id="store_badge_1" name="store_badge_1" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_1', 'Garantia Shopee • Compra 100% Protegida')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="store_badge_2">Selo de Confiança 2 (Certificado)</label>
-                    <input type="text" id="store_badge_2" name="store_badge_2" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="store_badge_3">Selo de Confiança 3 (Envio)</label>
-                    <input type="text" id="store_badge_3" name="store_badge_3" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_badge_3', 'Envio Rápido e Seguro para todo o Brasil')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="store_filter_all">Texto do Filtro "Todas as Peças"</label>
-                    <input type="text" id="store_filter_all" name="store_filter_all" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?>">
+                    <label for="seo_meta_description">Meta Descrição Global (Snippet do Google)</label>
+                    <textarea id="seo_meta_description" name="seo_meta_description" class="form-textarea" rows="3"><?= View::e(Setting::get('seo_meta_description', 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.')) ?></textarea>
+                    <span class="field-hint">Recomendado entre 140 e 160 caracteres para visualização perfeita nos resultados de busca do Google.</span>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="store_info_pill_text">Texto de Orientação da Vitrine</label>
-                    <input type="text" id="store_info_pill_text" name="store_info_pill_text" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('store_info_pill_text', 'Clique na peça para comprar na Shopee')) ?>">
+                    <label for="seo_meta_keywords">Palavras-chave (Keywords)</label>
+                    <input type="text" id="seo_meta_keywords" name="seo_meta_keywords" class="form-input"
+                           value="<?= View::e(Setting::get('seo_meta_keywords', 'joias autorais, prata 925, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre')) ?>"
+                           placeholder="joias autorais, prata 925, ...">
+                    <span class="field-hint">Termos separados por vírgula que descrevem o catálogo da marca.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="seo_og_image">Imagem de Compartilhamento Open Graph (WhatsApp / Redes Sociais)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="seo_og_image" name="seo_og_image" class="form-input"
+                               value="<?= View::e(Setting::get('seo_og_image', '/assets/images/hero/hero-main.webp')) ?>"
+                               placeholder="/assets/images/hero/hero-main.webp">
+                        <label class="btn-admin-gold" style="padding: 0 14px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.78rem;">
+                            <span>📁 Upload</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'seo_og_image', 'banners')">
+                        </label>
+                    </div>
+                    <span class="field-hint">A imagem que aparece automaticamente ao enviar o link do seu site pelo WhatsApp (tamanho ideal: 1200x630 px).</span>
+                </div>
+
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        📊 Scripts de Rastreamento & Marketing Digital
+                    </h4>
+                    <span class="field-hint">Códigos fornecidos pelo Google, Meta, TikTok ou ferramentas de atendimento para mensuração de tráfego.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="custom_head_scripts">Códigos no &lt;head&gt; (Google Analytics, Meta Pixel, Tag Manager)</label>
+                    <textarea id="custom_head_scripts" name="custom_head_scripts" class="form-textarea" rows="4" style="font-family: monospace; font-size: 0.8rem;" placeholder="<!-- Cole aqui seus scripts do <head> -->"><?= View::e(Setting::get('custom_head_scripts', '')) ?></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="custom_body_scripts">Códigos no final do &lt;body&gt; (Chatbots, Hotjar, Tags extras)</label>
+                    <textarea id="custom_body_scripts" name="custom_body_scripts" class="form-textarea" rows="4" style="font-family: monospace; font-size: 0.8rem;" placeholder="<!-- Cole aqui scripts do <body> -->"><?= View::e(Setting::get('custom_body_scripts', '')) ?></textarea>
                 </div>
             </div>
         </div>
