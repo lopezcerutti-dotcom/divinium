@@ -1173,7 +1173,15 @@ class AdminController
             }
 
             $targetKey = trim((string) ($_POST['target_key'] ?? 'site_bg_image'));
-            $allowedKeys = ['site_bg_image', 'hero_bg_image', 'admin_bg_image'];
+            $allowedKeys = [
+                'site_bg_image',
+                'hero_bg_image',
+                'store_bg_image',
+                'product_bg_image',
+                'checkout_bg_image',
+                'institutional_bg_image',
+                'admin_bg_image'
+            ];
             if (!in_array($targetKey, $allowedKeys, true)) {
                 $targetKey = 'site_bg_image';
             }
@@ -1212,7 +1220,15 @@ class AdminController
     {
         try {
             $targetKey = trim((string) ($_POST['target_key'] ?? 'site_bg_image'));
-            $allowedKeys = ['site_bg_image', 'hero_bg_image', 'admin_bg_image'];
+            $allowedKeys = [
+                'site_bg_image',
+                'hero_bg_image',
+                'store_bg_image',
+                'product_bg_image',
+                'checkout_bg_image',
+                'institutional_bg_image',
+                'admin_bg_image'
+            ];
             if (!in_array($targetKey, $allowedKeys, true)) {
                 $targetKey = 'site_bg_image';
             }
