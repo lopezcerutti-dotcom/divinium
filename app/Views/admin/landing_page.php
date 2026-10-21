@@ -44,11 +44,17 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
     <!-- NAVEGAÇÃO ENTRE SEÇÕES (TABS VISUAIS) -->
     <div class="editor-nav-tabs">
-        <button type="button" class="tab-btn active" onclick="switchSection('sec-banner', this)">
+        <button type="button" class="tab-btn active" onclick="switchSection('sec-sections-order', this)">
+            <span>🔀 Ordem da Home</span>
+        </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-identity', this)">
+            <span>💎 Identidade & Logo</span>
+        </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-banner', this)">
             <span>📢 Top Banner</span>
         </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-header-cart', this)">
-            <span>🧭 Topo & Sacola</span>
+            <span>🧭 Topo & Menu</span>
         </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-mobile-menu', this)">
             <span>📱 Menu Mobile</span>
@@ -71,8 +77,17 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchSection('sec-testimonials', this)">
             <span>💬 Depoimentos</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-buttons', this)">
+            <span>🔘 Botões & Estilos</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-store', this)">
             <span>🛍️ Textos da Loja</span>
+        </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-institutional', this)">
+            <span>🏛️ Institucional & CDC</span>
+        </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-seo', this)">
+            <span>🌐 SEO & Metatags</span>
         </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-footer', this)">
             <span>📞 Rodapé & LGPD</span>
@@ -84,9 +99,218 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
 
         <!-- ============================================================== -->
+        <!-- SEÇÃO: ORDEM E VISIBILIDADE DAS SEÇÕES DA HOME (PILAR 6) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card active" id="sec-sections-order">
+            <div class="section-card-header">
+                <div class="section-icon">🔀</div>
+                <div>
+                    <h3>Ordem & Visibilidade das Seções da Página Inicial</h3>
+                    <p>Defina a sequência hierárquica e ative ou oculte individualmente qualquer uma das 6 seções da Home.</p>
+                </div>
+            </div>
+
+            <?php
+                $currentOrderStr = Setting::get('home_sections_order', 'hero,stage,about,services,heritage,testimonials');
+                $sectionsList = [
+                    'hero' => ['name' => 'Abertura / Hero Principal', 'desc' => 'Dobra inicial com chamada nobre, foto editorial e botões de ação', 'tab' => 'sec-hero', 'icon' => '👑'],
+                    'stage' => ['name' => 'Carrossel de Destaques', 'desc' => 'Vitrine de fotos deslizantes da joalheria autoral em alta resolução', 'tab' => 'sec-stage', 'icon' => '🎠'],
+                    'about' => ['name' => 'Manifesto & Sobre a Marca', 'desc' => 'Narrativa conceitual de design, resina nobre e ouro', 'tab' => 'sec-about', 'icon' => '📜'],
+                    'services' => ['name' => 'Serviços, Garantia & Autoria', 'desc' => 'Grade com 3 selos de garantia vitalícia, ouro nobre e entrega blindada', 'tab' => 'sec-services', 'icon' => '🛡️'],
+                    'heritage' => ['name' => 'Peça Única & Tradição', 'desc' => 'Destaque especial da joia autoral com selo de exclusividade', 'tab' => 'sec-heritage', 'icon' => '💎'],
+                    'testimonials' => ['name' => 'Depoimentos & Experiência VIP', 'desc' => 'Avaliações de colecionadores e prova social de clientes', 'tab' => 'sec-testimonials', 'icon' => '💬']
+                ];
+                $orderKeys = array_filter(array_map('trim', explode(',', $currentOrderStr)));
+                foreach (array_keys($sectionsList) as $k) {
+                    if (!in_array($k, $orderKeys)) $orderKeys[] = $k;
+                }
+            ?>
+
+            <input type="hidden" id="home_sections_order" name="home_sections_order" value="<?= View::e($currentOrderStr) ?>">
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(212,186,136,0.2); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <span style="font-size: 0.85rem; color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        ✦ Sequência Atual da Página Inicial:
+                    </span>
+                    <button type="button" class="btn-admin-secondary" style="font-size: 0.76rem; padding: 6px 12px;" onclick="resetSectionsOrder()">
+                        Restaurar Ordem Padrão
+                    </button>
+                </div>
+
+                <div id="sectionsOrderContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                    <?php foreach ($orderKeys as $idx => $secKey): 
+                        if (!isset($sectionsList[$secKey])) continue;
+                        $secInfo = $sectionsList[$secKey];
+                        $visKey = 'home_' . $secKey . '_visible';
+                        $isSecVisible = Setting::get($visKey, '1') === '1';
+                    ?>
+                    <div class="section-order-row" data-section-key="<?= $secKey ?>" style="display: flex; align-items: center; justify-content: space-between; background: #161513; border: 1px solid <?= $isSecVisible ? 'rgba(212,186,136,0.3)' : 'rgba(255,255,255,0.06)' ?>; border-radius: 10px; padding: 14px 18px; gap: 14px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <span class="order-badge" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(212,186,136,0.15); color: #d4ba88; border: 1px solid #d4ba88; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                                <?= $idx + 1 ?>
+                            </span>
+                            <span style="font-size: 1.3rem;"><?= $secInfo['icon'] ?></span>
+                            <div>
+                                <strong style="color: #ffffff; font-size: 0.95rem; display: block;"><?= $secInfo['name'] ?></strong>
+                                <span style="color: #8e8880; font-size: 0.78rem;"><?= $secInfo['desc'] ?></span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <button type="button" class="btn-slide-order" onclick="moveSectionOrder('<?= $secKey ?>', -1)" title="Mover seção para cima">▲</button>
+                            <button type="button" class="btn-slide-order" onclick="moveSectionOrder('<?= $secKey ?>', 1)" title="Mover seção para baixo">▼</button>
+
+                            <button type="button" class="btn-admin-secondary" style="font-size: 0.75rem; padding: 6px 10px;" onclick="switchSection('<?= $secInfo['tab'] ?>', document.querySelector('.editor-nav-tabs button[onclick*=\'<?= $secInfo['tab'] ?>\']'))">
+                                ✎ Editar Textos
+                            </button>
+
+                            <div style="margin-left: 8px;">
+                                <?= $renderToggle($visKey) ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: IDENTIDADE VISUAL & LOGOTIPO (PILAR 1) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-identity">
+            <div class="section-card-header">
+                <div class="section-icon">💎</div>
+                <div>
+                    <h3>Identidade Visual, Logotipo & Favicon</h3>
+                    <p>Controle completo sobre o logotipo (em tipografia de alta joalheria ou imagem gráfica transparente), favicon e monograma autoral.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <!-- Modo do Logotipo -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 10px; border: 1px solid rgba(212,186,136,0.2);">
+                    <label style="font-size: 0.9rem; color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 8px;">
+                        Formato do Logotipo no Cabeçalho
+                    </label>
+                    <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #ffffff; font-size: 0.88rem;">
+                            <input type="radio" name="site_logo_type" value="text" <?= Setting::get('site_logo_type', 'text') === 'text' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #d4ba88; width: 18px; height: 18px;">
+                            <span>Tipografia Editorial Nobre (Texto Puro estilizado)</span>
+                        </label>
+                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #ffffff; font-size: 0.88rem;">
+                            <input type="radio" name="site_logo_type" value="image" <?= Setting::get('site_logo_type') === 'image' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #d4ba88; width: 18px; height: 18px;">
+                            <span>Imagem / Arquivo Gráfico (PNG transparente, SVG ou WebP)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Campos de Texto do Logo -->
+                <div class="form-group" id="logoTextGroup1">
+                    <label for="id_header_logo_text">Nome Principal da Marca (Texto)</label>
+                    <input type="text" id="id_header_logo_text" name="header_logo_text" class="form-input"
+                           value="<?= View::e(Setting::get('header_logo_text', 'DIVINIUM')) ?>"
+                           placeholder="DIVINIUM">
+                    <span class="field-hint">Exibido com tracking expandido e fonte serifada imperial.</span>
+                </div>
+
+                <div class="form-group" id="logoTextGroup2">
+                    <label for="id_header_logo_sub">Subtítulo / Selo da Marca</label>
+                    <input type="text" id="id_header_logo_sub" name="header_logo_sub" class="form-input"
+                           value="<?= View::e(Setting::get('header_logo_sub', 'HAUTE JOAILLERIE')) ?>"
+                           placeholder="HAUTE JOAILLERIE">
+                    <span class="field-hint">Ex: HAUTE JOAILLERIE, JOALHERIA AUTORAL ou JOIAS DE LUXO.</span>
+                </div>
+
+                <!-- Campos de Imagem do Logo -->
+                <div class="form-group full-width" id="logoImageGroup" style="<?= Setting::get('site_logo_type', 'text') === 'text' ? 'display: none;' : '' ?>">
+                    <div style="background: rgba(0,0,0,0.3); border: 1px dashed rgba(212,186,136,0.3); border-radius: 10px; padding: 20px;">
+                        <h4 style="color: #fff; margin: 0 0 10px; font-size: 0.95rem;">Arquivo do Logotipo Gráfico</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                            <div>
+                                <label style="font-size: 0.8rem; color: #ded7cf;">Logotipo para Fundo Escuro (Dourado / Branco):</label>
+                                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                                    <input type="text" id="site_logo_image_dark" name="site_logo_image_dark" class="form-input"
+                                           value="<?= View::e(Setting::get('site_logo_image_dark', '')) ?>"
+                                           placeholder="/assets/images/logos/logo-gold.svg">
+                                    <label class="btn-admin-gold" style="padding: 0 14px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.78rem;">
+                                        <span>📁 Upload</span>
+                                        <input type="file" accept="image/*,.svg" style="display: none;" onchange="uploadMediaFile(this, 'site_logo_image_dark', 'logos')">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style="font-size: 0.8rem; color: #ded7cf;">Logotipo Alternativo (Fundo Claro / Faturas):</label>
+                                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                                    <input type="text" id="site_logo_image_light" name="site_logo_image_light" class="form-input"
+                                           value="<?= View::e(Setting::get('site_logo_image_light', '')) ?>"
+                                           placeholder="/assets/images/logos/logo-dark.svg">
+                                    <label class="btn-admin-secondary" style="padding: 0 14px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.78rem;">
+                                        <span>📁 Upload</span>
+                                        <input type="file" accept="image/*,.svg" style="display: none;" onchange="uploadMediaFile(this, 'site_logo_image_light', 'logos')">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 14px;">
+                            <div>
+                                <label for="site_logo_height" style="font-size: 0.8rem; color: #ded7cf;">Altura da Imagem do Logo:</label>
+                                <select id="site_logo_height" name="site_logo_height" class="form-input" style="margin-top: 6px;">
+                                    <option value="32px" <?= Setting::get('site_logo_height') === '32px' ? 'selected' : '' ?>>32px — Minimalista Discreto</option>
+                                    <option value="38px" <?= Setting::get('site_logo_height', '38px') === '38px' ? 'selected' : '' ?>>38px — Padrão Equilibrado</option>
+                                    <option value="46px" <?= Setting::get('site_logo_height') === '46px' ? 'selected' : '' ?>>46px — Destaque Nobre</option>
+                                    <option value="54px" <?= Setting::get('site_logo_height') === '54px' ? 'selected' : '' ?>>54px — Grande Impacto</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="site_logo_alignment" style="font-size: 0.8rem; color: #ded7cf;">Alinhamento no Cabeçalho Desktop:</label>
+                                <select id="site_logo_alignment" name="site_logo_alignment" class="form-input" style="margin-top: 6px;">
+                                    <option value="center" <?= Setting::get('site_logo_alignment', 'center') === 'center' ? 'selected' : '' ?>>Centralizado (Design Simétrico de Alta Joalheria)</option>
+                                    <option value="left" <?= Setting::get('site_logo_alignment') === 'left' ? 'selected' : '' ?>>À Esquerda (Layout E-Commerce Convencional)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Favicon & Monograma -->
+                <div class="form-group">
+                    <label for="site_favicon_url">Ícone de Navegação (Favicon da Aba do Navegador)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="site_favicon_url" name="site_favicon_url" class="form-input"
+                               value="<?= View::e(Setting::get('site_favicon_url', '/assets/images/favicon.ico')) ?>"
+                               placeholder="/assets/images/favicon.ico">
+                        <label class="btn-admin-gold" style="padding: 0 14px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.78rem;">
+                            <span>📁 Upload</span>
+                            <input type="file" accept="image/*,.ico" style="display: none;" onchange="uploadMediaFile(this, 'site_favicon_url', 'favicons')">
+                        </label>
+                    </div>
+                    <span class="field-hint">Exibido na aba do navegador e nos favoritos (.ico, .png 32x32 ou .svg).</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="site_monogram_url">Monograma / Selo Diamantino da Marca</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="site_monogram_url" name="site_monogram_url" class="form-input"
+                               value="<?= View::e(Setting::get('site_monogram_url', '/assets/images/brand/monogram.svg')) ?>"
+                               placeholder="/assets/images/brand/monogram.svg">
+                        <label class="btn-admin-gold" style="padding: 0 14px; cursor: pointer; display: flex; align-items: center; white-space: nowrap; font-size: 0.78rem;">
+                            <span>📁 Upload</span>
+                            <input type="file" accept="image/*,.svg" style="display: none;" onchange="uploadMediaFile(this, 'site_monogram_url', 'logos')">
+                        </label>
+                    </div>
+                    <span class="field-hint">Símbolo gráfico utilizado em certificados de garantia e fundos de embalagens.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
         <!-- SEÇÃO 1: BARRA DE ANÚNCIOS SUPERIOR (TOP BANNER) -->
         <!-- ============================================================== -->
-        <div class="editor-section-card active" id="sec-banner">
+        <div class="editor-section-card" id="sec-banner">
             <div class="section-card-header">
                 <div class="section-icon">📢</div>
                 <div>
