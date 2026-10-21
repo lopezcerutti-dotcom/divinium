@@ -89,6 +89,59 @@
         <?php endif; ?>
     </style>
     <?php endif; ?>
+
+    <!-- Design System Dinâmico (Pilar 5: Cores, Tipografia, Tamanhos, Espaçamentos e Alinhamentos) -->
+    <?php
+        $dynSerif = \App\Models\Setting::get('custom_font_serif');
+        $dynSans = \App\Models\Setting::get('custom_font_sans');
+        $dynPrimary = \App\Models\Setting::get('custom_color_primary');
+        $dynAccent = \App\Models\Setting::get('custom_color_accent');
+        $dynBtnRadius = \App\Models\Setting::get('theme_btn_border_radius', \App\Models\Setting::get('custom_border_radius', ''));
+        $dynBtnTransform = \App\Models\Setting::get('theme_btn_text_transform', '');
+        $dynHeroSize = \App\Models\Setting::get('hero_title_size', '');
+        $dynBodySize = \App\Models\Setting::get('body_font_size', '');
+        $dynSpacingY = \App\Models\Setting::get('section_spacing_y', '');
+        $dynAlign = \App\Models\Setting::get('editorial_text_alignment', '');
+    ?>
+    <style id="divinium-design-tokens">
+        :root {
+            <?php if (!empty($dynSerif)): ?>--font-serif: <?= $dynSerif ?> !important;<?php endif; ?>
+            <?php if (!empty($dynSans)): ?>--font-sans: <?= $dynSans ?> !important;<?php endif; ?>
+            <?php if (!empty($dynPrimary)): ?>--gold-accent: <?= $dynPrimary ?> !important;<?php endif; ?>
+            <?php if (!empty($dynAccent)): ?>--gold-hover: <?= $dynAccent ?> !important;<?php endif; ?>
+        }
+        <?php if (!empty($dynBtnRadius)): ?>
+        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
+            border-radius: <?= $dynBtnRadius ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($dynBtnTransform)): ?>
+        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
+            text-transform: <?= $dynBtnTransform ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($dynHeroSize)): ?>
+        .hero-content h1, .hero-title-main {
+            font-size: <?= $dynHeroSize ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($dynBodySize)): ?>
+        body, p, .editorial-desc {
+            font-size: <?= $dynBodySize ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($dynSpacingY)): ?>
+        .about-manifesto-section, .services-section, .heritage-section, .testimonials-section {
+            padding-top: <?= $dynSpacingY ?> !important;
+            padding-bottom: <?= $dynSpacingY ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($dynAlign)): ?>
+        .manifesto-header, .section-header-editorial, .editorial-text-wrap {
+            text-align: <?= $dynAlign ?> !important;
+        }
+        <?php endif; ?>
+    </style>
 </head>
 <body class="luxury-theme">
     <?= \App\Models\Setting::get('custom_body_scripts', '') ?>
