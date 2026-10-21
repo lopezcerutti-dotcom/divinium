@@ -88,7 +88,7 @@
                 <div class="nav-section-label">DESIGN & IDENTIDADE</div>
                 <a href="/admin/temas" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/temas') ? 'active' : '' ?>">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10"></path></svg>
-                    <span>Gestão de Temas</span>
+                    <span>Cores, Fundo & Temas</span>
                 </a>
 
                 <a href="/admin/landing-page" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/landing-page') && !str_contains($_SERVER['REQUEST_URI'] ?? '', 'sec-mobile-menu') ? 'active' : '' ?>">
