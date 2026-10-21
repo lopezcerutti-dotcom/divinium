@@ -40,14 +40,25 @@ ob_start();
 
             <!-- Grupo de Ações Principais (Botões de Alta Conversão) -->
             <div class="hero-cta-group">
-                <a href="<?= \App\Core\View::e(Setting::get('hero_cta_primary_link', '/loja')) ?>" class="btn-hero-gold">
-                    <span><?= \App\Core\View::e(Setting::get('hero_cta_primary_text', 'Explorar Coleção Completa')) ?></span>
+                <?php if (Setting::get('hero_primary_btn_visible', '1') === '1'): ?>
+                <a href="<?= \App\Core\View::e(Setting::get('hero_primary_btn_url', Setting::get('hero_cta_primary_link', '/loja'))) ?>" class="btn-hero-gold hero-btn-primary">
+                    <span><?= \App\Core\View::e(Setting::get('hero_primary_btn_text', Setting::get('hero_cta_primary_text', 'Explorar Coleção Completa'))) ?></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
-                <a href="https://wa.me/<?= \App\Core\View::e(Setting::get('hero_whatsapp_number', '5511999999999')) ?>?text=Ol%C3%A1,%20gostaria%20de%20um%20atendimento%20personalizado%20sobre%20as%20joias%20Divinium" target="_blank" rel="noopener" class="btn-hero-ghost">
+                <?php endif; ?>
+
+                <?php if (Setting::get('hero_secondary_btn_visible', '1') === '1'): 
+                    $secBtnUrl = Setting::get('hero_secondary_btn_url');
+                    if (empty($secBtnUrl)) {
+                        $waNum = preg_replace('/[^0-9]/', '', Setting::get('hero_whatsapp_number', '5511999999999'));
+                        $secBtnUrl = "https://wa.me/{$waNum}?text=" . urlencode(Setting::get('whatsapp_floating_message', 'Olá! Gostaria de um atendimento personalizado sobre as joias autorais Divinium.'));
+                    }
+                ?>
+                <a href="<?= \App\Core\View::e($secBtnUrl) ?>" target="_blank" rel="noopener" class="btn-hero-ghost hero-btn-secondary">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                    <span><?= \App\Core\View::e(Setting::get('hero_cta_whatsapp_text', 'Concierge WhatsApp')) ?></span>
+                    <span><?= \App\Core\View::e(Setting::get('hero_secondary_btn_text', Setting::get('hero_cta_whatsapp_text', 'Concierge WhatsApp'))) ?></span>
                 </a>
+                <?php endif; ?>
             </div>
 
             <!-- Selos de Confiança e Exclusividade -->
