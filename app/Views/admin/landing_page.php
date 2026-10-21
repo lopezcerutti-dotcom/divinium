@@ -2758,6 +2758,123 @@ async function uploadEditorialImage(input, targetId) {
 }
 
 // ==============================================================================
+// GESTÃO DE IDENTIDADE VISUAL & UPLOAD GENÉRICO DE MÍDIA
+// ==============================================================================
+function toggleLogoFields() {
+    const isImage = document.querySelector('input[name="site_logo_type"]:checked')?.value === 'image';
+    const imgGroup = document.getElementById('logoImageGroup');
+    const textGroup1 = document.getElementById('logoTextGroup1');
+    const textGroup2 = document.getElementById('logoTextGroup2');
+    if (imgGroup) imgGroup.style.display = isImage ? 'block' : 'none';
+    if (textGroup1) textGroup1.style.opacity = isImage ? '0.7' : '1';
+    if (textGroup2) textGroup2.style.opacity = isImage ? '0.7' : '1';
+}
+
+async function uploadMediaFile(input, targetInputId, mediaType, previewImgId) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('media_file', file);
+    formData.append('media_type', mediaType || 'general');
+    formData.append('target_setting_key', targetInputId || '');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    if (csrfToken) formData.append('_csrf_token', csrfToken);
+
+    try {
+        const res = await fetch('/admin/media/upload', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        const raw = await res.text();
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (e) {
+            alert('Resposta inesperada do servidor ao enviar mídia. Recarregue a página.');
+            return;
+        }
+
+        if (data.success && data.url) {
+            const inputEl = document.getElementById(targetInputId);
+            if (inputEl) inputEl.value = data.url;
+            if (previewImgId) {
+                const imgEl = document.getElementById(previewImgId);
+                if (imgEl) imgEl.src = data.url;
+            }
+            alert('Arquivo enviado e aplicado com sucesso! Clique em Salvar para publicar as alterações.');
+        } else {
+            alert(data.error || 'Erro no upload do arquivo.');
+        }
+    } catch (err) {
+        alert('Erro ao enviar arquivo: ' + err.message);
+    }
+}
+
+// ==============================================================================
+// REORDENAÇÃO DINÂMICA DAS SEÇÕES DA HOME
+// ==============================================================================
+function moveSectionOrder(secKey, direction) {
+    const container = document.getElementById('sectionsOrderContainer');
+    if (!container) return;
+    const rows = Array.from(container.querySelectorAll('.section-order-row'));
+    const index = rows.findIndex(r => r.getAttribute('data-section-key') === secKey);
+    if (index === -1) return;
+
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= rows.length) return;
+
+    if (direction < 0) {
+        container.insertBefore(rows[index], rows[newIndex]);
+    } else {
+        container.insertBefore(rows[index], rows[newIndex].nextSibling);
+    }
+
+    rebuildSectionsOrder();
+}
+
+function rebuildSectionsOrder() {
+    const container = document.getElementById('sectionsOrderContainer');
+    if (!container) return;
+    const rows = Array.from(container.querySelectorAll('.section-order-row'));
+    const keys = [];
+
+    rows.forEach((row, idx) => {
+        const key = row.getAttribute('data-section-key');
+        if (key) keys.push(key);
+        const badge = row.querySelector('.order-badge');
+        if (badge) badge.textContent = (idx + 1);
+    });
+
+    const hiddenInput = document.getElementById('home_sections_order');
+    if (hiddenInput) {
+        hiddenInput.value = keys.join(',');
+    }
+}
+
+function resetSectionsOrder() {
+    const defaultOrder = ['hero', 'stage', 'about', 'services', 'heritage', 'testimonials'];
+    const container = document.getElementById('sectionsOrderContainer');
+    if (!container) return;
+    const rowsMap = {};
+    container.querySelectorAll('.section-order-row').forEach(r => {
+        rowsMap[r.getAttribute('data-section-key')] = r;
+    });
+
+    defaultOrder.forEach(k => {
+        if (rowsMap[k]) container.appendChild(rowsMap[k]);
+    });
+
+    rebuildSectionsOrder();
+}
+
+// ==============================================================================
 // GERENCIADOR VISUAL DE SLIDES DO CARROSSEL DA HOME
 // ==============================================================================
 function escapeHtml(str) {
