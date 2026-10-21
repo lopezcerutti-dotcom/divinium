@@ -201,10 +201,10 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 
 <style>
 .checkout-page-container {
-    background: #0d0c0b;
+    background-color: var(--checkout-bg, var(--bg-dark, #0d0c0b));
     min-height: 85vh;
     padding: 40px 0 80px;
-    color: #ded7cf;
+    color: var(--text-light, #ded7cf);
 }
 .checkout-header {
     display: flex;
@@ -255,7 +255,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     align-items: start;
 }
 .checkout-card {
-    background: #141312;
+    background-color: var(--checkout-card-bg, var(--surface-dark, #141312));
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
     padding: 32px;

@@ -52,27 +52,243 @@
     <!-- Scripts de Rastreamento / Analytics (Head) -->
     <?= \App\Models\Setting::get('custom_head_scripts', '') ?>
 
-    <!-- Personalização de Fundo Dinâmico (Configurado no Painel Administrativo) -->
+    <!-- Personalização de Cores e Fundo Dinâmico em Todas as Páginas -->
     <?php
+        // Fundo Global do Site
         $siteBgImage = \App\Models\Setting::get('site_bg_image');
         $siteBgOverlay = \App\Models\Setting::get('site_bg_overlay', '0.75');
         $siteBgRepeat = \App\Models\Setting::get('site_bg_repeat', 'cover');
+
+        // Fundo Específico do Hero (Banner Inicial da Home)
         $heroBgImage = \App\Models\Setting::get('hero_bg_image');
         $heroBgOverlay = \App\Models\Setting::get('hero_bg_overlay', '0.60');
+
+        // Fundo Específico da Boutique / Vitrine (/loja)
+        $storeBgColor = \App\Models\Setting::get('store_bg_color');
+        $storeBgImage = \App\Models\Setting::get('store_bg_image');
+        $storeBgOverlay = \App\Models\Setting::get('store_bg_overlay', '0.75');
+        $storeBgRepeat = \App\Models\Setting::get('store_bg_repeat', 'cover');
+        $storeCardBg = \App\Models\Setting::get('store_card_bg');
+
+        // Fundo Específico da Página de Detalhe da Joia (/produto/{slug})
+        $productBgColor = \App\Models\Setting::get('product_bg_color');
+        $productBgImage = \App\Models\Setting::get('product_bg_image');
+        $productBgOverlay = \App\Models\Setting::get('product_bg_overlay', '0.75');
+        $productCardBg = \App\Models\Setting::get('product_card_bg');
+
+        // Fundo Específico do Checkout (/checkout)
+        $checkoutBgColor = \App\Models\Setting::get('checkout_bg_color');
+        $checkoutBgImage = \App\Models\Setting::get('checkout_bg_image');
+        $checkoutBgOverlay = \App\Models\Setting::get('checkout_bg_overlay', '0.75');
+        $checkoutCardBg = \App\Models\Setting::get('checkout_card_bg');
+
+        // Fundo Específico das Páginas Institucionais (/politica-de-privacidade, /termos-de-uso, etc)
+        $institutionalBgColor = \App\Models\Setting::get('institutional_bg_color');
+        $institutionalBgImage = \App\Models\Setting::get('institutional_bg_image');
+        $institutionalBgOverlay = \App\Models\Setting::get('institutional_bg_overlay', '0.75');
+        $institutionalCardBg = \App\Models\Setting::get('institutional_card_bg');
+
+        // Paleta de Cores Globais
+        $customColorBg = \App\Models\Setting::get('custom_color_bg');
+        $customColorSurface = \App\Models\Setting::get('custom_color_surface');
+        $customColorPrimary = \App\Models\Setting::get('custom_color_primary');
+        $customColorAccent = \App\Models\Setting::get('custom_color_accent');
+        $customColorText = \App\Models\Setting::get('custom_color_text');
+        $customColorTextMuted = \App\Models\Setting::get('custom_color_text_muted');
+
+        // Tipografia e Formas
+        $dynSerif = \App\Models\Setting::get('custom_font_serif');
+        $dynSans = \App\Models\Setting::get('custom_font_sans');
+        $dynBtnRadius = \App\Models\Setting::get('theme_btn_border_radius', \App\Models\Setting::get('custom_border_radius', ''));
+        $dynBtnTransform = \App\Models\Setting::get('theme_btn_text_transform', '');
+        $dynHeroSize = \App\Models\Setting::get('hero_title_size', '');
+        $dynBodySize = \App\Models\Setting::get('body_font_size', '');
+        $dynSpacingY = \App\Models\Setting::get('section_spacing_y', '');
+        $dynAlign = \App\Models\Setting::get('editorial_text_alignment', '');
     ?>
-    <?php if (!empty($siteBgImage) || !empty($heroBgImage)): ?>
-    <style id="divinium-dynamic-bg">
+    <style id="divinium-design-tokens">
+        :root {
+            <?php if (!empty($dynSerif)): ?>--font-serif: <?= $dynSerif ?> !important;<?php endif; ?>
+            <?php if (!empty($dynSans)): ?>--font-sans: <?= $dynSans ?> !important;<?php endif; ?>
+            <?php if (!empty($customColorPrimary)): ?>--gold-accent: <?= $customColorPrimary ?> !important;<?php endif; ?>
+            <?php if (!empty($customColorAccent)): ?>--gold-hover: <?= $customColorAccent ?> !important;<?php endif; ?>
+            <?php if (!empty($customColorBg)): ?>
+                --bg-dark: <?= $customColorBg ?> !important;
+                --bg-light: <?= $customColorBg ?> !important;
+            <?php endif; ?>
+            <?php if (!empty($customColorSurface)): ?>
+                --surface-dark: <?= $customColorSurface ?> !important;
+                --bg-dark-card: <?= $customColorSurface ?> !important;
+                --card-bg: <?= $customColorSurface ?> !important;
+            <?php endif; ?>
+            <?php if (!empty($customColorText)): ?>
+                --text-light: <?= $customColorText ?> !important;
+                --text-primary: <?= $customColorText ?> !important;
+            <?php endif; ?>
+            <?php if (!empty($customColorTextMuted)): ?>
+                --text-secondary: <?= $customColorTextMuted ?> !important;
+                --text-muted: <?= $customColorTextMuted ?> !important;
+                --text-light-muted: <?= $customColorTextMuted ?> !important;
+            <?php endif; ?>
+            --page-bg: <?= !empty($institutionalBgColor) ? $institutionalBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
+            --page-card-bg: <?= !empty($institutionalCardBg) ? $institutionalCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
+            --checkout-bg: <?= !empty($checkoutBgColor) ? $checkoutBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
+            --checkout-card-bg: <?= !empty($checkoutCardBg) ? $checkoutCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
+            --product-bg: <?= !empty($productBgColor) ? $productBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
+            --product-card-bg: <?= !empty($productCardBg) ? $productCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
+            --store-bg: <?= !empty($storeBgColor) ? $storeBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
+            --store-card-bg: <?= !empty($storeCardBg) ? $storeCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
+        }
+
+        /* 1. COR DE FUNDO BASE GLOBAL EM TODAS AS PÁGINAS */
+        <?php if (!empty($customColorBg)): ?>
+        body.luxury-theme,
+        main,
+        .institutional-page-container,
+        .product-detail-page,
+        .checkout-page-container,
+        .store-hero-section,
+        .store-reasons-section {
+            background-color: <?= $customColorBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 2. COR DE SUPERFÍCIE DOS CARDS EM TODAS AS PÁGINAS */
+        <?php if (!empty($customColorSurface)): ?>
+        .store-product-card,
+        .product-gallery-card,
+        .product-info-panel,
+        .checkout-card,
+        .checkout-summary-card,
+        .institutional-card,
+        .reason-card,
+        .about-micro-feature,
+        .showcase-lifestyle-card,
+        .service-card,
+        .testimonial-card,
+        .product-card {
+            background: <?= $customColorSurface ?> !important;
+            background-color: <?= $customColorSurface ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 3. COR DE TEXTO NOBRE EM TODAS AS PÁGINAS */
+        <?php if (!empty($customColorText)): ?>
+        body.luxury-theme,
+        .institutional-page-container,
+        .product-detail-page,
+        .checkout-page-container,
+        .store-hero-title,
+        .institutional-title,
+        .editorial-body {
+            color: <?= $customColorText ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 4. FUNDO GLOBAL DO SITE COM IMAGEM / TEXTURA */
         <?php if (!empty($siteBgImage)): ?>
         body.luxury-theme {
-            background-color: #0d0c0b !important;
+            background-color: <?= !empty($customColorBg) ? $customColorBg : '#0d0c0b' ?> !important;
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$siteBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$siteBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
             background-size: <?= $siteBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
             background-repeat: <?= $siteBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
             background-attachment: fixed !important;
             background-position: center center !important;
         }
+        .institutional-page-container,
+        .product-detail-page,
+        .checkout-page-container,
+        .store-hero-section,
+        .store-reasons-section {
+            background-color: transparent !important;
+        }
         <?php endif; ?>
 
+        /* 5. FUNDO E CORES ESPECÍFICAS DA BOUTIQUE (/loja) */
+        <?php if (!empty($storeBgColor)): ?>
+        .store-hero-section, .store-reasons-section {
+            background-color: <?= $storeBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($storeBgImage)): ?>
+        .store-hero-section {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$storeBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$storeBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($storeBgImage) ?>') !important;
+            background-size: <?= $storeBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
+            background-repeat: <?= $storeBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($storeCardBg)): ?>
+        .store-product-card, .reason-card {
+            background: <?= $storeCardBg ?> !important;
+            background-color: <?= $storeCardBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 6. FUNDO E CORES ESPECÍFICAS DA PÁGINA DO PRODUTO (/produto/{slug}) */
+        <?php if (!empty($productBgColor)): ?>
+        .product-detail-page {
+            background-color: <?= $productBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($productBgImage)): ?>
+        .product-detail-page {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$productBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$productBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($productBgImage) ?>') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($productCardBg)): ?>
+        .product-gallery-card, .product-info-panel {
+            background: <?= $productCardBg ?> !important;
+            background-color: <?= $productCardBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 7. FUNDO E CORES ESPECÍFICAS DO CHECKOUT (/checkout) */
+        <?php if (!empty($checkoutBgColor)): ?>
+        .checkout-page-container {
+            background-color: <?= $checkoutBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($checkoutBgImage)): ?>
+        .checkout-page-container {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$checkoutBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$checkoutBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($checkoutBgImage) ?>') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($checkoutCardBg)): ?>
+        .checkout-card, .checkout-summary-card {
+            background: <?= $checkoutCardBg ?> !important;
+            background-color: <?= $checkoutCardBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 8. FUNDO E CORES ESPECÍFICAS DAS PÁGINAS INSTITUCIONAIS */
+        <?php if (!empty($institutionalBgColor)): ?>
+        .institutional-page-container {
+            background-color: <?= $institutionalBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($institutionalBgImage)): ?>
+        .institutional-page-container {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$institutionalBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$institutionalBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($institutionalBgImage) ?>') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center center !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($institutionalCardBg)): ?>
+        .institutional-card {
+            background: <?= $institutionalCardBg ?> !important;
+            background-color: <?= $institutionalCardBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 9. HERO DA PÁGINA INICIAL */
         <?php if (!empty($heroBgImage)): ?>
         .hero-section {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
@@ -87,29 +303,8 @@
             background-position: center center !important;
         }
         <?php endif; ?>
-    </style>
-    <?php endif; ?>
 
-    <!-- Design System Dinâmico (Pilar 5: Cores, Tipografia, Tamanhos, Espaçamentos e Alinhamentos) -->
-    <?php
-        $dynSerif = \App\Models\Setting::get('custom_font_serif');
-        $dynSans = \App\Models\Setting::get('custom_font_sans');
-        $dynPrimary = \App\Models\Setting::get('custom_color_primary');
-        $dynAccent = \App\Models\Setting::get('custom_color_accent');
-        $dynBtnRadius = \App\Models\Setting::get('theme_btn_border_radius', \App\Models\Setting::get('custom_border_radius', ''));
-        $dynBtnTransform = \App\Models\Setting::get('theme_btn_text_transform', '');
-        $dynHeroSize = \App\Models\Setting::get('hero_title_size', '');
-        $dynBodySize = \App\Models\Setting::get('body_font_size', '');
-        $dynSpacingY = \App\Models\Setting::get('section_spacing_y', '');
-        $dynAlign = \App\Models\Setting::get('editorial_text_alignment', '');
-    ?>
-    <style id="divinium-design-tokens">
-        :root {
-            <?php if (!empty($dynSerif)): ?>--font-serif: <?= $dynSerif ?> !important;<?php endif; ?>
-            <?php if (!empty($dynSans)): ?>--font-sans: <?= $dynSans ?> !important;<?php endif; ?>
-            <?php if (!empty($dynPrimary)): ?>--gold-accent: <?= $dynPrimary ?> !important;<?php endif; ?>
-            <?php if (!empty($dynAccent)): ?>--gold-hover: <?= $dynAccent ?> !important;<?php endif; ?>
-        }
+        /* 10. BOTÕES E FORMAS */
         <?php if (!empty($dynBtnRadius)): ?>
         .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
             border-radius: <?= $dynBtnRadius ?> !important;

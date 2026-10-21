@@ -57,8 +57,8 @@ use App\Core\View;
 
 <style>
 .institutional-page-container {
-    background: #0d0c0b;
-    color: #ded7cf;
+    background-color: var(--page-bg, var(--bg-dark, #0d0c0b));
+    color: var(--text-light, #ded7cf);
     min-height: 80vh;
     padding-bottom: 80px;
 }
@@ -119,7 +119,7 @@ use App\Core\View;
     padding-top: 40px;
 }
 .institutional-card {
-    background: #141312;
+    background-color: var(--page-card-bg, var(--surface-dark, #141312));
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 45px 50px;
