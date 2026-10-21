@@ -1033,11 +1033,27 @@ async function setDefaultTheme(themeId, btnElement) {
     }
 }
 
+function toggleSpecificColorsSection() {
+    const content = document.getElementById('contentSpecificColors');
+    const arrow = document.getElementById('arrowSpecificColors');
+    if (content) {
+        if (content.style.display === 'none') {
+            content.style.display = 'grid';
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.display = 'none';
+            if (arrow) arrow.style.transform = 'rotate(-90deg)';
+        }
+    }
+}
+
 function updateCustomPreview() {
     const primary = document.getElementById('custom_color_primary')?.value || '#CAA15C';
     const accent = document.getElementById('custom_color_accent')?.value || '#E0C080';
     const bg = document.getElementById('custom_color_bg')?.value || '#0D0C0B';
     const surface = document.getElementById('custom_color_surface')?.value || '#141312';
+    const text = document.getElementById('custom_color_text')?.value || '#F4EFEA';
+    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#9E978E';
     const fontSerif = document.getElementById('custom_font_serif')?.value || "'Cormorant Garamond', Georgia, serif";
     const radius = document.getElementById('custom_border_radius')?.value || '8px';
 
@@ -1050,6 +1066,14 @@ function updateCustomPreview() {
     if (title) {
         title.style.color = primary;
         title.style.fontFamily = fontSerif;
+    }
+    const sampleText = document.getElementById('previewSampleText');
+    if (sampleText) {
+        sampleText.style.color = text;
+    }
+    const sampleMuted = document.getElementById('previewSampleMuted');
+    if (sampleMuted) {
+        sampleMuted.style.color = textMuted;
     }
     const btn = document.getElementById('previewBtnSample');
     if (btn) {
@@ -1067,6 +1091,10 @@ function resetToThemeDefaults() {
     document.getElementById('picker_bg').value = '#0D0C0B';
     document.getElementById('custom_color_surface').value = '#141312';
     document.getElementById('picker_surface').value = '#141312';
+    document.getElementById('custom_color_text').value = '#F4EFEA';
+    document.getElementById('picker_text').value = '#F4EFEA';
+    document.getElementById('custom_color_text_muted').value = '#9E978E';
+    document.getElementById('picker_text_muted').value = '#9E978E';
     document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
     document.getElementById('custom_border_radius').value = '8px';
     updateCustomPreview();
@@ -1109,7 +1137,7 @@ async function handleCustomThemeSubmit(e) {
         }
 
         if (data.success) {
-            alert(data.message || 'Identidade visual e paleta personalizada salvas!');
+            alert(data.message || 'Cores e identidade visual salvas com sucesso em todas as páginas!');
             window.location.reload();
         } else {
             alert(data.error || 'Erro ao salvar tema personalizado.');
@@ -1120,13 +1148,14 @@ async function handleCustomThemeSubmit(e) {
 }
 
 // ==============================================================================
-// GESTÃO DA IMAGEM DE FUNDO & TEXTURAS NOBRES
+// GESTÃO DA IMAGEM DE FUNDO & TEXTURAS NOBRES (7 DESTINOS)
 // ==============================================================================
 let currentBgTab = 'site';
+const allBgTabs = ['site', 'hero', 'store', 'product', 'checkout', 'institutional', 'admin'];
 
 function switchBgTab(tab) {
     currentBgTab = tab;
-    ['site', 'hero', 'admin'].forEach(t => {
+    allBgTabs.forEach(t => {
         const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
         const panel = document.getElementById('panelBg' + t.charAt(0).toUpperCase() + t.slice(1));
         if (btn) {
@@ -1140,92 +1169,60 @@ function switchBgTab(tab) {
 }
 
 function updateBgPreview(target) {
-    if (target === 'site') {
-        const bg = document.getElementById('inputSiteBg')?.value?.trim();
-        const overlay = document.getElementById('inputSiteOverlay')?.value || 0.75;
-        const repeat = document.getElementById('inputSiteRepeat')?.value || 'cover';
-        const card = document.getElementById('previewCardSite');
-        const overlayEl = document.getElementById('previewOverlaySite');
-        if (card && overlayEl) {
-            if (bg) {
-                card.style.backgroundImage = `url('${bg}')`;
-                card.style.backgroundSize = repeat === 'repeat' ? 'auto' : 'cover';
-                card.style.backgroundRepeat = repeat === 'repeat' ? 'repeat' : 'no-repeat';
-                card.style.backgroundPosition = 'center';
-            } else {
-                card.style.backgroundImage = 'none';
-                card.style.backgroundColor = '#0d0c0b';
-            }
-            overlayEl.style.backgroundColor = `rgba(13, 12, 11, ${overlay})`;
+    const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+    const targetCap = capitalize(target);
+
+    const inputBg = document.getElementById('input' + targetCap + 'Bg');
+    const inputOverlay = document.getElementById('input' + targetCap + 'Overlay');
+    const inputRepeat = document.getElementById('input' + targetCap + 'Repeat');
+    const card = document.getElementById('previewCard' + targetCap);
+    const overlayEl = document.getElementById('previewOverlay' + targetCap);
+
+    if (card && overlayEl) {
+        const bg = inputBg?.value?.trim() || '';
+        const overlay = inputOverlay?.value || 0.75;
+        const repeat = inputRepeat?.value || 'cover';
+
+        if (bg) {
+            card.style.backgroundImage = `url('${bg}')`;
+            card.style.backgroundSize = repeat === 'repeat' ? 'auto' : 'cover';
+            card.style.backgroundRepeat = repeat === 'repeat' ? 'repeat' : 'no-repeat';
+            card.style.backgroundPosition = 'center';
+        } else {
+            card.style.backgroundImage = 'none';
+            card.style.backgroundColor = (target === 'hero') ? '#141312' : '#0d0c0b';
         }
-    } else if (target === 'hero') {
-        const bg = document.getElementById('inputHeroBg')?.value?.trim();
-        const overlay = document.getElementById('inputHeroOverlay')?.value || 0.60;
-        const card = document.getElementById('previewCardHero');
-        const overlayEl = document.getElementById('previewOverlayHero');
-        if (card && overlayEl) {
-            if (bg) {
-                card.style.backgroundImage = `url('${bg}')`;
-                card.style.backgroundSize = 'cover';
-                card.style.backgroundPosition = 'center';
-            } else {
-                card.style.backgroundImage = 'none';
-                card.style.backgroundColor = '#141312';
-            }
-            overlayEl.style.backgroundColor = `rgba(13, 12, 11, ${overlay})`;
-        }
-    } else if (target === 'admin') {
-        const bg = document.getElementById('inputAdminBg')?.value?.trim();
-        const overlay = document.getElementById('inputAdminOverlay')?.value || 0.85;
-        const card = document.getElementById('previewCardAdmin');
-        const overlayEl = document.getElementById('previewOverlayAdmin');
-        if (card && overlayEl) {
-            if (bg) {
-                card.style.backgroundImage = `url('${bg}')`;
-                card.style.backgroundSize = 'cover';
-                card.style.backgroundPosition = 'center';
-            } else {
-                card.style.backgroundImage = 'none';
-                card.style.backgroundColor = '#0d0c0b';
-            }
-            overlayEl.style.backgroundColor = `rgba(13, 12, 11, ${overlay})`;
-        }
+        overlayEl.style.backgroundColor = `rgba(13, 12, 11, ${overlay})`;
     }
 }
 
 function applyPresetToTarget(target, url, repeat = 'cover') {
-    if (target === 'site') {
-        const input = document.getElementById('inputSiteBg');
-        const rep = document.getElementById('inputSiteRepeat');
-        if (input) input.value = url;
-        if (rep) rep.value = repeat;
-        updateBgPreview('site');
-    } else if (target === 'hero') {
-        const input = document.getElementById('inputHeroBg');
-        if (input) input.value = url;
-        updateBgPreview('hero');
-    } else if (target === 'admin') {
-        const input = document.getElementById('inputAdminBg');
-        if (input) input.value = url;
-        updateBgPreview('admin');
-    }
+    const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+    const targetCap = capitalize(target);
+
+    const input = document.getElementById('input' + targetCap + 'Bg');
+    const rep = document.getElementById('input' + targetCap + 'Repeat');
+    if (input) input.value = url;
+    if (rep) rep.value = repeat;
+    updateBgPreview(target);
 }
 
 async function uploadBgFile(input, targetKey) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
     
-    let target = 'site';
-    let statusElId = 'uploadStatusSite';
-    if (targetKey === 'hero_bg_image') {
-        target = 'hero';
-        statusElId = 'uploadStatusHero';
-    } else if (targetKey === 'admin_bg_image') {
-        target = 'admin';
-        statusElId = 'uploadStatusAdmin';
-    }
+    const keyMap = {
+        'site_bg_image': { target: 'site', status: 'uploadStatusSite' },
+        'hero_bg_image': { target: 'hero', status: 'uploadStatusHero' },
+        'store_bg_image': { target: 'store', status: 'uploadStatusStore' },
+        'product_bg_image': { target: 'product', status: 'uploadStatusProduct' },
+        'checkout_bg_image': { target: 'checkout', status: 'uploadStatusCheckout' },
+        'institutional_bg_image': { target: 'institutional', status: 'uploadStatusInstitutional' },
+        'admin_bg_image': { target: 'admin', status: 'uploadStatusAdmin' }
+    };
 
-    const statusEl = document.getElementById(statusElId);
+    const config = keyMap[targetKey] || { target: 'site', status: 'uploadStatusSite' };
+    const statusEl = document.getElementById(config.status);
     if (statusEl) {
         statusEl.style.display = 'block';
         statusEl.textContent = '⏳ Enviando imagem para o servidor...';
@@ -1252,14 +1249,12 @@ async function uploadBgFile(input, targetKey) {
         });
         const data = await res.json();
         if (data.success && data.url) {
-            if (target === 'site') {
-                document.getElementById('inputSiteBg').value = data.url;
-            } else if (target === 'hero') {
-                document.getElementById('inputHeroBg').value = data.url;
-            } else if (target === 'admin') {
-                document.getElementById('inputAdminBg').value = data.url;
+            const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+            const inputField = document.getElementById('input' + capitalize(config.target) + 'Bg');
+            if (inputField) {
+                inputField.value = data.url;
             }
-            updateBgPreview(target);
+            updateBgPreview(config.target);
             if (statusEl) {
                 statusEl.innerHTML = '✓ Imagem enviada com sucesso! Salva em: <strong>' + data.url + '</strong>';
             }
@@ -1274,17 +1269,18 @@ async function uploadBgFile(input, targetKey) {
 }
 
 async function resetActiveBackground() {
-    let targetKey = 'site_bg_image';
-    let label = 'Fundo Global do Site';
-    if (currentBgTab === 'hero') {
-        targetKey = 'hero_bg_image';
-        label = 'Fundo do Hero';
-    } else if (currentBgTab === 'admin') {
-        targetKey = 'admin_bg_image';
-        label = 'Fundo do Painel Administrativo';
-    }
+    const keyMap = {
+        'site': { key: 'site_bg_image', label: 'Fundo Global do Site' },
+        'hero': { key: 'hero_bg_image', label: 'Fundo do Hero da Home' },
+        'store': { key: 'store_bg_image', label: 'Fundo da Boutique / Loja' },
+        'product': { key: 'product_bg_image', label: 'Fundo do Detalhe da Joia' },
+        'checkout': { key: 'checkout_bg_image', label: 'Fundo do Checkout Seguro' },
+        'institutional': { key: 'institutional_bg_image', label: 'Fundo das Páginas Institucionais' },
+        'admin': { key: 'admin_bg_image', label: 'Fundo do Painel Administrativo' }
+    };
 
-    if (!confirm('Deseja realmente remover o ' + label + ' e restaurar o padrão do tema?')) {
+    const current = keyMap[currentBgTab] || keyMap['site'];
+    if (!confirm('Deseja realmente remover o ' + current.label + ' e restaurar o padrão do tema?')) {
         return;
     }
 
@@ -1293,7 +1289,7 @@ async function resetActiveBackground() {
         || '';
 
     const formData = new FormData();
-    formData.append('target_key', targetKey);
+    formData.append('target_key', current.key);
     formData.append('_csrf_token', csrfToken);
 
     try {
@@ -1308,12 +1304,10 @@ async function resetActiveBackground() {
         });
         const data = await res.json();
         if (data.success) {
-            if (currentBgTab === 'site') {
-                document.getElementById('inputSiteBg').value = '';
-            } else if (currentBgTab === 'hero') {
-                document.getElementById('inputHeroBg').value = '';
-            } else if (currentBgTab === 'admin') {
-                document.getElementById('inputAdminBg').value = '';
+            const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+            const inputField = document.getElementById('input' + capitalize(currentBgTab) + 'Bg');
+            if (inputField) {
+                inputField.value = '';
             }
             updateBgPreview(currentBgTab);
             alert(data.message || 'Fundo removido com sucesso!');
@@ -1332,11 +1326,34 @@ async function saveBackgroundSettings() {
 
     const formData = new FormData();
     formData.append('_csrf_token', csrfToken);
+
+    // Global
     formData.append('site_bg_image', document.getElementById('inputSiteBg')?.value || '');
     formData.append('site_bg_overlay', document.getElementById('inputSiteOverlay')?.value || '0.75');
     formData.append('site_bg_repeat', document.getElementById('inputSiteRepeat')?.value || 'cover');
+
+    // Hero
     formData.append('hero_bg_image', document.getElementById('inputHeroBg')?.value || '');
     formData.append('hero_bg_overlay', document.getElementById('inputHeroOverlay')?.value || '0.60');
+
+    // Boutique
+    formData.append('store_bg_image', document.getElementById('inputStoreBg')?.value || '');
+    formData.append('store_bg_overlay', document.getElementById('inputStoreOverlay')?.value || '0.75');
+    formData.append('store_bg_repeat', document.getElementById('inputStoreRepeat')?.value || 'cover');
+
+    // Product
+    formData.append('product_bg_image', document.getElementById('inputProductBg')?.value || '');
+    formData.append('product_bg_overlay', document.getElementById('inputProductOverlay')?.value || '0.75');
+
+    // Checkout
+    formData.append('checkout_bg_image', document.getElementById('inputCheckoutBg')?.value || '');
+    formData.append('checkout_bg_overlay', document.getElementById('inputCheckoutOverlay')?.value || '0.75');
+
+    // Institutional
+    formData.append('institutional_bg_image', document.getElementById('inputInstitutionalBg')?.value || '');
+    formData.append('institutional_bg_overlay', document.getElementById('inputInstitutionalOverlay')?.value || '0.75');
+
+    // Admin
     formData.append('admin_bg_image', document.getElementById('inputAdminBg')?.value || '');
     formData.append('admin_bg_overlay', document.getElementById('inputAdminOverlay')?.value || '0.85');
 
@@ -1352,7 +1369,7 @@ async function saveBackgroundSettings() {
         });
         const data = await res.json();
         if (data.success) {
-            alert(data.message || 'Configurações de imagem de fundo salvas com sucesso!');
+            alert(data.message || 'Configurações de imagem de fundo salvas com sucesso em todas as páginas!');
             window.location.reload();
         } else {
             alert(data.error || 'Erro ao salvar imagens de fundo.');
@@ -1364,8 +1381,6 @@ async function saveBackgroundSettings() {
 
 document.addEventListener('DOMContentLoaded', () => {
     updateCustomPreview();
-    updateBgPreview('site');
-    updateBgPreview('hero');
-    updateBgPreview('admin');
+    allBgTabs.forEach(t => updateBgPreview(t));
 });
 </script>
