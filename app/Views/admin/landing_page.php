@@ -621,6 +621,40 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= \App\Core\View::e(Setting::get('cookie_banner_btn', 'Prosseguir')) ?>"
                            placeholder="Prosseguir">
                 </div>
+
+                <!-- Modal de Acesso Administrativo -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🔐 Botão & Modal de Acesso aos Bastidores (Entrar)
+                    </h4>
+                </div>
+
+                <div class="form-group">
+                    <label for="header_login_label">Texto do Botão no Topo</label>
+                    <input type="text" id="header_login_label" name="header_login_label" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('header_login_label', 'Entrar')) ?>"
+                           placeholder="Entrar">
+                </div>
+
+                <div class="form-group">
+                    <label for="login_modal_title">Título da Janela de Login</label>
+                    <input type="text" id="login_modal_title" name="login_modal_title" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('login_modal_title', 'Acesso aos Bastidores')) ?>"
+                           placeholder="Acesso aos Bastidores">
+                </div>
+
+                <div class="form-group">
+                    <label for="login_modal_subtitle">Subtítulo Explicativo</label>
+                    <input type="text" id="login_modal_subtitle" name="login_modal_subtitle" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('login_modal_subtitle', 'Controle de produtos, categorias, minerais e gestão do site.')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="login_modal_btn">Texto do Botão de Envio</label>
+                    <input type="text" id="login_modal_btn" name="login_modal_btn" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('login_modal_btn', 'Acessar Painel de Controle')) ?>"
+                           placeholder="Acessar Painel de Controle">
+                </div>
             </div>
         </div>
 
