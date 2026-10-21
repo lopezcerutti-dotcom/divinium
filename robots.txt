@@ -6,10 +6,13 @@ Disallow: /checkout/
 Disallow: /minha-conta/
 
 Allow: /
+Allow: /loja
 Allow: /catalogo
 Allow: /produto/
 Allow: /politica-de-privacidade
 Allow: /termos-de-uso
 Allow: /trocas-e-devolucoes
+Allow: /garantia-e-cuidados
+Allow: /guia-de-medidas
 
-Sitemap: https://seudominio.com.br/sitemap.xml
+Sitemap: https://divinium.com.br/sitemap.xml

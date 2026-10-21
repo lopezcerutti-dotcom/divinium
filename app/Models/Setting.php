@@ -88,11 +88,6 @@ class Setting
     }
 
     /**
-     * Salva múltiplas configurações em lote.
-     *
-     * @param array<string, mixed> $data
-     */
-    /**
      * Salva múltiplas configurações em lote de forma atômica e rápida.
      *
      * @param array<string, mixed> $data
