@@ -365,69 +365,206 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            placeholder="HAUTE JOAILLERIE">
                 </div>
 
-                <!-- Links da Navegação Principal -->
+                <!-- Links da Navegação Principal Desktop -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-top: 10px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🧭 Itens do Menu Desktop (Topo Esquerda)
+                    </h4>
+                </div>
+
+                <!-- Link Início -->
                 <div class="form-group">
-                    <label for="nav_link_home">Menu: Início</label>
+                    <div class="field-label-row">
+                        <label for="nav_link_home">Menu 1: Rótulo</label>
+                        <?= $renderToggle('nav_link_home_visible') ?>
+                    </div>
                     <input type="text" id="nav_link_home" name="nav_link_home" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_link_home', 'Início')) ?>"
                            placeholder="Início">
                 </div>
-
                 <div class="form-group">
-                    <label for="nav_link_store">Menu: Loja</label>
+                    <label for="nav_link_home_url">Menu 1: Destino (URL)</label>
+                    <input type="text" id="nav_link_home_url" name="nav_link_home_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_link_home_url', '/')) ?>"
+                           placeholder="/">
+                </div>
+
+                <!-- Link Loja -->
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_link_store">Menu 2: Rótulo</label>
+                        <?= $renderToggle('nav_link_store_visible') ?>
+                    </div>
                     <input type="text" id="nav_link_store" name="nav_link_store" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_link_store', 'Loja')) ?>"
                            placeholder="Loja">
                 </div>
-
                 <div class="form-group">
-                    <label for="nav_link_about">Menu: Sobre</label>
+                    <label for="nav_link_store_url">Menu 2: Destino (URL)</label>
+                    <input type="text" id="nav_link_store_url" name="nav_link_store_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_link_store_url', '/loja')) ?>"
+                           placeholder="/loja">
+                </div>
+
+                <!-- Link Sobre -->
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_link_about">Menu 3: Rótulo</label>
+                        <?= $renderToggle('nav_link_about_visible') ?>
+                    </div>
                     <input type="text" id="nav_link_about" name="nav_link_about" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_link_about', 'Sobre')) ?>"
                            placeholder="Sobre">
                 </div>
-
                 <div class="form-group">
-                    <label for="nav_link_collections">Menu: Coleções (Dropdown)</label>
+                    <label for="nav_link_about_url">Menu 3: Destino (URL)</label>
+                    <input type="text" id="nav_link_about_url" name="nav_link_about_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_link_about_url', '/#about')) ?>"
+                           placeholder="/#about">
+                </div>
+
+                <!-- Link Coleções -->
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_link_collections">Menu 4: Dropdown Coleções</label>
+                        <?= $renderToggle('nav_link_collections_visible') ?>
+                    </div>
                     <input type="text" id="nav_link_collections" name="nav_link_collections" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_link_collections', 'Coleções')) ?>"
                            placeholder="Coleções">
                 </div>
-
                 <div class="form-group">
-                    <label for="nav_link_services">Menu: Garantia / Serviços</label>
+                    <label for="nav_link_collections_url">Menu 4: Destino (URL)</label>
+                    <input type="text" id="nav_link_collections_url" name="nav_link_collections_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_link_collections_url', '/loja')) ?>"
+                           placeholder="/loja">
+                </div>
+
+                <!-- Link Garantia / Serviços -->
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_link_services">Menu 5: Rótulo</label>
+                        <?= $renderToggle('nav_link_services_visible') ?>
+                    </div>
                     <input type="text" id="nav_link_services" name="nav_link_services" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_link_services', 'Garantia')) ?>"
                            placeholder="Garantia">
                 </div>
+                <div class="form-group">
+                    <label for="nav_link_services_url">Menu 5: Destino (URL)</label>
+                    <input type="text" id="nav_link_services_url" name="nav_link_services_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_link_services_url', '/#services')) ?>"
+                           placeholder="/#services">
+                </div>
+
+                <!-- Link Customizado Adicional -->
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_custom_link1_text">Menu 6 (Opcional): Rótulo</label>
+                        <?= $renderToggle('nav_custom_link1_visible', '0') ?>
+                    </div>
+                    <input type="text" id="nav_custom_link1_text" name="nav_custom_link1_text" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_custom_link1_text', 'Certificado')) ?>"
+                           placeholder="Ex: Certificado">
+                </div>
+                <div class="form-group">
+                    <label for="nav_custom_link1_url">Menu 6: Destino (URL)</label>
+                    <input type="text" id="nav_custom_link1_url" name="nav_custom_link1_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_custom_link1_url', '/garantia-e-cuidados')) ?>"
+                           placeholder="/garantia-e-cuidados">
+                </div>
 
                 <!-- Sub-itens do Menu Coleções -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        💎 Sub-itens da Gaveta / Dropdown de Coleções
+                    </h4>
+                </div>
+
                 <div class="form-group">
-                    <label for="nav_sub_all">Dropdown: Ver Todas as Peças</label>
+                    <div class="field-label-row">
+                        <label for="nav_sub_all">Dropdown 1: Rótulo</label>
+                        <?= $renderToggle('nav_sub_all_visible') ?>
+                    </div>
                     <input type="text" id="nav_sub_all" name="nav_sub_all" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_sub_all', 'Ver Todas as Peças')) ?>"
                            placeholder="Ver Todas as Peças">
                 </div>
+                <div class="form-group">
+                    <label for="nav_sub_all_url">Dropdown 1: Destino (URL)</label>
+                    <input type="text" id="nav_sub_all_url" name="nav_sub_all_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_all_url', '/loja')) ?>"
+                           placeholder="/loja">
+                </div>
 
                 <div class="form-group">
-                    <label for="nav_sub_bracelets">Dropdown: Braceletes</label>
+                    <div class="field-label-row">
+                        <label for="nav_sub_bracelets">Dropdown 2: Braceletes</label>
+                        <?= $renderToggle('nav_sub_bracelets_visible') ?>
+                    </div>
                     <input type="text" id="nav_sub_bracelets" name="nav_sub_bracelets" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos')) ?>"
                            placeholder="Braceletes Exclusivos">
                 </div>
+                <div class="form-group">
+                    <label for="nav_sub_bracelets_url">Dropdown 2: Destino (URL)</label>
+                    <input type="text" id="nav_sub_bracelets_url" name="nav_sub_bracelets_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_bracelets_url', '/loja#braceletes')) ?>"
+                           placeholder="/loja#braceletes">
+                </div>
 
                 <div class="form-group">
-                    <label for="nav_sub_necklaces">Dropdown: Colares</label>
+                    <div class="field-label-row">
+                        <label for="nav_sub_necklaces">Dropdown 3: Colares</label>
+                        <?= $renderToggle('nav_sub_necklaces_visible') ?>
+                    </div>
                     <input type="text" id="nav_sub_necklaces" name="nav_sub_necklaces" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?>"
                            placeholder="Colares & Pingentes">
                 </div>
+                <div class="form-group">
+                    <label for="nav_sub_necklaces_url">Dropdown 3: Destino (URL)</label>
+                    <input type="text" id="nav_sub_necklaces_url" name="nav_sub_necklaces_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_necklaces_url', '/loja#colares')) ?>"
+                           placeholder="/loja#colares">
+                </div>
 
                 <div class="form-group">
-                    <label for="nav_sub_rings">Dropdown: Anéis</label>
+                    <div class="field-label-row">
+                        <label for="nav_sub_rings">Dropdown 4: Anéis</label>
+                        <?= $renderToggle('nav_sub_rings_visible') ?>
+                    </div>
                     <input type="text" id="nav_sub_rings" name="nav_sub_rings" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('nav_sub_rings', 'Anéis & Alianças')) ?>"
                            placeholder="Anéis & Alianças">
+                </div>
+                <div class="form-group">
+                    <label for="nav_sub_rings_url">Dropdown 4: Destino (URL)</label>
+                    <input type="text" id="nav_sub_rings_url" name="nav_sub_rings_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_rings_url', '/loja#aneis')) ?>"
+                           placeholder="/loja#aneis">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="nav_sub_earrings">Dropdown 5: Brincos</label>
+                        <?= $renderToggle('nav_sub_earrings_visible') ?>
+                    </div>
+                    <input type="text" id="nav_sub_earrings" name="nav_sub_earrings" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_earrings', 'Brincos & Segundo Furo')) ?>"
+                           placeholder="Brincos & Segundo Furo">
+                </div>
+                <div class="form-group">
+                    <label for="nav_sub_earrings_url">Dropdown 5: Destino (URL)</label>
+                    <input type="text" id="nav_sub_earrings_url" name="nav_sub_earrings_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('nav_sub_earrings_url', '/loja#brincos')) ?>"
+                           placeholder="/loja#brincos">
+                </div>
+
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
+                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🛍️ Gaveta Lateral da Sacola de Compras
+                    </h4>
                 </div>
 
                 <!-- Gaveta Lateral da Sacola -->
