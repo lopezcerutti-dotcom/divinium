@@ -47,6 +47,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn active" onclick="switchSection('sec-sections-order', this)">
             <span>🔀 Ordem da Home</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-theme-colors', this)" style="border: 1px solid rgba(202,161,92,0.4); background: rgba(202,161,92,0.08);">
+            <span>🎨 Cores & Fundo (Todas as Páginas)</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-identity', this)">
             <span>💎 Identidade & Logo</span>
         </button>
@@ -177,6 +180,351 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         </div>
                     </div>
                     <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: CORES & FUNDO DE TODAS AS PÁGINAS (NOVO ESTÚDIO CENTRAL) -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="sec-theme-colors">
+            <div class="section-card-header">
+                <div class="section-icon">🎨</div>
+                <div>
+                    <h3>Cores & Fundo de Todas as Páginas do Site</h3>
+                    <p>Controle global sobre o fundo (dark noir ou marfim), superfícies dos cards, ouro nobre e imagens/texturas de fundo aplicadas em todo o site ou por página.</p>
+                </div>
+            </div>
+
+            <!-- PALETAS RÁPIDAS DE ALTA JOALHERIA -->
+            <div class="form-group full-width" style="background: rgba(202,161,92,0.06); border: 1px solid rgba(202,161,92,0.25); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+                    <div>
+                        <strong style="color: #caa15c; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; display: block;">
+                            ✦ Aplicar Paleta Quiet Luxury Pronta (1 Clique):
+                        </strong>
+                        <span style="font-size: 0.78rem; color: #b8b1a7;">Clique para preencher automaticamente as tonalidades harmônicas em todos os campos.</span>
+                    </div>
+                    <a href="/admin/temas" class="btn-admin-secondary" style="font-size: 0.78rem; padding: 6px 12px; text-decoration: none;">
+                        <span>Ver Painel Completo de Temas ↗</span>
+                    </a>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                    <button type="button" class="btn-admin-cancel" style="background: #141312; border: 1px solid rgba(202,161,92,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #caa15c; border: 1px solid #fff;"></span>
+                            <strong style="color: #caa15c; font-size: 0.84rem;">Noir Ateliê Ouro</strong>
+                        </div>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #0D0C0B • Ouro #CAA15C</span>
+                    </button>
+
+                    <button type="button" class="btn-admin-cancel" style="background: #1e1e1d; border: 1px solid rgba(255,255,255,0.2); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #caa15c;"></span>
+                            <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Prata de Lei</strong>
+                        </div>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #FBF9F5 • Prata #FFFFFF</span>
+                    </button>
+
+                    <button type="button" class="btn-admin-cancel" style="background: #18120e; border: 1px solid rgba(212,139,96,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('rose')">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #d48b60; border: 1px solid #fff;"></span>
+                            <strong style="color: #d48b60; font-size: 0.84rem;">Terracota & Aço</strong>
+                        </div>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #120D0A • Terracota #D48B60</span>
+                    </button>
+
+                    <button type="button" class="btn-admin-cancel" style="background: #091710; border: 1px solid rgba(56,161,105,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('emerald')">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #38a169; border: 1px solid #fff;"></span>
+                            <strong style="color: #38a169; font-size: 0.84rem;">Esmeralda Imperial</strong>
+                        </div>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #06130D • Esmeralda #38A169</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1. CORES GLOBAIS DA MARCA -->
+            <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 16px;">
+                <h4 style="color: #caa15c; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    ✦ 1. Cores Globais da Marca (Aplicam-se em Todas as Páginas do Site)
+                </h4>
+            </div>
+
+            <div class="form-grid" style="margin-bottom: 24px;">
+                <!-- Fundo Base Global -->
+                <div class="form-group">
+                    <label for="lp_custom_color_bg">Fundo Base Global (Dark Noir)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_bg" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#0D0C0B')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_bg').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_bg" name="custom_color_bg" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#0D0C0B')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_bg').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Aplica-se ao fundo de todas as páginas da loja (Home, Boutique, Produto, Checkout, etc.)</span>
+                </div>
+
+                <!-- Superfície dos Cards -->
+                <div class="form-group">
+                    <label for="lp_custom_color_surface">Superfície dos Cards & Caixas</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_surface" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_surface').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_surface" name="custom_color_surface" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_surface').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Aplica-se às caixas de produtos, formulários e fichas técnicas.</span>
+                </div>
+
+                <!-- Cor Primária Ouro -->
+                <div class="form-group">
+                    <label for="lp_custom_color_primary">Cor Primária (Ouro / Botões Principais)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_primary" 
+                               value="<?= View::e(Setting::get('custom_color_primary', '#CAA15C')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_primary').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_primary" name="custom_color_primary" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_primary', '#CAA15C')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_primary').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Define o tom dos botões de compra, títulos e detalhes nobres.</span>
+                </div>
+
+                <!-- Cor de Realce -->
+                <div class="form-group">
+                    <label for="lp_custom_color_accent">Cor de Realce (Hover & Acentos)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_accent" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_accent').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_accent" name="custom_color_accent" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_accent').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Brilho dourado ao passar o cursor do mouse sobre links e botões.</span>
+                </div>
+
+                <!-- Texto Principal -->
+                <div class="form-group">
+                    <label for="lp_custom_color_text">Texto Principal (Leitura & Títulos)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_text" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_text').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_text" name="custom_color_text" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Cor dos títulos e corpo de texto principal.</span>
+                </div>
+
+                <!-- Texto Suave -->
+                <div class="form-group">
+                    <label for="lp_custom_color_text_muted">Texto Suave (Secundário / Legendas)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_lp_color_text_muted" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
+                               oninput="document.getElementById('lp_custom_color_text_muted').value = this.value; updateThemeColorsLivePreview();"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="lp_custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text_muted').value = this.value; updateThemeColorsLivePreview();">
+                    </div>
+                    <span class="field-hint">Legendas, especificações técnicas e notas de rodapé.</span>
+                </div>
+            </div>
+
+            <!-- 2. CORES ESPECÍFICAS POR PÁGINA (OPCIONAL) -->
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(202,161,92,0.2); border-radius: 12px; padding: 18px 20px; margin-bottom: 24px;">
+                <div style="margin-bottom: 14px;">
+                    <strong style="color: #ded7cf; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                        <span>✦ 2. Personalização de Cores Específicas por Página</span>
+                        <span style="font-size: 0.68rem; color: #caa15c; background: rgba(202,161,92,0.18); padding: 2px 8px; border-radius: 6px;">Opcional</span>
+                    </strong>
+                    <p style="font-size: 0.78rem; color: #8e8880; margin: 4px 0 0;">
+                        Deixe em branco para que cada página herde automaticamente as cores globais configuradas acima.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                    <!-- Boutique -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">🛍️ Boutique (/loja)</span>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <label style="font-size: 0.74rem;">Fundo da Loja:</label>
+                            <input type="text" name="store_bg_color" class="form-input" 
+                                   value="<?= View::e(Setting::get('store_bg_color', '')) ?>" 
+                                   placeholder="Vazio = herda cor global">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.74rem;">Cards de Joias:</label>
+                            <input type="text" name="store_card_bg" class="form-input" 
+                                   value="<?= View::e(Setting::get('store_card_bg', '')) ?>" 
+                                   placeholder="Vazio = herda superfície global">
+                        </div>
+                    </div>
+
+                    <!-- Detalhes do Produto -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">💎 Detalhes da Joia (/produto)</span>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <label style="font-size: 0.74rem;">Fundo da Página:</label>
+                            <input type="text" name="product_bg_color" class="form-input" 
+                                   value="<?= View::e(Setting::get('product_bg_color', '')) ?>" 
+                                   placeholder="Vazio = herda cor global">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.74rem;">Card da Galeria & Compra:</label>
+                            <input type="text" name="product_card_bg" class="form-input" 
+                                   value="<?= View::e(Setting::get('product_card_bg', '')) ?>" 
+                                   placeholder="Vazio = herda superfície global">
+                        </div>
+                    </div>
+
+                    <!-- Checkout Seguro -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">🔒 Checkout Seguro (/checkout)</span>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <label style="font-size: 0.74rem;">Fundo do Checkout:</label>
+                            <input type="text" name="checkout_bg_color" class="form-input" 
+                                   value="<?= View::e(Setting::get('checkout_bg_color', '')) ?>" 
+                                   placeholder="Vazio = herda cor global">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.74rem;">Caixas de Pagamento:</label>
+                            <input type="text" name="checkout_card_bg" class="form-input" 
+                                   value="<?= View::e(Setting::get('checkout_card_bg', '')) ?>" 
+                                   placeholder="Vazio = herda superfície global">
+                        </div>
+                    </div>
+
+                    <!-- Institucional -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">📜 Páginas Institucionais</span>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <label style="font-size: 0.74rem;">Fundo das Políticas:</label>
+                            <input type="text" name="institutional_bg_color" class="form-input" 
+                                   value="<?= View::e(Setting::get('institutional_bg_color', '')) ?>" 
+                                   placeholder="Vazio = herda cor global">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 0.74rem;">Card do Texto:</label>
+                            <input type="text" name="institutional_card_bg" class="form-input" 
+                                   value="<?= View::e(Setting::get('institutional_card_bg', '')) ?>" 
+                                   placeholder="Vazio = herda superfície global">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. IMAGEM OU TEXTURA DE FUNDO -->
+            <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 16px;">
+                <h4 style="color: #caa15c; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    ✦ 3. Imagem ou Textura de Fundo do Site & Páginas
+                </h4>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; margin-bottom: 24px;">
+                <div>
+                    <!-- Upload Direto ou URL da Imagem Global -->
+                    <div class="form-group full-width">
+                        <label for="lp_site_bg_image">Imagem de Fundo Global (Aplica-se em Todo o Site):</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="lp_site_bg_image" name="site_bg_image" class="form-input" 
+                                   value="<?= View::e(Setting::get('site_bg_image', '')) ?>" 
+                                   placeholder="Ex: /assets/images/backgrounds/marble-noir.svg ou link externo"
+                                   oninput="updateThemeColorsLivePreview()">
+                            <label class="btn-admin-secondary" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; white-space: nowrap; font-size: 0.8rem;">
+                                <span>📁 Enviar Foto</span>
+                                <input type="file" accept="image/*" style="display: none;" onchange="uploadSiteBgFromLanding(this)">
+                            </label>
+                            <button type="button" class="btn-admin-cancel" onclick="document.getElementById('lp_site_bg_image').value = ''; updateThemeColorsLivePreview();">
+                                <span>Limpar</span>
+                            </button>
+                        </div>
+                        <span class="field-hint">A foto ou textura se estende suavemente por todas as páginas com os containers translúcidos.</span>
+                    </div>
+
+                    <!-- Presets Rápidos de Texturas Nobres -->
+                    <div class="form-group full-width">
+                        <label style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; display: block; margin-bottom: 8px;">
+                            ✦ Escolher Textura de Alta Joalheria Pronta:
+                        </label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/marble-noir.svg', 'repeat')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Mármore Noir & Ouro</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Repetição suave</span>
+                            </button>
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/carbon-noir.svg', 'repeat')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Carbono Quiet Luxury</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Trama geométrica</span>
+                            </button>
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/stardust-noir.svg', 'repeat')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Poeira Dourada ✦</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Brilho estelar</span>
+                            </button>
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/hero/hero-caminhos.jpg', 'cover')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Joia Divinium Nobre</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Foto editorial</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contraste & Modo de Exibição -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group" style="margin: 0;">
+                            <label for="lp_site_bg_overlay">
+                                Escurecimento de Contraste: <strong id="valOverlayLanding"><?= round(((float)Setting::get('site_bg_overlay', '0.75')) * 100) ?>%</strong>
+                            </label>
+                            <input type="range" id="lp_site_bg_overlay" name="site_bg_overlay" min="0.10" max="0.95" step="0.05" 
+                                   value="<?= View::e(Setting::get('site_bg_overlay', '0.75')) ?>" 
+                                   style="width: 100%; accent-color: #caa15c;"
+                                   oninput="document.getElementById('valOverlayLanding').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
+                            <span class="field-hint">Garante legibilidade dos textos sobre a foto.</span>
+                        </div>
+
+                        <div class="form-group" style="margin: 0;">
+                            <label for="lp_site_bg_repeat">Modo de Enquadramento</label>
+                            <select id="lp_site_bg_repeat" name="site_bg_repeat" class="form-select" onchange="updateThemeColorsLivePreview()">
+                                <option value="cover" <?= Setting::get('site_bg_repeat', 'cover') === 'cover' ? 'selected' : '' ?>>Cobrir Inteira (Cover fixo)</option>
+                                <option value="repeat" <?= Setting::get('site_bg_repeat', '') === 'repeat' ? 'selected' : '' ?>>Repetir Textura (Seamless)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Lateral de Pré-Visualização Ao Vivo -->
+                <div>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Loja em Tempo Real:</label>
+                    <div id="lpColorsLivePreviewCard" style="height: 320px; border-radius: 12px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); background-color: #0d0c0b;">
+                        <div id="lpColorsLivePreviewOverlay" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
+                            <span id="lpPreviewLogo" style="font-family: var(--font-serif); font-size: 1.05rem; color: #fff; font-weight: 700; letter-spacing: 1px;">DIVINIUM</span>
+                            <span style="font-size: 0.65rem; background: rgba(202,161,92,0.25); color: #caa15c; border: 1px solid #caa15c; padding: 2px 8px; border-radius: 10px; font-weight: 600;">PRÉVIA AO VIVO</span>
+                        </div>
+                        <div style="position: relative; z-index: 2; text-align: center; margin: auto 0;">
+                            <h4 id="lpPreviewTitle" style="font-family: var(--font-serif); font-size: 1.25rem; color: #fff; margin: 0 0 4px;">Joias que Revelam</h4>
+                            <span id="lpPreviewHighlight" style="font-family: var(--font-serif); font-size: 1.1rem; color: #caa15c; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
+                            <div id="lpPreviewCardBox" style="display: inline-block; background: #141312; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 14px;">
+                                <span id="lpPreviewCardText" style="font-size: 0.72rem; color: #ded7cf;">✦ Alta Joalheria em Prata de Lei</span>
+                            </div>
+                        </div>
+                        <div style="position: relative; z-index: 2; text-align: center;">
+                            <button type="button" id="lpPreviewBtn" style="background: #caa15c; color: #000; border: none; font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; cursor: default;">
+                                Ver Coleção ↗
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3556,6 +3904,148 @@ function checkInitialEditorTab() {
     toggleLogoFields();
     updateMobileMenuLivePreview();
     updateAboutLivePreview();
+    updateThemeColorsLivePreview();
+}
+
+// Funções de Paletas, Texturas e Prévia do Estúdio Central de Cores & Fundo
+function applyThemePalette(themeName) {
+    const palettes = {
+        'gold': {
+            bg: '#0D0C0B',
+            surface: '#141312',
+            primary: '#CAA15C',
+            accent: '#E0C080',
+            text: '#F4EFEA',
+            textMuted: '#9E978E'
+        },
+        'silver': {
+            bg: '#FBF9F5',
+            surface: '#FFFFFF',
+            primary: '#1A1918',
+            accent: '#8A8782',
+            text: '#1A1918',
+            textMuted: '#6B665F'
+        },
+        'rose': {
+            bg: '#120D0A',
+            surface: '#1C1510',
+            primary: '#D48B60',
+            accent: '#E5A882',
+            text: '#F9F4F0',
+            textMuted: '#A89990'
+        },
+        'emerald': {
+            bg: '#06130D',
+            surface: '#0D2018',
+            primary: '#38A169',
+            accent: '#68D391',
+            text: '#EBF8F2',
+            textMuted: '#8BA698'
+        }
+    };
+
+    const p = palettes[themeName] || palettes['gold'];
+    const fields = [
+        { textId: 'lp_custom_color_bg', pickerId: 'picker_lp_color_bg', val: p.bg },
+        { textId: 'lp_custom_color_surface', pickerId: 'picker_lp_color_surface', val: p.surface },
+        { textId: 'lp_custom_color_primary', pickerId: 'picker_lp_color_primary', val: p.primary },
+        { textId: 'lp_custom_color_accent', pickerId: 'picker_lp_color_accent', val: p.accent },
+        { textId: 'lp_custom_color_text', pickerId: 'picker_lp_color_text', val: p.text },
+        { textId: 'lp_custom_color_text_muted', pickerId: 'picker_lp_color_text_muted', val: p.textMuted }
+    ];
+
+    fields.forEach(f => {
+        const txt = document.getElementById(f.textId);
+        if (txt) txt.value = f.val;
+        const pck = document.getElementById(f.pickerId);
+        if (pck) pck.value = f.val;
+    });
+
+    updateThemeColorsLivePreview();
+}
+
+function updateThemeColorsLivePreview() {
+    const bgVal = document.getElementById('lp_custom_color_bg')?.value || '#0d0c0b';
+    const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#141312';
+    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#caa15c';
+    const textVal = document.getElementById('lp_custom_color_text')?.value || '#ffffff';
+    const imgVal = document.getElementById('lp_site_bg_image')?.value || '';
+    const overlayVal = parseFloat(document.getElementById('lp_site_bg_overlay')?.value || '0.75');
+    const repeatVal = document.getElementById('lp_site_bg_repeat')?.value || 'cover';
+
+    const card = document.getElementById('lpColorsLivePreviewCard');
+    const overlay = document.getElementById('lpColorsLivePreviewOverlay');
+    const highlight = document.getElementById('lpPreviewHighlight');
+    const cardBox = document.getElementById('lpPreviewCardBox');
+    const btn = document.getElementById('lpPreviewBtn');
+    const title = document.getElementById('lpPreviewTitle');
+
+    if (card) {
+        card.style.backgroundColor = bgVal;
+        if (imgVal) {
+            card.style.backgroundImage = `url('${imgVal}')`;
+            card.style.backgroundSize = (repeatVal === 'repeat') ? 'auto' : 'cover';
+            card.style.backgroundRepeat = (repeatVal === 'repeat') ? 'repeat' : 'no-repeat';
+            card.style.backgroundPosition = 'center center';
+        } else {
+            card.style.backgroundImage = 'none';
+        }
+    }
+
+    if (overlay) {
+        overlay.style.background = `rgba(13, 12, 11, ${overlayVal})`;
+    }
+
+    if (highlight) highlight.style.color = primaryVal;
+    if (cardBox) cardBox.style.backgroundColor = surfaceVal;
+    if (title) title.style.color = textVal;
+    if (btn) {
+        btn.style.backgroundColor = primaryVal;
+        btn.style.color = (bgVal === '#FBF9F5' || primaryVal === '#1A1918') ? '#ffffff' : '#000000';
+    }
+}
+
+function applyBgPresetLanding(url, repeat) {
+    const input = document.getElementById('lp_site_bg_image');
+    if (input) input.value = url;
+    const select = document.getElementById('lp_site_bg_repeat');
+    if (select) select.value = repeat;
+    updateThemeColorsLivePreview();
+}
+
+async function uploadSiteBgFromLanding(fileInput) {
+    if (!fileInput.files || !fileInput.files[0]) return;
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('bg_file', file);
+    formData.append('target_key', 'site_bg_image');
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        || document.querySelector('input[name="_csrf_token"]')?.value || '';
+    formData.append('_csrf_token', csrf);
+
+    try {
+        const res = await fetch('/admin/temas/upload-fundo', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+            const input = document.getElementById('lp_site_bg_image');
+            if (input) input.value = data.url;
+            updateThemeColorsLivePreview();
+            alert('✓ Imagem de fundo enviada com sucesso!');
+        } else {
+            alert(data.error || 'Erro no upload do fundo.');
+        }
+    } catch (err) {
+        alert('Erro ao enviar imagem: ' + err.message);
+    }
 }
 
 if (document.readyState === 'loading') {
