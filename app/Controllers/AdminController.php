@@ -1230,6 +1230,65 @@ class AdminController
     }
 
     /**
+     * Upload Genérico de Mídia para Identidade, Banners, Favicon e Seções
+     */
+    public function uploadMedia(): void
+    {
+        try {
+            if (empty($_FILES['media_file']) || $_FILES['media_file']['error'] !== UPLOAD_ERR_OK) {
+                $this->respond(['success' => false, 'error' => 'Nenhum arquivo enviado ou erro no upload.'], 200);
+                return;
+            }
+
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'image/x-icon', 'image/vnd.microsoft.icon'];
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($_FILES['media_file']['tmp_name']);
+
+            if (!in_array($mime, $allowedMimes, true)) {
+                $this->respond(['success' => false, 'error' => 'Formato não suportado. Utilize JPG, PNG, WebP, SVG ou ICO.'], 200);
+                return;
+            }
+
+            $ext = strtolower(pathinfo($_FILES['media_file']['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'svg', 'ico'], true)) {
+                $ext = 'jpg';
+            }
+
+            $category = trim((string) ($_POST['media_type'] ?? 'general'));
+            $safeCategory = in_array($category, ['logos', 'favicons', 'banners', 'editorial', 'slides'], true) ? $category : 'general';
+
+            $uploadDir = BASE_PATH . '/assets/images/' . $safeCategory;
+            if (!is_dir($uploadDir)) {
+                @mkdir($uploadDir, 0755, true);
+            }
+
+            $filename = 'media-' . time() . '-' . rand(100, 999) . '.' . $ext;
+            $dest = $uploadDir . '/' . $filename;
+
+            if (!move_uploaded_file($_FILES['media_file']['tmp_name'], $dest)) {
+                $this->respond(['success' => false, 'error' => 'Falha ao salvar mídia no servidor.'], 200);
+                return;
+            }
+
+            $url = '/assets/images/' . $safeCategory . '/' . $filename;
+
+            $targetSettingKey = trim((string) ($_POST['target_setting_key'] ?? ''));
+            if ($targetSettingKey !== '' && !str_starts_with($targetSettingKey, '_')) {
+                \App\Models\Setting::set($targetSettingKey, $url);
+            }
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Arquivo enviado e atualizado com sucesso!',
+                'url' => $url,
+                'target_setting_key' => $targetSettingKey
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao processar mídia: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
      * Salvar Configurações Gerais da Loja (Dashboard)
      */
     public function saveStoreSettings(): void

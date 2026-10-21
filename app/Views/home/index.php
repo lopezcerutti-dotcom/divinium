@@ -6,6 +6,9 @@
 use App\Models\Setting;
 use App\Core\View;
 use App\Models\Collection;
+
+$renderSection = [];
+ob_start();
 ?>
 
 <!-- ======================================================================= -->
@@ -190,8 +193,11 @@ use App\Models\Collection;
             </div>
         </div>
 
-    </div>
 </section>
+<?php
+$renderSection['hero'] = ob_get_clean();
+ob_start();
+?>
 
 <!-- ======================================================================= -->
 <!-- SEÇÃO 2: MANIFESTO & HISTÓRIA (CRAFTED WITH PURPOSE) -->
@@ -273,8 +279,11 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
             </div>
         </div>
 
-    </div>
 </section>
+<?php
+$renderSection['about'] = ob_get_clean();
+ob_start();
+?>
 
 <!-- ======================================================================= -->
 <!-- SEÇÃO 3: VITRINE DE PRODUTOS & SLIDER (SIGNATURE SHOWCASE) -->
@@ -434,8 +443,11 @@ foreach ($activeCollections as $c) {
             </div>
         </div>
 
-    </div>
 </section>
+<?php
+$renderSection['collections'] = ob_get_clean();
+ob_start();
+?>
 
 <!-- ======================================================================= -->
 <!-- SEÇÃO 4: EXPERIÊNCIA E SERVIÇOS DE ASSINATURA (SIGNATURE SERVICES) -->
@@ -495,8 +507,11 @@ foreach ($activeCollections as $c) {
 
         </div>
 
-    </div>
 </section>
+<?php
+$renderSection['services'] = ob_get_clean();
+ob_start();
+?>
 
 <!-- ======================================================================= -->
 <!-- SEÇÃO 5: DESDE 2026, CADA PEÇA É ÚNICA -->
@@ -526,8 +541,11 @@ foreach ($activeCollections as $c) {
                 <a href="#collections" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('heritage_cta_text', 'Escolher Meu Bracelete')) ?></a>
             </div>
         </div>
-    </div>
 </section>
+<?php
+$renderSection['heritage'] = ob_get_clean();
+ob_start();
+?>
 
 <!-- ======================================================================= -->
 <!-- SEÇÃO 6: PROVA SOCIAL & DEPOIMENTOS (LOVED BY THOSE WHO APPRECIATE) -->
@@ -594,3 +612,17 @@ foreach ($activeCollections as $c) {
 
     </div>
 </section>
+<?php
+$renderSection['testimonials'] = ob_get_clean();
+
+// Renderização dinâmica conforme Ordem e Visibilidade configuradas no Painel Administrativo
+$defaultOrder = 'hero,about,collections,services,heritage,testimonials';
+$orderRaw = Setting::get('home_sections_order', $defaultOrder);
+$sections = array_map('trim', explode(',', $orderRaw ?: $defaultOrder));
+
+foreach ($sections as $secKey) {
+    if (isset($renderSection[$secKey]) && Setting::get('home_' . $secKey . '_visible', '1') === '1') {
+        echo $renderSection[$secKey];
+    }
+}
+?>

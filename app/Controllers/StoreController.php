@@ -30,12 +30,12 @@ class StoreController
             // Buscar modelos principais únicos (produtos base com parent_sku nulo, vazio ou igual a sku)
             $productsStmt = $pdo->query("
                 SELECT p.*, c.name as category_name, c.slug as category_slug,
-                       (SELECT COUNT(*) FROM products v WHERE (v.parent_sku = p.sku OR v.sku = p.sku) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as variations_count,
-                       (SELECT MIN(v.price_cents) FROM products v WHERE (v.parent_sku = p.sku OR v.sku = p.sku) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as min_price_cents
+                       (SELECT COUNT(*) FROM products v WHERE (TRIM(v.parent_sku) = TRIM(p.sku) OR TRIM(v.sku) = TRIM(p.sku)) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as variations_count,
+                       (SELECT MIN(v.price_cents) FROM products v WHERE (TRIM(v.parent_sku) = TRIM(p.sku) OR TRIM(v.sku) = TRIM(p.sku)) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as min_price_cents
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1)) 
-                  AND (p.parent_sku IS NULL OR p.parent_sku = '' OR p.parent_sku = p.sku)
+                  AND (p.parent_sku IS NULL OR TRIM(p.parent_sku) = '' OR TRIM(p.parent_sku) = TRIM(p.sku))
                 ORDER BY p.category_id ASC, p.sort_order ASC, p.id ASC
             ");
             if ($productsStmt) {
@@ -231,9 +231,9 @@ class StoreController
                         SELECT p.*, c.name as category_name 
                         FROM products p 
                         LEFT JOIN categories c ON p.category_id = c.id 
-                        WHERE (p.sku = :base_sku OR p.parent_sku = :base_sku OR p.sku LIKE :prefix)
+                        WHERE (TRIM(p.sku) = :base_sku OR TRIM(p.parent_sku) = :base_sku OR TRIM(p.sku) LIKE :prefix)
                           AND (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1))
-                        ORDER BY CASE WHEN p.sku = :base_sku THEN 0 ELSE 1 END, p.sort_order ASC, p.id ASC
+                        ORDER BY CASE WHEN TRIM(p.sku) = :base_sku THEN 0 ELSE 1 END, p.sort_order ASC, p.id ASC
                     ");
                     $varStmt->execute([
                         ':base_sku' => $baseModelSku,
@@ -575,4 +575,93 @@ class StoreController
             ],
         ];
     }
+
+    /**
+     * Página de Finalização de Compra / Checkout Seguro
+     */
+    public function checkout(): void
+    {
+        View::render('store/checkout', [
+            'pageTitle' => 'Finalizar Escolhas | Sacola Divinium',
+            'pageDescription' => 'Conclua seu pedido com atendimento exclusivo, Pix instantâneo com 5% de desconto ou canais homologados.'
+        ]);
+    }
+
+    /**
+     * Páginas Institucionais & Políticas da Joalheria
+     *
+     * @param array<string, string> $params
+     */
+    public function institutionalPage(array $params = []): void
+    {
+        $uri = trim((string)($_SERVER['REQUEST_URI'] ?? ''), '/');
+        $parts = explode('?', $uri)[0];
+        $slug = $params['slug'] ?? $parts;
+
+        $pageMap = [
+            'trocas-e-devolucoes' => [
+                'title' => \App\Models\Setting::get('page_returns_title', 'Política de Trocas e Devoluções'),
+                'desc' => 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.',
+                'content_key' => 'policy_returns_content',
+                'default_content' => "<h3>Compromisso de Excelência e Confiança DIVINIUM</h3><p>Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje realizar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.</p><h4>1. Direito de Arrependimento (CDC Art. 49)</h4><p>Você possui até <strong>7 (sete) dias corridos</strong> a contar da data de recebimento do pedido para solicitar a devolução com reembolso integral ou troca por outra gema mineral.</p><h4>2. Condições da Peça</h4><p>A joia deverá ser devolvida em sua embalagem de veludo original, acompanhada do Certificado de Garantia e sem sinais de uso indevido ou avarias mecânicas.</p><h4>3. Como Solicitar</h4><p>Entre em contato direto com o nosso <strong>Concierge VIP</strong> pelo WhatsApp oficial informado no rodapé ou pelo e-mail <strong>atendimento@divinium.com.br</strong> para receber o código postal de postagem reversa cortesia com seguro total de transporte.</p>"
+            ],
+            'garantia-e-cuidados' => [
+                'title' => \App\Models\Setting::get('page_warranty_title', 'Certificado de Garantia & Cuidados'),
+                'desc' => 'Conheça o compromisso de autenticidade da prata de lei 925, gemas naturais e as orientações para conservação.',
+                'content_key' => 'policy_warranty_content',
+                'default_content' => "<h3>Autenticidade & Nobreza dos Materiais</h3><p>A DIVINIUM assegura a autenticidade de cada joia autoral. Nossos aros são confeccionados em Prata de Lei 925 legítima e as mandalas abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.</p><h4>1. Garantia Vitalícia do Metal</h4><p>Garantimos permanentemente a pureza da prata 925 empregada em todas as nossas criações contra defeitos originários de manufatura.</p><h4>2. Cuidados com a sua Joia</h4><ul><li>Evite contato direto com produtos químicos abrasivos, alvejantes, cloro de piscina ou perfumes aplicados diretamente sobre as gemas.</li><li>Para higienização, utilize apenas flanela mágica de polimento ou água morna com sabão neutro, secando com pano macio e suave.</li><li>Armazene suas joias individualmente na embalagem aveludada original DIVINIUM para prevenir atritos entre metais.</li></ul>"
+            ],
+            'politica-de-privacidade' => [
+                'title' => \App\Models\Setting::get('page_privacy_title', 'Política de Privacidade & Proteção de Dados (LGPD)'),
+                'desc' => 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).',
+                'content_key' => 'policy_privacy_content',
+                'default_content' => "<h3>Privacidade e Respeito aos Seus Dados</h3><p>A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD)</strong>.</p><h4>1. Coleta de Informações</h4><p>Coletamos apenas dados estritamente necessários para viabilizar o processamento seguro de seus pedidos, cálculo de frete, emissão de nota fiscal e comunicação sobre suas joias.</p><h4>2. Segurança e Sigilo</h4><p>Não compartilhamos, comercializamos ou alugamos dados cadastrais a terceiros. Todo o tráfego é criptografado por protocolo SSL/TLS de 256 bits.</p><h4>3. Seus Direitos</h4><p>Você pode a qualquer momento consultar, retificar ou solicitar a eliminação dos seus dados entrando em contato com nosso Encarregado de Proteção de Dados (DPO) através de dpo@divinium.com.br.</p>"
+            ],
+            'termos-de-uso' => [
+                'title' => \App\Models\Setting::get('page_terms_title', 'Termos de Uso & Condições Gerais'),
+                'desc' => 'Termos de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.',
+                'content_key' => 'terms_of_use_content',
+                'default_content' => "<h3>Termos de Uso do Site DIVINIUM</h3><p>Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.</p><h4>1. Propriedade Intelectual</h4><p>Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Lei de Propriedade Industrial (Lei nº 9.279/1996).</p><h4>2. Exatidão das Informações</h4><p>As fotografias reproduzem fielmente os modelos. Por se tratarem de gemas minerais autênticas extraídas da natureza, pequenas nuances de cor e grafismos naturais nas conchas e pedras comprovam a singularidade e exclusividade de cada joia.</p>"
+            ],
+            'guia-de-medidas' => [
+                'title' => \App\Models\Setting::get('page_size_guide_title', 'Guia de Medidas & Tamanhos de Anéis'),
+                'desc' => 'Aprenda a identificar a medida exata do seu aro para um ajuste perfeito e confortável.',
+                'content_key' => 'policy_size_guide_content',
+                'default_content' => "<h3>Como Descobrir o Tamanho do Seu Anel</h3><p>Para assegurar que seu anel DIVINIUM se encaixe perfeitamente com toda a elegância e conforto, utilize o método prático do diâmetro interno.</p><h4>Método do Diâmetro Interno</h4><ol><li>Selecione um anel ou aliança que sirva perfeitamente no dedo desejado.</li><li>Com uma régua milimetrada, meça a distância interna (linha reta de borda a borda interna), desconsiderando a espessura do aro.</li><li>Consulte a tabela de equivalências:<ul><li>15,5 mm = Aro 12</li><li>16,2 mm = Aro 14</li><li>16,8 mm = Aro 16</li><li>17,5 mm = Aro 18</li><li>18,2 mm = Aro 20</li><li>18,8 mm = Aro 22</li><li>19,5 mm = Aro 24</li></ul></li></ol><p>Em caso de dúvidas entre dois números, recomendamos a escolha do tamanho maior para máximo conforto durante todas as estações do ano.</p>"
+            ],
+            'dpo' => [
+                'title' => \App\Models\Setting::get('page_dpo_title', 'Encarregado de Proteção de Dados (DPO)'),
+                'desc' => 'Canal direto de atendimento para solicitações e direitos previstos pela LGPD.',
+                'content_key' => 'policy_dpo_content',
+                'default_content' => "<h3>Canal do Encarregado de Dados (DPO)</h3><p>Em atendimento ao Artigo 41 da Lei Federal nº 13.709/2018 (LGPD), a DIVINIUM disponibiliza este canal oficial de comunicação direto entre os titulares de dados, a empresa e a Autoridade Nacional de Proteção de Dados (ANPD).</p><h4>Encarregado Oficial:</h4><p><strong>Comitê de Privacidade & Governança de Dados</strong><br>E-mail: <strong>dpo@divinium.com.br</strong><br>Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília)</p><p>As solicitações de consulta, retificação ou exclusão de dados serão respondidas dentro dos prazos legais estipulados pela legislação vigente.</p>"
+            ]
+        ];
+
+        $page = $pageMap[$slug] ?? null;
+        if (!$page) {
+            $customTitle = \App\Models\Setting::get('custom_page_' . $slug . '_title');
+            if ($customTitle) {
+                $page = [
+                    'title' => $customTitle,
+                    'desc' => \App\Models\Setting::get('custom_page_' . $slug . '_desc', 'Página institucional DIVINIUM'),
+                    'content_key' => 'custom_page_' . $slug . '_content',
+                    'default_content' => '<p>Conteúdo em atualização.</p>'
+                ];
+            } else {
+                header('Location: /');
+                exit;
+            }
+        }
+
+        $bodyContent = \App\Models\Setting::get($page['content_key'], $page['default_content']);
+
+        View::render('home/page', [
+            'pageTitle' => $page['title'],
+            'pageDescription' => $page['desc'],
+            'pageHeading' => $page['title'],
+            'pageBodyHtml' => $bodyContent,
+            'pageSlug' => $slug
+        ]);
+    }
 }
+

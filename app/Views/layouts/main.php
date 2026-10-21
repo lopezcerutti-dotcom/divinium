@@ -3,22 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title><?= isset($pageTitle) ? \App\Core\View::e($pageTitle) . ' | Divinium' : 'Divinium | Joalheria & Luxo Silencioso' ?></title>
+    <?php
+        $titleFormat = \App\Models\Setting::get('seo_site_title_format', '{title} | Divinium');
+        $siteBrand = \App\Models\Setting::get('header_logo_text', 'Divinium');
+        $currentTitle = isset($pageTitle) ? $pageTitle : 'Joias Autorais & Luxo Silencioso';
+        $renderedTitle = str_replace(['{title}', '{brand}'], [$currentTitle, $siteBrand], $titleFormat);
+        if (!str_contains($titleFormat, '{title}')) {
+            $renderedTitle = $currentTitle . ' | ' . $siteBrand;
+        }
+        $metaDesc = isset($pageDescription) ? $pageDescription : \App\Models\Setting::get('seo_meta_description', 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.');
+        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, prata 925, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre');
+        $ogImage = \App\Models\Setting::get('seo_og_image', '/assets/images/hero/hero-main.webp');
+        $faviconUrl = \App\Models\Setting::get('site_favicon_url', '/assets/images/favicon.ico');
+    ?>
+    <title><?= \App\Core\View::e($renderedTitle) ?></title>
     
-    <meta name="description" content="<?= isset($pageDescription) ? \App\Core\View::e($pageDescription) : 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.' ?>">
+    <meta name="description" content="<?= \App\Core\View::e($metaDesc) ?>">
+    <meta name="keywords" content="<?= \App\Core\View::e($metaKeywords) ?>">
     <link rel="canonical" href="https://seudominio.com.br<?= \App\Core\View::e($_SERVER['REQUEST_URI'] ?? '/') ?>">
+    <link rel="icon" href="<?= \App\Core\View::e($faviconUrl) ?>">
 
     <!-- Open Graph / Redes Sociais -->
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Divinium">
-    <meta property="og:title" content="<?= isset($pageTitle) ? \App\Core\View::e($pageTitle) : 'Divinium | Joalheria & Luxo Silencioso' ?>">
-    <meta property="og:description" content="Joias exclusivas que expressam a beleza atemporal do luxo silencioso.">
-    <meta property="og:image" content="/assets/images/hero/hero-main.webp">
+    <meta property="og:site_name" content="<?= \App\Core\View::e($siteBrand) ?>">
+    <meta property="og:title" content="<?= \App\Core\View::e($renderedTitle) ?>">
+    <meta property="og:description" content="<?= \App\Core\View::e($metaDesc) ?>">
+    <meta property="og:image" content="<?= \App\Core\View::e($ogImage) ?>">
 
     <!-- Tipografia Editorial: Cormorant Garamond (Serif de Luxo) + Plus Jakarta Sans (UI moderna) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Estilos Principais -->
     <link rel="stylesheet" href="/assets/css/app.css?v=<?= time() ?>">
@@ -33,6 +48,9 @@
             document.documentElement.classList.add(serverTheme);
         })();
     </script>
+
+    <!-- Scripts de Rastreamento / Analytics (Head) -->
+    <?= \App\Models\Setting::get('custom_head_scripts', '') ?>
 
     <!-- Personalização de Fundo Dinâmico (Configurado no Painel Administrativo) -->
     <?php
@@ -73,6 +91,7 @@
     <?php endif; ?>
 </head>
 <body class="luxury-theme">
+    <?= \App\Models\Setting::get('custom_body_scripts', '') ?>
 
     <!-- 1. BARRA SUPERIOR DE ANÚNCIO (TOP BANNER) -->
     <?php if (\App\Models\Setting::get('top_banner_active', '1') === '1'): ?>
@@ -97,26 +116,61 @@
 
             <!-- Links de Navegação (Desktop Esquerda) -->
             <nav class="nav-links left-nav" aria-label="Navegação Principal">
-                <a href="/" class="nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_home', 'Início')) ?></a>
-                <a href="/loja" class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_store', 'Loja')) ?></a>
-                <a href="/#about" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_about', 'Sobre')) ?></a>
+                <?php if (\App\Models\Setting::get('nav_link_home_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_link_home_url', '/')) ?>" class="nav-link <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_home', 'Início')) ?></a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('nav_link_store_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_link_store_url', '/loja')) ?>" class="nav-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/loja') ? 'active' : '' ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_store', 'Loja')) ?></a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('nav_link_about_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_link_about_url', '/#about')) ?>" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_about', 'Sobre')) ?></a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('nav_link_collections_visible', '1') === '1'): ?>
                 <div class="nav-item-dropdown">
-                    <a href="/loja" class="nav-link dropdown-toggle"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_collections', 'Coleções')) ?> <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_link_collections_url', '/loja')) ?>" class="nav-link dropdown-toggle"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_collections', 'Coleções')) ?> <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
-                        <a href="/loja"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all', 'Ver Todas as Peças')) ?></a>
-                        <a href="/loja#braceletes"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos')) ?></a>
-                        <a href="/loja#colares"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?></a>
-                        <a href="/loja#aneis"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings', 'Anéis & Alianças')) ?></a>
+                        <?php if (\App\Models\Setting::get('nav_sub_all_visible', '1') === '1'): ?>
+                            <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all_url', '/loja')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_all', 'Ver Todas as Peças')) ?></a>
+                        <?php endif; ?>
+                        <?php if (\App\Models\Setting::get('nav_sub_bracelets_visible', '1') === '1'): ?>
+                            <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets_url', '/loja#braceletes')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_bracelets', 'Braceletes Exclusivos')) ?></a>
+                        <?php endif; ?>
+                        <?php if (\App\Models\Setting::get('nav_sub_necklaces_visible', '1') === '1'): ?>
+                            <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces_url', '/loja#colares')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_necklaces', 'Colares & Pingentes')) ?></a>
+                        <?php endif; ?>
+                        <?php if (\App\Models\Setting::get('nav_sub_rings_visible', '1') === '1'): ?>
+                            <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings_url', '/loja#aneis')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_rings', 'Anéis & Alianças')) ?></a>
+                        <?php endif; ?>
+                        <?php if (\App\Models\Setting::get('nav_sub_earrings_visible', '1') === '1'): ?>
+                            <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_earrings_url', '/loja#brincos')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('nav_sub_earrings', 'Brincos & Segundo Furo')) ?></a>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <a href="/#services" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_services', 'Garantia')) ?></a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('nav_link_services_visible', '1') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_link_services_url', '/#services')) ?>" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_link_services', 'Garantia')) ?></a>
+                <?php endif; ?>
+
+                <?php if (\App\Models\Setting::get('nav_custom_link1_visible', '0') === '1'): ?>
+                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('nav_custom_link1_url', '/garantia-e-cuidados')) ?>" class="nav-link"><?= \App\Core\View::e(\App\Models\Setting::get('nav_custom_link1_text', 'Certificado')) ?></a>
+                <?php endif; ?>
             </nav>
 
-            <!-- Logo Central da Marca -->
-            <div class="brand-logo-container">
+            <!-- Logo Central da Marca (Pilar 1: Texto ou Imagem) -->
+            <div class="brand-logo-container" style="text-align: <?= \App\Models\Setting::get('site_logo_alignment', 'center') === 'left' ? 'left' : 'center' ?>;">
                 <a href="/" class="brand-logo" aria-label="Divinium Home">
-                    <span class="logo-text"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
-                    <span class="logo-sub"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_sub', 'HAUTE JOAILLERIE')) ?></span>
+                    <?php if (\App\Models\Setting::get('site_logo_type', 'text') === 'image' && \App\Models\Setting::get('site_logo_image_dark')): ?>
+                        <img src="<?= \App\Core\View::e(\App\Models\Setting::get('site_logo_image_dark')) ?>" 
+                             alt="<?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?>" 
+                             style="height: <?= \App\Core\View::e(\App\Models\Setting::get('site_logo_height', '38px')) ?>; max-height: 56px; width: auto; object-fit: contain;">
+                    <?php else: ?>
+                        <span class="logo-text"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
+                        <span class="logo-sub"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_sub', 'HAUTE JOAILLERIE')) ?></span>
+                    <?php endif; ?>
                 </a>
             </div>
 
@@ -446,6 +500,62 @@
             </form>
         </div>
     </div>
+
+    <!-- 8. BOTÃO FLUTUANTE DE WHATSAPP CONCIERGE VIP -->
+    <?php if (\App\Models\Setting::get('whatsapp_floating_enabled', '1') === '1'): 
+        $floatWaNum = preg_replace('/[^0-9]/', '', \App\Models\Setting::get('hero_whatsapp_number', '5511999999999'));
+        $floatWaMsg = urlencode(\App\Models\Setting::get('whatsapp_floating_message', 'Olá! Gostaria de um atendimento personalizado sobre as joias autorais Divinium.'));
+        $floatPos = \App\Models\Setting::get('whatsapp_floating_position', 'right');
+    ?>
+    <a href="https://wa.me/<?= $floatWaNum ?>?text=<?= $floatWaMsg ?>" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-whatsapp-vip <?= $floatPos === 'left' ? 'pos-left' : 'pos-right' ?>" 
+       aria-label="Atendimento Concierge WhatsApp VIP" 
+       title="Falar com o Concierge Divinium">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        <span class="floating-wa-label"><?= \App\Core\View::e(\App\Models\Setting::get('whatsapp_floating_label', 'Concierge VIP')) ?></span>
+    </a>
+    <style>
+    .floating-whatsapp-vip {
+        position: fixed;
+        bottom: 24px;
+        z-index: 998;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px 10px 14px;
+        background: #25D366;
+        color: #ffffff;
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: var(--font-sans, sans-serif);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+    .floating-whatsapp-vip.pos-right { right: 24px; }
+    .floating-whatsapp-vip.pos-left { left: 24px; }
+    .floating-whatsapp-vip:hover {
+        background: #20bd5a;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5);
+        color: #ffffff;
+    }
+    @media (max-width: 600px) {
+        .floating-whatsapp-vip {
+            bottom: 18px;
+            padding: 12px;
+            border-radius: 50%;
+        }
+        .floating-whatsapp-vip.pos-right { right: 18px; }
+        .floating-whatsapp-vip.pos-left { left: 18px; }
+        .floating-wa-label { display: none; }
+    }
+    </style>
+    <?php endif; ?>
 
     <!-- Scripts da Loja -->
     <script src="/assets/js/app.js?v=<?= time() ?>"></script>

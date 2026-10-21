@@ -196,7 +196,7 @@ class Database
         $ensured = true;
 
         // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
-        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v7_ensured.flag';
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v8_ensured.flag';
         if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
             return;
         }
@@ -489,8 +489,16 @@ class Database
                         ]);
                     }
                 }
-            } catch (\Throwable $migrationEx) {
-                // Ignora silenciosamente
+            // 7. Higienização e Correção do Catálogo de Produtos Divinium
+            try {
+                $pdo->exec("UPDATE products SET name = REPLACE(name, 'ORGONOTE', 'ORGONITE'), description = REPLACE(description, 'orgonote', 'orgonite'), slug = REPLACE(slug, 'orgonote', 'orgonite') WHERE name LIKE '%ORGONOTE%' OR description LIKE '%orgonote%' OR slug LIKE '%orgonote%';");
+                $pdo->exec("UPDATE products SET sku = TRIM(sku), parent_sku = TRIM(parent_sku);");
+                $pdo->exec("UPDATE products SET image_url = '/assets/images/products/an-ov-40-capa.jpg' WHERE sku LIKE 'AN-OV-40%' AND (image_url LIKE '%bracelete%' OR image_url IS NULL OR image_url = '');");
+                $pdo->exec("UPDATE products SET image_url = '/assets/images/products/an-rd-25-capa.jpg' WHERE sku LIKE 'AN-RD-25%' AND (image_url LIKE '%bracelete%' OR image_url LIKE '%an-ov-40%' OR image_url IS NULL OR image_url = '');");
+                $pdo->exec("UPDATE products SET image_url = '/assets/images/products/an-rd-20-capa.jpg' WHERE sku LIKE 'AN-RD-20%' AND (image_url LIKE '%bracelete%' OR image_url IS NULL OR image_url = '');");
+                $pdo->exec("UPDATE products SET image_url = '/assets/images/products/br-sf-06-capa.jpg' WHERE sku LIKE 'BR-SF-06%' AND (image_url LIKE '%bracelete%' OR image_url IS NULL OR image_url = '');");
+            } catch (\Throwable $catCleanEx) {
+                // Silencioso se colunas ou registros já estiverem limpos
             }
 
             $ensured = true;

@@ -323,6 +323,14 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                     </article>
                 <?php endforeach; ?>
             </div>
+            <div class="store-empty-state" id="storeEmptyState" style="display: none; margin-top: 40px; text-align: center; padding: 40px 20px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#caa15c" stroke-width="1" style="margin-bottom: 12px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <h3 style="color: #ffffff; font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 8px;"><?= View::e(Setting::get('store_empty_title', 'Em Breve Novos Lançamentos Desta Coleção')) ?></h3>
+                <p style="color: #9e978e; font-size: 0.9rem; max-width: 520px; margin: 0 auto 20px;"><?= View::e(Setting::get('store_empty_desc', 'Novas joias e gemas exclusivas estão sendo lapidadas no atelier. Selecione outra categoria ou explore todas as peças disponíveis.')) ?></p>
+                <button type="button" class="btn-store-back" style="cursor: pointer;" onclick="filterStore('all', document.querySelector('.store-filter-pill'))">
+                    Ver Todas as Joias Disponíveis
+                </button>
+            </div>
         <?php else: ?>
             <div class="store-empty-state">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
@@ -428,19 +436,50 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
 </section>
 <?php endif; ?>
 
-<!-- Script de Filtragem Rápida no Catálogo -->
+<!-- Script de Filtragem Rápida no Catálogo com Suporte a Hash e Estado Vazio -->
 <script>
 function filterStore(cat, btn) {
-    document.querySelectorAll('.store-filter-pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) {
+        document.querySelectorAll('.store-filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
 
     const cards = document.querySelectorAll('.store-product-card');
+    let visibleCount = 0;
     cards.forEach(card => {
         if (cat === 'all' || card.getAttribute('data-category') === cat) {
             card.style.display = 'flex';
+            visibleCount++;
         } else {
             card.style.display = 'none';
         }
     });
+
+    const emptyBox = document.getElementById('storeEmptyState');
+    if (emptyBox) {
+        emptyBox.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash.toLowerCase().replace('#', '');
+    if (hash) {
+        let matchedPill = null;
+        document.querySelectorAll('.store-filter-pill').forEach(pill => {
+            const txt = pill.textContent.toLowerCase();
+            const filterAttr = pill.getAttribute('data-filter') || '';
+            if (txt.includes(hash) || filterAttr.includes(hash)) {
+                matchedPill = pill;
+            }
+        });
+
+        if (matchedPill) {
+            matchedPill.click();
+            const catSec = document.getElementById('catalogo');
+            if (catSec) {
+                catSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+});
 </script>

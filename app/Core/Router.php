@@ -234,6 +234,18 @@ class Router
         $this->get('/produto/{slug}', [\App\Controllers\StoreController::class, 'show']);
         $this->get('/loja/{slug}', [\App\Controllers\StoreController::class, 'show']);
 
+        // Rota de Checkout Seguro
+        $this->get('/checkout', [\App\Controllers\StoreController::class, 'checkout']);
+
+        // Rotas das Páginas Institucionais & Políticas
+        $this->get('/trocas-e-devolucoes', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/garantia-e-cuidados', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/politica-de-privacidade', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/termos-de-uso', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/guia-de-medidas', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/dpo', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/institucional/{slug}', [\App\Controllers\StoreController::class, 'institutionalPage']);
+
         // Rota de Rastreamento de Cliques da Shopee (Analytics)
         $this->post('/api/track/click', function (): void {
             $input = json_decode(file_get_contents('php://input'), true);
@@ -297,6 +309,7 @@ class Router
         $this->post('/admin/temas/remover-bg', [\App\Controllers\AdminController::class, 'removeBackgroundImage'], $adminAuth);
         $this->post('/admin/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
         $this->post('/admin/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);
+        $this->post('/admin/media/upload', [\App\Controllers\AdminController::class, 'uploadMedia'], $adminAuth);
 
         // Rotas de Integração Bling ERP (OAuth2 & Sincronização)
         $this->get('/admin/bling/authorize', [\App\Controllers\AdminController::class, 'blingAuthorize'], $adminAuth);

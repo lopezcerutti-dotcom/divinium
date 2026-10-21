@@ -459,7 +459,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <?php if ($prodMineral): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Gema / Mineral</dt>
-                                <dd class="spec-value highlight-gold">✦ <?= View::e($prodMineral) ?></dd>
+                                <dd class="spec-value highlight-gold" id="specMineralValue">✦ <?= View::e($prodMineral) ?></dd>
                             </div>
                             <?php endif; ?>
 
@@ -627,11 +627,22 @@ function selectProductVariation(btn) {
         priceEl.textContent = priceFormatted;
     }
     
-    // 4. Atualizar desconto no Pix
+    // 4. Atualizar desconto no Pix e parcelamento no cartão
     const pixEl = document.querySelector('.price-pix-badge span:last-child');
     if (pixEl && priceCents > 0) {
         const pixVal = (priceCents * 0.95) / 100;
         pixEl.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' no Pix (-5%)';
+    }
+    const installmentsEl = document.querySelector('.price-installments-row span');
+    if (installmentsEl && priceCents > 0) {
+        const instVal = (priceCents / 600).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        installmentsEl.textContent = 'Em até 6x de R$ ' + instVal + ' sem juros nos canais oficiais homologados';
+    }
+
+    // 4.1 Atualizar ficha técnica no rodapé
+    const specMin = document.getElementById('specMineralValue');
+    if (specMin && stone) {
+        specMin.textContent = '✦ ' + stone;
     }
     
     // 5. Atualizar SKU / Código da Joia
