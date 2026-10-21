@@ -222,6 +222,44 @@
             </div>
         </div>
 
+        <!-- ESCALA TIPOGRÁFICA, RESPIRO & ALINHAMENTO (PILAR 5) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px; margin-top: 18px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="hero_title_size">Tamanho do Título Principal (Hero)</label>
+                <select id="hero_title_size" name="hero_title_size" class="form-select">
+                    <option value="clamp(2.3rem, 3.8vw, 3.4rem)" <?= ($customSettings['hero_title_size'] ?? '') === 'clamp(2.3rem, 3.8vw, 3.4rem)' ? 'selected' : '' ?>>Editorial Padrão (Harmônico)</option>
+                    <option value="clamp(2.6rem, 4.5vw, 4.0rem)" <?= ($customSettings['hero_title_size'] ?? '') === 'clamp(2.6rem, 4.5vw, 4.0rem)' ? 'selected' : '' ?>>Grande & Imponente (Impacto)</option>
+                    <option value="clamp(2.0rem, 3.0vw, 2.8rem)" <?= ($customSettings['hero_title_size'] ?? '') === 'clamp(2.0rem, 3.0vw, 2.8rem)' ? 'selected' : '' ?>>Minimalista Discreto (Quiet Luxe)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="body_font_size">Tamanho do Texto de Leitura</label>
+                <select id="body_font_size" name="body_font_size" class="form-select">
+                    <option value="1rem" <?= ($customSettings['body_font_size'] ?? '1rem') === '1rem' ? 'selected' : '' ?>>16px — Padrão Equilibrado</option>
+                    <option value="1.05rem" <?= ($customSettings['body_font_size'] ?? '') === '1.05rem' ? 'selected' : '' ?>>17px — Leitura Confortável</option>
+                    <option value="0.95rem" <?= ($customSettings['body_font_size'] ?? '') === '0.95rem' ? 'selected' : '' ?>>15px — Compacto & Refinado</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="section_spacing_y">Espaçamento Vertical entre Seções</label>
+                <select id="section_spacing_y" name="section_spacing_y" class="form-select">
+                    <option value="120px" <?= ($customSettings['section_spacing_y'] ?? '120px') === '120px' ? 'selected' : '' ?>>120px — Respiro Amplo Quiet Luxury</option>
+                    <option value="80px" <?= ($customSettings['section_spacing_y'] ?? '') === '80px' ? 'selected' : '' ?>>80px — Padrão Moderado</option>
+                    <option value="160px" <?= ($customSettings['section_spacing_y'] ?? '') === '160px' ? 'selected' : '' ?>>160px — Alta Costura / Super Espaçado</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="editorial_text_alignment">Alinhamento Textual Editorial</label>
+                <select id="editorial_text_alignment" name="editorial_text_alignment" class="form-select">
+                    <option value="center" <?= ($customSettings['editorial_text_alignment'] ?? 'center') === 'center' ? 'selected' : '' ?>>Centralizado (Elegância Simétrica)</option>
+                    <option value="left" <?= ($customSettings['editorial_text_alignment'] ?? '') === 'left' ? 'selected' : '' ?>>À Esquerda (Moderno Editorial)</option>
+                </select>
+            </div>
+        </div>
+
         <!-- PRÉ-VISUALIZADOR DA SUA PALETA AO VIVO -->
         <div id="customPalettePreviewBox" style="margin-top: 20px; background: #0d0c0b; border: 1px solid #caa15c; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div>
