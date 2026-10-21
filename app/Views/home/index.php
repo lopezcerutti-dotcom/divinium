@@ -252,14 +252,18 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
                 <p style="color: var(--about-text);">
                     <?= \App\Core\View::e(Setting::get('about_p2', 'Cada gema é única em suas veias, coloração e densidade. Encastoadas à mão sobre o aro duplo em prata, as pedras ganham vida e presença táctil sem jamais pesar no pulso.')) ?>
                 </p>
+                <?php if (Setting::get('about_quote_visible', '1') === '1'): ?>
                 <p class="about-quote-text" style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--about-accent); font-style: italic;">
                     "<?= \App\Core\View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                 </p>
+                <?php endif; ?>
             </div>
             
+            <?php if (Setting::get('about_cta_visible', '1') === '1'): ?>
             <div class="about-cta">
                 <a href="<?= \App\Core\View::e(Setting::get('about_cta_url', '#services')) ?>" class="btn-outline-dark" style="border-color: var(--about-btn); color: var(--about-btn);"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
             </div>
+            <?php endif; ?>
 
             <!-- Miniatura com macro da gema -->
             <div class="about-micro-feature" style="background-color: var(--about-card-bg); border-color: var(--about-card-border);">

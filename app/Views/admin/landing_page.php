@@ -1547,10 +1547,10 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                 <p id="aboutPreviewP1" style="font-size: 0.84rem; line-height: 1.6; margin: 0 0 10px; color: <?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>;">
                                     <?= View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade...')) ?>
                                 </p>
-                                <p id="aboutPreviewQuote" style="font-family: serif; font-style: italic; font-size: 1.05rem; margin: 0 0 16px; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>;">
+                                <p id="aboutPreviewQuote" style="font-family: serif; font-style: italic; font-size: 1.05rem; margin: 0 0 16px; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>; <?= Setting::get('about_quote_visible', '1') !== '1' ? 'display: none;' : '' ?>">
                                     "<?= View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                                 </p>
-                                <div style="margin-bottom: 16px;">
+                                <div id="aboutPreviewBtnWrap" style="margin-bottom: 16px; <?= Setting::get('about_cta_visible', '1') !== '1' ? 'display: none;' : '' ?>">
                                     <span id="aboutPreviewBtn" style="display: inline-block; padding: 7px 20px; font-size: 0.76rem; border: 1px solid <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; color: <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; border-radius: 20px; letter-spacing: 0.05em; font-weight: 500;">
                                         <?= View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?>
                                     </span>
@@ -1618,27 +1618,36 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <textarea id="about_p2" name="about_p2" class="form-textarea" rows="3"><?= \App\Core\View::e(Setting::get('about_p2', 'Cada gema é única em suas veias, coloração e densidade. Encastoadas à mão sobre o aro duplo em prata, as pedras ganham vida e presença táctil sem jamais pesar no pulso.')) ?></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="about_quote">Frase / Pergunta Poética de Destaque</label>
+                <div class="form-group <?= Setting::get('about_quote_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="about_quote">Frase / Pergunta Poética de Destaque</label>
+                        <?= $renderToggle('about_quote_visible') ?>
+                    </div>
                     <input type="text" id="about_quote" name="about_quote" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                            placeholder="Qual delas conversa com você hoje?"
                            oninput="updateAboutLivePreview()">
+                    <span class="field-hint">Frase poética reflexiva exibida em itálico abaixo dos parágrafos do manifesto.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="about_cta_text">Texto do Botão de Ação</label>
+                <div class="form-group <?= Setting::get('about_cta_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="about_cta_text">Texto do Botão de Ação</label>
+                        <?= $renderToggle('about_cta_visible') ?>
+                    </div>
                     <input type="text" id="about_cta_text" name="about_cta_text" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?>"
                            placeholder="Conheça Nossa História"
                            oninput="updateAboutLivePreview()">
+                    <span class="field-hint">Rótulo do botão de chamada para ação do Manifesto.</span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('about_cta_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="about_cta_url">Destino / Link do Botão (URL ou Âncora)</label>
                     <input type="text" id="about_cta_url" name="about_cta_url" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_cta_url', '#services')) ?>"
                            placeholder="#services ou /loja">
+                    <span class="field-hint">Endereço de destino ao clicar no botão.</span>
                 </div>
 
                 <!-- Foto e Macro do Sobre -->
@@ -2740,6 +2749,19 @@ function handleToggleSwitch(chk) {
         if (textSpan) textSpan.textContent = 'Oculto';
         if (formGroup) formGroup.classList.add('is-dimmed');
     }
+
+    if (chk.name && chk.name.startsWith('about_')) {
+        if (typeof updateAboutLivePreview === 'function') {
+            updateAboutLivePreview();
+        }
+        if (chk.name === 'about_cta_visible') {
+            const urlGroup = document.getElementById('about_cta_url')?.closest('.form-group');
+            if (urlGroup) {
+                if (chk.checked) urlGroup.classList.remove('is-dimmed');
+                else urlGroup.classList.add('is-dimmed');
+            }
+        }
+    }
 }
 
 function switchSection(sectionId, btn) {
@@ -3392,13 +3414,21 @@ function updateAboutLivePreview() {
         previewP1.style.color = text;
     }
 
+    const isQuoteActive = document.querySelector('input[name="about_quote_visible"][type="checkbox"]')?.checked ?? true;
+    const isCtaActive = document.querySelector('input[name="about_cta_visible"][type="checkbox"]')?.checked ?? true;
+
     const previewQuote = document.getElementById('aboutPreviewQuote');
     if (previewQuote) {
         previewQuote.textContent = '"' + getVal('about_quote', 'Qual delas conversa com você hoje?') + '"';
         previewQuote.style.color = accent;
+        previewQuote.style.display = isQuoteActive ? '' : 'none';
     }
 
     const previewBtn = document.getElementById('aboutPreviewBtn');
+    const previewBtnWrap = document.getElementById('aboutPreviewBtnWrap');
+    if (previewBtnWrap) {
+        previewBtnWrap.style.display = isCtaActive ? '' : 'none';
+    }
     if (previewBtn) {
         previewBtn.textContent = getVal('about_cta_text', 'Conheça Nossa História');
         previewBtn.style.color = btn;
