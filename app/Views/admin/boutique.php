@@ -208,6 +208,48 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('store_filter_all', 'Todas as Peças')) ?>">
                 </div>
 
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_filter_braceletes_visible">Filtro: Braceletes</label>
+                        <?= $renderToggle('store_filter_braceletes_visible') ?>
+                    </div>
+                    <input type="text" readonly class="form-input" style="opacity: 0.8;" value="Categoria: Braceletes (/loja#braceletes)">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_filter_colares_visible">Filtro: Colares</label>
+                        <?= $renderToggle('store_filter_colares_visible') ?>
+                    </div>
+                    <input type="text" readonly class="form-input" style="opacity: 0.8;" value="Categoria: Colares (/loja#colares)">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_filter_aneis_visible">Filtro: Anéis</label>
+                        <?= $renderToggle('store_filter_aneis_visible') ?>
+                    </div>
+                    <input type="text" readonly class="form-input" style="opacity: 0.8;" value="Categoria: Anéis (/loja#aneis)">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_filter_brincos_visible">Filtro: Brincos</label>
+                        <?= $renderToggle('store_filter_brincos_visible') ?>
+                    </div>
+                    <input type="text" readonly class="form-input" style="opacity: 0.8;" value="Categoria: Brincos (/loja#brincos)">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_default_channel">Canal Padrão Preferencial de Vendas</label>
+                    <select id="store_default_channel" name="store_default_channel" class="form-input">
+                        <option value="checkout" <?= Setting::get('store_default_channel', 'checkout') === 'checkout' ? 'selected' : '' ?>>🛒 Checkout Próprio Divinium (Pix 5% OFF + Cartão)</option>
+                        <option value="whatsapp" <?= Setting::get('store_default_channel') === 'whatsapp' ? 'selected' : '' ?>>💬 Concierge VIP via WhatsApp</option>
+                        <option value="shopee" <?= Setting::get('store_default_channel') === 'shopee' ? 'selected' : '' ?>>🟠 Shopee Oficial</option>
+                        <option value="mercadolivre" <?= Setting::get('store_default_channel') === 'mercadolivre' ? 'selected' : '' ?>>🟡 Mercado Livre Oficial</option>
+                    </select>
+                </div>
+
                 <div class="form-group full-width <?= Setting::get('store_info_pill_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <div class="field-label-row">
                         <label for="store_info_pill_text">Pílula Informativa de Segurança (Ao lado dos filtros)</label>
