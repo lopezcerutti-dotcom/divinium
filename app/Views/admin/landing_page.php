@@ -3334,6 +3334,7 @@ function checkInitialEditorTab() {
             switchSection(tabParam, btn);
         }
     }
+    toggleLogoFields();
     updateMobileMenuLivePreview();
     updateAboutLivePreview();
 }
