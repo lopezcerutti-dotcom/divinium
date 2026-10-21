@@ -48,6 +48,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn active" onclick="switchBoutiqueSection('bsec-hero', this)">
             <span>👑 Hero & Títulos</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-colors', this)">
+            <span>🎨 Fundo & Cores</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-trust', this)">
             <span>🛡️ Selos de Garantia</span>
         </button>
@@ -746,6 +749,118 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="store_empty_url">Destino do Botão</label>
                     <input type="text" id="store_empty_url" name="store_empty_url" class="form-input" 
                            value="<?= View::e(Setting::get('store_empty_url', '/')) ?>">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SEÇÃO: FUNDO & CORES DA BOUTIQUE -->
+        <!-- ============================================================== -->
+        <div class="editor-section-card" id="bsec-colors">
+            <div class="section-card-header">
+                <div class="section-icon">🎨</div>
+                <div>
+                    <h3>Fundo, Superfícies & Cores da Boutique (/loja)</h3>
+                    <p>Personalize as tonalidades exclusivas da página de catálogo (/loja), ou aplique texturas nobres.</p>
+                </div>
+            </div>
+
+            <!-- CARD INFORMATIVO COM ATALHO PARA CORES GLOBAIS -->
+            <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <strong style="color: #caa15c; font-size: 0.92rem; display: block; margin-bottom: 4px;">✦ Estúdio Global de Cores & Fundo de Todas as Páginas</strong>
+                        <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0; line-height: 1.4;">
+                            Deseja alterar as cores de fundo, superfícies e ouro de <strong>todas as páginas do site simultaneamente</strong> (Home, Boutique, Checkout, Produto, Políticas)?
+                        </p>
+                    </div>
+                    <a href="/admin/temas" class="btn-admin-gold" style="font-size: 0.8rem; padding: 8px 14px; text-decoration: none;">
+                        <span>Abrir Estúdio de Temas & Cores Globais ↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <!-- COR DE FUNDO DA BOUTIQUE -->
+                <div class="form-group">
+                    <label for="store_bg_color">Cor de Fundo da Boutique</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_store_bg" 
+                               value="<?= View::e(Setting::get('store_bg_color', Setting::get('custom_color_bg', '#0D0C0B'))) ?>" 
+                               onchange="document.getElementById('store_bg_color').value = this.value;"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="store_bg_color" name="store_bg_color" class="form-input" 
+                               value="<?= View::e(Setting::get('store_bg_color', '')) ?>" 
+                               placeholder="Ex: #0D0C0B (Vazio = herda cor global)"
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_store_bg').value = this.value;">
+                    </div>
+                    <span class="field-hint">Se deixar em branco, herda a cor global definida em Temas.</span>
+                </div>
+
+                <!-- COR DOS CARDS DE JOIAS -->
+                <div class="form-group">
+                    <label for="store_card_bg">Superfície dos Cards de Joias</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="picker_store_card" 
+                               value="<?= View::e(Setting::get('store_card_bg', Setting::get('custom_color_surface', '#141312'))) ?>" 
+                               onchange="document.getElementById('store_card_bg').value = this.value;"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                        <input type="text" id="store_card_bg" name="store_card_bg" class="form-input" 
+                               value="<?= View::e(Setting::get('store_card_bg', '')) ?>" 
+                               placeholder="Ex: #141312 (Vazio = herda superfície global)"
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_store_card').value = this.value;">
+                    </div>
+                    <span class="field-hint">Aplica-se ao fundo de cada vitrine de produto da loja.</span>
+                </div>
+
+                <!-- IMAGEM / TEXTURA DE FUNDO DA BOUTIQUE -->
+                <div class="form-group full-width">
+                    <label for="store_bg_image">Imagem de Fundo ou Textura da Boutique</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="store_bg_image" name="store_bg_image" class="form-input" 
+                               value="<?= View::e(Setting::get('store_bg_image', '')) ?>" 
+                               placeholder="Ex: /assets/images/backgrounds/marble-noir.svg ou link externo">
+                        <button type="button" class="btn-admin-secondary" onclick="document.getElementById('store_bg_image').value = '';">
+                            <span>Limpar</span>
+                        </button>
+                    </div>
+                    <span class="field-hint">A imagem é exibida com transparência e elegância atrás do catálogo.</span>
+                </div>
+
+                <!-- PRESETS RÁPIDOS -->
+                <div class="form-group full-width">
+                    <label style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; display: block; margin-bottom: 8px;">✦ Texturas Rápidas de Alta Joalheria:</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/marble-noir.svg';">
+                            Mármore Noir & Ouro
+                        </button>
+                        <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/carbon-noir.svg';">
+                            Carbono Texturizado
+                        </button>
+                        <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/stardust-noir.svg';">
+                            Poeira Dourada ✦
+                        </button>
+                        <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/hero/hero-caminhos.jpg';">
+                            Joia Divinium
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONTRASTE & ENQUADRAMENTO -->
+                <div class="form-group">
+                    <label for="store_bg_overlay">Escurecimento de Contraste</label>
+                    <input type="range" id="store_bg_overlay" name="store_bg_overlay" min="0.10" max="0.95" step="0.05" 
+                           value="<?= View::e(Setting::get('store_bg_overlay', '0.75')) ?>" 
+                           style="width: 100%; accent-color: #caa15c;">
+                    <span class="field-hint">Garante legibilidade dos textos e cards sobre a imagem.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_bg_repeat">Modo de Exibição</label>
+                    <select id="store_bg_repeat" name="store_bg_repeat" class="form-select">
+                        <option value="cover" <?= Setting::get('store_bg_repeat', 'cover') === 'cover' ? 'selected' : '' ?>>Cobrir Inteira (Cover)</option>
+                        <option value="repeat" <?= Setting::get('store_bg_repeat', '') === 'repeat' ? 'selected' : '' ?>>Repetir Textura (Seamless Repeat)</option>
+                    </select>
                 </div>
             </div>
         </div>
