@@ -161,6 +161,18 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                 <?php endif; ?>
             </div>
 
+            <!-- Busca Instantânea na Boutique -->
+            <div class="store-search-container" id="storeSearchContainer">
+                <div class="store-search-box">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="storeSearchInput" class="store-search-input" 
+                           placeholder="<?= View::e(Setting::get('store_search_placeholder', 'Buscar joia por nome, gema ou categoria...')) ?>"
+                           oninput="handleStoreLiveSearch(this.value)"
+                           aria-label="Buscar joia na boutique">
+                    <button type="button" class="store-search-clear" id="storeSearchClear" onclick="clearStoreSearch()" style="display: none;" aria-label="Limpar busca">&times;</button>
+                </div>
+            </div>
+
             <?php if (Setting::get('store_info_pill_visible', '1') === '1'): ?>
             <div class="store-info-pill">
                 <span class="shopee-dot"></span>

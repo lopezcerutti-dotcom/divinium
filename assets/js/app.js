@@ -320,7 +320,6 @@ function setupMobileMenu() {
     window.openMobileMenu = openMobileMenu;
 }
 
-// 5.2 BOTÃO DE BUSCA DO CABEÇALHO (DIRECIONAMENTO INTELIGENTE)
 function setupHeaderSearch() {
     const searchBtns = document.querySelectorAll('.search-trigger');
     searchBtns.forEach(btn => {
@@ -333,11 +332,53 @@ function setupHeaderSearch() {
                     searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else {
-                window.location.href = '/loja#showcase';
+                window.location.href = '/loja#storeSearchInput';
             }
         });
     });
 }
+
+// 5.3 BUSCA EM TEMPO REAL NO CATÁLOGO DA BOUTIQUE
+function handleStoreLiveSearch(rawQuery) {
+    const q = (rawQuery || '').toLowerCase().trim();
+    const clearBtn = document.getElementById('storeSearchClear');
+    if (clearBtn) {
+        clearBtn.style.display = q ? 'inline-block' : 'none';
+    }
+
+    const grid = document.getElementById('storeGrid');
+    const emptyBox = document.getElementById('storeEmptyState');
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll('.store-product-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const text = (card.innerText || '').toLowerCase();
+        if (!q || text.includes(q)) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (emptyBox) {
+        emptyBox.style.display = (visibleCount === 0) ? 'block' : 'none';
+    }
+}
+
+function clearStoreSearch() {
+    const input = document.getElementById('storeSearchInput');
+    if (input) {
+        input.value = '';
+        handleStoreLiveSearch('');
+        input.focus();
+    }
+}
+
+window.handleStoreLiveSearch = handleStoreLiveSearch;
+window.clearStoreSearch = clearStoreSearch;
 
 // 7. CONTROLE DO SELETOR DE TEMAS (SUPORTE À ÁREA ADMINISTRATIVA)
 function setupThemeToggle() {

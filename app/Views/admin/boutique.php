@@ -250,6 +250,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="store_search_placeholder">Texto Placeholder da Busca Rápida</label>
+                    <input type="text" id="store_search_placeholder" name="store_search_placeholder" class="form-input"
+                           value="<?= View::e(Setting::get('store_search_placeholder', 'Buscar joia por nome, gema ou categoria...')) ?>"
+                           placeholder="Buscar joia por nome, gema ou categoria...">
+                    <span class="field-hint">Exibido na caixa de busca ao vivo do catálogo na boutique.</span>
+                </div>
+
                 <div class="form-group full-width <?= Setting::get('store_info_pill_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <div class="field-label-row">
                         <label for="store_info_pill_text">Pílula Informativa de Segurança (Ao lado dos filtros)</label>

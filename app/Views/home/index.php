@@ -258,7 +258,7 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
             </div>
             
             <div class="about-cta">
-                <a href="#services" class="btn-outline-dark" style="border-color: var(--about-btn); color: var(--about-btn);"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
+                <a href="<?= \App\Core\View::e(Setting::get('about_cta_url', '#services')) ?>" class="btn-outline-dark" style="border-color: var(--about-btn); color: var(--about-btn);"><?= \App\Core\View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?></a>
             </div>
 
             <!-- Miniatura com macro da gema -->
@@ -549,7 +549,7 @@ ob_start();
                 <?= \App\Core\View::e(Setting::get('heritage_p2', 'O aro duplo oferece estabilidade elegante e leveza incomparável no antebraço, transitando com naturalidade do visual casual diário a eventos de gala.')) ?>
             </p>
             <div class="heritage-action">
-                <a href="#collections" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('heritage_cta_text', 'Escolher Meu Bracelete')) ?></a>
+                <a href="<?= \App\Core\View::e(Setting::get('heritage_cta_url', '#collections')) ?>" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('heritage_cta_text', 'Escolher Meu Bracelete')) ?></a>
             </div>
         </div>
 </section>
@@ -590,34 +590,34 @@ ob_start();
         <!-- Miniaturas Reais das Peças e Detalhes -->
         <div class="client-gallery-strip">
             <div class="client-thumb">
-                <img src="/assets/images/products/bracelete-verde.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_thumb_1', '/assets/images/products/bracelete-verde.jpg')) ?>" 
                      alt="Bracelete Verde"
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-verde.png';">
+                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-verde.jpg';">
             </div>
             <div class="client-thumb">
-                <img src="/assets/images/products/bracelete-madreperola.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_thumb_2', '/assets/images/products/bracelete-madreperola.jpg')) ?>" 
                      alt="Bracelete Madrepérola"
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-madreperola.jpeg';">
+                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-madreperola.jpg';">
             </div>
             <div class="client-thumb">
-                <img src="/assets/images/products/bracelete-vermelho.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_thumb_3', '/assets/images/products/bracelete-vermelho.jpg')) ?>" 
                      alt="Bracelete Vermelho"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='/assets/images/products/bracelete-vermelho.jpg';">
             </div>
             <div class="client-thumb">
-                <img src="/assets/images/products/bracelete-onix.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_thumb_4', '/assets/images/products/bracelete-onix.jpg')) ?>" 
                      alt="Bracelete Ônix"
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-onix.jpeg';">
+                     onerror="this.onerror=null; this.src='/assets/images/products/bracelete-onix.jpg';">
             </div>
             <div class="client-thumb">
-                <img src="/assets/images/about/macro-texture.jpg" 
+                <img src="<?= \App\Core\View::e(Setting::get('testimonial_thumb_5', '/assets/images/about/macro-texture.jpg')) ?>" 
                      alt="Macro da Gema"
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/about/macro-texture.png';">
+                     onerror="this.onerror=null; this.src='/assets/images/about/macro-texture.jpg';">
             </div>
         </div>
 
@@ -629,7 +629,8 @@ $renderSection['testimonials'] = ob_get_clean();
 // Renderização dinâmica conforme Ordem e Visibilidade configuradas no Painel Administrativo
 $defaultOrder = 'hero,about,collections,services,heritage,testimonials';
 $orderRaw = Setting::get('home_sections_order', $defaultOrder);
-$sections = array_map('trim', explode(',', $orderRaw ?: $defaultOrder));
+$orderRaw = str_replace('stage', 'collections', $orderRaw ?: $defaultOrder);
+$sections = array_filter(array_map('trim', explode(',', $orderRaw)));
 
 foreach ($sections as $secKey) {
     if (isset($renderSection[$secKey]) && Setting::get('home_' . $secKey . '_visible', '1') === '1') {
