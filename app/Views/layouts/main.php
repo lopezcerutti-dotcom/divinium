@@ -242,7 +242,7 @@
                     <span class="cart-counter" id="cartCount">0</span>
                 </button>
 
-                <button type="button" class="login-pill-btn" id="loginModalTrigger" aria-label="Acessar Painel Administrativo">Entrar</button>
+                <button type="button" class="login-pill-btn" id="loginModalTrigger" aria-label="Acessar Painel Administrativo"><?= \App\Core\View::e(\App\Models\Setting::get('header_login_label', 'Entrar')) ?></button>
             </div>
 
         </div>
@@ -520,8 +520,8 @@
             </div>
 
             <div class="login-modal-header">
-                <h3 id="loginModalTitle">Acesso aos Bastidores</h3>
-                <p>Controle de produtos, categorias, minerais e gestão do site.</p>
+                <h3 id="loginModalTitle"><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_title', 'Acesso aos Bastidores')) ?></h3>
+                <p><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_subtitle', 'Controle de produtos, categorias, minerais e gestão do site.')) ?></p>
             </div>
 
             <!-- Alerta de Erro Dinâmico -->
@@ -547,7 +547,7 @@
                 </div>
 
                 <button type="submit" class="btn-modal-submit" id="adminLoginSubmitBtn">
-                    <span>Acessar Painel de Controle</span>
+                    <span><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_btn', 'Acessar Painel de Controle')) ?></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
             </form>

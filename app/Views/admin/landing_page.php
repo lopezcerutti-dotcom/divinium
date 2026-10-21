@@ -1600,6 +1600,13 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            oninput="updateAboutLivePreview()">
                 </div>
 
+                <div class="form-group">
+                    <label for="about_cta_url">Destino / Link do Botão (URL ou Âncora)</label>
+                    <input type="text" id="about_cta_url" name="about_cta_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('about_cta_url', '#services')) ?>"
+                           placeholder="#services ou /loja">
+                </div>
+
                 <!-- Foto e Macro do Sobre -->
                 <div class="form-group">
                     <label for="about_micro_title">Título da Miniatura Macro</label>
@@ -1616,15 +1623,27 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group">
-                    <label for="about_micro_img">Caminho da Imagem Macro</label>
-                    <input type="text" id="about_micro_img" name="about_micro_img" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>">
+                    <label for="about_micro_img">Imagem Macro da Gema</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="about_micro_img" name="about_micro_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'about_micro_img', 'editorials')">
+                        </label>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="about_banner_img">Caminho da Imagem Editorial Lateral</label>
-                    <input type="text" id="about_banner_img" name="about_banner_img" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>">
+                    <label for="about_banner_img">Imagem Editorial Lateral (Banner Caminhos)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="about_banner_img" name="about_banner_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'about_banner_img', 'editorials')">
+                        </label>
+                    </div>
                 </div>
 
                 <div class="form-group full-width">
@@ -1750,8 +1769,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <div class="form-group">
                     <label for="showcase_lifestyle_img">Card Espelho - Imagem</label>
-                    <input type="text" id="showcase_lifestyle_img" name="showcase_lifestyle_img" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_img', '/assets/images/products/colecao-completa-espelho.jpg')) ?>">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="showcase_lifestyle_img" name="showcase_lifestyle_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_img', '/assets/images/products/colecao-completa-espelho.jpg')) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'showcase_lifestyle_img', 'editorials')">
+                        </label>
+                    </div>
                 </div>
 
                 <div class="form-group full-width">
@@ -1900,10 +1925,22 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group">
-                    <label for="heritage_banner_img">Caminho da Imagem Editorial</label>
-                    <input type="text" id="heritage_banner_img" name="heritage_banner_img" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('heritage_banner_img', '/assets/images/about/banner-unica.jpg')) ?>"
-                           placeholder="/assets/images/about/banner-unica.jpg">
+                    <label for="heritage_cta_url">Destino / Link do Botão (URL ou Âncora)</label>
+                    <input type="text" id="heritage_cta_url" name="heritage_cta_url" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('heritage_cta_url', '#collections')) ?>"
+                           placeholder="#collections ou /loja">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="heritage_banner_img">Imagem Editorial da Seção Peça Única</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="heritage_banner_img" name="heritage_banner_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('heritage_banner_img', '/assets/images/about/banner-unica.jpg')) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'heritage_banner_img', 'editorials')">
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1916,7 +1953,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="section-icon">💬</div>
                 <div>
                     <h3>Depoimentos & Avaliações de Clientes</h3>
-                    <p>Edite os textos de aprovação, estrelas e depoimento destacado na Home.</p>
+                    <p>Edite os textos de aprovação, estrelas, depoimento destacado e fotos da galeria de clientes na Home.</p>
                 </div>
             </div>
 
@@ -1948,11 +1985,49 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="testimonial_backdrop_img">Caminho da Imagem de Fundo (Foto da Modelo)</label>
-                    <input type="text" id="testimonial_backdrop_img" name="testimonial_backdrop_img" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>"
-                           placeholder="/assets/images/about/model-wrist-sunglasses.jpg">
+                    <label for="testimonial_backdrop_img">Imagem de Fundo do Depoimento (Foto da Modelo)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="testimonial_backdrop_img" name="testimonial_backdrop_img" class="form-input"
+                               value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_backdrop_img', 'editorials')">
+                        </label>
+                    </div>
                 </div>
+
+                <!-- Miniaturas da Faixa de Clientes -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        📸 Faixa de Miniaturas da Galeria de Clientes (5 Fotos)
+                    </h4>
+                    <span class="field-hint">Fotos quadradas exibidas logo abaixo da citação na Home.</span>
+                </div>
+
+                <?php 
+                    $defaultThumbs = [
+                        1 => '/assets/images/products/bracelete-verde.jpg',
+                        2 => '/assets/images/products/bracelete-madreperola.jpg',
+                        3 => '/assets/images/products/bracelete-vermelho.jpg',
+                        4 => '/assets/images/products/bracelete-onix.jpg',
+                        5 => '/assets/images/about/macro-texture.jpg',
+                    ];
+                    for ($t = 1; $t <= 5; $t++): 
+                        $thumbKey = 'testimonial_thumb_' . $t;
+                        $thumbVal = Setting::get($thumbKey, $defaultThumbs[$t]);
+                ?>
+                <div class="form-group">
+                    <label for="<?= $thumbKey ?>">Miniatura 0<?= $t ?></label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="<?= $thumbKey ?>" name="<?= $thumbKey ?>" class="form-input"
+                               value="<?= View::e($thumbVal) ?>">
+                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 10px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>📁 Enviar</span>
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, '<?= $thumbKey ?>', 'editorials')">
+                        </label>
+                    </div>
+                </div>
+                <?php endfor; ?>
             </div>
         </div>
 
@@ -2165,7 +2240,59 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?>">
                 </div>
 
-                <!-- Editor de Páginas Dinâmicas -->
+                <!-- Configurações de Checkout Direto & Pix -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
+                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        ⚡ Checkout Direto, Pagamento Pix & Sacola de Compras (/checkout)
+                    </h4>
+                    <span class="field-hint">Defina a chave Pix oficial da joalheria e personalize todos os textos da sacola e tela de pagamento.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment_pix_key">Chave Pix Oficial (E-mail, CNPJ, Telefone ou Aleatória)</label>
+                    <input type="text" id="payment_pix_key" name="payment_pix_key" class="form-input"
+                           value="<?= View::e(Setting::get('payment_pix_key', 'contato@divinium.com.br')) ?>"
+                           placeholder="ex: contato@divinium.com.br ou CNPJ">
+                </div>
+
+                <div class="form-group">
+                    <label for="payment_pix_name">Nome do Titular / Beneficiário do Pix</label>
+                    <input type="text" id="payment_pix_name" name="payment_pix_name" class="form-input"
+                           value="<?= View::e(Setting::get('payment_pix_name', 'DIVINIUM JOIAS AUTORAIS')) ?>"
+                           placeholder="DIVINIUM JOIAS AUTORAIS">
+                </div>
+
+                <div class="form-group">
+                    <label for="cart_drawer_title">Título da Gaveta da Sacola</label>
+                    <input type="text" id="cart_drawer_title" name="cart_drawer_title" class="form-input"
+                           value="<?= View::e(Setting::get('cart_drawer_title', 'Sua Sacola de Escolhas')) ?>"
+                           placeholder="Sua Sacola de Escolhas">
+                </div>
+
+                <div class="form-group">
+                    <label for="cart_checkout_btn">Texto do Botão de Finalizar Compra</label>
+                    <input type="text" id="cart_checkout_btn" name="cart_checkout_btn" class="form-input"
+                           value="<?= View::e(Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?>"
+                           placeholder="Finalizar Compra">
+                </div>
+
+                <div class="form-group">
+                    <label for="cart_drawer_empty">Mensagem de Sacola Vazia</label>
+                    <input type="text" id="cart_drawer_empty" name="cart_drawer_empty" class="form-input"
+                           value="<?= View::e(Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="cart_drawer_discover">Texto do Botão 'Descobrir Coleção' (Sacola Vazia)</label>
+                    <input type="text" id="cart_drawer_discover" name="cart_drawer_discover" class="form-input"
+                           value="<?= View::e(Setting::get('cart_drawer_discover', 'Descobrir Coleção')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="cart_security_badge">Texto de Segurança do Rodapé da Sacola</label>
+                    <input type="text" id="cart_security_badge" name="cart_security_badge" class="form-input"
+                           value="<?= View::e(Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?>">
+                </div>
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
                     <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         📄 Conteúdo das Páginas Institucionais Oficiais
