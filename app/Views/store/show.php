@@ -333,6 +333,35 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
                         </div>
 
+                        <!-- Opção Direta de Compra na Boutique Divinium (com Pix 5% OFF) -->
+                        <div class="channel-option-wrapper" style="margin-bottom: 14px;">
+                            <a href="/checkout" 
+                               onclick="event.preventDefault(); if (typeof addToCart === 'function') { addToCart({id: <?= $prodId ?>, name: <?= json_encode($prodName) ?>, price: <?= $basePriceCents ?>, image: <?= json_encode($prodImageUrl) ?>, stone: document.getElementById('selectedStoneName')?.textContent || <?= json_encode($prodMineral) ?>}); } window.location.href='/checkout';" 
+                               class="btn-channel-impartial platform-direct-vip"
+                               style="background: linear-gradient(135deg, rgba(212,186,136,0.18) 0%, rgba(20,18,16,0.98) 100%); border: 1.5px solid #d4ba88; box-shadow: 0 4px 15px rgba(212,186,136,0.15);">
+                                
+                                <div class="channel-btn-left">
+                                    <span class="channel-icon-pill" style="background: rgba(212,186,136,0.2); color: #d4ba88;">
+                                        💎
+                                    </span>
+                                    <div class="channel-meta-text">
+                                        <span class="channel-action-name" style="color: #ffffff; font-weight: 700;">Comprar Direto na DIVINIUM</span>
+                                        <span class="channel-protection-sub" style="color: #d4ba88;">5% OFF no Pix • Envio com Seguro Blindado</span>
+                                    </div>
+                                </div>
+
+                                <div class="channel-btn-right">
+                                    <div class="channel-price-wrap">
+                                        <span class="channel-price-label" style="color: #4ade80;">Pix (-5%)</span>
+                                        <span class="channel-price-val" style="color: #d4ba88; font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
+                                    </div>
+                                    <span class="channel-arrow-circle" style="background: #d4ba88; color: #000;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+
                         <!-- Lista ou Grade Imparcial de Opções de Compra -->
                         <?php if (!empty($validLinks)): ?>
                             <div class="channels-action-list <?= $buttonLayout === 'grid' ? 'channels-layout-grid' : 'channels-layout-list' ?>">
