@@ -68,6 +68,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchSection('sec-about', this)">
             <span>📜 Manifesto & Sobre</span>
         </button>
+        <button type="button" class="tab-btn" onclick="switchSection('sec-collections', this)">
+            <span>✨ Vitrine & Coleções</span>
+        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-services', this)">
             <span>🛡️ Serviços & Garantia</span>
         </button>
@@ -111,19 +114,22 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <?php
-                $currentOrderStr = Setting::get('home_sections_order', 'hero,stage,about,services,heritage,testimonials');
+                $rawOrder = Setting::get('home_sections_order', 'hero,about,collections,services,heritage,testimonials');
+                // Migração transparente de legado 'stage' para 'collections'
+                $rawOrder = str_replace('stage', 'collections', $rawOrder);
                 $sectionsList = [
-                    'hero' => ['name' => 'Abertura / Hero Principal', 'desc' => 'Dobra inicial com chamada nobre, foto editorial e botões de ação', 'tab' => 'sec-hero', 'icon' => '👑'],
-                    'stage' => ['name' => 'Carrossel de Destaques', 'desc' => 'Vitrine de fotos deslizantes da joalheria autoral em alta resolução', 'tab' => 'sec-stage', 'icon' => '🎠'],
-                    'about' => ['name' => 'Manifesto & Sobre a Marca', 'desc' => 'Narrativa conceitual de design, resina nobre e ouro', 'tab' => 'sec-about', 'icon' => '📜'],
-                    'services' => ['name' => 'Serviços, Garantia & Autoria', 'desc' => 'Grade com 3 selos de garantia vitalícia, ouro nobre e entrega blindada', 'tab' => 'sec-services', 'icon' => '🛡️'],
+                    'hero' => ['name' => 'Abertura / Hero Principal & Carrossel', 'desc' => 'Dobra inicial com chamada nobre, fotos editoriais e botões de ação', 'tab' => 'sec-hero', 'icon' => '👑'],
+                    'about' => ['name' => 'Manifesto & Sobre a Marca', 'desc' => 'Narrativa conceitual de design, resina nobre, ouro e foto editorial', 'tab' => 'sec-about', 'icon' => '📜'],
+                    'collections' => ['name' => 'Vitrine de Coleções & Lançamentos', 'desc' => 'Grade de joias da Home, filtros de categoria e card lifestyle', 'tab' => 'sec-collections', 'icon' => '✨'],
+                    'services' => ['name' => 'Serviços, Garantia & Autoria', 'desc' => 'Grade com 3 serviços exclusivos de sintonia, cuidado e garantia', 'tab' => 'sec-services', 'icon' => '🛡️'],
                     'heritage' => ['name' => 'Peça Única & Tradição', 'desc' => 'Destaque especial da joia autoral com selo de exclusividade', 'tab' => 'sec-heritage', 'icon' => '💎'],
-                    'testimonials' => ['name' => 'Depoimentos & Experiência VIP', 'desc' => 'Avaliações de colecionadores e prova social de clientes', 'tab' => 'sec-testimonials', 'icon' => '💬']
+                    'testimonials' => ['name' => 'Depoimentos & Experiência VIP', 'desc' => 'Avaliações de clientes verificadas, foto e miniaturas', 'tab' => 'sec-testimonials', 'icon' => '💬']
                 ];
-                $orderKeys = array_filter(array_map('trim', explode(',', $currentOrderStr)));
+                $orderKeys = array_filter(array_map('trim', explode(',', $rawOrder)));
                 foreach (array_keys($sectionsList) as $k) {
                     if (!in_array($k, $orderKeys)) $orderKeys[] = $k;
                 }
+                $currentOrderStr = implode(',', $orderKeys);
             ?>
 
             <input type="hidden" id="home_sections_order" name="home_sections_order" value="<?= View::e($currentOrderStr) ?>">
@@ -2859,7 +2865,7 @@ function rebuildSectionsOrder() {
 }
 
 function resetSectionsOrder() {
-    const defaultOrder = ['hero', 'stage', 'about', 'services', 'heritage', 'testimonials'];
+    const defaultOrder = ['hero', 'about', 'collections', 'services', 'heritage', 'testimonials'];
     const container = document.getElementById('sectionsOrderContainer');
     if (!container) return;
     const rowsMap = {};
