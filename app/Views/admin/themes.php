@@ -116,10 +116,10 @@
         <div>
             <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; font-size: 1.35rem; margin: 0;">
                 <span style="color: #caa15c;">🎨</span>
-                Estúdio de Cores & Personalização Autoral
+                Estúdio de Cores & Fundo de Todas as Páginas
             </h3>
             <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
-                Personalize as cores primárias, superfícies e fontes para criar uma paleta exclusiva para sua joalheria.
+                Personalize as cores de fundo, superfícies, ouro e textos para todas as páginas da loja (Home, Boutique, Produto, Checkout e Institucionais).
             </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -127,7 +127,7 @@
                 <span>Restaurar Padrões</span>
             </button>
             <button type="button" class="btn-admin-gold" onclick="document.getElementById('customThemeForm').requestSubmit()">
-                <span>Salvar Identidade Personalizada</span>
+                <span>Salvar Cores & Estilos</span>
             </button>
         </div>
     </div>
@@ -135,8 +135,37 @@
     <form id="customThemeForm" onsubmit="handleCustomThemeSubmit(event)">
         <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
 
-        <!-- GRID DE CORES -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 22px;">
+        <!-- 1. GRID DE CORES GLOBAIS (APLICADAS EM TODAS AS PÁGINAS) -->
+        <div style="margin-bottom: 12px;">
+            <span style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; letter-spacing: 0.5px;">✦ 1. Cores Globais da Marca (Aplicam-se em Todas as Páginas do Site):</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_bg">Fundo Base (Dark Noir)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_bg" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_surface">Superfície dos Cards & Caixas</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_surface" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           onchange="document.getElementById('custom_color_surface').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
             <div class="form-group" style="margin: 0;">
                 <label for="custom_color_primary">Cor Primária (Ouro / Botões)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
@@ -151,7 +180,7 @@
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_accent">Cor de Realce (Acentos & Hover)</label>
+                <label for="custom_color_accent">Cor de Realce (Hover & Acentos)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_accent" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#E0C080') ?>" 
@@ -164,28 +193,114 @@
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_bg">Fundo da Página (Dark Noir)</label>
+                <label for="custom_color_text">Texto Principal (Leitura)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_bg" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
-                           onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();"
+                    <input type="color" id="picker_text" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#F4EFEA') ?>" 
+                           onchange="document.getElementById('custom_color_text').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
-                           oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
+                    <input type="text" id="custom_color_text" name="custom_color_text" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#F4EFEA') ?>" 
+                           oninput="document.getElementById('picker_text').value = this.value; updateCustomPreview();">
                 </div>
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_surface">Superfície dos Cards & Módulos</label>
+                <label for="custom_color_text_muted">Texto Suave (Secundário)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_surface" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
-                           onchange="document.getElementById('custom_color_surface').value = this.value; updateCustomPreview();"
+                    <input type="color" id="picker_text_muted" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#9E978E') ?>" 
+                           onchange="document.getElementById('custom_color_text_muted').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
-                           oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
+                    <input type="text" id="custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#9E978E') ?>" 
+                           oninput="document.getElementById('picker_text_muted').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. CORES ESPECÍFICAS POR PÁGINA (OPCIONAL) -->
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(202,161,92,0.25); border-radius: 12px; padding: 18px 20px; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleSpecificColorsSection()">
+                <div>
+                    <span style="font-size: 0.82rem; font-weight: 700; color: #ded7cf; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                        <span>✦ 2. Personalização de Cores Específicas por Página</span>
+                        <span style="font-size: 0.7rem; color: #caa15c; background: rgba(202,161,92,0.18); padding: 2px 8px; border-radius: 6px; font-weight: 600;">Opcional</span>
+                    </span>
+                    <p style="font-size: 0.76rem; color: #8e8880; margin: 4px 0 0;">
+                        Deseja personalizar individualmente o tom de fundo ou dos cards da Boutique, do Produto, do Checkout ou das Políticas? Configure abaixo. Se deixar vazio, cada página herda as cores globais.
+                    </p>
+                </div>
+                <span id="arrowSpecificColors" style="color: #caa15c; font-size: 1.1rem; transition: transform 0.2s;">▼</span>
+            </div>
+
+            <div id="contentSpecificColors" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px;">
+                <!-- Boutique & Catálogo (/loja) -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">🛍️ Boutique & Catálogo (/loja)</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo da Boutique:</label>
+                        <input type="text" name="store_bg_color" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['store_bg_color'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Cards de Joias da Boutique:</label>
+                        <input type="text" name="store_card_bg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['store_card_bg'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#141312)">
+                    </div>
+                </div>
+
+                <!-- Detalhe da Joia (/produto/{slug}) -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">💎 Página de Detalhe da Joia</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo da Página do Produto:</label>
+                        <input type="text" name="product_bg_color" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['product_bg_color'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Card da Galeria & Compra:</label>
+                        <input type="text" name="product_card_bg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['product_card_bg'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#141312)">
+                    </div>
+                </div>
+
+                <!-- Checkout Seguro (/checkout) -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">🔒 Checkout Seguro (/checkout)</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo do Checkout:</label>
+                        <input type="text" name="checkout_bg_color" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['checkout_bg_color'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Caixas de Pagamento & Resumo:</label>
+                        <input type="text" name="checkout_card_bg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['checkout_card_bg'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#141312)">
+                    </div>
+                </div>
+
+                <!-- Páginas Institucionais & Políticas -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">📜 Páginas Institucionais & Políticas</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo das Páginas de Políticas:</label>
+                        <input type="text" name="institutional_bg_color" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['institutional_bg_color'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Card do Conteúdo Editorial:</label>
+                        <input type="text" name="institutional_card_bg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['institutional_card_bg'] ?? '') ?>" 
+                               placeholder="Padrão: herdado do global (#141312)">
+                    </div>
                 </div>
             </div>
         </div>
@@ -266,7 +381,10 @@
                 <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.4rem; color: #caa15c; display: block; font-weight: 700;">
                     Divinium Joias Contemporâneas
                 </span>
-                <span style="font-size: 0.8rem; color: #ded7cf;">
+                <span id="previewSampleText" style="font-size: 0.85rem; color: #f4efea; display: block; margin-top: 2px;">
+                    Joias autorais em prata de lei 925 e gemas minerais raras.
+                </span>
+                <span id="previewSampleMuted" style="font-size: 0.76rem; color: #9e978e;">
                     Prévia em tempo real das cores e tipografia selecionadas acima.
                 </span>
             </div>
@@ -277,16 +395,16 @@
     </form>
 </div>
 
-<!-- ESTÚDIO DE IMAGEM DE FUNDO & TEXTURAS NOBRES -->
+<!-- ESTÚDIO DE IMAGEM DE FUNDO & TEXTURAS NOBRES EM TODAS AS PÁGINAS -->
 <div class="admin-card" style="border: 1px solid rgba(202, 161, 92, 0.4); padding: 28px; margin-bottom: 30px; background: #14161a; position: relative; overflow: hidden;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 18px; flex-wrap: wrap; gap: 14px;">
         <div>
             <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; font-size: 1.35rem; margin: 0;">
                 <span style="color: #caa15c;">🖼️</span>
-                Personalização da Imagem de Fundo & Texturas
+                Personalização de Imagens de Fundo & Texturas de Todas as Páginas
             </h3>
             <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
-                Defina uma imagem ou textura nobre para o fundo da loja, da seção Hero ou do painel executivo. Envie fotos do seu computador ou use texturas exclusivas.
+                Defina imagens ou texturas nobres para o fundo global do site, da boutique, dos produtos, do checkout, das políticas ou do painel executivo.
             </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -302,25 +420,37 @@
     <!-- TABS PARA ESCOLHA DO DESTINO DO FUNDO -->
     <div style="display: flex; gap: 8px; margin-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px; flex-wrap: wrap;">
         <button type="button" id="tabBtnSite" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('site')">
-            <span>🌐 Fundo Global do Site / Loja</span>
+            <span>🌐 Fundo Global (Todas as Páginas)</span>
         </button>
         <button type="button" id="tabBtnHero" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('hero')">
-            <span>👑 Fundo do Hero (Banner Principal)</span>
+            <span>👑 Hero da Home</span>
+        </button>
+        <button type="button" id="tabBtnStore" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('store')">
+            <span>🛍️ Boutique & Catálogo</span>
+        </button>
+        <button type="button" id="tabBtnProduct" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('product')">
+            <span>💎 Detalhes do Produto</span>
+        </button>
+        <button type="button" id="tabBtnCheckout" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('checkout')">
+            <span>🔒 Checkout Seguro</span>
+        </button>
+        <button type="button" id="tabBtnInstitutional" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('institutional')">
+            <span>📜 Páginas Institucionais</span>
         </button>
         <button type="button" id="tabBtnAdmin" class="btn-admin-cancel" style="padding: 8px 16px; font-size: 0.82rem;" onclick="switchBgTab('admin')">
-            <span>🛡️ Fundo do Painel Administrativo</span>
+            <span>🛡️ Painel Administrativo</span>
         </button>
     </div>
 
-    <!-- PAINEL 1: FUNDO GLOBAL DO SITE -->
+    <!-- PAINEL 1: FUNDO GLOBAL DO SITE (TODAS AS PÁGINAS) -->
     <div id="panelBgSite" class="bg-settings-panel">
         <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
             <div>
                 <!-- OPÇÃO 1: UPLOAD DO COMPUTADOR -->
                 <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 2rem; margin-bottom: 6px;">📁</div>
-                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Imagem do seu Computador</h4>
-                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Suporta JPG, PNG, WEBP ou SVG (resolução recomendada: 1920x1080 ou superior)</p>
+                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo Global do seu Computador</h4>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">A imagem se estende suavemente por todas as páginas da loja (Home, Boutique, Checkout, etc.)</p>
                     <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
                         <span>Escolher Arquivo no Meu Dispositivo</span>
                         <input type="file" id="fileUploadSite" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'site_bg_image')">
@@ -340,30 +470,29 @@
                             <span>Limpar</span>
                         </button>
                     </div>
-                    <span style="font-size: 0.74rem; color: #8e8880; display: block; margin-top: 4px;">Você pode colar links do Unsplash, Imgur ou qualquer endereço web seguro.</span>
                 </div>
 
                 <!-- OPÇÃO 3: GALERIA DE TEXTURAS NOBRES PRONTAS -->
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #caa15c; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">✦ Texturas de Alta Joalheria Prontas para Usar:</label>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
-                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/marble-noir.svg', 'repeat')" style="background: #191715; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/marble-noir.svg', 'repeat')" style="background: #191715; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left;">
                             <div style="height: 40px; border-radius: 4px; background: url('/assets/images/backgrounds/marble-noir.svg') center/cover; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="font-size: 0.72rem; color: #fff; display: block; font-weight: 600;">Mármore Noir & Ouro</span>
                         </button>
-                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/carbon-noir.svg', 'repeat')" style="background: #141312; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/carbon-noir.svg', 'repeat')" style="background: #141312; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left;">
                             <div style="height: 40px; border-radius: 4px; background: url('/assets/images/backgrounds/carbon-noir.svg') center/auto repeat; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="font-size: 0.72rem; color: #fff; display: block; font-weight: 600;">Carbono Quiet Luxury</span>
                         </button>
-                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/stardust-noir.svg', 'repeat')" style="background: #0f0e0d; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/backgrounds/stardust-noir.svg', 'repeat')" style="background: #0f0e0d; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left;">
                             <div style="height: 40px; border-radius: 4px; background: url('/assets/images/backgrounds/stardust-noir.svg') center/cover; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="font-size: 0.72rem; color: #fff; display: block; font-weight: 600;">Poeira Dourada ✦</span>
                         </button>
-                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/hero/hero-caminhos.jpg', 'cover')" style="background: #14161a; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/hero/hero-caminhos.jpg', 'cover')" style="background: #14161a; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left;">
                             <div style="height: 40px; border-radius: 4px; background: url('/assets/images/hero/hero-caminhos.jpg') center/cover; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="font-size: 0.72rem; color: #fff; display: block; font-weight: 600;">Joia Divinium nobre</span>
                         </button>
-                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/brand/IMG_8356.jpg', 'cover')" style="background: #14161a; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                        <button type="button" class="bg-preset-btn" onclick="applyPresetToTarget('site', '/assets/images/brand/IMG_8356.jpg', 'cover')" style="background: #14161a; border: 1px solid rgba(202,161,92,0.3); border-radius: 8px; padding: 10px; cursor: pointer; text-align: left;">
                             <div style="height: 40px; border-radius: 4px; background: url('/assets/images/brand/IMG_8356.jpg') center/cover; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);"></div>
                             <span style="font-size: 0.72rem; color: #fff; display: block; font-weight: 600;">Ateliê de Ourives</span>
                         </button>
@@ -380,7 +509,6 @@
                                value="<?= \App\Core\View::e($customSettings['site_bg_overlay'] ?? '0.75') ?>"
                                style="width: 100%; accent-color: #caa15c;"
                                oninput="document.getElementById('overlayValSite').innerText = Math.round(this.value * 100) + '%'; updateBgPreview('site');">
-                        <span style="font-size: 0.72rem; color: #8e8880;">Garante leitura perfeita de todos os textos dourados e brancos.</span>
                     </div>
 
                     <div class="form-group" style="margin: 0;">
@@ -397,16 +525,11 @@
             <div>
                 <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Loja com este Fundo:</label>
                 <div id="previewCardSite" style="height: 380px; border-radius: 14px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
-                    <!-- CAMADA DE OVERLAY DINÂMICA -->
                     <div id="previewOverlaySite" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
-                    
-                    <!-- CONTEÚDO MOCKUP SUPERIOR -->
                     <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-family: var(--font-serif); font-size: 1.1rem; color: #fff; letter-spacing: 1px; font-weight: 700;">DIVINIUM</span>
-                        <span style="font-size: 0.68rem; background: rgba(202,161,92,0.25); color: #caa15c; border: 1px solid #caa15c; padding: 2px 8px; border-radius: 12px; font-weight: 600;">VISÃO DO CLIENTE</span>
+                        <span style="font-size: 0.68rem; background: rgba(202,161,92,0.25); color: #caa15c; border: 1px solid #caa15c; padding: 2px 8px; border-radius: 12px; font-weight: 600;">VISÃO GLOBAL</span>
                     </div>
-
-                    <!-- CONTEÚDO MOCKUP CENTRAL -->
                     <div style="position: relative; z-index: 2; text-align: center; margin: auto 0;">
                         <h4 style="font-family: var(--font-serif); font-size: 1.3rem; color: #fff; margin: 0 0 6px;">Joias que Revelam</h4>
                         <span style="font-family: var(--font-serif); font-size: 1.15rem; color: #caa15c; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
@@ -414,24 +537,22 @@
                             <span style="font-size: 0.72rem; color: #ded7cf; display: block;">Bracelete Caminhos • R$ 380,00</span>
                         </div>
                     </div>
-
-                    <!-- CONTEÚDO MOCKUP INFERIOR -->
                     <div style="position: relative; z-index: 2; text-align: center;">
-                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo aplicado instantaneamente no site</span>
+                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo aplicado instantaneamente em todas as páginas</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PAINEL 2: FUNDO ESPECÍFICO DO HERO (BANNER PRINCIPAL) -->
+    <!-- PAINEL 2: FUNDO DO HERO (BANNER PRINCIPAL DA HOME) -->
     <div id="panelBgHero" class="bg-settings-panel" style="display: none;">
         <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
             <div>
                 <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 2rem; margin-bottom: 6px;">👑</div>
                     <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo Exclusivo do Hero (Banner de Abertura)</h4>
-                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Substitui o gradiente padrão da primeira dobra da página inicial por uma fotografia espetacular.</p>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Substitui o gradiente padrão da primeira dobra da Home por uma fotografia espetacular.</p>
                     <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
                         <span>Escolher Foto para o Hero</span>
                         <input type="file" id="fileUploadHero" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'hero_bg_image')">
@@ -477,7 +598,252 @@
         </div>
     </div>
 
-    <!-- PAINEL 3: FUNDO DO PAINEL ADMINISTRATIVO -->
+    <!-- PAINEL 3: FUNDO DA BOUTIQUE & CATÁLOGO (/loja) -->
+    <div id="panelBgStore" class="bg-settings-panel" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+            <div>
+                <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 6px;">🛍️</div>
+                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo Exclusivo da Boutique (/loja)</h4>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Dê à sua vitrine oficial uma imagem ou textura personalizada para envolver os clientes.</p>
+                    <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
+                        <span>Escolher Imagem para a Boutique</span>
+                        <input type="file" id="fileUploadStore" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'store_bg_image')">
+                    </label>
+                    <div id="uploadStatusStore" style="font-size: 0.8rem; color: #caa15c; margin-top: 10px; display: none;"></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="inputStoreBg">URL direta da imagem da Boutique:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="inputStoreBg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['store_bg_image'] ?? '') ?>" 
+                               placeholder="Ex: /assets/images/backgrounds/carbon-noir.svg"
+                               oninput="updateBgPreview('store')">
+                        <button type="button" class="btn-admin-secondary" onclick="document.getElementById('inputStoreBg').value = ''; updateBgPreview('store');">
+                            <span>Limpar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group" style="margin: 0;">
+                        <label for="inputStoreOverlay">
+                            Escurecimento da Boutique: <strong id="overlayValStore"><?= round(((float)($customSettings['store_bg_overlay'] ?? '0.75')) * 100) ?>%</strong>
+                        </label>
+                        <input type="range" id="inputStoreOverlay" min="0.10" max="0.95" step="0.05" 
+                               value="<?= \App\Core\View::e($customSettings['store_bg_overlay'] ?? '0.75') ?>"
+                               style="width: 100%; accent-color: #caa15c;"
+                               oninput="document.getElementById('overlayValStore').innerText = Math.round(this.value * 100) + '%'; updateBgPreview('store');">
+                    </div>
+
+                    <div class="form-group" style="margin: 0;">
+                        <label for="inputStoreRepeat">Modo de Enquadramento:</label>
+                        <select id="inputStoreRepeat" class="form-select" onchange="updateBgPreview('store')">
+                            <option value="cover" <?= ($customSettings['store_bg_repeat'] ?? 'cover') === 'cover' ? 'selected' : '' ?>>Cobrir Tela (Cover)</option>
+                            <option value="repeat" <?= ($customSettings['store_bg_repeat'] ?? '') === 'repeat' ? 'selected' : '' ?>>Repetir Textura (Repeat)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Boutique (/loja):</label>
+                <div id="previewCardStore" style="height: 380px; border-radius: 14px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                    <div id="previewOverlayStore" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                    <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-family: var(--font-serif); font-size: 1.1rem; color: #fff; font-weight: 700;">VITRINE OFICIAL</span>
+                        <span style="font-size: 0.68rem; color: #4ade80;">● Catálogo Ativo</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; background: rgba(20,19,18,0.85); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px;">
+                        <span style="font-size: 0.72rem; color: #caa15c; font-weight: 600; display: block;">Joia Autoral</span>
+                        <span style="font-size: 0.95rem; font-weight: 700; color: #fff;">Anel Gema Imperial</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo exclusivo da página /loja</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL 4: FUNDO DA PÁGINA DO PRODUTO (/produto/{slug}) -->
+    <div id="panelBgProduct" class="bg-settings-panel" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+            <div>
+                <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 6px;">💎</div>
+                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo da Página de Detalhe da Joia</h4>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Define a atmosfera da tela de apresentação individual de cada produto.</p>
+                    <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
+                        <span>Escolher Imagem para Detalhe da Joia</span>
+                        <input type="file" id="fileUploadProduct" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'product_bg_image')">
+                    </label>
+                    <div id="uploadStatusProduct" style="font-size: 0.8rem; color: #caa15c; margin-top: 10px; display: none;"></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="inputProductBg">URL direta da imagem do Produto:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="inputProductBg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['product_bg_image'] ?? '') ?>" 
+                               placeholder="Ex: /assets/images/backgrounds/stardust-noir.svg"
+                               oninput="updateBgPreview('product')">
+                        <button type="button" class="btn-admin-secondary" onclick="document.getElementById('inputProductBg').value = ''; updateBgPreview('product');">
+                            <span>Limpar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin: 0;">
+                    <label for="inputProductOverlay">
+                        Intensidade do Escurecimento: <strong id="overlayValProduct"><?= round(((float)($customSettings['product_bg_overlay'] ?? '0.75')) * 100) ?>%</strong>
+                    </label>
+                    <input type="range" id="inputProductOverlay" min="0.10" max="0.95" step="0.05" 
+                           value="<?= \App\Core\View::e($customSettings['product_bg_overlay'] ?? '0.75') ?>"
+                           style="width: 100%; accent-color: #caa15c;"
+                           oninput="document.getElementById('overlayValProduct').innerText = Math.round(this.value * 100) + '%'; updateBgPreview('product');">
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Página da Joia:</label>
+                <div id="previewCardProduct" style="height: 380px; border-radius: 14px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                    <div id="previewOverlayProduct" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                    <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.72rem; color: #caa15c; font-weight: 700;">Prata 925 • Gema Rara</span>
+                        <span style="font-size: 0.68rem; color: #ded7cf;">#SKU-772</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <h4 style="font-family: var(--font-serif); font-size: 1.25rem; color: #fff; margin: 0 0 4px;">Colar Sinfonia Mineral</h4>
+                        <span style="color: #caa15c; font-weight: 700; font-size: 1.1rem;">R$ 490,00</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo da visualização de cada joia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL 5: FUNDO DO CHECKOUT SEGURO (/checkout) -->
+    <div id="panelBgCheckout" class="bg-settings-panel" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+            <div>
+                <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 6px;">🔒</div>
+                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo do Checkout Seguro (/checkout)</h4>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Ambiente de alta sofisticação para finalização das compras e pagamentos Pix.</p>
+                    <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
+                        <span>Escolher Imagem para o Checkout</span>
+                        <input type="file" id="fileUploadCheckout" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'checkout_bg_image')">
+                    </label>
+                    <div id="uploadStatusCheckout" style="font-size: 0.8rem; color: #caa15c; margin-top: 10px; display: none;"></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="inputCheckoutBg">URL direta da imagem do Checkout:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="inputCheckoutBg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['checkout_bg_image'] ?? '') ?>" 
+                               placeholder="Ex: /assets/images/backgrounds/marble-noir.svg"
+                               oninput="updateBgPreview('checkout')">
+                        <button type="button" class="btn-admin-secondary" onclick="document.getElementById('inputCheckoutBg').value = ''; updateBgPreview('checkout');">
+                            <span>Limpar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin: 0;">
+                    <label for="inputCheckoutOverlay">
+                        Intensidade do Escurecimento: <strong id="overlayValCheckout"><?= round(((float)($customSettings['checkout_bg_overlay'] ?? '0.75')) * 100) ?>%</strong>
+                    </label>
+                    <input type="range" id="inputCheckoutOverlay" min="0.10" max="0.95" step="0.05" 
+                           value="<?= \App\Core\View::e($customSettings['checkout_bg_overlay'] ?? '0.75') ?>"
+                           style="width: 100%; accent-color: #caa15c;"
+                           oninput="document.getElementById('overlayValCheckout').innerText = Math.round(this.value * 100) + '%'; updateBgPreview('checkout');">
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia do Checkout Seguro:</label>
+                <div id="previewCardCheckout" style="height: 380px; border-radius: 14px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                    <div id="previewOverlayCheckout" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                    <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; color: #fff; font-size: 0.9rem;">CHECKOUT SEGURO</span>
+                        <span style="font-size: 0.7rem; color: #4ade80;">🔒 SSL 256 bits</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; background: rgba(20,19,18,0.85); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px;">
+                        <span style="font-size: 0.72rem; color: #caa15c; font-weight: 600; display: block;">Pagamento Pix Instantâneo</span>
+                        <span style="font-size: 0.82rem; color: #fff;">Desconto Nobre de 5% Aplicado</span>
+                    </div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo do ambiente de pagamento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL 6: FUNDO DAS PÁGINAS INSTITUCIONAIS -->
+    <div id="panelBgInstitutional" class="bg-settings-panel" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+            <div>
+                <div style="background: rgba(255,255,255,0.02); border: 2px dashed rgba(202, 161, 92, 0.3); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 2rem; margin-bottom: 6px;">📜</div>
+                    <h4 style="font-size: 0.95rem; color: #fff; margin: 0 0 4px;">Enviar Fundo das Páginas Institucionais</h4>
+                    <p style="font-size: 0.78rem; color: #9e978e; margin: 0 0 14px;">Aplica-se às páginas de Políticas de Privacidade, Termos de Uso, Garantia, Trocas e Devoluções.</p>
+                    <label class="btn-admin-gold" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 0.84rem;">
+                        <span>Escolher Imagem para Institucional</span>
+                        <input type="file" id="fileUploadInstitutional" accept="image/*" style="display: none;" onchange="uploadBgFile(this, 'institutional_bg_image')">
+                    </label>
+                    <div id="uploadStatusInstitutional" style="font-size: 0.8rem; color: #caa15c; margin-top: 10px; display: none;"></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="inputInstitutionalBg">URL direta da imagem Institucional:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="inputInstitutionalBg" class="form-input" 
+                               value="<?= \App\Core\View::e($customSettings['institutional_bg_image'] ?? '') ?>" 
+                               placeholder="Ex: /assets/images/backgrounds/carbon-noir.svg"
+                               oninput="updateBgPreview('institutional')">
+                        <button type="button" class="btn-admin-secondary" onclick="document.getElementById('inputInstitutionalBg').value = ''; updateBgPreview('institutional');">
+                            <span>Limpar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin: 0;">
+                    <label for="inputInstitutionalOverlay">
+                        Intensidade do Escurecimento: <strong id="overlayValInstitutional"><?= round(((float)($customSettings['institutional_bg_overlay'] ?? '0.75')) * 100) ?>%</strong>
+                    </label>
+                    <input type="range" id="inputInstitutionalOverlay" min="0.10" max="0.95" step="0.05" 
+                           value="<?= \App\Core\View::e($customSettings['institutional_bg_overlay'] ?? '0.75') ?>"
+                           style="width: 100%; accent-color: #caa15c;"
+                           oninput="document.getElementById('overlayValInstitutional').innerText = Math.round(this.value * 100) + '%'; updateBgPreview('institutional');">
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia das Políticas & Termos:</label>
+                <div id="previewCardInstitutional" style="height: 380px; border-radius: 14px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                    <div id="previewOverlayInstitutional" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <span style="font-size: 0.68rem; background: rgba(202,161,92,0.2); color: #caa15c; padding: 2px 8px; border-radius: 10px;">POLÍTICAS DE GARANTIA</span>
+                        <h4 style="font-family: var(--font-serif); font-size: 1.2rem; color: #fff; margin: 8px 0 0;">Transparência & Confiança</h4>
+                    </div>
+                    <div style="position: relative; z-index: 2; background: rgba(20,19,18,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; font-size: 0.72rem; color: #ded7cf;">
+                        Certificado oficial de garantia vitalícia do metal nobre prata 925.
+                    </div>
+                    <div style="position: relative; z-index: 2; text-align: center;">
+                        <span style="font-size: 0.72rem; color: #9e978e;">Fundo das páginas institucionais</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAINEL 7: FUNDO DO PAINEL ADMINISTRATIVO -->
     <div id="panelBgAdmin" class="bg-settings-panel" style="display: none;">
         <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
             <div>
