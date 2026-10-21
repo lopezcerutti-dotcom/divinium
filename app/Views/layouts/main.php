@@ -144,12 +144,19 @@
         <?php if (!empty($customColorBg)): ?>
         body.luxury-theme,
         main,
+        .hero-section,
+        .about-manifesto-section,
+        .showcase-section,
+        .signature-services-section,
+        .heritage-editorial-section,
+        .testimonials-section,
         .institutional-page-container,
         .product-detail-page,
         .checkout-page-container,
         .store-hero-section,
         .store-reasons-section {
             background-color: <?= $customColorBg ?> !important;
+            background: <?= $customColorBg ?> !important;
         }
         <?php endif; ?>
 
@@ -175,6 +182,10 @@
         /* 3. COR DE TEXTO NOBRE EM TODAS AS PÁGINAS */
         <?php if (!empty($customColorText)): ?>
         body.luxury-theme,
+        .hero-title,
+        .showcase-title,
+        .services-title,
+        .testimonials-title,
         .institutional-page-container,
         .product-detail-page,
         .checkout-page-container,
@@ -195,12 +206,20 @@
             background-attachment: fixed !important;
             background-position: center center !important;
         }
+        main,
+        .hero-section,
+        .about-manifesto-section,
+        .showcase-section,
+        .signature-services-section,
+        .heritage-editorial-section,
+        .testimonials-section,
         .institutional-page-container,
         .product-detail-page,
         .checkout-page-container,
         .store-hero-section,
         .store-reasons-section {
             background-color: transparent !important;
+            background: transparent !important;
         }
         <?php endif; ?>
 
