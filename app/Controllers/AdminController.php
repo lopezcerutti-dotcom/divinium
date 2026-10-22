@@ -1049,61 +1049,66 @@ class AdminController
             session_start();
         }
 
-        $defaultTheme = \App\Models\Setting::get('default_theme', 'theme-gold');
+        $defaultTheme = \App\Models\Setting::get('default_theme', 'theme-silver-noir');
         $customThemeSettings = \App\Models\Setting::getAll();
 
         $themesList = [
             [
-                'id' => 'theme-gold',
-                'name' => 'Ouro Imperial & Noir',
-                'subtitle' => 'Quiet Luxury Clássico',
-                'description' => 'A essência atemporal da alta joalheria. Ouro 18k e dourado palha suave sobre fundo preto nobre ônix. Ideal para destacar diamantes e metais nobres com sobriedade régia.',
-                'primary_color' => '#CAA15C',
-                'accent_color' => '#E0C080',
-                'bg_color' => '#0A0B0D',
-                'text_color' => '#F4EFEA',
+                'id' => 'theme-silver-noir',
+                'name' => 'Prata Nobre & Noir',
+                'subtitle' => 'Clássico Original',
+                'description' => 'Elegância atemporal que combina prata fosca, grafite e branco perolado. Uma identidade refinada, discreta e versátil para joias autorais.',
+                'primary_color' => '#A7ADB4',
+                'accent_color' => '#737B85',
+                'bg_color' => '#F7F7F5',
+                'surface_color' => '#FFFFFF',
+                'text_color' => '#25272A',
                 'badge' => 'Clássico Original',
-                'gradient' => 'linear-gradient(135deg, #F4EFEA 0%, #CAA15C 50%, #8A6D3B 100%)',
-                'is_default' => ($defaultTheme === 'theme-gold')
+                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #A7ADB4 50%, #737B85 100%)',
+                'is_default' => in_array($defaultTheme, ['theme-silver-noir', 'theme-gold'], true)
             ],
             [
-                'id' => 'theme-silver',
-                'name' => 'Prata Nobre & Platina',
-                'subtitle' => 'Luz Diamantina & Contemporâneo',
-                'description' => 'Elegância minimalista e cristalina. Prata 925 polida, platina e brilho diamantino com glassmorphism translúcido sofisticado e tipografia de alto contraste.',
-                'primary_color' => '#CBD5E1',
-                'accent_color' => '#E2E8F0',
-                'bg_color' => '#0F172A',
-                'text_color' => '#FFFFFF',
-                'badge' => 'Alta Legibilidade',
-                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, #94A3B8 100%)',
-                'is_default' => ($defaultTheme === 'theme-silver')
+                'id' => 'theme-pearl-platinum',
+                'name' => 'Branco Perolado & Platina',
+                'subtitle' => 'Quiet Luxury',
+                'description' => 'Minimalismo luminoso, com superfícies brancas, tons de platina e tipografia elegante. Valoriza as joias sem competir com o brilho dos metais e das pedras.',
+                'primary_color' => '#CBD0D6',
+                'accent_color' => '#858C95',
+                'bg_color' => '#FAFAF8',
+                'surface_color' => '#FFFFFF',
+                'text_color' => '#242629',
+                'badge' => 'Quiet Luxury',
+                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #CBD0D6 50%, #858C95 100%)',
+                'is_default' => in_array($defaultTheme, ['theme-pearl-platinum', 'theme-silver'], true)
             ],
             [
-                'id' => 'theme-emerald',
-                'name' => 'Esmeralda Real & Champagne Gold',
-                'subtitle' => 'Gemas Preciosas & Tradição Joalheira',
-                'description' => 'Inspirado nas grandes casas da Place Vendôme. Verde esmeralda profundo aveludado com detalhes em champagne gold. Cria uma aura aristocrática para gemas naturais.',
-                'primary_color' => '#10B981',
-                'accent_color' => '#34D399',
-                'bg_color' => '#041E16',
-                'text_color' => '#ECFDF5',
-                'badge' => 'Exclusivo ✦',
-                'gradient' => 'linear-gradient(135deg, #ECFDF5 0%, #34D399 45%, #059669 100%)',
-                'is_default' => ($defaultTheme === 'theme-emerald')
+                'id' => 'theme-nude-pearl',
+                'name' => 'Nude & Bege Pérola',
+                'subtitle' => 'Nude Elegante',
+                'description' => 'Uma estética suave, acolhedora e sofisticada, inspirada em tons de areia clara, nude rosado, bege-pérola e prata fosca. Uma combinação delicada que valoriza as joias autorais sem competir com as pedras naturais.',
+                'primary_color' => '#C8B9AE',
+                'accent_color' => '#B3A49A',
+                'bg_color' => '#F8F5F2',
+                'surface_color' => '#FFFFFF',
+                'text_color' => '#302C29',
+                'text_muted' => '#81766F',
+                'badge' => 'Nude Elegante',
+                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #C8B9AE 50%, #81766F 100%)',
+                'is_default' => in_array($defaultTheme, ['theme-nude-pearl', 'theme-emerald'], true)
             ],
             [
-                'id' => 'theme-rose',
-                'name' => 'Rose Gold & Veludo Noir',
-                'subtitle' => 'Romantismo & Alta Sociedade',
-                'description' => 'A delicadeza sensual do ouro rosa 18k combinada a um fundo grafite aveludado. Acento caloroso que valoriza o caimento das joias com toque sedutor e contemporâneo.',
-                'primary_color' => '#FB7185',
-                'accent_color' => '#FDA4AF',
-                'bg_color' => '#1F0B17',
-                'text_color' => '#FFF1F2',
-                'badge' => 'Tendência 2026',
-                'gradient' => 'linear-gradient(135deg, #FFF1F2 0%, #FDA4AF 45%, #E11D48 100%)',
-                'is_default' => ($defaultTheme === 'theme-rose')
+                'id' => 'theme-contemporary-graphite',
+                'name' => 'Prata & Grafite',
+                'subtitle' => 'Contemporâneo',
+                'description' => 'Uma identidade moderna e arquitetônica, com cinza-prata, branco frio e grafite. Ideal para destacar o design autoral, a geometria e o acabamento das joias.',
+                'primary_color' => '#9DA5AE',
+                'accent_color' => '#626B75',
+                'bg_color' => '#F2F3F4',
+                'surface_color' => '#FFFFFF',
+                'text_color' => '#25272A',
+                'badge' => 'Contemporâneo',
+                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #9DA5AE 50%, #626B75 100%)',
+                'is_default' => in_array($defaultTheme, ['theme-contemporary-graphite', 'theme-rose'], true)
             ]
         ];
 
@@ -1121,8 +1126,11 @@ class AdminController
      */
     public function saveDefaultTheme(): void
     {
-        $theme = trim((string) ($_POST['theme_id'] ?? 'theme-gold'));
-        $allowed = ['theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose', 'theme-custom'];
+        $theme = trim((string) ($_POST['theme_id'] ?? 'theme-silver-noir'));
+        $allowed = [
+            'theme-silver-noir', 'theme-pearl-platinum', 'theme-nude-pearl', 'theme-contemporary-graphite',
+            'theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose', 'theme-custom'
+        ];
         if (!in_array($theme, $allowed, true)) {
             $this->respond(['success' => false, 'error' => 'Tema inválido.'], 200);
             return;
