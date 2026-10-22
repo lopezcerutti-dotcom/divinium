@@ -376,20 +376,31 @@ class Database
                     $jsonContent = @file_get_contents($seedFile);
                     $seedData = json_decode((string)$jsonContent, true);
                     if (is_array($seedData) && !empty($seedData)) {
-                        $upStmt = $pdo->prepare("UPDATE products SET parent_sku = :parent_sku, image_url = :image_url WHERE sku = :sku");
-                        foreach ($seedData as $sp) {
+                        $items = isset($seedData['value']) && is_array($seedData['value']) ? $seedData['value'] : $seedData;
+                        $upStmt = $pdo->prepare("UPDATE products SET parent_sku = :parent_sku, image_url = :image_url, stone_mineral = :stone_mineral WHERE sku = :sku");
+                        foreach ($items as $sp) {
                             $spSku = trim((string)($sp['sku'] ?? ''));
                             $spParent = trim((string)($sp['parent_sku'] ?? ''));
                             $spImg = trim((string)($sp['image_url'] ?? ''));
+                            $spStone = trim((string)($sp['stone_mineral'] ?? ''));
                             if ($spSku !== '') {
                                 $upStmt->execute([
-                                    ':parent_sku' => ($spParent !== '' && $spParent !== $spSku) ? $spParent : null,
-                                    ':image_url'  => $spImg,
-                                    ':sku'        => $spSku,
+                                    ':parent_sku'    => ($spParent !== '' && $spParent !== $spSku) ? $spParent : null,
+                                    ':image_url'     => $spImg,
+                                    ':stone_mineral' => $spStone !== '' ? $spStone : null,
+                                    ':sku'           => $spSku,
                                 ]);
                             }
                         }
                     }
+                    // Garantir parent_sku para variações com sufixo (ex: BRAC-CAM-20-AMT -> parent_sku = BRAC-CAM-20)
+                    $pdo->exec("
+                        UPDATE products 
+                        SET parent_sku = SUBSTRING_INDEX(sku, '-', 3) 
+                        WHERE (parent_sku IS NULL OR TRIM(parent_sku) = '' OR TRIM(parent_sku) = TRIM(sku)) 
+                          AND LENGTH(sku) - LENGTH(REPLACE(sku, '-', '')) >= 3
+                    ");
+                    $pdo->exec("UPDATE products SET sku = TRIM(sku), parent_sku = TRIM(parent_sku)");
                 }
             } catch (\Throwable $syncEx) {
                 // Silencioso se ocorrer qualquer erro de I/O
