@@ -1,4 +1,4 @@
-﻿/* ==============================================================================
+/* ==============================================================================
    DIVINIUM - HAUTE JOAILLERIE & QUIET LUXURY DESIGN SYSTEM
    Paleta: Marfim Sedoso (#FAF8F5), Bronze Nobre (#9C7A58), Grafite Profundo (#11100F)
    ============================================================================== */
@@ -757,23 +757,24 @@ body.luxury-theme {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(135deg, #ebd5a0 0%, #d4ba88 50%, #c2a36e 100%);
-    color: #0e0d0c;
+    background: var(--gold-accent);
+    color: var(--text-primary);
     text-decoration: none;
     padding: 12px 28px;
     border-radius: 40px;
     font-size: 0.84rem;
     letter-spacing: 0.05em;
     font-weight: 600;
-    box-shadow: 0 10px 25px rgba(212, 186, 136, 0.28), 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    border: 1px solid var(--gold-hover);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     transition: var(--transition);
 }
 
 .btn-hero-gold:hover {
-    background: linear-gradient(135deg, #fff2d6 0%, #ebd5a0 50%, #d4ba88 100%);
+    background: var(--gold-hover);
     transform: translateY(-2px);
-    box-shadow: 0 14px 35px rgba(212, 186, 136, 0.42);
-    color: #000;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+    color: #ffffff;
 }
 
 .btn-hero-ghost {
