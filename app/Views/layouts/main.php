@@ -114,7 +114,7 @@
         $topBannerBgColor = \App\Models\Setting::get('top_banner_bg_color');
         $topBannerTextColor = \App\Models\Setting::get('top_banner_text_color');
 
-        // Paleta de Cores Globais
+        // 1. Cores Globais da Marca (Base Primária do Estúdio de Cores)
         $customColorBg = \App\Models\Setting::get('custom_color_bg');
         $customColorBgAlt = \App\Models\Setting::get('custom_color_bg_alt');
         $customColorSurface = \App\Models\Setting::get('custom_color_surface');
@@ -122,6 +122,68 @@
         $customColorAccent = \App\Models\Setting::get('custom_color_accent');
         $customColorText = \App\Models\Setting::get('custom_color_text');
         $customColorTextMuted = \App\Models\Setting::get('custom_color_text_muted');
+
+        // Padrões do tema canônico selecionado caso a cor global não esteja definida
+        $themeDefaults = [
+            'theme-silver-noir' => [
+                'bg' => '#F7F7F5', 'bg_alt' => '#FAFAF8', 'surface' => '#FFFFFF',
+                'primary' => '#A7ADB4', 'accent' => '#737B85',
+                'text' => '#25272A', 'text_muted' => '#737B85',
+                'footer_bg' => '#1E2023', 'footer_text' => '#CBD0D6'
+            ],
+            'theme-pearl-platinum' => [
+                'bg' => '#FAFAF8', 'bg_alt' => '#FFFFFF', 'surface' => '#FFFFFF',
+                'primary' => '#CBD0D6', 'accent' => '#858C95',
+                'text' => '#242629', 'text_muted' => '#858C95',
+                'footer_bg' => '#1A1C1E', 'footer_text' => '#CBD0D6'
+            ],
+            'theme-nude-pearl' => [
+                'bg' => '#F8F5F2', 'bg_alt' => '#FAF8F5', 'surface' => '#FFFFFF',
+                'primary' => '#C8B9AE', 'accent' => '#B3A49A',
+                'text' => '#302C29', 'text_muted' => '#81766F',
+                'footer_bg' => '#24201D', 'footer_text' => '#D5CBC3'
+            ],
+            'theme-contemporary-graphite' => [
+                'bg' => '#F2F3F4', 'bg_alt' => '#FAFAF8', 'surface' => '#FFFFFF',
+                'primary' => '#9DA5AE', 'accent' => '#626B75',
+                'text' => '#25272A', 'text_muted' => '#626B75',
+                'footer_bg' => '#1C1E21', 'footer_text' => '#CBD0D6'
+            ]
+        ];
+        $activeThemeDef = $themeDefaults[$canonicalTheme] ?? $themeDefaults['theme-silver-noir'];
+
+        $effGlobalBg = !empty($customColorBg) ? $customColorBg : $activeThemeDef['bg'];
+        $effGlobalBgAlt = !empty($customColorBgAlt) ? $customColorBgAlt : $activeThemeDef['bg_alt'];
+        $effGlobalSurface = !empty($customColorSurface) ? $customColorSurface : $activeThemeDef['surface'];
+        $effGlobalPrimary = !empty($customColorPrimary) ? $customColorPrimary : $activeThemeDef['primary'];
+        $effGlobalAccent = !empty($customColorAccent) ? $customColorAccent : $activeThemeDef['accent'];
+        $effGlobalText = !empty($customColorText) ? $customColorText : $activeThemeDef['text'];
+        $effGlobalTextMuted = !empty($customColorTextMuted) ? $customColorTextMuted : $activeThemeDef['text_muted'];
+
+        // Regra de Herança Estrita: Se um campo específico estiver vazio, ele herda diretamente a cor global correspondente
+        $effHomeBg = !empty($homeBgColor) ? $homeBgColor : $effGlobalBg;
+        $effHomeCard = !empty($homeCardBg) ? $homeCardBg : $effGlobalSurface;
+
+        $effStoreBg = !empty($storeBgColor) ? $storeBgColor : $effGlobalBg;
+        $effStoreCard = !empty($storeCardBg) ? $storeCardBg : $effGlobalSurface;
+
+        $effProductBg = !empty($productBgColor) ? $productBgColor : $effGlobalBg;
+        $effProductCard = !empty($productCardBg) ? $productCardBg : $effGlobalSurface;
+
+        $effCheckoutBg = !empty($checkoutBgColor) ? $checkoutBgColor : $effGlobalBg;
+        $effCheckoutCard = !empty($checkoutCardBg) ? $checkoutCardBg : $effGlobalSurface;
+
+        $effInstitutionalBg = !empty($institutionalBgColor) ? $institutionalBgColor : $effGlobalBg;
+        $effInstitutionalCard = !empty($institutionalCardBg) ? $institutionalCardBg : $effGlobalSurface;
+
+        $effHeaderBg = !empty($headerBgColor) ? $headerBgColor : $effGlobalSurface;
+        $effHeaderText = !empty($headerTextColor) ? $headerTextColor : $effGlobalText;
+
+        $effFooterBg = !empty($footerBgColor) ? $footerBgColor : $activeThemeDef['footer_bg'];
+        $effFooterText = !empty($footerTextColor) ? $footerTextColor : $activeThemeDef['footer_text'];
+
+        $effTopBannerBg = !empty($topBannerBgColor) ? $topBannerBgColor : '#1A1C1E';
+        $effTopBannerText = !empty($topBannerTextColor) ? $topBannerTextColor : '#CBD0D6';
 
         // Tipografia e Formas
         $dynSerif = \App\Models\Setting::get('custom_font_serif');
@@ -134,139 +196,257 @@
         $dynAlign = \App\Models\Setting::get('editorial_text_alignment', '');
     ?>
     <style id="divinium-design-tokens">
-        :root {
+        :root, html, body.luxury-theme {
             <?php if (!empty($dynSerif)): ?>--font-serif: <?= $dynSerif ?> !important;<?php endif; ?>
             <?php if (!empty($dynSans)): ?>--font-sans: <?= $dynSans ?> !important;<?php endif; ?>
-            <?php if (!empty($customColorPrimary)): ?>--gold-accent: <?= $customColorPrimary ?> !important;<?php endif; ?>
-            <?php if (!empty($customColorAccent)): ?>--gold-hover: <?= $customColorAccent ?> !important;<?php endif; ?>
-            <?php if (!empty($customColorBg)): ?>
-                --bg-dark: <?= $customColorBg ?> !important;
-                --bg-light: <?= $customColorBg ?> !important;
-                --page-bg: <?= $customColorBg ?> !important;
-            <?php endif; ?>
-            <?php if (!empty($customColorBgAlt)): ?>
-                --bg-alt: <?= $customColorBgAlt ?> !important;
-                --surface-alt: <?= $customColorBgAlt ?> !important;
-            <?php endif; ?>
-            <?php if (!empty($customColorSurface)): ?>
-                --surface-dark: <?= $customColorSurface ?> !important;
-                --bg-dark-card: <?= $customColorSurface ?> !important;
-                --card-bg: <?= $customColorSurface ?> !important;
-            <?php endif; ?>
-            <?php if (!empty($customColorText)): ?>
-                --text-light: <?= $customColorText ?> !important;
-                --text-primary: <?= $customColorText ?> !important;
-            <?php endif; ?>
-            <?php if (!empty($customColorTextMuted)): ?>
-                --text-secondary: <?= $customColorTextMuted ?> !important;
-                --text-muted: <?= $customColorTextMuted ?> !important;
-                --text-light-muted: <?= $customColorTextMuted ?> !important;
-            <?php endif; ?>
-            --page-bg: <?= !empty($institutionalBgColor) ? $institutionalBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
-            --page-card-bg: <?= !empty($institutionalCardBg) ? $institutionalCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
-            --checkout-bg: <?= !empty($checkoutBgColor) ? $checkoutBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
-            --checkout-card-bg: <?= !empty($checkoutCardBg) ? $checkoutCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
-            --product-bg: <?= !empty($productBgColor) ? $productBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
-            --product-card-bg: <?= !empty($productCardBg) ? $productCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
-            --store-bg: <?= !empty($storeBgColor) ? $storeBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
-            --store-card-bg: <?= !empty($storeCardBg) ? $storeCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
-            <?php if (!empty($homeBgColor)): ?>
-            --home-bg: <?= $homeBgColor ?> !important;
-            <?php endif; ?>
-            <?php if (!empty($homeCardBg)): ?>
-            --home-card-bg: <?= $homeCardBg ?> !important;
-            <?php endif; ?>
+
+            /* Cores Globais da Marca Centralizadas */
+            --bg-light: <?= $effGlobalBg ?> !important;
+            --bg-white: <?= $effGlobalSurface ?> !important;
+            --bg-dark: <?= $effGlobalBg ?> !important;
+            --bg-alt: <?= $effGlobalBgAlt ?> !important;
+            --surface-alt: <?= $effGlobalBgAlt ?> !important;
+            --bg-dark-card: <?= $effGlobalSurface ?> !important;
+            --card-bg: <?= $effGlobalSurface ?> !important;
+            --surface-dark: <?= $effGlobalSurface ?> !important;
+
+            --gold-accent: <?= $effGlobalPrimary ?> !important;
+            --gold-hover: <?= $effGlobalAccent ?> !important;
+            --silver-accent: <?= $effGlobalPrimary ?> !important;
+            --silver-hover: <?= $effGlobalAccent ?> !important;
+
+            --text-primary: <?= $effGlobalText ?> !important;
+            --text-light: <?= $effGlobalText ?> !important;
+            --text-secondary: <?= $effGlobalTextMuted ?> !important;
+            --text-muted: <?= $effGlobalTextMuted ?> !important;
+            --text-light-muted: <?= $effGlobalTextMuted ?> !important;
+
+            /* Variáveis Específicas por Página com Herança Estrita */
+            --home-bg: <?= $effHomeBg ?> !important;
+            --home-card-bg: <?= $effHomeCard ?> !important;
+
+            --store-bg: <?= $effStoreBg ?> !important;
+            --store-card-bg: <?= $effStoreCard ?> !important;
+
+            --product-bg: <?= $effProductBg ?> !important;
+            --product-card-bg: <?= $effProductCard ?> !important;
+
+            --checkout-bg: <?= $effCheckoutBg ?> !important;
+            --checkout-card-bg: <?= $effCheckoutCard ?> !important;
+
+            --page-bg: <?= $effInstitutionalBg ?> !important;
+            --page-card-bg: <?= $effInstitutionalCard ?> !important;
+
+            --header-bg: <?= $effHeaderBg ?> !important;
+            --header-text: <?= $effHeaderText ?> !important;
+
+            --footer-bg: <?= $effFooterBg ?> !important;
+            --footer-text: <?= $effFooterText ?> !important;
+
+            --top-banner-bg: <?= $effTopBannerBg ?> !important;
+            --top-banner-text: <?= $effTopBannerText ?> !important;
         }
 
-        /* 1. COR DE FUNDO BASE GLOBAL EM TODAS AS PÁGINAS */
-        <?php if (!empty($customColorBg)): ?>
-        body.luxury-theme,
-        main,
-        .hero-section,
-        .about-manifesto-section,
-        .showcase-section,
-        .signature-services-section,
-        .heritage-editorial-section,
-        .testimonials-section,
-        .institutional-page-container,
-        .product-detail-page,
-        .checkout-page-container,
-        .store-hero-section,
-        .store-reasons-section {
-            background-color: <?= $customColorBg ?> !important;
-            background: <?= $customColorBg ?> !important;
+        /* 1. FUNDO BASE E TEXTO GLOBAL EM TODAS AS PÁGINAS */
+        body.luxury-theme {
+            background-color: <?= $effGlobalBg ?> !important;
+            color: <?= $effGlobalText ?> !important;
         }
-        <?php endif; ?>
 
-        /* 2. COR DE SUPERFÍCIE DOS CARDS EM TODAS AS PÁGINAS */
-        <?php if (!empty($customColorSurface)): ?>
-        .store-product-card,
-        .product-gallery-card,
-        .product-info-panel,
-        .checkout-card,
-        .checkout-summary-card,
-        .institutional-card,
-        .reason-card,
-        .about-micro-feature,
-        .showcase-lifestyle-card,
-        .service-card,
-        .testimonial-card,
-        .product-card {
-            background: <?= $customColorSurface ?> !important;
-            background-color: <?= $customColorSurface ?> !important;
+        /* Títulos Nobres Globais */
+        body.luxury-theme h1,
+        body.luxury-theme h2,
+        body.luxury-theme h3,
+        body.luxury-theme h4,
+        body.luxury-theme h5,
+        body.luxury-theme h6,
+        body.luxury-theme .hero-title,
+        body.luxury-theme .showcase-title,
+        body.luxury-theme .services-title,
+        body.luxury-theme .testimonials-title,
+        body.luxury-theme .store-hero-title,
+        body.luxury-theme .product-title-large,
+        body.luxury-theme .product-title-heading,
+        body.luxury-theme .product-price-main,
+        body.luxury-theme .price-current-large,
+        body.luxury-theme .institutional-title {
+            color: <?= $effGlobalText ?> !important;
         }
-        <?php endif; ?>
 
-        /* 3. COR DE TEXTO NOBRE EM TODAS AS PÁGINAS */
-        <?php if (!empty($customColorText)): ?>
-        body.luxury-theme,
-        .hero-title,
-        .showcase-title,
-        .services-title,
-        .testimonials-title,
-        .institutional-page-container,
-        .product-detail-page,
-        .checkout-page-container,
-        .store-hero-title,
-        .institutional-title,
-        .editorial-body {
-            color: <?= $customColorText ?> !important;
+        /* Textos Secundários / Muted */
+        body.luxury-theme .hero-subtitle,
+        body.luxury-theme .store-hero-subtitle,
+        body.luxury-theme .institutional-subtitle,
+        body.luxury-theme .product-storytelling-text,
+        body.luxury-theme .editorial-desc,
+        body.luxury-theme .spec-term,
+        body.luxury-theme .guarantee-desc {
+            color: <?= $effGlobalTextMuted ?> !important;
         }
-        <?php endif; ?>
 
-        /* 4. FUNDO GLOBAL DO SITE COM IMAGEM / TEXTURA */
+        /* 2. PÁGINA INICIAL (HOME) */
+        body.luxury-theme .hero-section,
+        body.luxury-theme .about-manifesto-section,
+        body.luxury-theme .showcase-section,
+        body.luxury-theme .signature-services-section,
+        body.luxury-theme .heritage-editorial-section,
+        body.luxury-theme .testimonials-section {
+            background-color: <?= $effHomeBg ?> !important;
+        }
+        body.luxury-theme .showcase-lifestyle-card,
+        body.luxury-theme .service-card,
+        body.luxury-theme .testimonial-card,
+        body.luxury-theme .about-micro-feature {
+            background-color: <?= $effHomeCard ?> !important;
+            background: <?= $effHomeCard ?> !important;
+        }
+
+        /* 3. BOUTIQUE & CATÁLOGO (/loja) */
+        body.luxury-theme .store-hero-section,
+        body.luxury-theme .store-catalog-section,
+        body.luxury-theme .store-reasons-section {
+            background-color: <?= $effStoreBg ?> !important;
+        }
+        body.luxury-theme .store-product-card,
+        body.luxury-theme .reason-card,
+        body.luxury-theme .related-product-card {
+            background-color: <?= $effStoreCard ?> !important;
+            background: <?= $effStoreCard ?> !important;
+        }
+
+        /* 4. DETALHE DO PRODUTO (/produto/{slug}) */
+        body.luxury-theme .product-detail-page,
+        body.luxury-theme .product-breadcrumb-nav {
+            background-color: <?= $effProductBg ?> !important;
+        }
+        body.luxury-theme .product-gallery-card,
+        body.luxury-theme .product-info-panel,
+        body.luxury-theme .product-price-box,
+        body.luxury-theme .product-price-block,
+        body.luxury-theme .product-purchase-channels-box,
+        body.luxury-theme .product-variations-section,
+        body.luxury-theme .product-description-card,
+        body.luxury-theme .product-specs-card,
+        body.luxury-theme .product-guarantee-card {
+            background-color: <?= $effProductCard ?> !important;
+            background: <?= $effProductCard ?> !important;
+        }
+
+        /* 5. CHECKOUT SEGURO (/checkout) */
+        body.luxury-theme .checkout-page-container {
+            background-color: <?= $effCheckoutBg ?> !important;
+        }
+        body.luxury-theme .checkout-card,
+        body.luxury-theme .checkout-summary-card,
+        body.luxury-theme .payment-instructions-card {
+            background-color: <?= $effCheckoutCard ?> !important;
+            background: <?= $effCheckoutCard ?> !important;
+        }
+
+        /* 6. PÁGINAS INSTITUCIONAIS & POLÍTICAS */
+        body.luxury-theme .institutional-page-container,
+        body.luxury-theme .institutional-hero {
+            background-color: <?= $effInstitutionalBg ?> !important;
+        }
+        body.luxury-theme .institutional-card {
+            background-color: <?= $effInstitutionalCard ?> !important;
+            background: <?= $effInstitutionalCard ?> !important;
+        }
+
+        /* 7. CABEÇALHO / MENU SUPERIOR */
+        body.luxury-theme .main-header {
+            background-color: <?= $effHeaderBg ?> !important;
+            background: <?= $effHeaderBg ?> !important;
+        }
+        body.luxury-theme .main-header .nav-link,
+        body.luxury-theme .main-header .brand-name,
+        body.luxury-theme .main-header .header-action-btn,
+        body.luxury-theme .main-header .action-btn,
+        body.luxury-theme .main-header .logo-text,
+        body.luxury-theme .main-header .theme-toggle-btn {
+            color: <?= $effHeaderText ?> !important;
+        }
+
+        /* 8. RODAPÉ OFICIAL */
+        body.luxury-theme .main-footer {
+            background-color: <?= $effFooterBg ?> !important;
+            background: <?= $effFooterBg ?> !important;
+        }
+        body.luxury-theme .main-footer,
+        body.luxury-theme .main-footer p,
+        body.luxury-theme .main-footer a,
+        body.luxury-theme .main-footer .footer-col-title,
+        body.luxury-theme .main-footer .footer-col h4,
+        body.luxury-theme .main-footer .footer-logo,
+        body.luxury-theme .main-footer .brand-tagline,
+        body.luxury-theme .main-footer .footer-bottom {
+            color: <?= $effFooterText ?> !important;
+        }
+
+        /* 9. TOP BANNER DE ANÚNCIOS */
+        body.luxury-theme .top-announcement-bar {
+            background-color: <?= $effTopBannerBg ?> !important;
+            background: <?= $effTopBannerBg ?> !important;
+        }
+        body.luxury-theme .top-announcement-bar,
+        body.luxury-theme .top-announcement-bar span,
+        body.luxury-theme .top-announcement-bar strong {
+            color: <?= $effTopBannerText ?> !important;
+        }
+
+        /* 10. BOTÕES PRINCIPAIS, DESTAQUES E ESTADOS DE HOVER */
+        body.luxury-theme .btn-hero-gold,
+        body.luxury-theme .btn-gold,
+        body.luxury-theme .stage-buy-btn,
+        body.luxury-theme .btn-checkout-primary,
+        body.luxury-theme .btn-checkout-submit,
+        body.luxury-theme .btn-card-explore,
+        body.luxury-theme .overlay-cta-text,
+        body.luxury-theme .btn-store-back,
+        body.luxury-theme .btn-concierge-help,
+        body.luxury-theme .store-filter-pill.active {
+            background: <?= $effGlobalPrimary ?> !important;
+            background-color: <?= $effGlobalPrimary ?> !important;
+            color: <?= $effGlobalText ?> !important;
+            border-color: <?= $effGlobalAccent ?> !important;
+        }
+
+        body.luxury-theme .btn-hero-gold:hover,
+        body.luxury-theme .btn-gold:hover,
+        body.luxury-theme .stage-buy-btn:hover,
+        body.luxury-theme .btn-checkout-primary:hover,
+        body.luxury-theme .btn-checkout-submit:hover,
+        body.luxury-theme .btn-card-explore:hover,
+        body.luxury-theme .btn-concierge-help:hover {
+            background: <?= $effGlobalAccent ?> !important;
+            background-color: <?= $effGlobalAccent ?> !important;
+            color: #ffffff !important;
+            border-color: <?= $effGlobalAccent ?> !important;
+        }
+
+        /* 11. IMAGEM / TEXTURA DE FUNDO GLOBAL */
         <?php if (!empty($siteBgImage)): ?>
         body.luxury-theme {
-            background-color: <?= !empty($customColorBg) ? $customColorBg : '#0d0c0b' ?> !important;
+            background-color: <?= $effGlobalBg ?> !important;
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$siteBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$siteBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
             background-size: <?= $siteBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
             background-repeat: <?= $siteBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
             background-attachment: fixed !important;
             background-position: center center !important;
         }
-        main,
-        .hero-section,
-        .about-manifesto-section,
-        .showcase-section,
-        .signature-services-section,
-        .heritage-editorial-section,
-        .testimonials-section,
-        .institutional-page-container,
-        .product-detail-page,
-        .checkout-page-container,
-        .store-hero-section,
-        .store-reasons-section {
-            background-color: transparent !important;
-            background: transparent !important;
+        <?php endif; ?>
+
+        /* 12. HERO DA PÁGINA INICIAL COM IMAGEM */
+        <?php if (!empty($heroBgImage)): ?>
+        .hero-section {
+            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
         }
         <?php endif; ?>
 
-        /* 5. FUNDO E CORES ESPECÍFICAS DA BOUTIQUE (/loja) */
-        <?php if (!empty($storeBgColor)): ?>
-        .store-hero-section, .store-reasons-section {
-            background-color: <?= $storeBgColor ?> !important;
-        }
-        <?php endif; ?>
+        /* 13. BOUTIQUE COM IMAGEM */
         <?php if (!empty($storeBgImage)): ?>
         .store-hero-section {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$storeBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$storeBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($storeBgImage) ?>') !important;
@@ -275,19 +455,8 @@
             background-position: center center !important;
         }
         <?php endif; ?>
-        <?php if (!empty($storeCardBg)): ?>
-        .store-product-card, .reason-card {
-            background: <?= $storeCardBg ?> !important;
-            background-color: <?= $storeCardBg ?> !important;
-        }
-        <?php endif; ?>
 
-        /* 6. FUNDO E CORES ESPECÍFICAS DA PÁGINA DO PRODUTO (/produto/{slug}) */
-        <?php if (!empty($productBgColor)): ?>
-        .product-detail-page {
-            background-color: <?= $productBgColor ?> !important;
-        }
-        <?php endif; ?>
+        /* 14. DETALHE DO PRODUTO COM IMAGEM */
         <?php if (!empty($productBgImage)): ?>
         .product-detail-page {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$productBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$productBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($productBgImage) ?>') !important;
@@ -296,19 +465,8 @@
             background-position: center center !important;
         }
         <?php endif; ?>
-        <?php if (!empty($productCardBg)): ?>
-        .product-gallery-card, .product-info-panel {
-            background: <?= $productCardBg ?> !important;
-            background-color: <?= $productCardBg ?> !important;
-        }
-        <?php endif; ?>
 
-        /* 7. FUNDO E CORES ESPECÍFICAS DO CHECKOUT (/checkout) */
-        <?php if (!empty($checkoutBgColor)): ?>
-        .checkout-page-container {
-            background-color: <?= $checkoutBgColor ?> !important;
-        }
-        <?php endif; ?>
+        /* 15. CHECKOUT COM IMAGEM */
         <?php if (!empty($checkoutBgImage)): ?>
         .checkout-page-container {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$checkoutBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$checkoutBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($checkoutBgImage) ?>') !important;
@@ -317,19 +475,8 @@
             background-position: center center !important;
         }
         <?php endif; ?>
-        <?php if (!empty($checkoutCardBg)): ?>
-        .checkout-card, .checkout-summary-card {
-            background: <?= $checkoutCardBg ?> !important;
-            background-color: <?= $checkoutCardBg ?> !important;
-        }
-        <?php endif; ?>
 
-        /* 8. FUNDO E CORES ESPECÍFICAS DAS PÁGINAS INSTITUCIONAIS */
-        <?php if (!empty($institutionalBgColor)): ?>
-        .institutional-page-container {
-            background-color: <?= $institutionalBgColor ?> !important;
-        }
-        <?php endif; ?>
+        /* 16. INSTITUCIONAIS COM IMAGEM */
         <?php if (!empty($institutionalBgImage)): ?>
         .institutional-page-container {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$institutionalBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$institutionalBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($institutionalBgImage) ?>') !important;
@@ -338,101 +485,20 @@
             background-position: center center !important;
         }
         <?php endif; ?>
-        <?php if (!empty($institutionalCardBg)): ?>
-        .institutional-card {
-            background: <?= $institutionalCardBg ?> !important;
-            background-color: <?= $institutionalCardBg ?> !important;
-        }
-        <?php endif; ?>
 
-        /* 9. FUNDO E CORES ESPECÍFICAS DA PÁGINA INICIAL / HOME */
-        <?php if (!empty($homeBgColor)): ?>
-        body.luxury-theme:has(.hero-section),
-        .hero-section,
-        .about-manifesto-section,
-        .showcase-section,
-        .signature-services-section,
-        .heritage-editorial-section,
-        .testimonials-section {
-            background-color: <?= $homeBgColor ?> !important;
-            background: <?= $homeBgColor ?> !important;
-        }
-        <?php endif; ?>
-        <?php if (!empty($homeCardBg)): ?>
-        .showcase-lifestyle-card, .service-card, .testimonial-card, .about-micro-feature {
-            background: <?= $homeCardBg ?> !important;
-            background-color: <?= $homeCardBg ?> !important;
-        }
-        <?php endif; ?>
-
-        /* 10. FUNDO E CORES ESPECÍFICAS DO CABEÇALHO / HEADER */
-        <?php if (!empty($headerBgColor)): ?>
-        .main-header {
-            background-color: <?= $headerBgColor ?> !important;
-            background: <?= $headerBgColor ?> !important;
-        }
-        <?php endif; ?>
-        <?php if (!empty($headerTextColor)): ?>
-        .main-header .nav-link, .main-header .brand-name, .main-header .header-action-btn, .main-header .theme-toggle-btn {
-            color: <?= $headerTextColor ?> !important;
-        }
-        <?php endif; ?>
-
-        /* 11. FUNDO E CORES ESPECÍFICAS DO RODAPÉ / FOOTER */
-        <?php if (!empty($footerBgColor)): ?>
-        .main-footer {
-            background-color: <?= $footerBgColor ?> !important;
-            background: <?= $footerBgColor ?> !important;
-        }
-        <?php endif; ?>
-        <?php if (!empty($footerTextColor)): ?>
-        .main-footer, .main-footer p, .main-footer a, .main-footer .footer-col-title, .main-footer .footer-brand-title {
-            color: <?= $footerTextColor ?> !important;
-        }
-        <?php endif; ?>
-
-        /* 12. FUNDO E COR DO TOP BANNER DE ANÚNCIOS */
-        <?php if (!empty($topBannerBgColor)): ?>
-        .top-announcement-bar {
-            background-color: <?= $topBannerBgColor ?> !important;
-            background: <?= $topBannerBgColor ?> !important;
-        }
-        <?php endif; ?>
-        <?php if (!empty($topBannerTextColor)): ?>
-        .top-announcement-bar, .top-announcement-bar span {
-            color: <?= $topBannerTextColor ?> !important;
-        }
-        <?php endif; ?>
-
-        /* 13. HERO DA PÁGINA INICIAL */
-        <?php if (!empty($heroBgImage)): ?>
-        .hero-section {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
-            background-size: cover !important;
-            background-position: center center !important;
-            background-repeat: no-repeat !important;
-        }
-        <?php elseif (!empty($siteBgImage)): ?>
-        .hero-section {
-            background-image: linear-gradient(rgba(13, 12, 11, 0.45), rgba(13, 12, 11, 0.85)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
-            background-size: cover !important;
-            background-position: center center !important;
-        }
-        <?php endif; ?>
-
-        /* 14. BOTÕES E FORMAS */
+        /* 17. TIPOGRAFIA & DIMENSÕES DINÂMICAS */
         <?php if (!empty($dynBtnRadius)): ?>
-        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
+        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary, .btn-hero-gold, .btn-card-explore, .stage-buy-btn, .btn-checkout-submit, .btn-store-back, .btn-concierge-help {
             border-radius: <?= $dynBtnRadius ?> !important;
         }
         <?php endif; ?>
         <?php if (!empty($dynBtnTransform)): ?>
-        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
+        .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary, .btn-hero-gold, .btn-card-explore, .stage-buy-btn, .btn-checkout-submit, .btn-store-back, .btn-concierge-help {
             text-transform: <?= $dynBtnTransform ?> !important;
         }
         <?php endif; ?>
         <?php if (!empty($dynHeroSize)): ?>
-        .hero-content h1, .hero-title-main {
+        .hero-content h1, .hero-title-main, .hero-title {
             font-size: <?= $dynHeroSize ?> !important;
         }
         <?php endif; ?>
