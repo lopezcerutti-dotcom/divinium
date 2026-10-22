@@ -153,25 +153,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 ?>
 
 <div class="product-detail-page">
-    
-    <!-- 1. BREADCRUMB LUXURY DE NAVEGAÇÃO -->
-    <nav class="product-breadcrumb-nav" aria-label="Navegação estrutural">
-        <div class="container">
-            <ol class="breadcrumb-list">
-                <li class="breadcrumb-item"><a href="/">Início</a></li>
-                <li class="breadcrumb-separator">/</li>
-                <li class="breadcrumb-item"><a href="/loja"><?= View::e(Setting::get('nav_link_store', 'Boutique')) ?></a></li>
-                <?php if ($prodCategory): ?>
-                    <li class="breadcrumb-separator">/</li>
-                    <li class="breadcrumb-item"><a href="/loja#catalogo"><?= View::e($prodCategory) ?></a></li>
-                <?php endif; ?>
-                <li class="breadcrumb-separator">/</li>
-                <li class="breadcrumb-item active" aria-current="page"><?= View::e($prodName) ?></li>
-            </ol>
-        </div>
-    </nav>
 
-    <!-- 2. SEÇÃO PRINCIPAL DO PRODUTO (LAYOUT 2 COLUNAS) -->
+    <!-- SEÇÃO PRINCIPAL DO PRODUTO (LAYOUT 2 COLUNAS) -->
     <section class="product-main-section">
         <div class="container">
             <div class="product-detail-layout">
