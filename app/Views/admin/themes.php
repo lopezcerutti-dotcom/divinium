@@ -292,7 +292,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🏠 Página Inicial / Home (/)</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo da Página Inicial:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo da Página Inicial:</label>
+                            <button type="button" onclick="clearSpecificColor('home_bg_color', 'picker_home_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_home_bg" value="<?= !empty($customSettings['home_bg_color']) ? $customSettings['home_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('home_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="home_bg_color" name="home_bg_color" class="form-input" 
@@ -302,7 +305,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Cards da Página Inicial:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Cards da Página Inicial:</label>
+                            <button type="button" onclick="clearSpecificColor('home_card_bg', 'picker_home_card')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_home_card" value="<?= !empty($customSettings['home_card_bg']) ? $customSettings['home_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('home_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="home_card_bg" name="home_card_bg" class="form-input" 
@@ -317,7 +323,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🛍️ Boutique & Catálogo (/loja)</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo da Boutique:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo da Boutique:</label>
+                            <button type="button" onclick="clearSpecificColor('store_bg_color', 'picker_store_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_store_bg" value="<?= !empty($customSettings['store_bg_color']) ? $customSettings['store_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('store_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="store_bg_color" name="store_bg_color" class="form-input" 
@@ -327,7 +336,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Cards de Joias da Boutique:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Cards de Joias da Boutique:</label>
+                            <button type="button" onclick="clearSpecificColor('store_card_bg', 'picker_store_card')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_store_card" value="<?= !empty($customSettings['store_card_bg']) ? $customSettings['store_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('store_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="store_card_bg" name="store_card_bg" class="form-input" 
@@ -342,7 +354,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">💎 Página de Detalhe da Joia</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo da Página do Produto:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo da Página do Produto:</label>
+                            <button type="button" onclick="clearSpecificColor('product_bg_color', 'picker_product_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_product_bg" value="<?= !empty($customSettings['product_bg_color']) ? $customSettings['product_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('product_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="product_bg_color" name="product_bg_color" class="form-input" 
@@ -352,7 +367,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Card da Galeria & Compra:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Card da Galeria & Compra:</label>
+                            <button type="button" onclick="clearSpecificColor('product_card_bg', 'picker_product_card')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_product_card" value="<?= !empty($customSettings['product_card_bg']) ? $customSettings['product_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('product_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="product_card_bg" name="product_card_bg" class="form-input" 
@@ -367,7 +385,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🔒 Checkout Seguro (/checkout)</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo do Checkout:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo do Checkout:</label>
+                            <button type="button" onclick="clearSpecificColor('checkout_bg_color', 'picker_checkout_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_checkout_bg" value="<?= !empty($customSettings['checkout_bg_color']) ? $customSettings['checkout_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('checkout_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="checkout_bg_color" name="checkout_bg_color" class="form-input" 
@@ -377,7 +398,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Caixas de Pagamento & Resumo:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Caixas de Pagamento & Resumo:</label>
+                            <button type="button" onclick="clearSpecificColor('checkout_card_bg', 'picker_checkout_card')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_checkout_card" value="<?= !empty($customSettings['checkout_card_bg']) ? $customSettings['checkout_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('checkout_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="checkout_card_bg" name="checkout_card_bg" class="form-input" 
@@ -392,7 +416,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">📜 Páginas Institucionais & Políticas</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo das Páginas de Políticas:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo das Páginas de Políticas:</label>
+                            <button type="button" onclick="clearSpecificColor('institutional_bg_color', 'picker_institutional_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_institutional_bg" value="<?= !empty($customSettings['institutional_bg_color']) ? $customSettings['institutional_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('institutional_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="institutional_bg_color" name="institutional_bg_color" class="form-input" 
@@ -402,7 +429,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Card do Conteúdo Editorial:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Card do Conteúdo Editorial:</label>
+                            <button type="button" onclick="clearSpecificColor('institutional_card_bg', 'picker_institutional_card')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_institutional_card" value="<?= !empty($customSettings['institutional_card_bg']) ? $customSettings['institutional_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('institutional_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="institutional_card_bg" name="institutional_card_bg" class="form-input" 
@@ -417,7 +447,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">✨ Topo & Menu de Navegação</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo do Cabeçalho / Menu:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo do Cabeçalho / Menu:</label>
+                            <button type="button" onclick="clearSpecificColor('header_bg_color', 'picker_header_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_header_bg" value="<?= !empty($customSettings['header_bg_color']) ? $customSettings['header_bg_color'] : '#FFFFFF' ?>" onchange="document.getElementById('header_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="header_bg_color" name="header_bg_color" class="form-input" 
@@ -427,7 +460,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Cor dos Links & Textos do Topo:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Cor dos Links & Textos do Topo:</label>
+                            <button type="button" onclick="clearSpecificColor('header_text_color', 'picker_header_text')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_header_text" value="<?= !empty($customSettings['header_text_color']) ? $customSettings['header_text_color'] : '#25272A' ?>" onchange="document.getElementById('header_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="header_text_color" name="header_text_color" class="form-input" 
@@ -442,7 +478,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🏛️ Rodapé Oficial da Loja</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo do Rodapé:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo do Rodapé:</label>
+                            <button type="button" onclick="clearSpecificColor('footer_bg_color', 'picker_footer_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_footer_bg" value="<?= !empty($customSettings['footer_bg_color']) ? $customSettings['footer_bg_color'] : '#1E2023' ?>" onchange="document.getElementById('footer_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="footer_bg_color" name="footer_bg_color" class="form-input" 
@@ -452,7 +491,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Cor dos Textos do Rodapé:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Cor dos Textos do Rodapé:</label>
+                            <button type="button" onclick="clearSpecificColor('footer_text_color', 'picker_footer_text')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_footer_text" value="<?= !empty($customSettings['footer_text_color']) ? $customSettings['footer_text_color'] : '#CBD0D6' ?>" onchange="document.getElementById('footer_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="footer_text_color" name="footer_text_color" class="form-input" 
@@ -467,7 +509,10 @@
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">📢 Barra Superior de Anúncios</span>
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 0.75rem;">Fundo da Barra de Anúncios:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Fundo da Barra de Anúncios:</label>
+                            <button type="button" onclick="clearSpecificColor('top_banner_bg_color', 'picker_top_banner_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_top_banner_bg" value="<?= !empty($customSettings['top_banner_bg_color']) ? $customSettings['top_banner_bg_color'] : '#1A1C1E' ?>" onchange="document.getElementById('top_banner_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="top_banner_bg_color" name="top_banner_bg_color" class="form-input" 
@@ -477,7 +522,10 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.75rem;">Cor do Texto do Anúncio:</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label style="font-size: 0.75rem; margin: 0;">Cor do Texto do Anúncio:</label>
+                            <button type="button" onclick="clearSpecificColor('top_banner_text_color', 'picker_top_banner_text')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
+                        </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="picker_top_banner_text" value="<?= !empty($customSettings['top_banner_text_color']) ? $customSettings['top_banner_text_color'] : '#FFFFFF' ?>" onchange="document.getElementById('top_banner_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="top_banner_text_color" name="top_banner_text_color" class="form-input" 
