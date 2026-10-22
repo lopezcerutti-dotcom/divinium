@@ -336,7 +336,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <!-- Opção Direta de Compra na Boutique Divinium (com Pix 5% OFF) -->
                         <div class="channel-option-wrapper" style="margin-bottom: 14px;">
                             <a href="/checkout" 
-                               onclick="event.preventDefault(); if (typeof addToCart === 'function') { addToCart({id: <?= $prodId ?>, name: <?= json_encode($prodName) ?>, price: <?= $basePriceCents ?>, image: <?= json_encode($prodImageUrl) ?>, stone: document.getElementById('selectedStoneName')?.textContent || <?= json_encode($prodMineral) ?>}); } window.location.href='/checkout';" 
+                               id="btnDirectCheckoutVip"
+                               onclick="buySelectedVariation(event, true);" 
                                class="btn-channel-impartial platform-direct-vip"
                                style="background: linear-gradient(135deg, rgba(212,186,136,0.18) 0%, rgba(20,18,16,0.98) 100%); border: 1.5px solid #d4ba88; box-shadow: 0 4px 15px rgba(212,186,136,0.15);">
                                 
@@ -353,7 +354,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 <div class="channel-btn-right">
                                     <div class="channel-price-wrap">
                                         <span class="channel-price-label" style="color: #4ade80;">Pix (-5%)</span>
-                                        <span class="channel-price-val" style="color: #d4ba88; font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
+                                        <span class="channel-price-val vip-pix-val" style="color: #d4ba88; font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
                                     </div>
                                     <span class="channel-arrow-circle" style="background: #d4ba88; color: #000;">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -387,7 +388,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                         <a href="<?= View::e($linkUrl) ?>" 
                                            target="<?= $targetAttr ?>" 
                                            rel="noopener noreferrer"
-                                           class="btn-channel-impartial platform-<?= $platSlug ?>"
+                                           class="btn-channel-impartial btn-channel-external platform-<?= $platSlug ?>"
                                            data-track-product-id="<?= $prodId ?>"
                                            data-track-product-name="<?= View::e($prodName) ?>"
                                            data-track-source="detail_<?= $platSlug ?>"
@@ -423,6 +424,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <!-- Fallback Caso Nenhum Link Esteja Cadastrado: Atendimento Direto WhatsApp -->
                             <div class="channel-option-wrapper">
                                 <a href="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999')) ?>" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer"
+                                   class="btn-channel-impartial btn-channel-external platform-whatsapp"
                                    target="_blank" 
                                    rel="noopener noreferrer"
                                    class="btn-channel-impartial platform-whatsapp"
@@ -519,8 +523,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
 
                             <div class="spec-row">
+                                <dt class="spec-term">Referência / SKU</dt>
+                                <dd class="spec-value" id="specSkuValue">#<?= View::e($prodSku) ?></dd>
+                            </div>
+
+                            <div class="spec-row">
                                 <dt class="spec-term">Disponibilidade</dt>
-                                <dd class="spec-value">
+                                <dd class="spec-value" id="specStockValue">
                                     <?php if ($prodStockStatus === 'preorder'): ?>
                                         <span style="color: #fbbf24;">● Manufatura Sob Encomenda (Envio prioritário)</span>
                                     <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
@@ -623,14 +632,14 @@ function selectProductVariation(btn) {
     btn.classList.add('active');
     btn.setAttribute('aria-checked', 'true');
     
-    const sku = btn.getAttribute('data-sku');
-    const name = btn.getAttribute('data-name');
-    const stone = btn.getAttribute('data-stone');
-    const priceFormatted = btn.getAttribute('data-price-formatted');
+    const sku = btn.getAttribute('data-sku') || '';
+    const name = btn.getAttribute('data-name') || '';
+    const stone = btn.getAttribute('data-stone') || '';
+    const priceFormatted = btn.getAttribute('data-price-formatted') || '';
     const priceCents = parseInt(btn.getAttribute('data-price-cents') || '0', 10);
-    const imgUrl = btn.getAttribute('data-image');
-    const stock = btn.getAttribute('data-stock');
-    const extUrl = btn.getAttribute('data-url');
+    const imgUrl = btn.getAttribute('data-image') || '';
+    const stock = btn.getAttribute('data-stock') || 'in_stock';
+    const extUrl = btn.getAttribute('data-url') || '';
     
     // 1. Atualizar nome da pedra mineral selecionada
     const stoneDisplay = document.getElementById('selectedStoneName');
@@ -641,13 +650,13 @@ function selectProductVariation(btn) {
     // 2. Atualizar foto com transição suave
     const mainImg = document.getElementById('productMainImage');
     if (mainImg && imgUrl && mainImg.getAttribute('src') !== imgUrl) {
-        mainImg.style.opacity = '0.3';
-        mainImg.style.transition = 'opacity 0.25s ease';
+        mainImg.style.opacity = '0.25';
+        mainImg.style.transition = 'opacity 0.2s ease';
         setTimeout(() => {
             mainImg.src = imgUrl;
             mainImg.onload = () => { mainImg.style.opacity = '1'; };
-            setTimeout(() => { mainImg.style.opacity = '1'; }, 200);
-        }, 150);
+            setTimeout(() => { mainImg.style.opacity = '1'; }, 150);
+        }, 100);
     }
     
     // 3. Atualizar preço principal
@@ -662,31 +671,48 @@ function selectProductVariation(btn) {
         const pixVal = (priceCents * 0.95) / 100;
         pixEl.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' no Pix (-5%)';
     }
+    const vipPixVal = document.querySelector('.vip-pix-val');
+    if (vipPixVal && priceCents > 0) {
+        const pixVal = (priceCents * 0.95) / 100;
+        vipPixVal.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
     const installmentsEl = document.querySelector('.price-installments-row span');
     if (installmentsEl && priceCents > 0) {
         const instVal = (priceCents / 600).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         installmentsEl.textContent = 'Em até 6x de R$ ' + instVal + ' sem juros nos canais oficiais homologados';
     }
 
-    // 4.1 Atualizar ficha técnica no rodapé
+    // 5. Atualizar ficha técnica no rodapé
     const specMin = document.getElementById('specMineralValue');
     if (specMin && stone) {
         specMin.textContent = '✦ ' + stone;
     }
+    const specSku = document.getElementById('specSkuValue');
+    if (specSku && sku) {
+        specSku.textContent = '#' + sku;
+    }
+    const specStock = document.getElementById('specStockValue');
+    if (specStock) {
+        if (stock === 'out_of_stock') {
+            specStock.innerHTML = '<span style="color: #fbbf24;">● Manufatura Sob Encomenda (Envio prioritário)</span>';
+        } else {
+            specStock.innerHTML = '<span style="color: #4ade80;">● Pronta Entrega para Envio Imediato</span>';
+        }
+    }
     
-    // 5. Atualizar SKU / Código da Joia
+    // 6. Atualizar SKU / Código da Joia no card da galeria
     const skuDisplay = document.querySelector('.media-sku-text strong');
     if (skuDisplay && sku) {
         skuDisplay.textContent = '#' + sku;
     }
     
-    // 6. Atualizar Badge Mineral na foto
+    // 7. Atualizar Badge Mineral na foto
     const badgeMineral = document.querySelector('.badge-mineral');
     if (badgeMineral && stone) {
         badgeMineral.textContent = '✦ ' + stone;
     }
     
-    // 7. Atualizar Badge de Disponibilidade
+    // 8. Atualizar Badge de Disponibilidade na foto
     const badgeStock = document.querySelector('.product-media-badges .media-badge:first-child');
     if (badgeStock) {
         if (stock === 'out_of_stock') {
@@ -698,15 +724,50 @@ function selectProductVariation(btn) {
         }
     }
     
-    // 8. Atualizar botões de canais de compra (Shopee e outros)
+    // 9. Atualizar botões de canais externos (Shopee e outros) sem alterar o botão de checkout VIP interno
     if (extUrl) {
-        document.querySelectorAll('.btn-channel-impartial').forEach(cBtn => {
+        document.querySelectorAll('.btn-channel-external').forEach(cBtn => {
             cBtn.href = extUrl;
             const pVal = cBtn.querySelector('.channel-price-val');
             if (pVal && priceFormatted) {
                 pVal.textContent = priceFormatted;
             }
         });
+    }
+
+    // 10. Atualizar URL com o parâmetro da variante selecionada sem recarregar a página
+    if (sku && window.history && window.history.replaceState) {
+        const curUrl = new URL(window.location);
+        curUrl.searchParams.set('variante', sku);
+        window.history.replaceState({}, '', curUrl.toString());
+    }
+}
+
+function buySelectedVariation(event, isDirectCheckout) {
+    if (event) {
+        event.preventDefault();
+    }
+    const activeChip = document.querySelector('.variation-chip.active') || document.querySelector('.variation-chip');
+    const sku = activeChip ? activeChip.getAttribute('data-sku') : '<?= View::e($prodSku) ?>';
+    const stone = activeChip ? activeChip.getAttribute('data-stone') : (document.getElementById('selectedStoneName')?.textContent || '<?= View::e($prodMineral) ?>');
+    const priceCents = activeChip ? parseInt(activeChip.getAttribute('data-price-cents') || '<?= $basePriceCents ?>', 10) : <?= $basePriceCents ?>;
+    const imgUrl = activeChip ? activeChip.getAttribute('data-image') : (document.getElementById('productMainImage')?.getAttribute('src') || '<?= View::e($prodImageUrl) ?>');
+    const modelName = <?= json_encode($prodName) ?>;
+    const fullName = modelName + (stone ? ' - ' + stone : '');
+
+    if (typeof addToCart === 'function') {
+        addToCart({
+            id: <?= $prodId ?>,
+            sku: sku,
+            name: fullName,
+            price: priceCents,
+            image: imgUrl,
+            stone: stone
+        });
+    }
+
+    if (isDirectCheckout) {
+        window.location.href = '/checkout';
     }
 }
 
