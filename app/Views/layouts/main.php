@@ -185,6 +185,22 @@
         $effTopBannerBg = !empty($topBannerBgColor) ? $topBannerBgColor : '#1A1C1E';
         $effTopBannerText = !empty($topBannerTextColor) ? $topBannerTextColor : '#CBD0D6';
 
+        // Cálculo dinâmico de contraste para textos de botões e estados interativos
+        $calcContrastColor = function($hexColor) {
+            $h = ltrim((string)$hexColor, '#');
+            if (strlen($h) === 3) {
+                $h = $h[0].$h[0].$h[1].$h[1].$h[2].$h[2];
+            }
+            if (strlen($h) !== 6) return '#FFFFFF';
+            $r = hexdec(substr($h, 0, 2));
+            $g = hexdec(substr($h, 2, 2));
+            $b = hexdec(substr($h, 4, 2));
+            $yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+            return ($yiq >= 140) ? '#121110' : '#FFFFFF';
+        };
+        $effBtnText = $calcContrastColor($effGlobalPrimary);
+        $effBtnHoverText = $calcContrastColor($effGlobalAccent);
+
         // Tipografia e Formas
         $dynSerif = \App\Models\Setting::get('custom_font_serif');
         $dynSans = \App\Models\Setting::get('custom_font_sans');

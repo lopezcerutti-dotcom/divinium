@@ -1,4 +1,4 @@
-/* ==============================================================================
+﻿/* ==============================================================================
    DIVINIUM - HAUTE JOAILLERIE & QUIET LUXURY DESIGN SYSTEM
    Paleta: Marfim Sedoso (#FAF8F5), Bronze Nobre (#9C7A58), Grafite Profundo (#11100F)
    ============================================================================== */
@@ -3157,19 +3157,19 @@ body.luxury-theme {
 
 /* Modificadores de Cores dos Botões */
 .btn-color-gold {
-    background: linear-gradient(135deg, #d4ba88 0%, #b89758 100%) !important;
-    color: #0d0c0b !important;
-    border: 1px solid rgba(212, 186, 136, 0.6) !important;
-    box-shadow: 0 4px 14px rgba(212, 186, 136, 0.35) !important;
+    background: var(--gold-accent) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-light) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
 }
 .btn-color-gold .platform-btn-price-tag {
-    border-left-color: rgba(13, 12, 11, 0.25) !important;
-    color: #0d0c0b !important;
+    border-left-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
 }
 .btn-color-gold:hover {
-    background: linear-gradient(135deg, #e0c99a 0%, #c9a96e 100%) !important;
-    color: #0d0c0b !important;
-    box-shadow: 0 6px 20px rgba(212, 186, 136, 0.5) !important;
+    background: var(--gold-hover) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 .btn-color-dark {
@@ -3303,9 +3303,9 @@ body.luxury-theme {
 
 /* Aplicação a canais secundários de venda */
 .store-channel-pill.btn-color-gold {
-    background: rgba(212, 186, 136, 0.12) !important;
-    border-color: rgba(212, 186, 136, 0.5) !important;
-    color: #d4ba88 !important;
+    background: var(--card-bg) !important;
+    border-color: var(--gold-accent) !important;
+    color: var(--gold-accent) !important;
 }
 .store-channel-pill.btn-color-silver {
     background: rgba(226, 232, 240, 0.12) !important;
