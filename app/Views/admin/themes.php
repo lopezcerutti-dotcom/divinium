@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: GESTÃO DE TEMAS & IDENTIDADE VISUAL - ADMIN DIVINIUM
  */
@@ -192,6 +192,18 @@
                     <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#FFFFFF') ?>" 
                            oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
+                </div>
+                <!-- Paleta de Tons Rápidos de Superfície -->
+                <div style="margin-top: 8px;">
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Nobres Rápidos:</span>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button type="button" onclick="setQuickSurface('#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#FAFAF8')" title="Branco Perolado (#FAFAF8)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAFAF8; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#FAF8F5')" title="Bege Pérola (#FAF8F5)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAF8F5; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#F2F3F4')" title="Cinza Contemporâneo (#F2F3F4)" style="width: 20px; height: 20px; border-radius: 50%; background: #F2F3F4; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#1E2023')" title="Grafite Escuro (#1E2023)" style="width: 20px; height: 20px; border-radius: 50%; background: #1E2023; border: 1px solid #555; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#14161A')" title="Noir Noturno (#14161A)" style="width: 20px; height: 20px; border-radius: 50%; background: #14161A; border: 1px solid #333; cursor: pointer;"></button>
+                    </div>
                 </div>
             </div>
 
