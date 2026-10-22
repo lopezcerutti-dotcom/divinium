@@ -112,15 +112,15 @@
 </div>
 
 <!-- ESTÚDIO DE PERSONALIZAÇÃO DE CORES & IDENTIDADE AUTORAL -->
-<div class="admin-card" style="border: 1px solid rgba(202, 161, 92, 0.35); padding: 26px; margin-bottom: 30px;">
+<div class="admin-card" style="border: 1px solid rgba(167, 173, 180, 0.35); padding: 26px; margin-bottom: 30px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; flex-wrap: wrap; gap: 14px;">
         <div>
             <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; font-size: 1.35rem; margin: 0;">
-                <span style="color: #caa15c;">🎨</span>
+                <span style="color: #A7ADB4;">🎨</span>
                 Estúdio de Cores & Fundo de Todas as Páginas
             </h3>
             <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
-                Personalize as cores de fundo, superfícies, ouro e textos para todas as páginas da loja (Home, Boutique, Produto, Checkout e Institucionais).
+                Personalize as cores de fundo, superfícies, metais nobres e textos para todas as páginas da loja (Home, Boutique, Produto, Checkout e Institucionais).
             </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -138,18 +138,18 @@
 
         <!-- 1. GRID DE CORES GLOBAIS (APLICADAS EM TODAS AS PÁGINAS) -->
         <div style="margin-bottom: 12px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; letter-spacing: 0.5px;">✦ 1. Cores Globais da Marca (Aplicam-se em Todas as Páginas do Site):</span>
+            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 1. Cores Globais da Marca (Aplicam-se em Todas as Páginas do Site):</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_bg">Fundo Base (Dark Noir)</label>
+                <label for="custom_color_bg">Fundo Base da Loja</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_bg" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
                            onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#0D0C0B') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
                            oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
                 </div>
             </div>
@@ -158,11 +158,11 @@
                 <label for="custom_color_surface">Superfície dos Cards & Caixas</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_surface" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#FFFFFF') ?>" 
                            onchange="document.getElementById('custom_color_surface').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#141312') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#FFFFFF') ?>" 
                            oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
                 </div>
             </div>
@@ -171,11 +171,11 @@
                 <label for="custom_color_primary">Cor Primária (Metais Nobres / Botões)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_primary" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#CAA15C') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" 
                            onchange="document.getElementById('custom_color_primary').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_primary" name="custom_color_primary" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#CAA15C') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" 
                            oninput="document.getElementById('picker_primary').value = this.value; updateCustomPreview();">
                 </div>
             </div>
@@ -184,11 +184,11 @@
                 <label for="custom_color_accent">Cor de Realce (Hover & Acentos)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_accent" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#E0C080') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#737B85') ?>" 
                            onchange="document.getElementById('custom_color_accent').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_accent" name="custom_color_accent" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#E0C080') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#737B85') ?>" 
                            oninput="document.getElementById('picker_accent').value = this.value; updateCustomPreview();">
                 </div>
             </div>
@@ -197,11 +197,11 @@
                 <label for="custom_color_text">Texto Principal (Leitura)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_text" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#F4EFEA') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#25272A') ?>" 
                            onchange="document.getElementById('custom_color_text').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_text" name="custom_color_text" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#F4EFEA') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#25272A') ?>" 
                            oninput="document.getElementById('picker_text').value = this.value; updateCustomPreview();">
                 </div>
             </div>
@@ -210,11 +210,11 @@
                 <label for="custom_color_text_muted">Texto Suave (Secundário)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_text_muted" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#9E978E') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#737B85') ?>" 
                            onchange="document.getElementById('custom_color_text_muted').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#9E978E') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#737B85') ?>" 
                            oninput="document.getElementById('picker_text_muted').value = this.value; updateCustomPreview();">
                 </div>
             </div>
