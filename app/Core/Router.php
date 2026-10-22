@@ -291,6 +291,11 @@ class Router
         $this->get('/admin/categorias', [\App\Controllers\AdminController::class, 'categories'], $adminAuth);
         $this->post('/admin/categorias/salvar', [\App\Controllers\AdminController::class, 'saveCategory'], $adminAuth);
         $this->post('/admin/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);
+        $this->get('/admin/categorias/produtos', [\App\Controllers\AdminController::class, 'categoryProducts'], $adminAuth);
+        $this->post('/admin/categorias/associar-produto', [\App\Controllers\AdminController::class, 'associateCategoryProduct'], $adminAuth);
+        $this->post('/admin/categorias/desassociar-produto', [\App\Controllers\AdminController::class, 'disassociateCategoryProduct'], $adminAuth);
+        $this->post('/admin/categorias/salvar-variante', [\App\Controllers\AdminController::class, 'saveVariant'], $adminAuth);
+        $this->post('/admin/categorias/salvar-canais', [\App\Controllers\AdminController::class, 'saveProductChannels'], $adminAuth);
         $this->get('/admin/boutique', [\App\Controllers\AdminController::class, 'boutique'], $adminAuth);
         $this->post('/admin/boutique/salvar', [\App\Controllers\AdminController::class, 'saveBoutique'], $adminAuth);
         $this->get('/admin/lancamentos', [\App\Controllers\AdminController::class, 'lancamentos'], $adminAuth);
