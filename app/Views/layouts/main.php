@@ -73,6 +73,10 @@
         $siteBgOverlay = \App\Models\Setting::get('site_bg_overlay', '0.75');
         $siteBgRepeat = \App\Models\Setting::get('site_bg_repeat', 'cover');
 
+        // Fundo Específico da Home (/ ou Início)
+        $homeBgColor = \App\Models\Setting::get('home_bg_color');
+        $homeCardBg = \App\Models\Setting::get('home_card_bg');
+
         // Fundo Específico do Hero (Banner Inicial da Home)
         $heroBgImage = \App\Models\Setting::get('hero_bg_image');
         $heroBgOverlay = \App\Models\Setting::get('hero_bg_overlay', '0.60');
@@ -102,8 +106,17 @@
         $institutionalBgOverlay = \App\Models\Setting::get('institutional_bg_overlay', '0.75');
         $institutionalCardBg = \App\Models\Setting::get('institutional_card_bg');
 
+        // Fundo do Cabeçalho, Rodapé e Top Banner
+        $headerBgColor = \App\Models\Setting::get('header_bg_color');
+        $headerTextColor = \App\Models\Setting::get('header_text_color');
+        $footerBgColor = \App\Models\Setting::get('footer_bg_color');
+        $footerTextColor = \App\Models\Setting::get('footer_text_color');
+        $topBannerBgColor = \App\Models\Setting::get('top_banner_bg_color');
+        $topBannerTextColor = \App\Models\Setting::get('top_banner_text_color');
+
         // Paleta de Cores Globais
         $customColorBg = \App\Models\Setting::get('custom_color_bg');
+        $customColorBgAlt = \App\Models\Setting::get('custom_color_bg_alt');
         $customColorSurface = \App\Models\Setting::get('custom_color_surface');
         $customColorPrimary = \App\Models\Setting::get('custom_color_primary');
         $customColorAccent = \App\Models\Setting::get('custom_color_accent');
@@ -129,6 +142,11 @@
             <?php if (!empty($customColorBg)): ?>
                 --bg-dark: <?= $customColorBg ?> !important;
                 --bg-light: <?= $customColorBg ?> !important;
+                --page-bg: <?= $customColorBg ?> !important;
+            <?php endif; ?>
+            <?php if (!empty($customColorBgAlt)): ?>
+                --bg-alt: <?= $customColorBgAlt ?> !important;
+                --surface-alt: <?= $customColorBgAlt ?> !important;
             <?php endif; ?>
             <?php if (!empty($customColorSurface)): ?>
                 --surface-dark: <?= $customColorSurface ?> !important;
@@ -144,14 +162,20 @@
                 --text-muted: <?= $customColorTextMuted ?> !important;
                 --text-light-muted: <?= $customColorTextMuted ?> !important;
             <?php endif; ?>
-            --page-bg: <?= !empty($institutionalBgColor) ? $institutionalBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
-            --page-card-bg: <?= !empty($institutionalCardBg) ? $institutionalCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
-            --checkout-bg: <?= !empty($checkoutBgColor) ? $checkoutBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
-            --checkout-card-bg: <?= !empty($checkoutCardBg) ? $checkoutCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
-            --product-bg: <?= !empty($productBgColor) ? $productBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
-            --product-card-bg: <?= !empty($productCardBg) ? $productCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
-            --store-bg: <?= !empty($storeBgColor) ? $storeBgColor : (!empty($customColorBg) ? $customColorBg : '#0d0c0b') ?>;
-            --store-card-bg: <?= !empty($storeCardBg) ? $storeCardBg : (!empty($customColorSurface) ? $customColorSurface : '#141312') ?>;
+            --page-bg: <?= !empty($institutionalBgColor) ? $institutionalBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
+            --page-card-bg: <?= !empty($institutionalCardBg) ? $institutionalCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
+            --checkout-bg: <?= !empty($checkoutBgColor) ? $checkoutBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
+            --checkout-card-bg: <?= !empty($checkoutCardBg) ? $checkoutCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
+            --product-bg: <?= !empty($productBgColor) ? $productBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
+            --product-card-bg: <?= !empty($productCardBg) ? $productCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
+            --store-bg: <?= !empty($storeBgColor) ? $storeBgColor : (!empty($customColorBg) ? $customColorBg : '#F7F7F5') ?>;
+            --store-card-bg: <?= !empty($storeCardBg) ? $storeCardBg : (!empty($customColorSurface) ? $customColorSurface : '#FFFFFF') ?>;
+            <?php if (!empty($homeBgColor)): ?>
+            --home-bg: <?= $homeBgColor ?> !important;
+            <?php endif; ?>
+            <?php if (!empty($homeCardBg)): ?>
+            --home-card-bg: <?= $homeCardBg ?> !important;
+            <?php endif; ?>
         }
 
         /* 1. COR DE FUNDO BASE GLOBAL EM TODAS AS PÁGINAS */
@@ -321,7 +345,66 @@
         }
         <?php endif; ?>
 
-        /* 9. HERO DA PÁGINA INICIAL */
+        /* 9. FUNDO E CORES ESPECÍFICAS DA PÁGINA INICIAL / HOME */
+        <?php if (!empty($homeBgColor)): ?>
+        body.luxury-theme:has(.hero-section),
+        .hero-section,
+        .about-manifesto-section,
+        .showcase-section,
+        .signature-services-section,
+        .heritage-editorial-section,
+        .testimonials-section {
+            background-color: <?= $homeBgColor ?> !important;
+            background: <?= $homeBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($homeCardBg)): ?>
+        .showcase-lifestyle-card, .service-card, .testimonial-card, .about-micro-feature {
+            background: <?= $homeCardBg ?> !important;
+            background-color: <?= $homeCardBg ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 10. FUNDO E CORES ESPECÍFICAS DO CABEÇALHO / HEADER */
+        <?php if (!empty($headerBgColor)): ?>
+        .main-header {
+            background-color: <?= $headerBgColor ?> !important;
+            background: <?= $headerBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($headerTextColor)): ?>
+        .main-header .nav-link, .main-header .brand-name, .main-header .header-action-btn, .main-header .theme-toggle-btn {
+            color: <?= $headerTextColor ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 11. FUNDO E CORES ESPECÍFICAS DO RODAPÉ / FOOTER */
+        <?php if (!empty($footerBgColor)): ?>
+        .main-footer {
+            background-color: <?= $footerBgColor ?> !important;
+            background: <?= $footerBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($footerTextColor)): ?>
+        .main-footer, .main-footer p, .main-footer a, .main-footer .footer-col-title, .main-footer .footer-brand-title {
+            color: <?= $footerTextColor ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 12. FUNDO E COR DO TOP BANNER DE ANÚNCIOS */
+        <?php if (!empty($topBannerBgColor)): ?>
+        .top-announcement-bar {
+            background-color: <?= $topBannerBgColor ?> !important;
+            background: <?= $topBannerBgColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($topBannerTextColor)): ?>
+        .top-announcement-bar, .top-announcement-bar span {
+            color: <?= $topBannerTextColor ?> !important;
+        }
+        <?php endif; ?>
+
+        /* 13. HERO DA PÁGINA INICIAL */
         <?php if (!empty($heroBgImage)): ?>
         .hero-section {
             background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
@@ -337,7 +420,7 @@
         }
         <?php endif; ?>
 
-        /* 10. BOTÕES E FORMAS */
+        /* 14. BOTÕES E FORMAS */
         <?php if (!empty($dynBtnRadius)): ?>
         .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary {
             border-radius: <?= $dynBtnRadius ?> !important;
