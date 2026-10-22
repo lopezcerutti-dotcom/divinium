@@ -1052,12 +1052,12 @@ function toggleSpecificColorsSection() {
 }
 
 function updateCustomPreview() {
-    const primary = document.getElementById('custom_color_primary')?.value || '#CAA15C';
-    const accent = document.getElementById('custom_color_accent')?.value || '#E0C080';
-    const bg = document.getElementById('custom_color_bg')?.value || '#0D0C0B';
-    const surface = document.getElementById('custom_color_surface')?.value || '#141312';
-    const text = document.getElementById('custom_color_text')?.value || '#F4EFEA';
-    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#9E978E';
+    const primary = document.getElementById('custom_color_primary')?.value || '#A7ADB4';
+    const accent = document.getElementById('custom_color_accent')?.value || '#737B85';
+    const bg = document.getElementById('custom_color_bg')?.value || '#F7F7F5';
+    const surface = document.getElementById('custom_color_surface')?.value || '#FFFFFF';
+    const text = document.getElementById('custom_color_text')?.value || '#25272A';
+    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#737B85';
     const fontSerif = document.getElementById('custom_font_serif')?.value || "'Cormorant Garamond', Georgia, serif";
     const radius = document.getElementById('custom_border_radius')?.value || '8px';
 
@@ -1068,7 +1068,7 @@ function updateCustomPreview() {
     }
     const title = document.getElementById('previewSerifTitle');
     if (title) {
-        title.style.color = primary;
+        title.style.color = text;
         title.style.fontFamily = fontSerif;
     }
     const sampleText = document.getElementById('previewSampleText');
@@ -1082,23 +1082,24 @@ function updateCustomPreview() {
     const btn = document.getElementById('previewBtnSample');
     if (btn) {
         btn.style.backgroundColor = primary;
+        btn.style.color = text;
         btn.style.borderRadius = radius;
     }
 }
 
 function resetToThemeDefaults() {
-    document.getElementById('custom_color_primary').value = '#CAA15C';
-    document.getElementById('picker_primary').value = '#CAA15C';
-    document.getElementById('custom_color_accent').value = '#E0C080';
-    document.getElementById('picker_accent').value = '#E0C080';
-    document.getElementById('custom_color_bg').value = '#0D0C0B';
-    document.getElementById('picker_bg').value = '#0D0C0B';
-    document.getElementById('custom_color_surface').value = '#141312';
-    document.getElementById('picker_surface').value = '#141312';
-    document.getElementById('custom_color_text').value = '#F4EFEA';
-    document.getElementById('picker_text').value = '#F4EFEA';
-    document.getElementById('custom_color_text_muted').value = '#9E978E';
-    document.getElementById('picker_text_muted').value = '#9E978E';
+    document.getElementById('custom_color_primary').value = '#A7ADB4';
+    document.getElementById('picker_primary').value = '#A7ADB4';
+    document.getElementById('custom_color_accent').value = '#737B85';
+    document.getElementById('picker_accent').value = '#737B85';
+    document.getElementById('custom_color_bg').value = '#F7F7F5';
+    document.getElementById('picker_bg').value = '#F7F7F5';
+    document.getElementById('custom_color_surface').value = '#FFFFFF';
+    document.getElementById('picker_surface').value = '#FFFFFF';
+    document.getElementById('custom_color_text').value = '#25272A';
+    document.getElementById('picker_text').value = '#25272A';
+    document.getElementById('custom_color_text_muted').value = '#737B85';
+    document.getElementById('picker_text_muted').value = '#737B85';
     document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
     document.getElementById('custom_border_radius').value = '8px';
     updateCustomPreview();
