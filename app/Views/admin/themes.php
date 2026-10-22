@@ -921,7 +921,7 @@
         </div>
         <div>
             <strong style="color: #fff; display: block; margin-bottom: 4px;">3. Arquitetura CSS Zero Reflow:</strong>
-            Todos os 4 temas utilizam classes CSS nativas pré-compiladas (`.theme-gold`, `.theme-silver`, `.theme-emerald`, `.theme-rose`), garantindo renderização instantânea em 60fps sem lentidão.
+            Todos os 4 temas utilizam classes CSS nativas pré-compiladas (`.theme-silver-noir`, `.theme-pearl-platinum`, `.theme-nude-pearl`, `.theme-contemporary-graphite`), garantindo renderização instantânea em 60fps sem lentidão.
         </div>
     </div>
 </div>
@@ -932,7 +932,10 @@ function previewThemeOnPage(themeId) {
     if (window.diviniumApplyTheme) {
         window.diviniumApplyTheme(themeId);
     } else {
-        const themes = ['theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose'];
+        const themes = [
+            'theme-silver-noir', 'theme-pearl-platinum', 'theme-nude-pearl', 'theme-contemporary-graphite',
+            'theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose'
+        ];
         themes.forEach(t => {
             document.documentElement.classList.remove(t);
             document.body.classList.remove(t);
@@ -947,7 +950,7 @@ function previewThemeOnPage(themeId) {
     toast.style.bottom = '24px';
     toast.style.right = '24px';
     toast.style.background = '#1a1816';
-    toast.style.border = '1px solid #caa15c';
+    toast.style.border = '1px solid #cbd0d6';
     toast.style.color = '#fff';
     toast.style.padding = '12px 20px';
     toast.style.borderRadius = '8px';
