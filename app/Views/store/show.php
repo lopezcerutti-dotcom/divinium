@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: DETALHES DA JOIA DIVINIUM (/produto/{slug} ou /loja/{slug})
  * QUIET LUXURY HIGH-JEWELRY PRODUCT DETAIL PAGE
@@ -322,24 +322,24 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                id="btnDirectCheckoutVip"
                                onclick="buySelectedVariation(event, true);" 
                                class="btn-channel-impartial platform-direct-vip"
-                               style="background: linear-gradient(135deg, rgba(167,173,180,0.18) 0%, rgba(20,22,26,0.98) 100%); border: 1.5px solid var(--gold-accent, #A7ADB4); box-shadow: 0 4px 15px rgba(0,0,0,0.12);">
+                               style="background: var(--card-bg); border: 1.5px solid var(--gold-accent); box-shadow: var(--shadow-luxury, 0 4px 15px rgba(0,0,0,0.12));">
                                 
                                 <div class="channel-btn-left">
-                                    <span class="channel-icon-pill" style="background: rgba(167,173,180,0.2); color: var(--gold-accent, #A7ADB4);">
+                                    <span class="channel-icon-pill" style="background: rgba(167,173,180,0.15); color: var(--gold-accent); border: 1px solid var(--border-light);">
                                         💎
                                     </span>
                                     <div class="channel-meta-text">
-                                        <span class="channel-action-name" style="color: #ffffff; font-weight: 700;">Comprar Direto na DIVINIUM</span>
-                                        <span class="channel-protection-sub" style="color: var(--gold-accent, #A7ADB4);">5% OFF no Pix • Envio com Seguro Blindado</span>
+                                        <span class="channel-action-name" style="color: var(--text-primary); font-weight: 700;">Comprar Direto na DIVINIUM</span>
+                                        <span class="channel-protection-sub" style="color: var(--gold-accent);">5% OFF no Pix • Envio com Seguro Blindado</span>
                                     </div>
                                 </div>
 
                                 <div class="channel-btn-right">
                                     <div class="channel-price-wrap">
                                         <span class="channel-price-label" style="color: #4ade80;">Pix (-5%)</span>
-                                        <span class="channel-price-val vip-pix-val" style="color: var(--gold-accent, #A7ADB4); font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
+                                        <span class="channel-price-val vip-pix-val" style="color: var(--gold-accent); font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
                                     </div>
-                                    <span class="channel-arrow-circle" style="background: var(--gold-accent, #A7ADB4); color: #000;">
+                                    <span class="channel-arrow-circle" style="background: var(--gold-accent); color: var(--bg-dark, #0d0c0b);">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                     </span>
                                 </div>
@@ -787,8 +787,8 @@ function showCopyFeedback() {
     
     const orig = txt.textContent;
     txt.textContent = 'Link Copiado!';
-    btn.style.borderColor = 'var(--gold-accent, #A7ADB4)';
-    btn.style.color = 'var(--gold-accent, #A7ADB4)';
+    btn.style.borderColor = 'var(--gold-accent)';
+    btn.style.color = 'var(--gold-accent)';
     
     setTimeout(() => {
         txt.textContent = orig;
