@@ -218,11 +218,11 @@ ob_start();
 $aboutBg = Setting::get('about_bg_color', '#0d0c0b');
 $aboutTitleColor = Setting::get('about_title_color', '#ffffff');
 $aboutTextColor = Setting::get('about_text_color', '#ded7cf');
-$aboutAccentColor = Setting::get('about_accent_color', '#d4ba88');
-$aboutTagColor = Setting::get('about_tag_color', '#d4ba88');
+$aboutAccentColor = Setting::get('about_accent_color', '#A7ADB4');
+$aboutTagColor = Setting::get('about_tag_color', '#A7ADB4');
 $aboutCardBg = Setting::get('about_card_bg', '#161513');
-$aboutCardBorder = Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)');
-$aboutBtnColor = Setting::get('about_btn_color', '#d4ba88');
+$aboutCardBorder = Setting::get('about_card_border', 'rgba(167, 173, 180, 0.25)');
+$aboutBtnColor = Setting::get('about_btn_color', '#A7ADB4');
 $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
 ?>
 <section class="about-manifesto-section" id="about" style="
@@ -353,7 +353,7 @@ foreach ($activeCollections as $c) {
                     <?php if (count($activeCollections) > 1 || !empty($col['subtitle']) || !empty($col['promo_text'])): ?>
                     <div class="collection-block-header" style="margin-bottom: 24px;">
                         <?php if (!empty($col['badge'])): ?>
-                            <span class="badge-tag" style="position: static; display: inline-block; margin-bottom: 8px; background: rgba(212,186,136,0.15); color: #d4ba88; border: 1px solid rgba(212,186,136,0.3);">
+                            <span class="badge-tag" style="position: static; display: inline-block; margin-bottom: 8px; background: rgba(167,173,180,0.15); color: var(--gold-accent, #A7ADB4); border: 1px solid rgba(167,173,180,0.3);">
                                 <?= View::e($col['badge']) ?>
                             </span>
                         <?php endif; ?>
