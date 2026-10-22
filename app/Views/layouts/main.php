@@ -276,12 +276,36 @@
 
             --top-banner-bg: <?= $effTopBannerBg ?> !important;
             --top-banner-text: <?= $effTopBannerText ?> !important;
+
+            --border-light: rgba(167, 173, 180, 0.22) !important;
+            --border-color: rgba(167, 173, 180, 0.22) !important;
+            --border-medium: rgba(167, 173, 180, 0.35) !important;
+            --border-gold: <?= $effGlobalPrimary ?> !important;
+            --primary-color: <?= $effGlobalPrimary ?> !important;
+            --accent-color: <?= $effGlobalAccent ?> !important;
         }
 
         /* 1. FUNDO BASE E TEXTO GLOBAL EM TODAS AS PÁGINAS */
         body.luxury-theme {
             background-color: <?= $effGlobalBg ?> !important;
             color: <?= $effGlobalText ?> !important;
+        }
+
+        /* 1.1 APLICAÇÃO EXCLUSIVA DE FUNDO POR PÁGINA (HERANÇA OU SOBRESCRITA ESPECÍFICA) */
+        body.luxury-theme.page-home {
+            background-color: <?= $effHomeBg ?> !important;
+        }
+        body.luxury-theme.page-store {
+            background-color: <?= $effStoreBg ?> !important;
+        }
+        body.luxury-theme.page-product {
+            background-color: <?= $effProductBg ?> !important;
+        }
+        body.luxury-theme.page-checkout {
+            background-color: <?= $effCheckoutBg ?> !important;
+        }
+        body.luxury-theme.page-institutional {
+            background-color: <?= $effInstitutionalBg ?> !important;
         }
 
         /* Títulos Nobres Globais */
@@ -316,70 +340,70 @@
         }
 
         /* 2. PÁGINA INICIAL (HOME) */
-        body.luxury-theme .hero-section,
-        body.luxury-theme .about-manifesto-section,
-        body.luxury-theme .showcase-section,
-        body.luxury-theme .signature-services-section,
-        body.luxury-theme .heritage-editorial-section,
-        body.luxury-theme .testimonials-section {
+        body.luxury-theme.page-home .hero-section,
+        body.luxury-theme.page-home .about-manifesto-section,
+        body.luxury-theme.page-home .showcase-section,
+        body.luxury-theme.page-home .signature-services-section,
+        body.luxury-theme.page-home .heritage-editorial-section,
+        body.luxury-theme.page-home .testimonials-section {
             background-color: <?= $effHomeBg ?> !important;
         }
-        body.luxury-theme .showcase-lifestyle-card,
-        body.luxury-theme .service-card,
-        body.luxury-theme .testimonial-card,
-        body.luxury-theme .about-micro-feature {
+        body.luxury-theme.page-home .showcase-lifestyle-card,
+        body.luxury-theme.page-home .service-card,
+        body.luxury-theme.page-home .testimonial-card,
+        body.luxury-theme.page-home .about-micro-feature {
             background-color: <?= $effHomeCard ?> !important;
             background: <?= $effHomeCard ?> !important;
         }
 
         /* 3. BOUTIQUE & CATÁLOGO (/loja) */
-        body.luxury-theme .store-hero-section,
-        body.luxury-theme .store-catalog-section,
-        body.luxury-theme .store-reasons-section {
+        body.luxury-theme.page-store .store-hero-section,
+        body.luxury-theme.page-store .store-catalog-section,
+        body.luxury-theme.page-store .store-reasons-section {
             background-color: <?= $effStoreBg ?> !important;
         }
-        body.luxury-theme .store-product-card,
-        body.luxury-theme .reason-card,
-        body.luxury-theme .related-product-card {
+        body.luxury-theme.page-store .store-product-card,
+        body.luxury-theme.page-store .reason-card,
+        body.luxury-theme.page-store .related-product-card {
             background-color: <?= $effStoreCard ?> !important;
             background: <?= $effStoreCard ?> !important;
         }
 
         /* 4. DETALHE DO PRODUTO (/produto/{slug}) */
-        body.luxury-theme .product-detail-page,
-        body.luxury-theme .product-breadcrumb-nav {
+        body.luxury-theme.page-product .product-detail-page,
+        body.luxury-theme.page-product .product-breadcrumb-nav {
             background-color: <?= $effProductBg ?> !important;
         }
-        body.luxury-theme .product-gallery-card,
-        body.luxury-theme .product-info-panel,
-        body.luxury-theme .product-price-box,
-        body.luxury-theme .product-price-block,
-        body.luxury-theme .product-purchase-channels-box,
-        body.luxury-theme .product-variations-section,
-        body.luxury-theme .product-description-card,
-        body.luxury-theme .product-specs-card,
-        body.luxury-theme .product-guarantee-card {
+        body.luxury-theme.page-product .product-gallery-card,
+        body.luxury-theme.page-product .product-info-panel,
+        body.luxury-theme.page-product .product-price-box,
+        body.luxury-theme.page-product .product-price-block,
+        body.luxury-theme.page-product .product-purchase-channels-box,
+        body.luxury-theme.page-product .product-variations-section,
+        body.luxury-theme.page-product .product-description-card,
+        body.luxury-theme.page-product .product-specs-card,
+        body.luxury-theme.page-product .product-guarantee-card {
             background-color: <?= $effProductCard ?> !important;
             background: <?= $effProductCard ?> !important;
         }
 
         /* 5. CHECKOUT SEGURO (/checkout) */
-        body.luxury-theme .checkout-page-container {
+        body.luxury-theme.page-checkout .checkout-page-container {
             background-color: <?= $effCheckoutBg ?> !important;
         }
-        body.luxury-theme .checkout-card,
-        body.luxury-theme .checkout-summary-card,
-        body.luxury-theme .payment-instructions-card {
+        body.luxury-theme.page-checkout .checkout-card,
+        body.luxury-theme.page-checkout .checkout-summary-card,
+        body.luxury-theme.page-checkout .payment-instructions-card {
             background-color: <?= $effCheckoutCard ?> !important;
             background: <?= $effCheckoutCard ?> !important;
         }
 
         /* 6. PÁGINAS INSTITUCIONAIS & POLÍTICAS */
-        body.luxury-theme .institutional-page-container,
-        body.luxury-theme .institutional-hero {
+        body.luxury-theme.page-institutional .institutional-page-container,
+        body.luxury-theme.page-institutional .institutional-hero {
             background-color: <?= $effInstitutionalBg ?> !important;
         }
-        body.luxury-theme .institutional-card {
+        body.luxury-theme.page-institutional .institutional-card {
             background-color: <?= $effInstitutionalCard ?> !important;
             background: <?= $effInstitutionalCard ?> !important;
         }
@@ -495,6 +519,44 @@
         }
         .stock-status-preorder, .checkout-warning-text {
             color: #fbbf24 !important;
+        }
+
+        /* 10.2 CAMPOS DE FORMULÁRIO, BORDAS & MENUS SUSPENSOS */
+        body.luxury-theme .form-input,
+        body.luxury-theme .form-select,
+        body.luxury-theme input[type="text"],
+        body.luxury-theme input[type="email"],
+        body.luxury-theme input[type="tel"],
+        body.luxury-theme input[type="search"],
+        body.luxury-theme select,
+        body.luxury-theme textarea {
+            background-color: <?= $effGlobalSurface ?> !important;
+            color: <?= $effGlobalText ?> !important;
+            border-color: rgba(167, 173, 180, 0.28) !important;
+        }
+        body.luxury-theme .form-input:focus,
+        body.luxury-theme .form-select:focus,
+        body.luxury-theme input:focus,
+        body.luxury-theme select:focus,
+        body.luxury-theme textarea:focus {
+            border-color: <?= $effGlobalPrimary ?> !important;
+            outline: 2px solid <?= $effGlobalAccent ?> !important;
+            outline-offset: 1px !important;
+        }
+
+        body.luxury-theme .nav-dropdown-menu,
+        body.luxury-theme .dropdown-menu {
+            background-color: <?= $effHeaderBg ?> !important;
+            border-color: rgba(167, 173, 180, 0.25) !important;
+        }
+        body.luxury-theme .nav-dropdown-item,
+        body.luxury-theme .dropdown-item {
+            color: <?= $effHeaderText ?> !important;
+        }
+        body.luxury-theme .nav-dropdown-item:hover,
+        body.luxury-theme .dropdown-item:hover {
+            background-color: rgba(167, 173, 180, 0.12) !important;
+            color: <?= $effGlobalAccent ?> !important;
         }
 
         /* 11. IMAGEM / TEXTURA DE FUNDO GLOBAL */
