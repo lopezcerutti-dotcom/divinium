@@ -428,7 +428,7 @@ foreach ($activeCollections as $c) {
                                     <a href="<?= View::e(!empty($col['button_url']) ? $col['button_url'] : '/loja') ?>" 
                                        target="<?= View::e($col['button_target'] ?? '_self') ?>"
                                        class="btn-col-cta-lifestyle"
-                                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #d4ba88; color: #121110; padding: 12px 24px; border-radius: 4px; font-weight: 600; font-size: 0.86rem; text-decoration: none; letter-spacing: 0.04em; transition: all 0.25s ease;">
+                                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold-accent, #A7ADB4); color: var(--text-primary, #25272A); border: 1px solid var(--gold-hover, #737B85); padding: 12px 24px; border-radius: 4px; font-weight: 700; font-size: 0.86rem; text-decoration: none; letter-spacing: 0.04em; transition: all 0.25s ease;">
                                         <span><?= View::e(!empty($col['button_text']) ? $col['button_text'] : 'Explorar Coleção') ?></span>
                                         <span style="font-size: 0.9rem;">↗</span>
                                     </a>
