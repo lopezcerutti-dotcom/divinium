@@ -554,10 +554,66 @@ class AdminController
             session_start();
         }
 
-        $categories = $this->pdo->query('SELECT c.*, (SELECT COUNT(*) FROM products WHERE category_id = c.id) as product_count FROM categories c ORDER BY c.sort_order ASC, c.name ASC')->fetchAll();
+        // Buscar categorias com contagens separadas de produtos principais e variantes
+        $categories = $this->pdo->query('
+            SELECT c.*, 
+            (
+                SELECT COUNT(*) 
+                FROM products p 
+                WHERE p.category_id = c.id 
+                  AND (p.parent_sku IS NULL OR p.parent_sku = "" OR p.parent_sku = p.sku)
+            ) AS main_products_count,
+            (
+                SELECT COUNT(*) 
+                FROM products p 
+                WHERE p.category_id = c.id 
+                  AND p.parent_sku IS NOT NULL 
+                  AND p.parent_sku != "" 
+                  AND p.parent_sku != p.sku
+            ) AS variants_count,
+            (
+                SELECT COUNT(*) 
+                FROM products p 
+                WHERE p.category_id = c.id
+            ) AS product_count 
+            FROM categories c 
+            ORDER BY c.sort_order ASC, c.name ASC
+        ')->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Fallback para seed_products.json caso as contagens no banco estejam zeradas
+        $totalDbProds = (int) $this->pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
+        if ($totalDbProds === 0) {
+            $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
+            if (file_exists($seedFile)) {
+                $seedContent = @file_get_contents($seedFile);
+                $seedJson = json_decode((string)$seedContent, true);
+                $items = isset($seedJson['value']) && is_array($seedJson['value']) ? $seedJson['value'] : (is_array($seedJson) ? $seedJson : []);
+                
+                $seedMainByCat = [];
+                $seedVarByCat = [];
+                foreach ($items as $sp) {
+                    $catId = (int)($sp['category_id'] ?? 0);
+                    $sku = trim((string)($sp['sku'] ?? ''));
+                    $parent = trim((string)($sp['parent_sku'] ?? ''));
+                    if ($parent === '' || $parent === $sku) {
+                        $seedMainByCat[$catId] = ($seedMainByCat[$catId] ?? 0) + 1;
+                    } else {
+                        $seedVarByCat[$catId] = ($seedVarByCat[$catId] ?? 0) + 1;
+                    }
+                }
+
+                foreach ($categories as &$c) {
+                    $cId = (int)$c['id'];
+                    $c['main_products_count'] = $seedMainByCat[$cId] ?? 0;
+                    $c['variants_count'] = $seedVarByCat[$cId] ?? 0;
+                    $c['product_count'] = ($c['main_products_count'] ?? 0) + ($c['variants_count'] ?? 0);
+                }
+                unset($c);
+            }
+        }
 
         View::render('admin/categories', [
-            'pageTitle' => 'Gerenciar Categorias | Catálogo Divinium',
+            'pageTitle' => 'Gerenciar Categorias & Coleções | Catálogo Divinium',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador'],
             'categories' => $categories,
         ], 'admin');
@@ -612,6 +668,430 @@ class AdminController
         $stmt->execute([$id]);
 
         $this->respond(['success' => true, 'message' => 'Categoria removida com sucesso.']);
+    }
+
+    /**
+     * Retorna produtos principais vinculados à categoria, com suas variantes Bling e links de compra
+     */
+    public function categoryProducts(): void
+    {
+        $categoryId = (int) ($_GET['categoria_id'] ?? 0);
+        if ($categoryId <= 0) {
+            $this->respond(['success' => false, 'error' => 'Categoria inválida.'], 200);
+            return;
+        }
+
+        // 1. Buscar produtos desta categoria no banco
+        $stmt = $this->pdo->prepare("
+            SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id 
+            WHERE p.category_id = ?
+            ORDER BY p.sort_order ASC, p.id ASC
+        ");
+        $stmt->execute([$categoryId]);
+        $catProducts = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
+        // Mesclar ou carregar do seed_products.json caso necessário
+        $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
+        $seedItems = [];
+        if (file_exists($seedFile)) {
+            $seedContent = @file_get_contents($seedFile);
+            $seedJson = json_decode((string)$seedContent, true);
+            $seedItems = isset($seedJson['value']) && is_array($seedJson['value']) ? $seedJson['value'] : (is_array($seedJson) ? $seedJson : []);
+        }
+
+        if (empty($catProducts)) {
+            foreach ($seedItems as $sp) {
+                if ((int)($sp['category_id'] ?? 0) === $categoryId) {
+                    $catProducts[] = $sp;
+                }
+            }
+        }
+
+        // Indexar variantes por parent_sku
+        $variantsByParentSku = [];
+        $existingVarSkus = [];
+        $totalVariants = 0;
+
+        foreach ($catProducts as $p) {
+            $sku = trim((string)($p['sku'] ?? ''));
+            $parentSku = trim((string)($p['parent_sku'] ?? ''));
+            if ($parentSku !== '' && $parentSku !== $sku) {
+                $variantsByParentSku[$parentSku][] = $p;
+                $existingVarSkus[$sku] = true;
+                $totalVariants++;
+            }
+        }
+
+        // Também enriquecer com variantes do catálogo Bling verificado (seed) se faltarem
+        foreach ($seedItems as $sp) {
+            $spSku = trim((string)($sp['sku'] ?? ''));
+            $spParent = trim((string)($sp['parent_sku'] ?? ''));
+            if ($spParent !== '' && $spParent !== $spSku && !isset($existingVarSkus[$spSku])) {
+                $parentInCat = false;
+                foreach ($catProducts as $cp) {
+                    if (trim((string)($cp['sku'] ?? '')) === $spParent) {
+                        $parentInCat = true;
+                        break;
+                    }
+                }
+                if ($parentInCat || (int)($sp['category_id'] ?? 0) === $categoryId) {
+                    $variantsByParentSku[$spParent][] = $sp;
+                    $existingVarSkus[$spSku] = true;
+                    $totalVariants++;
+                }
+            }
+        }
+
+        $mainProducts = [];
+        foreach ($catProducts as $p) {
+            $sku = trim((string)($p['sku'] ?? ''));
+            $parentSku = trim((string)($p['parent_sku'] ?? ''));
+            $isMain = ($parentSku === '' || $parentSku === $sku);
+
+            if ($isMain) {
+                $pId = (int)($p['id'] ?? 0);
+
+                // Carregar canais de venda (product_links)
+                $links = [];
+                if ($pId > 0) {
+                    try {
+                        $linkStmt = $this->pdo->prepare("SELECT * FROM product_links WHERE product_id = ? ORDER BY sort_order ASC, id ASC");
+                        $linkStmt->execute([$pId]);
+                        $links = $linkStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                    } catch (\Throwable $e) {}
+                }
+                if (empty($links) && !empty($p['external_url'])) {
+                    $links[] = [
+                        'id' => 0,
+                        'product_id' => $pId,
+                        'platform_name' => 'Shopee',
+                        'url' => $p['external_url'],
+                        'price_cents' => $p['price_cents'] ?? 38000,
+                        'button_text' => 'Comprar na Shopee Oficial',
+                        'is_active' => 1,
+                        'sort_order' => 0,
+                    ];
+                }
+
+                // Variantes deste produto
+                $vars = $variantsByParentSku[$sku] ?? [];
+                if (empty($vars)) {
+                    // Fallback para variantes com prefixo do SKU
+                    foreach ($catProducts as $other) {
+                        $otherSku = trim((string)($other['sku'] ?? ''));
+                        if ($otherSku !== $sku && str_starts_with($otherSku, $sku . '-')) {
+                            $vars[] = $other;
+                        }
+                    }
+                }
+
+                // Filtrar item base genérico se houver variantes minerais autênticas
+                $cleanVars = [];
+                foreach ($vars as $v) {
+                    $vStone = trim((string)($v['stone_mineral'] ?? ''));
+                    $vSku = trim((string)($v['sku'] ?? ''));
+                    if ($vSku === $sku && ($vStone === '' || str_contains(mb_strtolower($vStone), 'tradicional')) && count($vars) > 1) {
+                        continue;
+                    }
+                    if (empty($v['image_url']) && !empty($p['image_url'])) {
+                        $v['image_url'] = $p['image_url'];
+                    }
+                    $v['price_formatted'] = 'R$ ' . number_format(((int)($v['price_cents'] ?? ($p['price_cents'] ?? 38000))) / 100, 2, ',', '.');
+                    $cleanVars[] = $v;
+                }
+                if (empty($cleanVars)) {
+                    $cleanVars = $vars;
+                }
+
+                $p['price_formatted'] = 'R$ ' . number_format(((int)($p['price_cents'] ?? 38000)) / 100, 2, ',', '.');
+                $p['variants'] = array_values($cleanVars);
+                $p['variants_count'] = count($p['variants']);
+                $p['links'] = $links;
+
+                $mainProducts[] = $p;
+            }
+        }
+
+        // Buscar outros produtos principais disponíveis no catálogo para associar
+        $availableProducts = [];
+        try {
+            $availStmt = $this->pdo->prepare("
+                SELECT p.id, p.name, p.sku, p.category_id, c.name as category_name
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE (p.category_id != ? OR p.category_id IS NULL)
+                  AND (p.parent_sku IS NULL OR p.parent_sku = '' OR p.parent_sku = p.sku)
+                ORDER BY p.name ASC
+            ");
+            $availStmt->execute([$categoryId]);
+            $availableProducts = $availStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+        } catch (\Throwable $e) {}
+
+        if (empty($availableProducts) && !empty($seedItems)) {
+            $seenAvail = [];
+            foreach ($seedItems as $sp) {
+                $pSku = trim((string)($sp['sku'] ?? ''));
+                $pParent = trim((string)($sp['parent_sku'] ?? ''));
+                if (($pParent === '' || $pParent === $pSku) && (int)($sp['category_id'] ?? 0) !== $categoryId) {
+                    if (!isset($seenAvail[$pSku])) {
+                        $seenAvail[$pSku] = true;
+                        $availableProducts[] = [
+                            'id' => $sp['id'],
+                            'name' => $sp['name'],
+                            'sku' => $sp['sku'],
+                            'category_id' => $sp['category_id'],
+                            'category_name' => $sp['category_name'] ?? 'Outra Categoria',
+                        ];
+                    }
+                }
+            }
+        }
+
+        $this->respond([
+            'success' => true,
+            'main_products_count' => count($mainProducts),
+            'variants_count' => $totalVariants,
+            'products' => $mainProducts,
+            'available_products' => $availableProducts,
+        ]);
+    }
+
+    /**
+     * Associa um produto existente e suas variantes a uma categoria, sem duplicar registros
+     */
+    public function associateCategoryProduct(): void
+    {
+        $categoryId = (int) ($_POST['category_id'] ?? 0);
+        $productId = (int) ($_POST['product_id'] ?? 0);
+
+        if ($categoryId <= 0 || $productId <= 0) {
+            $this->respond(['success' => false, 'error' => 'Dados inválidos para associação.'], 200);
+            return;
+        }
+
+        try {
+            $pStmt = $this->pdo->prepare("SELECT id, sku FROM products WHERE id = ? LIMIT 1");
+            $pStmt->execute([$productId]);
+            $prod = $pStmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$prod) {
+                // Se produto existe apenas no seed, sincronizá-lo para persistência
+                $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
+                if (file_exists($seedFile)) {
+                    $seedJson = json_decode((string)file_get_contents($seedFile), true);
+                    $items = isset($seedJson['value']) && is_array($seedJson['value']) ? $seedJson['value'] : (is_array($seedJson) ? $seedJson : []);
+                    foreach ($items as $sp) {
+                        if ((int)($sp['id'] ?? 0) === $productId) {
+                            $prod = $sp;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$prod) {
+                $this->respond(['success' => false, 'error' => 'Produto não encontrado no catálogo.'], 200);
+                return;
+            }
+
+            $sku = trim((string)($prod['sku'] ?? ''));
+
+            // Atualizar produto principal e todas as suas variantes para a nova categoria sem duplicar
+            $updateStmt = $this->pdo->prepare("
+                UPDATE products 
+                SET category_id = ? 
+                WHERE id = ? OR (parent_sku = ? AND parent_sku != '') OR (sku LIKE ? AND sku != ?)
+            ");
+            $updateStmt->execute([$categoryId, $productId, $sku, $sku . '-%', $sku]);
+
+            $this->respond([
+                'success' => true, 
+                'message' => 'Produto principal e suas variantes vinculados à categoria com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao associar produto: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Desassocia um produto principal e suas variantes da categoria (preserva o produto intacto no catálogo)
+     */
+    public function disassociateCategoryProduct(): void
+    {
+        $productId = (int) ($_POST['product_id'] ?? 0);
+
+        if ($productId <= 0) {
+            $this->respond(['success' => false, 'error' => 'Produto inválido.'], 200);
+            return;
+        }
+
+        try {
+            $pStmt = $this->pdo->prepare("SELECT id, sku FROM products WHERE id = ? LIMIT 1");
+            $pStmt->execute([$productId]);
+            $prod = $pStmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($prod) {
+                $sku = trim((string)($prod['sku'] ?? ''));
+                $stmt = $this->pdo->prepare("
+                    UPDATE products 
+                    SET category_id = NULL 
+                    WHERE id = ? OR (parent_sku = ? AND parent_sku != '') OR (sku LIKE ? AND sku != ?)
+                ");
+                $stmt->execute([$productId, $sku, $sku . '-%', $sku]);
+            }
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Produto desassociado da categoria com sucesso (o cadastro permanece preservado no catálogo).'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao desassociar produto: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Salva alterações em uma variante (nome/gema mineral, SKU, preço, estoque e imagem)
+     */
+    public function saveVariant(): void
+    {
+        $variantId = !empty($_POST['variant_id']) ? (int) $_POST['variant_id'] : 0;
+        $sku = trim((string) ($_POST['sku'] ?? ''));
+        $name = trim((string) ($_POST['name'] ?? ''));
+        $stoneMineral = trim((string) ($_POST['stone_mineral'] ?? ''));
+        $price = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) ($_POST['price'] ?? '0'));
+        $priceCents = (int) round($price * 100);
+        $stock = isset($_POST['stock_quantity']) ? max(0, (int) $_POST['stock_quantity']) : 0;
+        $imageUrl = trim((string) ($_POST['image_url'] ?? ''));
+
+        if ($sku === '') {
+            $this->respond(['success' => false, 'error' => 'SKU da variante é obrigatório.'], 200);
+            return;
+        }
+
+        try {
+            // Upload de imagem da variante se arquivo foi enviado
+            if (!empty($_FILES['image_file']['tmp_name']) && is_uploaded_file($_FILES['image_file']['tmp_name'])) {
+                $ext = strtolower(pathinfo($_FILES['image_file']['name'], PATHINFO_EXTENSION));
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'avif'], true)) {
+                    $uploadDir = BASE_PATH . '/assets/images/products';
+                    if (!is_dir($uploadDir)) {
+                        @mkdir($uploadDir, 0755, true);
+                    }
+                    $filename = 'var-' . time() . '-' . rand(100, 999) . '.' . $ext;
+                    if (move_uploaded_file($_FILES['image_file']['tmp_name'], $uploadDir . '/' . $filename)) {
+                        $imageUrl = '/assets/images/products/' . $filename;
+                    }
+                }
+            }
+
+            if ($variantId > 0) {
+                $stmt = $this->pdo->prepare("
+                    UPDATE products 
+                    SET name = COALESCE(NULLIF(?, ''), name),
+                        stone_mineral = ?,
+                        price_cents = CASE WHEN ? > 0 THEN ? ELSE price_cents END,
+                        stock_quantity = ?,
+                        image_url = CASE WHEN ? != '' THEN ? ELSE image_url END
+                    WHERE id = ?
+                ");
+                $stmt->execute([$name, $stoneMineral, $priceCents, $priceCents, $stock, $imageUrl, $imageUrl, $variantId]);
+            } else {
+                $stmt = $this->pdo->prepare("
+                    UPDATE products 
+                    SET name = COALESCE(NULLIF(?, ''), name),
+                        stone_mineral = ?,
+                        price_cents = CASE WHEN ? > 0 THEN ? ELSE price_cents END,
+                        stock_quantity = ?,
+                        image_url = CASE WHEN ? != '' THEN ? ELSE image_url END
+                    WHERE sku = ?
+                ");
+                $stmt->execute([$name, $stoneMineral, $priceCents, $priceCents, $stock, $imageUrl, $imageUrl, $sku]);
+            }
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Variante atualizada com sucesso!',
+                'image_url' => $imageUrl,
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao salvar variante: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Salva links e canais de venda configurados para um produto principal (compartilhados por todas as variantes)
+     */
+    public function saveProductChannels(): void
+    {
+        $productId = (int) ($_POST['product_id'] ?? 0);
+        if ($productId <= 0) {
+            $this->respond(['success' => false, 'error' => 'Produto principal inválido.'], 200);
+            return;
+        }
+
+        $rawLinks = $_POST['links'] ?? [];
+        if (is_string($rawLinks)) {
+            $rawLinks = json_decode($rawLinks, true) ?: [];
+        }
+
+        try {
+            $this->pdo->prepare("DELETE FROM product_links WHERE product_id = ?")->execute([$productId]);
+
+            $insStmt = $this->pdo->prepare("
+                INSERT INTO product_links 
+                (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order)
+                VALUES (?, ?, ?, ?, ?, 'default', 'md', '_blank', ?, ?)
+            ");
+
+            $primaryExternalUrl = '';
+
+            if (is_array($rawLinks)) {
+                foreach ($rawLinks as $idx => $link) {
+                    $url = trim((string)($link['url'] ?? ''));
+                    if ($url === '') continue;
+                    if (!preg_match('#^https?://#i', $url)) {
+                        $url = 'https://' . $url;
+                    }
+                    if (!filter_var($url, FILTER_VALIDATE_URL)) continue;
+
+                    $plat = trim((string)($link['platform_name'] ?? 'Shopee'));
+                    if ($plat === '') $plat = 'Shopee';
+
+                    $priceFloat = 0;
+                    if (isset($link['price']) && $link['price'] !== '') {
+                        $priceFloat = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) $link['price']);
+                    }
+                    $priceCents = $priceFloat > 0 ? (int) round($priceFloat * 100) : null;
+
+                    $btnText = trim((string)($link['button_text'] ?? ''));
+                    if ($btnText === '') {
+                        $btnText = $plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' . $plat);
+                    }
+
+                    $isActive = isset($link['is_active']) ? ((int)$link['is_active'] ? 1 : 0) : 1;
+                    $sort = isset($link['sort_order']) ? (int)$link['sort_order'] : $idx;
+
+                    $insStmt->execute([$productId, $plat, $url, $priceCents, $btnText, $isActive, $sort]);
+
+                    if ($primaryExternalUrl === '' && $isActive) {
+                        $primaryExternalUrl = $url;
+                    }
+                }
+            }
+
+            if ($primaryExternalUrl !== '') {
+                $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?")->execute([$primaryExternalUrl, $productId]);
+            }
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Canais de venda e links compartilhados salvos com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao salvar canais: ' . $e->getMessage()], 200);
+        }
     }
 
     /**
