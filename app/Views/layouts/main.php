@@ -42,10 +42,24 @@
     <meta name="csrf-token" content="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
 
     <!-- Aplicação do Tema Definido no Painel Administrativo -->
+    <?php
+        $rawServerTheme = \App\Models\Setting::get('default_theme', 'theme-silver-noir');
+        $themeClassMap = [
+            'theme-gold' => 'theme-silver-noir',
+            'theme-silver' => 'theme-pearl-platinum',
+            'theme-emerald' => 'theme-nude-pearl',
+            'theme-rose' => 'theme-contemporary-graphite'
+        ];
+        $canonicalTheme = $themeClassMap[$rawServerTheme] ?? $rawServerTheme;
+    ?>
     <script>
         (function() {
-            var serverTheme = <?= json_encode(\App\Models\Setting::get('default_theme', 'theme-gold')) ?>;
-            document.documentElement.classList.add(serverTheme);
+            var rawTheme = <?= json_encode($rawServerTheme) ?>;
+            var canonicalTheme = <?= json_encode($canonicalTheme) ?>;
+            document.documentElement.classList.add(canonicalTheme);
+            if (rawTheme && rawTheme !== canonicalTheme) {
+                document.documentElement.classList.add(rawTheme);
+            }
         })();
     </script>
 
@@ -357,7 +371,7 @@
         <?php endif; ?>
     </style>
 </head>
-<body class="luxury-theme">
+<body class="luxury-theme <?= \App\Core\View::e($canonicalTheme) ?> <?= $rawServerTheme !== $canonicalTheme ? \App\Core\View::e($rawServerTheme) : '' ?>">
     <?= \App\Models\Setting::get('custom_body_scripts', '') ?>
 
     <!-- 1. BARRA SUPERIOR DE ANÚNCIO (TOP BANNER) -->
