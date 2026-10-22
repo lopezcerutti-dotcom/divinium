@@ -423,7 +423,7 @@
         body.luxury-theme .store-filter-pill.active {
             background: <?= $effGlobalPrimary ?> !important;
             background-color: <?= $effGlobalPrimary ?> !important;
-            color: <?= $effGlobalText ?> !important;
+            color: <?= $effBtnText ?> !important;
             border-color: <?= $effGlobalAccent ?> !important;
         }
 
@@ -433,11 +433,53 @@
         body.luxury-theme .btn-checkout-primary:hover,
         body.luxury-theme .btn-checkout-submit:hover,
         body.luxury-theme .btn-card-explore:hover,
-        body.luxury-theme .btn-concierge-help:hover {
+        body.luxury-theme .btn-concierge-help:hover,
+        body.luxury-theme .store-filter-pill:hover {
             background: <?= $effGlobalAccent ?> !important;
             background-color: <?= $effGlobalAccent ?> !important;
-            color: #ffffff !important;
+            color: <?= $effBtnHoverText ?> !important;
             border-color: <?= $effGlobalAccent ?> !important;
+        }
+
+        /* Estados de Foco & Acessibilidade */
+        body.luxury-theme .btn-hero-gold:focus,
+        body.luxury-theme .btn-hero-gold:focus-visible,
+        body.luxury-theme .btn-gold:focus,
+        body.luxury-theme .btn-gold:focus-visible,
+        body.luxury-theme .stage-buy-btn:focus,
+        body.luxury-theme .stage-buy-btn:focus-visible,
+        body.luxury-theme .btn-checkout-submit:focus,
+        body.luxury-theme .btn-checkout-submit:focus-visible,
+        body.luxury-theme .form-input:focus {
+            outline: 2px solid <?= $effGlobalAccent ?> !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Estados Desativados */
+        body.luxury-theme .btn-hero-gold:disabled,
+        body.luxury-theme .btn-gold:disabled,
+        body.luxury-theme .btn-checkout-submit:disabled,
+        body.luxury-theme button:disabled {
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+            filter: grayscale(35%) !important;
+        }
+
+        /* Seleção de Texto Conforme Paleta */
+        ::selection {
+            background: <?= $effGlobalAccent ?> !important;
+            color: <?= $effBtnHoverText ?> !important;
+        }
+
+        /* 10.1 PRESERVAÇÃO DE CORES FUNCIONAIS (Checkout, Estoque, Pix) */
+        .stock-status-available, .channel-price-label, .pix-badge-nob, .badge-nob-pix {
+            color: #10b981 !important;
+        }
+        .stock-status-out, .checkout-error-text {
+            color: #f87171 !important;
+        }
+        .stock-status-preorder, .checkout-warning-text {
+            color: #fbbf24 !important;
         }
 
         /* 11. IMAGEM / TEXTURA DE FUNDO GLOBAL */
