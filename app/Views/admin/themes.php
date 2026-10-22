@@ -218,6 +218,18 @@
                            value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" 
                            oninput="document.getElementById('picker_primary').value = this.value; updateCustomPreview();">
                 </div>
+                <!-- Paleta de Metais Nobres Rápidos -->
+                <div style="margin-top: 8px;">
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Metais Nobres Rápidos:</span>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button type="button" onclick="setQuickPrimary('#A7ADB4')" title="Prata 925 Nobre (#A7ADB4)" style="width: 20px; height: 20px; border-radius: 50%; background: #A7ADB4; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#CBD0D6')" title="Platina Radiante (#CBD0D6)" style="width: 20px; height: 20px; border-radius: 50%; background: #CBD0D6; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#858C95')" title="Titânio Acetinado (#858C95)" style="width: 20px; height: 20px; border-radius: 50%; background: #858C95; border: 1px solid #777; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#626B75')" title="Grafite Imperial (#626B75)" style="width: 20px; height: 20px; border-radius: 50%; background: #626B75; border: 1px solid #555; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#25272A')" title="Grafite Noturno (#25272A)" style="width: 20px; height: 20px; border-radius: 50%; background: #25272A; border: 1px solid #444; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#C8B9AE')" title="Nude Pérola Nobre (#C8B9AE)" style="width: 20px; height: 20px; border-radius: 50%; background: #C8B9AE; border: 1px solid #aaa; cursor: pointer;"></button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group" style="margin: 0;">
