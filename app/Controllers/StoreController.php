@@ -27,54 +27,88 @@ class StoreController
                 $categories = $catStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
             }
 
-            // Buscar modelos principais únicos (produtos base com parent_sku nulo, vazio ou igual a sku)
-            $productsStmt = $pdo->query("
-                SELECT p.*, c.name as category_name, c.slug as category_slug,
-                       (SELECT COUNT(*) FROM products v WHERE (TRIM(v.parent_sku) = TRIM(p.sku) OR TRIM(v.sku) = TRIM(p.sku)) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as variations_count,
-                       (SELECT MIN(v.price_cents) FROM products v WHERE (TRIM(v.parent_sku) = TRIM(p.sku) OR TRIM(v.sku) = TRIM(p.sku)) AND (v.status = 'published' OR (v.status IS NULL AND v.is_active = 1))) as min_price_cents
+            // Buscar todos os produtos ativos e agrupar estritamente por modelo autoral único
+            $allRawStmt = $pdo->query("
+                SELECT p.*, c.name as category_name, c.slug as category_slug 
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1)) 
-                  AND (p.parent_sku IS NULL OR TRIM(p.parent_sku) = '' OR TRIM(p.parent_sku) = TRIM(p.sku))
                 ORDER BY p.category_id ASC, p.sort_order ASC, p.id ASC
             ");
-            if ($productsStmt) {
-                $products = $productsStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
-            }
+            $allRaw = $allRawStmt ? ($allRawStmt->fetchAll(\PDO::FETCH_ASSOC) ?: []) : [];
 
-            // Fallback de agrupamento caso parent_sku ainda não esteja totalmente indexado
-            if (count($products) < 8) {
-                $allRawStmt = $pdo->query("
-                    SELECT p.*, c.name as category_name, c.slug as category_slug 
-                    FROM products p 
-                    LEFT JOIN categories c ON p.category_id = c.id 
-                    WHERE (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1)) 
-                    ORDER BY p.category_id ASC, p.sort_order ASC, p.id ASC
-                ");
-                $allRaw = $allRawStmt ? ($allRawStmt->fetchAll(\PDO::FETCH_ASSOC) ?: []) : [];
-                $grouped = [];
-                foreach ($allRaw as $item) {
-                    $sku = trim((string)($item['sku'] ?? ''));
-                    $parent = trim((string)($item['parent_sku'] ?? ''));
-                    if ($parent !== '' && $parent !== $sku) {
-                        $baseSku = $parent;
-                    } else {
-                        $parts = explode('-', $sku);
-                        $baseSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $sku;
+            $grouped = [];
+            foreach ($allRaw as $item) {
+                $sku = trim((string)($item['sku'] ?? ''));
+                $parent = trim((string)($item['parent_sku'] ?? ''));
+                if ($parent !== '' && $parent !== $sku) {
+                    $baseSku = $parent;
+                } else {
+                    $parts = explode('-', $sku);
+                    $baseSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $sku;
+                }
+
+                $isParent = ($sku === $baseSku || $parent === '' || $parent === $sku);
+
+                if (!isset($grouped[$baseSku])) {
+                    $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$item['name']);
+                    $item['clean_name'] = !empty($cleanName) ? $cleanName : $item['name'];
+                    $item['variations_count'] = 1;
+                    $item['min_price_cents'] = $item['price_cents'] ?? 3500;
+                    $item['base_sku'] = $baseSku;
+                    $grouped[$baseSku] = $item;
+                } else {
+                    $grouped[$baseSku]['variations_count']++;
+                    if (!empty($item['price_cents']) && $item['price_cents'] < $grouped[$baseSku]['min_price_cents']) {
+                        $grouped[$baseSku]['min_price_cents'] = $item['price_cents'];
                     }
-                    if (!isset($grouped[$baseSku])) {
-                        $item['variations_count'] = 1;
-                        $item['min_price_cents'] = $item['price_cents'] ?? 3500;
-                        $grouped[$baseSku] = $item;
-                    } else {
-                        $grouped[$baseSku]['variations_count']++;
-                        if (!empty($item['price_cents']) && $item['price_cents'] < $grouped[$baseSku]['min_price_cents']) {
-                            $grouped[$baseSku]['min_price_cents'] = $item['price_cents'];
+                    if ($isParent) {
+                        $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$item['name']);
+                        $grouped[$baseSku]['id'] = $item['id'];
+                        $grouped[$baseSku]['name'] = !empty($cleanName) ? $cleanName : $item['name'];
+                        $grouped[$baseSku]['clean_name'] = $grouped[$baseSku]['name'];
+                        if (!empty($item['slug'])) {
+                            $grouped[$baseSku]['slug'] = $item['slug'];
+                        }
+                        if (!empty($item['image_url'])) {
+                            $grouped[$baseSku]['image_url'] = $item['image_url'];
                         }
                     }
                 }
-                if (!empty($grouped)) {
-                    $products = array_values($grouped);
+            }
+
+            if (!empty($grouped)) {
+                $products = array_values($grouped);
+                foreach ($products as &$pr) {
+                    if (!empty($pr['clean_name'])) {
+                        $pr['name'] = $pr['clean_name'];
+                    }
+                    if (!empty($pr['min_price_cents'])) {
+                        $pr['price_cents'] = $pr['min_price_cents'];
+                    }
+                }
+                unset($pr);
+            }
+
+            // Se houver menos de 8 modelos, mesclar modelos faltantes do catálogo autoral oficial
+            if (count($products) < 8) {
+                $defaults = self::getDefaultProducts();
+                foreach ($defaults as $def) {
+                    $defParts = explode('-', $def['sku']);
+                    $defBase = count($defParts) >= 3 ? implode('-', array_slice($defParts, 0, 3)) : $def['sku'];
+                    $found = false;
+                    foreach ($products as $ep) {
+                        $epSku = $ep['sku'] ?? '';
+                        $epParts = explode('-', $epSku);
+                        $epBase = count($epParts) >= 3 ? implode('-', array_slice($epParts, 0, 3)) : $epSku;
+                        if ($epBase === $defBase) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        $products[] = $def;
+                    }
                 }
             }
 
