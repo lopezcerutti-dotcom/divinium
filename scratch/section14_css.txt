@@ -1,0 +1,1131 @@
+.product-detail-page {
+    background: var(--product-bg, var(--bg-light));
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 100px;
+}
+
+/* NAVEGAÇÃO BREADCRUMB */
+.product-breadcrumb-nav {
+    background: var(--product-bg, var(--bg-light));
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 0;
+    position: sticky;
+    top: 70px;
+    z-index: 40;
+    backdrop-filter: blur(14px);
+}
+
+.product-breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.product-breadcrumb-list a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.product-breadcrumb-list a:hover {
+    color: var(--gold-accent);
+}
+
+.product-breadcrumb-sep {
+    color: var(--border-light);
+    font-size: 0.72rem;
+}
+
+.product-breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* LAYOUT PRINCIPAL: 2 COLUNAS (FOTOS + INFORMAÇÕES) */
+.product-detail-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 40px 24px 0;
+}
+
+.product-detail-layout {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: start;
+}
+
+/* COLUNA DA ESQUERDA: FOTOS E GALERIA */
+.product-media-column {
+    position: sticky;
+    top: 130px;
+}
+
+.product-gallery-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-float);
+}
+
+.product-gallery-main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--product-card-bg, var(--card-bg));
+    overflow: hidden;
+}
+
+.product-gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-gallery-card:hover .product-gallery-main img {
+    transform: scale(1.03);
+}
+
+.gallery-floating-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--gold-accent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    z-index: 5;
+    box-shadow: var(--shadow-soft);
+}
+
+.gallery-mineral-badge {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(8px);
+    z-index: 5;
+    box-shadow: var(--shadow-soft);
+}
+
+.gallery-mineral-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+/* THUMBNAILS DA GALERIA */
+.product-gallery-thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.gallery-thumb-item {
+    width: 76px;
+    height: 76px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+    background: var(--product-card-bg, var(--card-bg));
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    opacity: 0.65;
+}
+
+.gallery-thumb-item:hover,
+.gallery-thumb-item.active {
+    opacity: 1;
+    border-color: var(--gold-accent);
+    box-shadow: 0 0 12px rgba(115, 123, 133, 0.25);
+}
+
+.gallery-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* COLUNA DA DIREITA: INFORMAÇÕES & CANAIS DE VENDA */
+.product-info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.product-meta-header {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 22px;
+}
+
+.product-category-tag {
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--gold-accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.product-title-large {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+}
+
+.product-sub-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.product-sku-tag {
+    font-family: monospace;
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.product-stock-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.product-stock-status-tag.in-stock {
+    color: #34d399;
+}
+
+.product-stock-status-tag.made-to-order {
+    color: var(--gold-accent);
+}
+
+/* BLOCO DE PREÇOS */
+.product-price-box {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.product-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.product-price-main {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 2.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.product-price-promotional {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.product-price-discounts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
+}
+
+.product-pix-tag {
+    color: #34d399;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.product-installments-tag {
+    color: var(--text-secondary);
+}
+
+/* ==============================================================================
+   PAINEL DE CANAIS DE COMPRA IMPARCIAIS (STANDARD & EQUIVALENT)
+   ============================================================================== */
+.product-main-section {
+    padding: 32px 0 60px;
+}
+
+.product-media-badges {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.media-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+}
+
+.media-badge.badge-metal {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--gold-accent);
+}
+
+.media-badge.badge-mineral {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.media-badge.badge-preorder {
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    color: #fef08a;
+}
+
+.media-badge.badge-out {
+    background: rgba(248, 113, 113, 0.15);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+}
+
+.product-main-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--product-card-bg, var(--card-bg));
+    overflow: hidden;
+}
+
+.product-main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-gallery-card:hover .product-main-image {
+    transform: scale(1.03);
+}
+
+.product-media-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border-light);
+    font-size: 0.78rem;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.media-sku-text {
+    color: var(--text-secondary);
+}
+
+.media-sku-text strong {
+    color: var(--gold-accent);
+    font-family: monospace;
+}
+
+.media-share-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-share-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-share-icon:hover {
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
+}
+
+.btn-share-icon.whatsapp:hover {
+    background: rgba(37, 211, 102, 0.15);
+    border-color: #25d366;
+    color: #4ade80;
+}
+
+/* HEADER DO PRODUTO */
+.product-collection-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--gold-accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.product-title-heading {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: clamp(2rem, 3.5vw, 2.85rem);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+/* BLOCO DE PREÇOS */
+.product-price-block {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.price-figures-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.price-compare-at {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.price-current-large {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 2.45rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.price-pix-badge {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.price-installments-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-light);
+}
+
+.price-installments-row svg {
+    color: var(--gold-accent);
+}
+
+/* SELETOR DE PEDRAS MINERAIS / VARIAÇÕES DA JOIA */
+.product-variations-section {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    box-shadow: var(--shadow-soft);
+}
+
+.variations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+}
+
+.variations-title {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.selected-stone-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 6px;
+}
+
+.variations-count-badge {
+    font-size: 0.72rem;
+    color: var(--gold-accent);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.variations-chips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.variations-chips-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.variations-chips-grid::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 4px;
+}
+
+.variation-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.82rem;
+    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: left;
+    user-select: none;
+}
+
+.variation-chip:hover {
+    border-color: var(--gold-accent);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    background: var(--bg-alt);
+}
+
+.variation-chip.active {
+    background: var(--gold-accent);
+    border-color: var(--gold-hover);
+    color: var(--text-primary);
+    box-shadow: 0 0 14px rgba(115, 123, 133, 0.25);
+    font-weight: 600;
+}
+
+.stone-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--border-dark);
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+}
+
+.variation-chip.active .stone-dot {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 8px rgba(115, 123, 133, 0.4);
+}
+
+.variation-chip.variation-out-stock {
+    opacity: 0.55;
+}
+
+/* CAIXA DE CANAIS DE COMPRA */
+.product-purchase-channels-box {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.channels-box-header {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.channels-box-title {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+}
+
+.channels-box-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* LISTA OU GRADE DE BOTÕES */
+.channels-action-list.channels-layout-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.channels-action-list.channels-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.channel-option-wrapper {
+    position: relative;
+}
+
+/* BOTÃO DE COMPRA IMPARCIAL NOVO */
+.btn-channel-impartial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-family: inherit;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 58px;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-channel-impartial:hover {
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.btn-channel-impartial:active {
+    transform: translateY(0);
+}
+
+.channel-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.channel-icon-pill {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--gold-accent);
+}
+
+.channel-meta-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.channel-action-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.channel-protection-sub {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+}
+
+.channel-btn-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.channel-price-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.channel-price-label {
+    font-size: 0.64rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.channel-price-val {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    white-space: nowrap;
+}
+
+.channel-arrow-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-accent);
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.btn-channel-impartial:hover .channel-arrow-circle {
+    transform: translateX(3px);
+    background: var(--gold-accent);
+    color: var(--text-primary);
+}
+
+.channels-security-footnote {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.channels-security-footnote svg {
+    color: #34d399;
+    flex-shrink: 0;
+}
+
+/* DESCRIÇÃO E HISTÓRIA */
+.product-description-card {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.section-subheading {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+}
+
+.product-storytelling-text {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+/* FICHA TÉCNICA */
+.product-specs-card {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.specs-grid-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.82rem;
+    gap: 16px;
+}
+
+.spec-row:last-child {
+    border-bottom: none;
+}
+
+.spec-term {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.spec-value {
+    color: var(--text-primary);
+    font-weight: 500;
+    text-align: right;
+    margin: 0;
+}
+
+.spec-value.highlight-gold {
+    color: var(--gold-accent);
+}
+
+/* GARANTIA */
+.product-guarantee-card {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+}
+
+.guarantee-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.guarantee-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.guarantee-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+}
+
+.guarantee-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.guarantee-perks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.perk-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
+.perk-item svg {
+    color: var(--gold-accent);
+    flex-shrink: 0;
+}
+
+/* PRODUTOS RELACIONADOS */
+.product-related-section {
+    max-width: 1240px;
+    margin: 70px auto 0;
+    padding: 0 24px;
+    border-top: 1px solid var(--border-light);
+    padding-top: 48px;
+}
+
+.related-section-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.related-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--gold-accent);
+}
+
+.related-title {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 6px 0 0;
+}
+
+.related-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.related-product-card {
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-soft);
+}
+
+.related-product-card:hover {
+    border-color: var(--gold-accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-float);
+}
+
+.related-card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: block;
+}
+
+.related-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.related-product-card:hover .related-card-media img {
+    transform: scale(1.05);
+}
+
+.related-card-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.related-card-title {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.related-card-price {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    margin-bottom: 12px;
+}
+
+.related-card-btn {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-accent);
+    border-radius: 6px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.related-card-btn:hover {
+    background: var(--gold-accent);
+    color: var(--text-primary);
+}
+
+/* ==============================================================================
+   CANAIS IMPARCIAIS NOS CARDS DA VITRINE / BOUTIQUE (/loja)
+   ============================================================================== */
+.channels-grid-impartial {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.store-channel-pill-impartial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: all 0.22s ease;
+}
+
+.store-channel-pill-impartial:hover {
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
+    transform: translateX(2px);
+}
+
+.channel-pill-lead,
+.channel-pill-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.channel-pill-icon {
+    font-size: 0.95rem;
+}
+
+.channel-pill-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.channel-pill-price {
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    white-space: nowrap;
+}
+
+/* BOTÃO DE EXPLORAR JOIA NO CARD DA LOJA */
+.btn-card-explore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 16px;
+    background: var(--gold-accent);
+    border: 1px solid var(--gold-hover);
+    border-radius: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: all 0.25s ease;
+    margin-top: 12px;
+}
+
+.btn-card-explore:hover {
+    background: var(--gold-hover);
+    color: #ffffff;
+    border-color: var(--gold-hover);
+    box-shadow: 0 6px 18px rgba(115, 123, 133, 0.25);
+    transform: translateY(-1px);
+}

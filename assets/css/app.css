@@ -4682,16 +4682,16 @@ body.theme-rose .btn-store-back {
    ============================================================================== */
 
 .product-detail-page {
-    background: #0d0c0b;
-    color: #ded7cf;
+    background: var(--product-bg, var(--bg-light));
+    color: var(--text-primary);
     min-height: 100vh;
     padding-bottom: 100px;
 }
 
 /* NAVEGAÇÃO BREADCRUMB */
 .product-breadcrumb-nav {
-    background: rgba(13, 12, 11, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--product-bg, var(--bg-light));
+    border-bottom: 1px solid var(--border-light);
     padding: 18px 0;
     position: sticky;
     top: 70px;
@@ -4704,7 +4704,7 @@ body.theme-rose .btn-store-back {
     align-items: center;
     gap: 10px;
     font-size: 0.8rem;
-    color: #8e8880;
+    color: var(--text-secondary);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -4712,22 +4712,22 @@ body.theme-rose .btn-store-back {
 }
 
 .product-breadcrumb-list a {
-    color: #b5ada3;
+    color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .product-breadcrumb-list a:hover {
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 .product-breadcrumb-sep {
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--border-light);
     font-size: 0.72rem;
 }
 
 .product-breadcrumb-current {
-    color: #f7f4ee;
+    color: var(--text-primary);
     font-weight: 500;
 }
 
@@ -4755,16 +4755,16 @@ body.theme-rose .btn-store-back {
     position: relative;
     border-radius: 14px;
     overflow: hidden;
-    background: #141210;
-    border: 1px solid rgba(212, 186, 136, 0.2);
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-float);
 }
 
 .product-gallery-main {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #121110;
+    background: var(--product-card-bg, var(--card-bg));
     overflow: hidden;
 }
 
@@ -4784,9 +4784,9 @@ body.theme-rose .btn-store-back {
     position: absolute;
     top: 16px;
     left: 16px;
-    background: rgba(13, 12, 11, 0.85);
-    border: 1px solid rgba(212, 186, 136, 0.4);
-    color: #d4ba88;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--gold-accent);
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.72rem;
@@ -4795,16 +4795,16 @@ body.theme-rose .btn-store-back {
     text-transform: uppercase;
     backdrop-filter: blur(8px);
     z-index: 5;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    box-shadow: var(--shadow-soft);
 }
 
 .gallery-mineral-badge {
     position: absolute;
     bottom: 16px;
     left: 16px;
-    background: rgba(13, 12, 11, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ede7df;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -4813,6 +4813,7 @@ body.theme-rose .btn-store-back {
     gap: 8px;
     backdrop-filter: blur(8px);
     z-index: 5;
+    box-shadow: var(--shadow-soft);
 }
 
 .gallery-mineral-dot {
@@ -4837,8 +4838,8 @@ body.theme-rose .btn-store-back {
     height: 76px;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: #141210;
+    border: 1px solid var(--border-light);
+    background: var(--product-card-bg, var(--card-bg));
     cursor: pointer;
     flex-shrink: 0;
     transition: all 0.25s ease;
@@ -4848,8 +4849,8 @@ body.theme-rose .btn-store-back {
 .gallery-thumb-item:hover,
 .gallery-thumb-item.active {
     opacity: 1;
-    border-color: #d4ba88;
-    box-shadow: 0 0 12px rgba(212, 186, 136, 0.3);
+    border-color: var(--gold-accent);
+    box-shadow: 0 0 12px rgba(115, 123, 133, 0.25);
 }
 
 .gallery-thumb-item img {
@@ -4866,7 +4867,7 @@ body.theme-rose .btn-store-back {
 }
 
 .product-meta-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-light);
     padding-bottom: 22px;
 }
 
@@ -4874,18 +4875,18 @@ body.theme-rose .btn-store-back {
     font-size: 0.76rem;
     font-weight: 600;
     letter-spacing: 0.14em;
-    color: #d4ba88;
+    color: var(--gold-accent);
     text-transform: uppercase;
     margin-bottom: 8px;
     display: block;
 }
 
 .product-title-large {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: clamp(2rem, 3.4vw, 2.75rem);
     font-weight: 500;
     line-height: 1.15;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 12px;
     letter-spacing: -0.01em;
 }
@@ -4896,16 +4897,16 @@ body.theme-rose .btn-store-back {
     gap: 16px;
     flex-wrap: wrap;
     font-size: 0.78rem;
-    color: #9e978e;
+    color: var(--text-secondary);
 }
 
 .product-sku-tag {
     font-family: monospace;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
     padding: 3px 8px;
     border-radius: 4px;
-    color: #b5ada3;
+    color: var(--text-secondary);
 }
 
 .product-stock-status-tag {
@@ -4920,15 +4921,16 @@ body.theme-rose .btn-store-back {
 }
 
 .product-stock-status-tag.made-to-order {
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 /* BLOCO DE PREÇOS */
 .product-price-box {
-    background: linear-gradient(135deg, rgba(212, 186, 136, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%), #141210;
-    border: 1px solid rgba(212, 186, 136, 0.22);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 20px 24px;
+    box-shadow: var(--shadow-soft);
 }
 
 .product-price-row {
@@ -4940,16 +4942,16 @@ body.theme-rose .btn-store-back {
 }
 
 .product-price-main {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 2.35rem;
     font-weight: 700;
-    color: #f7f4ee;
+    color: var(--text-primary);
     line-height: 1;
 }
 
 .product-price-promotional {
     font-size: 1.05rem;
-    color: #7a746c;
+    color: var(--text-muted);
     text-decoration: line-through;
 }
 
@@ -4960,7 +4962,7 @@ body.theme-rose .btn-store-back {
     flex-wrap: wrap;
     font-size: 0.82rem;
     padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-light);
 }
 
 .product-pix-tag {
@@ -4972,12 +4974,11 @@ body.theme-rose .btn-store-back {
 }
 
 .product-installments-tag {
-    color: #b5ada3;
+    color: var(--text-secondary);
 }
 
 /* ==============================================================================
    PAINEL DE CANAIS DE COMPRA IMPARCIAIS (STANDARD & EQUIVALENT)
-   Nenhum canal é favorecido. Todos possuem peso visual, tamanho e sofisticação idênticos.
    ============================================================================== */
 .product-main-section {
     padding: 32px 0 60px;
@@ -5004,19 +5005,19 @@ body.theme-rose .btn-store-back {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-soft);
 }
 
 .media-badge.badge-metal {
-    background: rgba(13, 12, 11, 0.88);
-    border: 1px solid rgba(212, 186, 136, 0.4);
-    color: #d4ba88;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--gold-accent);
 }
 
 .media-badge.badge-mineral {
-    background: rgba(13, 12, 11, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: #ede7df;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
 }
 
 .media-badge.badge-preorder {
@@ -5035,7 +5036,7 @@ body.theme-rose .btn-store-back {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #141210;
+    background: var(--product-card-bg, var(--card-bg));
     overflow: hidden;
 }
 
@@ -5056,19 +5057,19 @@ body.theme-rose .btn-store-back {
     justify-content: space-between;
     align-items: center;
     padding: 14px 18px;
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border-light);
     font-size: 0.78rem;
     flex-wrap: wrap;
     gap: 12px;
 }
 
 .media-sku-text {
-    color: #9e978e;
+    color: var(--text-secondary);
 }
 
 .media-sku-text strong {
-    color: #d4ba88;
+    color: var(--gold-accent);
     font-family: monospace;
 }
 
@@ -5082,9 +5083,9 @@ body.theme-rose .btn-store-back {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ded7cf;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -5094,9 +5095,9 @@ body.theme-rose .btn-store-back {
 }
 
 .btn-share-icon:hover {
-    background: rgba(212, 186, 136, 0.12);
-    border-color: #d4ba88;
-    color: #d4ba88;
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
 }
 
 .btn-share-icon.whatsapp:hover {
@@ -5113,27 +5114,28 @@ body.theme-rose .btn-store-back {
     font-size: 0.76rem;
     font-weight: 600;
     letter-spacing: 0.14em;
-    color: #d4ba88;
+    color: var(--gold-accent);
     text-transform: uppercase;
     margin-bottom: 8px;
 }
 
 .product-title-heading {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: clamp(2rem, 3.5vw, 2.85rem);
     font-weight: 500;
     line-height: 1.15;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0;
     letter-spacing: -0.01em;
 }
 
 /* BLOCO DE PREÇOS */
 .product-price-block {
-    background: linear-gradient(135deg, rgba(212, 186, 136, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%), #141210;
-    border: 1px solid rgba(212, 186, 136, 0.24);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 20px 24px;
+    box-shadow: var(--shadow-soft);
 }
 
 .price-figures-wrap {
@@ -5146,15 +5148,15 @@ body.theme-rose .btn-store-back {
 
 .price-compare-at {
     font-size: 1.05rem;
-    color: #7a746c;
+    color: var(--text-muted);
     text-decoration: line-through;
 }
 
 .price-current-large {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 2.45rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary);
     line-height: 1;
 }
 
@@ -5175,23 +5177,24 @@ body.theme-rose .btn-store-back {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #b5ada3;
+    color: var(--text-secondary);
     font-size: 0.82rem;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-light);
 }
 
 .price-installments-row svg {
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 /* SELETOR DE PEDRAS MINERAIS / VARIAÇÕES DA JOIA */
 .product-variations-section {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 18px 20px;
     margin: 18px 0;
+    box-shadow: var(--shadow-soft);
 }
 
 .variations-header {
@@ -5203,13 +5206,13 @@ body.theme-rose .btn-store-back {
 
 .variations-title {
     font-size: 0.82rem;
-    color: #a8a096;
+    color: var(--text-secondary);
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
 .selected-stone-name {
-    color: #f7f4ee;
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 0.95rem;
     margin-left: 6px;
@@ -5217,9 +5220,9 @@ body.theme-rose .btn-store-back {
 
 .variations-count-badge {
     font-size: 0.72rem;
-    color: #d4ba88;
-    background: rgba(212, 186, 136, 0.1);
-    border: 1px solid rgba(212, 186, 136, 0.25);
+    color: var(--gold-accent);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
     padding: 3px 9px;
     border-radius: 12px;
     font-weight: 500;
@@ -5239,7 +5242,7 @@ body.theme-rose .btn-store-back {
 }
 
 .variations-chips-grid::-webkit-scrollbar-thumb {
-    background: rgba(212, 186, 136, 0.25);
+    background: var(--border-light);
     border-radius: 4px;
 }
 
@@ -5248,12 +5251,12 @@ body.theme-rose .btn-store-back {
     align-items: center;
     gap: 8px;
     padding: 8px 14px;
-    background: rgba(20, 19, 18, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
     border-radius: 8px;
-    color: #d1cbc4;
+    color: var(--text-primary);
     font-size: 0.82rem;
-    font-family: 'Outfit', 'Inter', sans-serif;
+    font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: left;
@@ -5261,17 +5264,17 @@ body.theme-rose .btn-store-back {
 }
 
 .variation-chip:hover {
-    border-color: rgba(212, 186, 136, 0.6);
-    color: #ffffff;
+    border-color: var(--gold-accent);
+    color: var(--text-primary);
     transform: translateY(-1px);
-    background: rgba(212, 186, 136, 0.08);
+    background: var(--bg-alt);
 }
 
 .variation-chip.active {
-    background: rgba(212, 186, 136, 0.16);
-    border-color: #d4ba88;
-    color: #ffffff;
-    box-shadow: 0 0 14px rgba(212, 186, 136, 0.3);
+    background: var(--gold-accent);
+    border-color: var(--gold-hover);
+    color: var(--text-primary);
+    box-shadow: 0 0 14px rgba(115, 123, 133, 0.25);
     font-weight: 600;
 }
 
@@ -5279,15 +5282,15 @@ body.theme-rose .btn-store-back {
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid var(--border-dark);
     flex-shrink: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     display: inline-block;
 }
 
 .variation-chip.active .stone-dot {
-    border-color: #ffffff;
-    box-shadow: 0 0 8px rgba(212, 186, 136, 0.8);
+    border-color: var(--text-primary);
+    box-shadow: 0 0 8px rgba(115, 123, 133, 0.4);
 }
 
 .variation-chip.variation-out-stock {
@@ -5296,31 +5299,31 @@ body.theme-rose .btn-store-back {
 
 /* CAIXA DE CANAIS DE COMPRA */
 .product-purchase-channels-box {
-    background: #141210;
-    border: 1px solid rgba(212, 186, 136, 0.24);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 14px;
     padding: 24px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    box-shadow: var(--shadow-soft);
 }
 
 .channels-box-header {
     margin-bottom: 18px;
     padding-bottom: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .channels-box-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.35rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 6px;
     letter-spacing: -0.01em;
 }
 
 .channels-box-subtitle {
     font-size: 0.82rem;
-    color: #9e978e;
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
 }
@@ -5348,11 +5351,11 @@ body.theme-rose .btn-store-back {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%), #171513;
-    border: 1px solid rgba(212, 186, 136, 0.28);
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
     border-radius: 10px;
     padding: 14px 18px;
-    color: #f7f4ee;
+    color: var(--text-primary);
     text-decoration: none;
     font-family: inherit;
     transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
@@ -5360,14 +5363,15 @@ body.theme-rose .btn-store-back {
     overflow: hidden;
     cursor: pointer;
     min-height: 58px;
+    box-shadow: var(--shadow-soft);
 }
 
 .btn-channel-impartial:hover {
-    background: linear-gradient(135deg, rgba(212, 186, 136, 0.12) 0%, rgba(212, 186, 136, 0.04) 100%), #1c1916;
-    border-color: #d4ba88;
-    color: #ffffff;
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--text-primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(212, 186, 136, 0.18), 0 2px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .btn-channel-impartial:active {
@@ -5385,13 +5389,13 @@ body.theme-rose .btn-store-back {
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 .channel-meta-text {
@@ -5404,7 +5408,7 @@ body.theme-rose .btn-store-back {
 .channel-action-name {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5412,7 +5416,7 @@ body.theme-rose .btn-store-back {
 
 .channel-protection-sub {
     font-size: 0.68rem;
-    color: #9e978e;
+    color: var(--text-secondary);
     letter-spacing: 0.03em;
 }
 
@@ -5431,16 +5435,16 @@ body.theme-rose .btn-store-back {
 
 .channel-price-label {
     font-size: 0.64rem;
-    color: #8e8880;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
 .channel-price-val {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.15rem;
     font-weight: 700;
-    color: #d4ba88;
+    color: var(--gold-accent);
     white-space: nowrap;
 }
 
@@ -5448,19 +5452,19 @@ body.theme-rose .btn-store-back {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: rgba(212, 186, 136, 0.08);
-    border: 1px solid rgba(212, 186, 136, 0.25);
+    background: var(--bg-alt);
+    border: 1px solid var(--border-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #d4ba88;
+    color: var(--gold-accent);
     transition: transform 0.25s ease, background 0.25s ease;
 }
 
 .btn-channel-impartial:hover .channel-arrow-circle {
     transform: translateX(3px);
-    background: #d4ba88;
-    color: #0d0c0b;
+    background: var(--gold-accent);
+    color: var(--text-primary);
 }
 
 .channels-security-footnote {
@@ -5468,10 +5472,10 @@ body.theme-rose .btn-store-back {
     align-items: center;
     gap: 8px;
     font-size: 0.74rem;
-    color: #8e8880;
+    color: var(--text-secondary);
     margin-top: 16px;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid var(--border-light);
 }
 
 .channels-security-footnote svg {
@@ -5481,16 +5485,17 @@ body.theme-rose .btn-store-back {
 
 /* DESCRIÇÃO E HISTÓRIA */
 .product-description-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 24px;
+    box-shadow: var(--shadow-soft);
 }
 
 .section-subheading {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.25rem;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 12px;
     letter-spacing: -0.01em;
 }
@@ -5498,15 +5503,16 @@ body.theme-rose .btn-store-back {
 .product-storytelling-text {
     font-size: 0.88rem;
     line-height: 1.75;
-    color: #b8b1a7;
+    color: var(--text-secondary);
 }
 
 /* FICHA TÉCNICA */
 .product-specs-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 24px;
+    box-shadow: var(--shadow-soft);
 }
 
 .specs-grid-table {
@@ -5521,7 +5527,7 @@ body.theme-rose .btn-store-back {
     justify-content: space-between;
     align-items: baseline;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--border-light);
     font-size: 0.82rem;
     gap: 16px;
 }
@@ -5531,27 +5537,28 @@ body.theme-rose .btn-store-back {
 }
 
 .spec-term {
-    color: #8e8880;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
 .spec-value {
-    color: #ede7df;
+    color: var(--text-primary);
     font-weight: 500;
     text-align: right;
     margin: 0;
 }
 
 .spec-value.highlight-gold {
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 /* GARANTIA */
 .product-guarantee-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(212, 186, 136, 0.2);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 20px;
+    box-shadow: var(--shadow-soft);
 }
 
 .guarantee-header {
@@ -5560,7 +5567,7 @@ body.theme-rose .btn-store-back {
     gap: 14px;
     margin-bottom: 16px;
     padding-bottom: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .guarantee-icon {
@@ -5571,13 +5578,13 @@ body.theme-rose .btn-store-back {
 .guarantee-title {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 4px;
 }
 
 .guarantee-desc {
     font-size: 0.78rem;
-    color: #9e978e;
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
 }
@@ -5593,11 +5600,11 @@ body.theme-rose .btn-store-back {
     align-items: center;
     gap: 8px;
     font-size: 0.72rem;
-    color: #ded7cf;
+    color: var(--text-secondary);
 }
 
 .perk-item svg {
-    color: #d4ba88;
+    color: var(--gold-accent);
     flex-shrink: 0;
 }
 
@@ -5606,7 +5613,7 @@ body.theme-rose .btn-store-back {
     max-width: 1240px;
     margin: 70px auto 0;
     padding: 0 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid var(--border-light);
     padding-top: 48px;
 }
 
@@ -5619,13 +5626,13 @@ body.theme-rose .btn-store-back {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.15em;
-    color: #d4ba88;
+    color: var(--gold-accent);
 }
 
 .related-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 2rem;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 6px 0 0;
 }
 
@@ -5636,19 +5643,20 @@ body.theme-rose .btn-store-back {
 }
 
 .related-product-card {
-    background: #141210;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--product-card-bg, var(--card-bg));
+    border: 1px solid var(--border-light);
     border-radius: 10px;
     overflow: hidden;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--shadow-soft);
 }
 
 .related-product-card:hover {
-    border-color: rgba(212, 186, 136, 0.4);
+    border-color: var(--gold-accent);
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-float);
 }
 
 .related-card-media {
@@ -5680,7 +5688,7 @@ body.theme-rose .btn-store-back {
 .related-card-title {
     font-size: 0.86rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 8px;
     line-height: 1.35;
     white-space: nowrap;
@@ -5689,10 +5697,10 @@ body.theme-rose .btn-store-back {
 }
 
 .related-card-price {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.15rem;
     font-weight: 700;
-    color: #d4ba88;
+    color: var(--gold-accent);
     margin-bottom: 12px;
 }
 
@@ -5703,10 +5711,10 @@ body.theme-rose .btn-store-back {
     justify-content: center;
     gap: 6px;
     padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(212, 186, 136, 0.3);
+    background: var(--card-bg);
+    border: 1px solid var(--gold-accent);
     border-radius: 6px;
-    color: #ede7df;
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 0.75rem;
     font-weight: 600;
@@ -5714,8 +5722,8 @@ body.theme-rose .btn-store-back {
 }
 
 .related-card-btn:hover {
-    background: #d4ba88;
-    color: #0d0c0b;
+    background: var(--gold-accent);
+    color: var(--text-primary);
 }
 
 /* ==============================================================================
@@ -5733,20 +5741,20 @@ body.theme-rose .btn-store-back {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(212, 186, 136, 0.22);
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
     border-radius: 6px;
     padding: 6px 10px;
-    color: #ded7cf;
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 0.75rem;
     transition: all 0.22s ease;
 }
 
 .store-channel-pill-impartial:hover {
-    background: rgba(212, 186, 136, 0.12);
-    border-color: #d4ba88;
-    color: #ffffff;
+    background: var(--bg-alt);
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
     transform: translateX(2px);
 }
 
@@ -5766,14 +5774,14 @@ body.theme-rose .btn-store-back {
 
 .channel-pill-name {
     font-weight: 500;
-    color: #ede7df;
+    color: var(--text-primary);
 }
 
 .channel-pill-price {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 0.95rem;
     font-weight: 700;
-    color: #d4ba88;
+    color: var(--gold-accent);
     white-space: nowrap;
 }
 
@@ -5785,10 +5793,10 @@ body.theme-rose .btn-store-back {
     gap: 8px;
     width: 100%;
     padding: 11px 16px;
-    background: linear-gradient(135deg, rgba(212, 186, 136, 0.15) 0%, rgba(212, 186, 136, 0.06) 100%);
-    border: 1px solid rgba(212, 186, 136, 0.4);
+    background: var(--gold-accent);
+    border: 1px solid var(--gold-hover);
     border-radius: 8px;
-    color: #f7f4ee;
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 0.82rem;
     font-weight: 600;
@@ -5798,12 +5806,13 @@ body.theme-rose .btn-store-back {
 }
 
 .btn-card-explore:hover {
-    background: linear-gradient(135deg, #d4ba88 0%, #b89758 100%);
-    color: #0d0c0b;
-    border-color: #d4ba88;
-    box-shadow: 0 6px 18px rgba(212, 186, 136, 0.25);
+    background: var(--gold-hover);
+    color: #ffffff;
+    border-color: var(--gold-hover);
+    box-shadow: 0 6px 18px rgba(115, 123, 133, 0.25);
     transform: translateY(-1px);
 }
+
 
 /* ==============================================================================
    RESPONSIVIDADE: COMPUTADORES, TABLETS & CELULARES
