@@ -383,16 +383,27 @@ window.clearStoreSearch = clearStoreSearch;
 // 7. CONTROLE DO SELETOR DE TEMAS (SUPORTE À ÁREA ADMINISTRATIVA)
 function setupThemeToggle() {
     const availableThemes = [
-        { id: 'theme-gold', name: 'Ouro Imperial', color: '#caa15c' },
-        { id: 'theme-silver', name: 'Prata Nobre', color: '#cbd5e1' },
-        { id: 'theme-emerald', name: 'Esmeralda Real', color: '#10b981' },
-        { id: 'theme-rose', name: 'Rose Gold', color: '#fb7185' }
+        { id: 'theme-silver-noir', name: 'Prata Nobre & Noir', color: '#A7ADB4' },
+        { id: 'theme-pearl-platinum', name: 'Branco Perolado & Platina', color: '#CBD0D6' },
+        { id: 'theme-nude-pearl', name: 'Nude & Bege Pérola', color: '#C8B9AE' },
+        { id: 'theme-contemporary-graphite', name: 'Prata & Grafite', color: '#9DA5AE' }
     ];
 
-    const themeClassList = availableThemes.map(t => t.id);
+    const themeClassList = [
+        'theme-silver-noir', 'theme-pearl-platinum', 'theme-nude-pearl', 'theme-contemporary-graphite',
+        'theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose'
+    ];
+
+    const legacyMap = {
+        'theme-gold': 'theme-silver-noir',
+        'theme-silver': 'theme-pearl-platinum',
+        'theme-emerald': 'theme-nude-pearl',
+        'theme-rose': 'theme-contemporary-graphite'
+    };
 
     function applyTheme(themeId) {
-        const found = availableThemes.find(t => t.id === themeId) || availableThemes[0];
+        const resolvedId = legacyMap[themeId] || themeId;
+        const found = availableThemes.find(t => t.id === resolvedId) || availableThemes[0];
         
         // Limpar classes de temas anteriores
         themeClassList.forEach(cls => {
