@@ -201,16 +201,16 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 
 <style>
 .checkout-page-container {
-    background-color: var(--checkout-bg, var(--bg-dark, #0d0c0b));
+    background-color: var(--checkout-bg, var(--bg-light, #F7F7F5));
     min-height: 85vh;
     padding: 40px 0 80px;
-    color: var(--text-light, #ded7cf);
+    color: var(--text-primary, #25272A);
 }
 .checkout-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
     padding-bottom: 20px;
     margin-bottom: 30px;
     flex-wrap: wrap;
@@ -222,31 +222,31 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     gap: 10px;
 }
 .checkout-brand .sparkle {
-    color: #caa15c;
+    color: var(--gold-accent, #737B85);
     font-size: 1.2rem;
 }
 .checkout-brand .brand-name {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.5rem;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     letter-spacing: 2px;
 }
 .checkout-badge {
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 1px;
-    background: rgba(202, 161, 92, 0.15);
-    color: #caa15c;
+    background: rgba(167, 173, 180, 0.18);
+    color: var(--text-primary, #25272A);
     padding: 3px 8px;
     border-radius: 4px;
-    border: 1px solid rgba(202, 161, 92, 0.3);
+    border: 1px solid rgba(167, 173, 180, 0.35);
 }
 .checkout-security-status {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.78rem;
-    color: #9e978e;
+    color: var(--text-secondary, #737B85);
 }
 .checkout-grid {
     display: grid;
@@ -255,16 +255,16 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     align-items: start;
 }
 .checkout-card {
-    background-color: var(--checkout-card-bg, var(--surface-dark, #141312));
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: var(--checkout-card-bg, var(--surface-dark, #FFFFFF));
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
     border-radius: 14px;
     padding: 32px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 .card-step-title {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.35rem;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     margin: 0 0 20px;
     display: flex;
     align-items: center;
@@ -274,8 +274,8 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: #caa15c;
-    color: #0d0c0b;
+    background: var(--gold-accent, #A7ADB4);
+    color: #25272A;
     font-size: 0.85rem;
     font-weight: 700;
     display: inline-flex;
@@ -294,39 +294,41 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     display: block;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #ded7cf;
+    color: var(--text-secondary, #737B85);
     margin-bottom: 6px;
 }
 .form-input {
     width: 100%;
     padding: 12px 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--bg-white, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.14));
     border-radius: 8px;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     font-size: 0.88rem;
     transition: border-color 0.2s;
     box-sizing: border-box;
 }
 .form-input:focus {
     outline: none;
-    border-color: #caa15c;
-    background: rgba(202, 161, 92, 0.04);
+    border-color: var(--gold-accent, #737B85);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(167, 173, 180, 0.2);
 }
 .btn-calc-cep {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ded7cf;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.15));
+    color: var(--text-primary, #25272A);
     border-radius: 8px;
     padding: 0 16px;
     font-size: 0.82rem;
+    font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s;
 }
 .btn-calc-cep:hover {
-    background: #caa15c;
-    color: #0d0c0b;
+    background: var(--gold-accent, #A7ADB4);
+    color: #25272A;
 }
 .payment-methods-grid {
     display: flex;
@@ -338,20 +340,20 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
     border-radius: 10px;
     padding: 16px;
     cursor: pointer;
     transition: all 0.2s;
 }
 .payment-option.active {
-    border-color: #caa15c;
-    background: rgba(202, 161, 92, 0.06);
+    border-color: var(--gold-accent, #A7ADB4);
+    background: rgba(167, 173, 180, 0.08);
 }
 .payment-option input {
     margin-top: 3px;
-    accent-color: #caa15c;
+    accent-color: var(--gold-accent, #737B85);
 }
 .payment-option-inner {
     flex: 1;
@@ -364,43 +366,45 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 }
 .opt-name {
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     font-size: 0.92rem;
 }
 .opt-discount-tag {
     font-size: 0.68rem;
     font-weight: 700;
-    color: #caa15c;
-    background: rgba(202, 161, 92, 0.18);
+    color: #25272A;
+    background: rgba(167, 173, 180, 0.25);
     padding: 2px 8px;
     border-radius: 4px;
+    border: 1px solid rgba(167, 173, 180, 0.4);
 }
 .opt-tag-nob {
     font-size: 0.68rem;
     font-weight: 700;
-    color: #4ade80;
-    background: rgba(74, 222, 128, 0.15);
+    color: #15803d;
+    background: rgba(34, 197, 94, 0.15);
     padding: 2px 8px;
     border-radius: 4px;
 }
 .opt-tag-sub {
     font-size: 0.68rem;
-    color: #888;
+    color: var(--text-secondary, #737B85);
 }
 .opt-desc {
     margin: 0;
     font-size: 0.78rem;
-    color: #9e978e;
+    color: var(--text-secondary, #737B85);
 }
 .payment-instructions-card {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(202, 161, 92, 0.2);
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(167, 173, 180, 0.28);
     border-radius: 10px;
     padding: 16px 20px;
     margin-bottom: 24px;
 }
 .pix-key-preview {
-    background: rgba(255, 255, 255, 0.04);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     padding: 10px 14px;
     border-radius: 6px;
     font-size: 0.8rem;
@@ -408,17 +412,18 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    color: var(--text-primary, #25272A);
 }
 .pix-key-preview code {
-    color: #caa15c;
+    color: var(--text-primary, #25272A);
     font-weight: 700;
 }
 .btn-checkout-submit {
     width: 100%;
     padding: 16px 24px;
-    background: #caa15c;
-    color: #0d0c0b;
-    border: none;
+    background: var(--gold-accent, #A7ADB4);
+    color: #25272A;
+    border: 1px solid var(--gold-hover, #737B85);
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 700;
@@ -431,17 +436,18 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     transition: all 0.25s ease;
 }
 .btn-checkout-submit:hover {
-    background: #e0c080;
+    background: var(--gold-hover, #737B85);
+    color: #FFFFFF;
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(202, 161, 92, 0.3);
+    box-shadow: 0 8px 20px rgba(115, 123, 133, 0.25);
 }
 .summary-title {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.35rem;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     margin: 0 0 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
 }
 .checkout-items-list {
     margin-bottom: 20px;
@@ -453,60 +459,63 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     gap: 14px;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.06));
 }
 .checkout-item-img {
     width: 54px;
     height: 54px;
     border-radius: 8px;
     object-fit: cover;
-    background: #1e1d1b;
+    background: #f0f0ee;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 .checkout-item-info {
     flex: 1;
 }
 .checkout-item-title {
     font-size: 0.85rem;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     font-weight: 600;
     margin: 0 0 2px;
 }
 .checkout-item-meta {
     font-size: 0.74rem;
-    color: #caa15c;
+    color: var(--text-secondary, #737B85);
     margin: 0;
 }
 .checkout-item-price {
     font-size: 0.88rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
 }
 .summary-totals-block {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.02);
     border-radius: 8px;
     padding: 14px;
     margin-bottom: 20px;
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.05));
 }
 .summary-row {
     display: flex;
     justify-content: space-between;
     font-size: 0.85rem;
-    color: #9e978e;
+    color: var(--text-secondary, #737B85);
     margin-bottom: 8px;
 }
 .summary-row.total-row {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
     font-size: 1.05rem;
-    color: #ffffff;
+    color: var(--text-primary, #25272A);
     font-weight: 700;
 }
 .total-val {
-    color: #caa15c;
+    color: var(--text-primary, #25272A);
+    font-weight: 800;
 }
 .checkout-perks-list {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
     padding-top: 16px;
     margin-bottom: 18px;
 }
@@ -515,22 +524,22 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     align-items: center;
     gap: 8px;
     font-size: 0.76rem;
-    color: #888;
+    color: var(--text-secondary, #737B85);
     margin-bottom: 6px;
 }
 .perk-dot {
-    color: #caa15c;
+    color: var(--gold-accent, #737B85);
 }
 .btn-return-store {
     display: block;
     text-align: center;
     font-size: 0.8rem;
-    color: #caa15c;
+    color: var(--text-secondary, #737B85);
     text-decoration: none;
     transition: color 0.2s;
 }
 .btn-return-store:hover {
-    color: #e0c080;
+    color: var(--text-primary, #25272A);
     text-decoration: underline;
 }
 @media (max-width: 900px) {
@@ -602,7 +611,7 @@ function loadCartFromStorage() {
     } catch (e) {}
 
     if (!items || items.length === 0) {
-        listContainer.innerHTML = '<div style="padding: 20px 0; color: #888; font-size: 0.85rem; text-align: center;">Sua sacola está vazia no momento.<br><a href="/loja" style="color:#caa15c; text-decoration:none; display:inline-block; margin-top:8px;">Descobrir Joias</a></div>';
+        listContainer.innerHTML = '<div style="padding: 20px 0; color: #888; font-size: 0.85rem; text-align: center;">Sua sacola está vazia no momento.<br><a href="/loja" style="color:var(--gold-accent, #737B85); text-decoration:underline; font-weight:600; display:inline-block; margin-top:8px;">Descobrir Joias</a></div>';
         cartSubtotal = 0;
         updateTotals();
         return;
