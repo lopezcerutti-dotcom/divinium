@@ -168,7 +168,7 @@
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_primary">Cor Primária (Ouro / Botões)</label>
+                <label for="custom_color_primary">Cor Primária (Metais Nobres / Botões)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_primary" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#CAA15C') ?>" 
