@@ -253,13 +253,13 @@ class StoreController
                     ];
                 }
 
-                // Identificar o SKU base do modelo
+                // Identificar o SKU base do modelo autoral
                 $rawModelSku = !empty($product['parent_sku']) ? $product['parent_sku'] : $product['sku'];
                 $parts = explode('-', (string)$rawModelSku);
                 $baseModelSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $rawModelSku;
 
-                // Buscar todas as variações deste modelo
-                $variations = [];
+                // 1. Carregar variações do banco de dados
+                $dbVariations = [];
                 try {
                     $varStmt = $pdo->prepare("
                         SELECT p.*, c.name as category_name 
@@ -267,46 +267,169 @@ class StoreController
                         LEFT JOIN categories c ON p.category_id = c.id 
                         WHERE (TRIM(p.sku) = :base_sku OR TRIM(p.parent_sku) = :base_sku OR TRIM(p.sku) LIKE :prefix)
                           AND (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1))
-                        ORDER BY CASE WHEN TRIM(p.sku) = :base_sku THEN 0 ELSE 1 END, p.sort_order ASC, p.id ASC
+                        ORDER BY p.sort_order ASC, p.id ASC
                     ");
                     $varStmt->execute([
                         ':base_sku' => $baseModelSku,
                         ':prefix'   => $baseModelSku . '-%'
                     ]);
-                    $variations = $varStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                    $dbVariations = $varStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
                 } catch (\Throwable $varEx) {
                     // Silencioso
                 }
 
-                // Fallback para arquivo seed caso a tabela de produtos tenha apenas o produto individual
-                if (empty($variations) || count($variations) <= 1) {
-                    $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
-                    if (file_exists($seedFile)) {
-                        $seedJson = json_decode((string)@file_get_contents($seedFile), true);
-                        if (is_array($seedJson)) {
-                            $variations = [];
-                            foreach ($seedJson as $sp) {
-                                $spSku = (string)($sp['sku'] ?? '');
-                                $spParent = (string)($sp['parent_sku'] ?? '');
-                                if ($spSku === $baseModelSku || $spParent === $baseModelSku || str_starts_with($spSku, $baseModelSku . '-')) {
-                                    $variations[] = $sp;
-                                }
+                // 2. Carregar variações do catálogo oficial verificado (seed_products.json)
+                $seedVariations = [];
+                $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
+                if (file_exists($seedFile)) {
+                    $seedContent = @file_get_contents($seedFile);
+                    $seedJson = json_decode((string)$seedContent, true);
+                    if (is_array($seedJson)) {
+                        $items = isset($seedJson['value']) && is_array($seedJson['value']) ? $seedJson['value'] : $seedJson;
+                        foreach ($items as $sp) {
+                            $spSku = trim((string)($sp['sku'] ?? ''));
+                            $spParent = trim((string)($sp['parent_sku'] ?? ''));
+                            if ($spSku === $baseModelSku || $spParent === $baseModelSku || str_starts_with($spSku, $baseModelSku . '-')) {
+                                $seedVariations[$spSku] = $sp;
                             }
                         }
                     }
                 }
 
-                // Garantir links e dados de cada variação
-                foreach ($variations as &$v) {
+                // 3. Mesclar banco com o catálogo oficial, garantindo integridade das gemas e fotos
+                $mergedVariations = [];
+                foreach ($dbVariations as $dv) {
+                    $s = trim((string)($dv['sku'] ?? ''));
+                    if ($s !== '') {
+                        $mergedVariations[$s] = $dv;
+                    }
+                }
+                foreach ($seedVariations as $sSku => $sv) {
+                    if (isset($mergedVariations[$sSku])) {
+                        $currentImg = (string)($mergedVariations[$sSku]['image_url'] ?? '');
+                        $seedImg = (string)($sv['image_url'] ?? '');
+                        if ((empty($currentImg) || str_contains($currentImg, 'capa.jpg') || str_contains($currentImg, 'an-ov-40')) && !empty($seedImg) && !str_contains($seedImg, 'an-ov-40')) {
+                            $mergedVariations[$sSku]['image_url'] = $seedImg;
+                        }
+                        if (empty($mergedVariations[$sSku]['stone_mineral']) && !empty($sv['stone_mineral'])) {
+                            $mergedVariations[$sSku]['stone_mineral'] = $sv['stone_mineral'];
+                        }
+                        if (!isset($mergedVariations[$sSku]['has_stock']) && isset($sv['has_stock'])) {
+                            $mergedVariations[$sSku]['has_stock'] = $sv['has_stock'];
+                        }
+                    } else {
+                        $mergedVariations[$sSku] = $sv;
+                    }
+                }
+
+                // 4. Filtrar o item base genérico se houver variações minerais reais
+                $cleanVariations = [];
+                foreach ($mergedVariations as $vSku => $vData) {
+                    $vStone = trim((string)($vData['stone_mineral'] ?? ''));
+                    $isGenericParent = ($vSku === $baseModelSku) && ($vStone === '' || $vStone === 'Orgonite Tradicional' || str_contains(mb_strtolower($vStone), 'tradicional'));
+                    if ($isGenericParent && count($mergedVariations) > 1) {
+                        continue;
+                    }
+                    $cleanVariations[] = $vData;
+                }
+                if (empty($cleanVariations)) {
+                    $cleanVariations = array_values($mergedVariations);
+                }
+
+                // 5. Ordenação nobre das gemas autênticas do catálogo
+                // Quartzo Verde, Madrepérola, Jaspe Vermelho, Ônix Negro e Ametista no topo
+                $stoneOrderMap = [
+                    'quartzo verde'   => 10,
+                    'madrepérola'     => 20,
+                    'madreperola'     => 20,
+                    'jaspe vermelho'  => 30,
+                    'coral'           => 30,
+                    'ônix negro'      => 40,
+                    'ônix'            => 40,
+                    'onix'            => 40,
+                    'ametista'        => 50,
+                ];
+
+                usort($cleanVariations, function($a, $b) use ($stoneOrderMap) {
+                    $stoneA = mb_strtolower(trim((string)($a['stone_mineral'] ?? $a['name'] ?? '')));
+                    $stoneB = mb_strtolower(trim((string)($b['stone_mineral'] ?? $b['name'] ?? '')));
+                    
+                    $rankA = 999;
+                    foreach ($stoneOrderMap as $needle => $val) {
+                        if (str_contains($stoneA, $needle)) {
+                            $rankA = $val;
+                            break;
+                        }
+                    }
+                    $rankB = 999;
+                    foreach ($stoneOrderMap as $needle => $val) {
+                        if (str_contains($stoneB, $needle)) {
+                            $rankB = $val;
+                            break;
+                        }
+                    }
+                    if ($rankA !== $rankB) {
+                        return $rankA <=> $rankB;
+                    }
+                    return strcmp($stoneA, $stoneB);
+                });
+
+                // Formatar dados e preços de cada variação
+                foreach ($cleanVariations as &$v) {
                     if (empty($v['image_url'])) {
-                        $v['image_url'] = '/assets/images/products/an-rd-20-capa.jpg';
+                        $v['image_url'] = !empty($product['image_url']) ? $product['image_url'] : '/assets/images/products/brac-cam-20-capa.jpg';
                     }
                     if (empty($v['external_url'])) {
                         $v['external_url'] = 'https://shopee.com.br/search?keyword=' . urlencode('Divinium ' . ($v['name'] ?? ''));
                     }
-                    $v['price_formatted'] = 'R$ ' . number_format(((int)($v['price_cents'] ?? 3500)) / 100, 2, ',', '.');
+                    $v['price_formatted'] = 'R$ ' . number_format(((int)($v['price_cents'] ?? ($product['price_cents'] ?? 3500))) / 100, 2, ',', '.');
                 }
                 unset($v);
+
+                $variations = $cleanVariations;
+
+                // 6. Resolução da Variante Inicial e Sincronização Perfeita com o Produto
+                $targetVarSku = trim((string)($_GET['variante'] ?? ($_GET['sku'] ?? '')));
+                $initialVariation = null;
+                if ($targetVarSku !== '') {
+                    foreach ($variations as $var) {
+                        if (strcasecmp((string)$var['sku'], $targetVarSku) === 0) {
+                            $initialVariation = $var;
+                            break;
+                        }
+                    }
+                }
+                if (!$initialVariation) {
+                    foreach ($variations as $var) {
+                        if (!empty($var['slug']) && $var['slug'] === $rawSlug) {
+                            $initialVariation = $var;
+                            break;
+                        }
+                    }
+                }
+                if (!$initialVariation && !empty($variations[0])) {
+                    $initialVariation = $variations[0];
+                }
+
+                if ($initialVariation) {
+                    $selectedSku = $initialVariation['sku'];
+                    $product['sku'] = $initialVariation['sku'];
+                    if (!empty($initialVariation['stone_mineral'])) {
+                        $product['stone_mineral'] = $initialVariation['stone_mineral'];
+                    }
+                    if (!empty($initialVariation['image_url'])) {
+                        $product['image_url'] = $initialVariation['image_url'];
+                    }
+                    if (!empty($initialVariation['price_cents'])) {
+                        $product['price_cents'] = $initialVariation['price_cents'];
+                    }
+                    if (isset($initialVariation['has_stock'])) {
+                        $product['stock_status'] = $initialVariation['has_stock'] ? 'in_stock' : 'out_of_stock';
+                    }
+                    if (!empty($initialVariation['external_url'])) {
+                        $product['external_url'] = $initialVariation['external_url'];
+                    }
+                }
 
                 // Buscar joias relacionadas (outros modelos da mesma categoria)
                 $catId = (int) ($product['category_id'] ?? 0);
@@ -318,17 +441,31 @@ class StoreController
                       AND (p.status = 'published' OR (p.status IS NULL AND p.is_active = 1))
                       " . ($catId > 0 ? "AND p.category_id = " . $catId : "") . "
                     ORDER BY p.sort_order ASC, p.id ASC 
-                    LIMIT 4
+                    LIMIT 8
                 ";
                 $relStmt = $pdo->prepare($relSql);
                 $relStmt->execute([':cur_sku' => $baseModelSku]);
-                $relatedProducts = $relStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
-                foreach ($relatedProducts as &$rp) {
+                $relRaw = $relStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                $relatedProducts = [];
+                $seenRelBases = [];
+                foreach ($relRaw as $rp) {
+                    $rSku = (string)($rp['sku'] ?? '');
+                    $rParts = explode('-', $rSku);
+                    $rBase = count($rParts) >= 3 ? implode('-', array_slice($rParts, 0, 3)) : $rSku;
+                    if ($rBase === $baseModelSku || isset($seenRelBases[$rBase])) {
+                        continue;
+                    }
+                    $seenRelBases[$rBase] = true;
                     if (empty($rp['slug'])) {
                         $rp['slug'] = self::slugify((string)($rp['name'] ?? 'joia-' . $rp['id']));
                     }
+                    $cleanRelName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$rp['name']);
+                    $rp['name'] = !empty($cleanRelName) ? $cleanRelName : $rp['name'];
+                    $relatedProducts[] = $rp;
+                    if (count($relatedProducts) >= 4) {
+                        break;
+                    }
                 }
-                unset($rp);
             }
         } catch (\Throwable $e) {
             error_log('Erro ao buscar produto: ' . $e->getMessage());
@@ -362,13 +499,19 @@ class StoreController
             $baseModelSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $rawModelSku;
             $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
             if (file_exists($seedFile)) {
-                $seedJson = json_decode((string)@file_get_contents($seedFile), true);
+                $seedContent = @file_get_contents($seedFile);
+                $seedJson = json_decode((string)$seedContent, true);
                 if (is_array($seedJson)) {
                     $variations = [];
-                    foreach ($seedJson as $sp) {
+                    $items = isset($seedJson['value']) && is_array($seedJson['value']) ? $seedJson['value'] : $seedJson;
+                    foreach ($items as $sp) {
                         $spSku = (string)($sp['sku'] ?? '');
                         $spParent = (string)($sp['parent_sku'] ?? '');
                         if ($spSku === $baseModelSku || $spParent === $baseModelSku || str_starts_with($spSku, $baseModelSku . '-')) {
+                            $spStone = trim((string)($sp['stone_mineral'] ?? ''));
+                            if ($spSku === $baseModelSku && ($spStone === '' || $spStone === 'Orgonite Tradicional')) {
+                                continue;
+                            }
                             if (empty($sp['image_url'])) {
                                 $sp['image_url'] = $product['image_url'] ?? '/assets/images/products/an-rd-20-capa.jpg';
                             }
@@ -378,6 +521,39 @@ class StoreController
                             $sp['price_formatted'] = 'R$ ' . number_format(((int)($sp['price_cents'] ?? ($product['price_cents'] ?? 3500))) / 100, 2, ',', '.');
                             $variations[] = $sp;
                         }
+                    }
+                    if (!empty($variations)) {
+                        $stoneOrderMap = [
+                            'quartzo verde'   => 10,
+                            'madrepérola'     => 20,
+                            'madreperola'     => 20,
+                            'jaspe vermelho'  => 30,
+                            'coral'           => 30,
+                            'ônix negro'      => 40,
+                            'ônix'            => 40,
+                            'onix'            => 40,
+                            'ametista'        => 50,
+                        ];
+                        usort($variations, function($a, $b) use ($stoneOrderMap) {
+                            $stoneA = mb_strtolower(trim((string)($a['stone_mineral'] ?? $a['name'] ?? '')));
+                            $stoneB = mb_strtolower(trim((string)($b['stone_mineral'] ?? $b['name'] ?? '')));
+                            $rankA = 999;
+                            foreach ($stoneOrderMap as $needle => $val) {
+                                if (str_contains($stoneA, $needle)) { $rankA = $val; break; }
+                            }
+                            $rankB = 999;
+                            foreach ($stoneOrderMap as $needle => $val) {
+                                if (str_contains($stoneB, $needle)) { $rankB = $val; break; }
+                            }
+                            if ($rankA !== $rankB) { return $rankA <=> $rankB; }
+                            return strcmp($stoneA, $stoneB);
+                        });
+                        $initialVariation = $variations[0];
+                        $selectedSku = $initialVariation['sku'];
+                        $product['sku'] = $initialVariation['sku'];
+                        $product['stone_mineral'] = $initialVariation['stone_mineral'];
+                        $product['image_url'] = $initialVariation['image_url'];
+                        $product['price_cents'] = $initialVariation['price_cents'];
                     }
                 }
             }
