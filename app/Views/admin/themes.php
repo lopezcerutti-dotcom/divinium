@@ -142,7 +142,7 @@
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_bg">Fundo Base da Loja</label>
+                <label for="custom_color_bg">Fundo Base Principal da Loja</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_bg" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
@@ -152,6 +152,34 @@
                            value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
                            oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
                 </div>
+                <!-- Paleta de Tons Rápidos de Fundo -->
+                <div style="margin-top: 8px;">
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Nobres Rápidos:</span>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button type="button" onclick="setQuickBg('#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#FAFAF8')" title="Branco Perolado (#FAFAF8 - Quiet Luxury)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAFAF8; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#F7F7F5')" title="Prata Nobre (#F7F7F5 - Clássico)" style="width: 20px; height: 20px; border-radius: 50%; background: #F7F7F5; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#F8F5F2')" title="Nude & Bege Pérola (#F8F5F2 - Nude)" style="width: 20px; height: 20px; border-radius: 50%; background: #F8F5F2; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#F2F3F4')" title="Cinza Contemporâneo (#F2F3F4)" style="width: 20px; height: 20px; border-radius: 50%; background: #F2F3F4; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#F4EFEA')" title="Areia Acetinada (#F4EFEA)" style="width: 20px; height: 20px; border-radius: 50%; background: #F4EFEA; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#25272A')" title="Grafite Suave (#25272A)" style="width: 20px; height: 20px; border-radius: 50%; background: #25272A; border: 1px solid #555; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#0D0C0B')" title="Noir Noturno (#0D0C0B)" style="width: 20px; height: 20px; border-radius: 50%; background: #0D0C0B; border: 1px solid #333; cursor: pointer;"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_bg_alt">Fundo Secundário (Seções Alternadas)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_bg_alt" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#FAFAF8') ?>" 
+                           onchange="document.getElementById('custom_color_bg_alt').value = this.value; updateCustomPreview();"
+                           style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_bg_alt" name="custom_color_bg_alt" class="form-input" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#FAFAF8') ?>" 
+                           oninput="document.getElementById('picker_bg_alt').value = this.value; updateCustomPreview();">
+                </div>
+                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Usado para contraste em seções secundárias e vitrines.</span>
             </div>
 
             <div class="form-group" style="margin: 0;">
@@ -221,86 +249,218 @@
         </div>
 
         <!-- 2. CORES ESPECÍFICAS POR PÁGINA (OPCIONAL) -->
-        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(202,161,92,0.25); border-radius: 12px; padding: 18px 20px; margin-bottom: 24px;">
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 12px; padding: 18px 20px; margin-bottom: 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleSpecificColorsSection()">
                 <div>
                     <span style="font-size: 0.82rem; font-weight: 700; color: #ded7cf; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
-                        <span>✦ 2. Personalização de Cores Específicas por Página</span>
-                        <span style="font-size: 0.7rem; color: #caa15c; background: rgba(202,161,92,0.18); padding: 2px 8px; border-radius: 6px; font-weight: 600;">Opcional</span>
+                        <span>✦ 2. Personalização de Cores Específicas por Página & Elemento</span>
+                        <span style="font-size: 0.7rem; color: #A7ADB4; background: rgba(167, 173, 180, 0.15); padding: 2px 8px; border-radius: 6px; font-weight: 600;">Opcional</span>
                     </span>
                     <p style="font-size: 0.76rem; color: #8e8880; margin: 4px 0 0;">
-                        Deseja personalizar individualmente o tom de fundo ou dos cards da Boutique, do Produto, do Checkout ou das Políticas? Configure abaixo. Se deixar vazio, cada página herda as cores globais.
+                        Personalize individualmente o tom de fundo ou dos cards da Home, Boutique, Produto, Checkout, Cabeçalho, Rodapé e Políticas. Se deixar vazio, cada elemento herda automaticamente o fundo base global.
                     </p>
                 </div>
-                <span id="arrowSpecificColors" style="color: #caa15c; font-size: 1.1rem; transition: transform 0.2s;">▼</span>
+                <span id="arrowSpecificColors" style="color: #A7ADB4; font-size: 1.1rem; transition: transform 0.2s;">▼</span>
             </div>
 
             <div id="contentSpecificColors" style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px;">
+                <!-- Página Inicial / Home (/) -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🏠 Página Inicial / Home (/)</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo da Página Inicial:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_home_bg" value="<?= !empty($customSettings['home_bg_color']) ? $customSettings['home_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('home_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="home_bg_color" name="home_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['home_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado do global (#F7F7F5)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_home_bg').value = this.value;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Cards da Página Inicial:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_home_card" value="<?= !empty($customSettings['home_card_bg']) ? $customSettings['home_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('home_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="home_card_bg" name="home_card_bg" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['home_card_bg'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#FFFFFF)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_home_card').value = this.value;">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Boutique & Catálogo (/loja) -->
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">🛍️ Boutique & Catálogo (/loja)</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🛍️ Boutique & Catálogo (/loja)</span>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label style="font-size: 0.75rem;">Fundo da Boutique:</label>
-                        <input type="text" name="store_bg_color" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['store_bg_color'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_store_bg" value="<?= !empty($customSettings['store_bg_color']) ? $customSettings['store_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('store_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="store_bg_color" name="store_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['store_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_store_bg').value = this.value;">
+                        </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
                         <label style="font-size: 0.75rem;">Cards de Joias da Boutique:</label>
-                        <input type="text" name="store_card_bg" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['store_card_bg'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#141312)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_store_card" value="<?= !empty($customSettings['store_card_bg']) ? $customSettings['store_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('store_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="store_card_bg" name="store_card_bg" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['store_card_bg'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#FFFFFF)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_store_card').value = this.value;">
+                        </div>
                     </div>
                 </div>
 
                 <!-- Detalhe da Joia (/produto/{slug}) -->
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">💎 Página de Detalhe da Joia</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">💎 Página de Detalhe da Joia</span>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label style="font-size: 0.75rem;">Fundo da Página do Produto:</label>
-                        <input type="text" name="product_bg_color" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['product_bg_color'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_product_bg" value="<?= !empty($customSettings['product_bg_color']) ? $customSettings['product_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('product_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="product_bg_color" name="product_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['product_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_product_bg').value = this.value;">
+                        </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
                         <label style="font-size: 0.75rem;">Card da Galeria & Compra:</label>
-                        <input type="text" name="product_card_bg" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['product_card_bg'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#141312)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_product_card" value="<?= !empty($customSettings['product_card_bg']) ? $customSettings['product_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('product_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="product_card_bg" name="product_card_bg" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['product_card_bg'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#FFFFFF)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_product_card').value = this.value;">
+                        </div>
                     </div>
                 </div>
 
                 <!-- Checkout Seguro (/checkout) -->
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">🔒 Checkout Seguro (/checkout)</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🔒 Checkout Seguro (/checkout)</span>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label style="font-size: 0.75rem;">Fundo do Checkout:</label>
-                        <input type="text" name="checkout_bg_color" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['checkout_bg_color'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_checkout_bg" value="<?= !empty($customSettings['checkout_bg_color']) ? $customSettings['checkout_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('checkout_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="checkout_bg_color" name="checkout_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['checkout_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_checkout_bg').value = this.value;">
+                        </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
                         <label style="font-size: 0.75rem;">Caixas de Pagamento & Resumo:</label>
-                        <input type="text" name="checkout_card_bg" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['checkout_card_bg'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#141312)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_checkout_card" value="<?= !empty($customSettings['checkout_card_bg']) ? $customSettings['checkout_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('checkout_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="checkout_card_bg" name="checkout_card_bg" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['checkout_card_bg'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#FFFFFF)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_checkout_card').value = this.value;">
+                        </div>
                     </div>
                 </div>
 
                 <!-- Páginas Institucionais & Políticas -->
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 10px;">📜 Páginas Institucionais & Políticas</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">📜 Páginas Institucionais & Políticas</span>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label style="font-size: 0.75rem;">Fundo das Páginas de Políticas:</label>
-                        <input type="text" name="institutional_bg_color" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['institutional_bg_color'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#0D0C0B)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_institutional_bg" value="<?= !empty($customSettings['institutional_bg_color']) ? $customSettings['institutional_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('institutional_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="institutional_bg_color" name="institutional_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['institutional_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_institutional_bg').value = this.value;">
+                        </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
                         <label style="font-size: 0.75rem;">Card do Conteúdo Editorial:</label>
-                        <input type="text" name="institutional_card_bg" class="form-input" 
-                               value="<?= \App\Core\View::e($customSettings['institutional_card_bg'] ?? '') ?>" 
-                               placeholder="Padrão: herdado do global (#141312)">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_institutional_card" value="<?= !empty($customSettings['institutional_card_bg']) ? $customSettings['institutional_card_bg'] : '#FFFFFF' ?>" onchange="document.getElementById('institutional_card_bg').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="institutional_card_bg" name="institutional_card_bg" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['institutional_card_bg'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#FFFFFF)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_institutional_card').value = this.value;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cabeçalho & Menu Superior -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">✨ Topo & Menu de Navegação</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo do Cabeçalho / Menu:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_header_bg" value="<?= !empty($customSettings['header_bg_color']) ? $customSettings['header_bg_color'] : '#FFFFFF' ?>" onchange="document.getElementById('header_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="header_bg_color" name="header_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['header_bg_color'] ?? '') ?>" 
+                                   placeholder="Ex: #FFFFFF ou #F7F7F5"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_header_bg').value = this.value;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Cor dos Links & Textos do Topo:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_header_text" value="<?= !empty($customSettings['header_text_color']) ? $customSettings['header_text_color'] : '#25272A' ?>" onchange="document.getElementById('header_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="header_text_color" name="header_text_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['header_text_color'] ?? '') ?>" 
+                                   placeholder="Padrão: herdado (#25272A)"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_header_text').value = this.value;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé Oficial da Loja -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">🏛️ Rodapé Oficial da Loja</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo do Rodapé:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_footer_bg" value="<?= !empty($customSettings['footer_bg_color']) ? $customSettings['footer_bg_color'] : '#1E2023' ?>" onchange="document.getElementById('footer_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="footer_bg_color" name="footer_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['footer_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: #1E2023 ou #F7F7F5"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_footer_bg').value = this.value;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Cor dos Textos do Rodapé:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_footer_text" value="<?= !empty($customSettings['footer_text_color']) ? $customSettings['footer_text_color'] : '#CBD0D6' ?>" onchange="document.getElementById('footer_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="footer_text_color" name="footer_text_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['footer_text_color'] ?? '') ?>" 
+                                   placeholder="Padrão: #CBD0D6"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_footer_text').value = this.value;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Anúncios Topo -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #A7ADB4; text-transform: uppercase; display: block; margin-bottom: 10px;">📢 Barra Superior de Anúncios</span>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem;">Fundo da Barra de Anúncios:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_top_banner_bg" value="<?= !empty($customSettings['top_banner_bg_color']) ? $customSettings['top_banner_bg_color'] : '#1A1C1E' ?>" onchange="document.getElementById('top_banner_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="top_banner_bg_color" name="top_banner_bg_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['top_banner_bg_color'] ?? '') ?>" 
+                                   placeholder="Padrão: #1A1C1E ou prata"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_top_banner_bg').value = this.value;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="font-size: 0.75rem;">Cor do Texto do Anúncio:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="color" id="picker_top_banner_text" value="<?= !empty($customSettings['top_banner_text_color']) ? $customSettings['top_banner_text_color'] : '#FFFFFF' ?>" onchange="document.getElementById('top_banner_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="top_banner_text_color" name="top_banner_text_color" class="form-input" 
+                                   value="<?= \App\Core\View::e($customSettings['top_banner_text_color'] ?? '') ?>" 
+                                   placeholder="Padrão: #FFFFFF"
+                                   oninput="if(this.value.length===7) document.getElementById('picker_top_banner_text').value = this.value;">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1051,6 +1211,14 @@ function toggleSpecificColorsSection() {
     }
 }
 
+function setQuickBg(color) {
+    const picker = document.getElementById('picker_bg');
+    const input = document.getElementById('custom_color_bg');
+    if (picker) picker.value = color;
+    if (input) input.value = color;
+    updateCustomPreview();
+}
+
 function updateCustomPreview() {
     const primary = document.getElementById('custom_color_primary')?.value || '#A7ADB4';
     const accent = document.getElementById('custom_color_accent')?.value || '#737B85';
@@ -1094,6 +1262,10 @@ function resetToThemeDefaults() {
     document.getElementById('picker_accent').value = '#737B85';
     document.getElementById('custom_color_bg').value = '#F7F7F5';
     document.getElementById('picker_bg').value = '#F7F7F5';
+    if (document.getElementById('custom_color_bg_alt')) {
+        document.getElementById('custom_color_bg_alt').value = '#FAFAF8';
+        document.getElementById('picker_bg_alt').value = '#FAFAF8';
+    }
     document.getElementById('custom_color_surface').value = '#FFFFFF';
     document.getElementById('picker_surface').value = '#FFFFFF';
     document.getElementById('custom_color_text').value = '#25272A';
