@@ -57,34 +57,35 @@ use App\Core\View;
 
 <style>
 .institutional-page-container {
-    background-color: var(--page-bg, var(--bg-dark, #0d0c0b));
-    color: var(--text-light, #ded7cf);
+    background-color: var(--page-bg, var(--bg-dark));
+    color: var(--text-primary);
     min-height: 80vh;
     padding-bottom: 80px;
 }
 .institutional-hero {
     padding: 70px 0 35px;
     background: radial-gradient(circle at 50% 20%, rgba(202, 161, 92, 0.08) 0%, rgba(13, 12, 11, 0) 70%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-light);
     text-align: center;
 }
 .breadcrumb-trail {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--text-secondary);
     margin-bottom: 16px;
     letter-spacing: 0.5px;
 }
 .breadcrumb-trail a {
-    color: #caa15c;
+    color: var(--gold-accent);
     text-decoration: none;
     transition: color 0.2s;
 }
 .breadcrumb-trail a:hover {
-    color: #e0c080;
+    color: var(--gold-hover);
 }
 .breadcrumb-trail .sep {
     margin: 0 8px;
-    color: #555;
+    color: var(--text-secondary);
+    opacity: 0.6;
 }
 .institutional-hero-badge {
     display: inline-flex;
@@ -94,23 +95,23 @@ use App\Core\View;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: #caa15c;
+    color: var(--gold-accent);
     background: rgba(202, 161, 92, 0.1);
     padding: 6px 14px;
     border-radius: 20px;
-    border: 1px solid rgba(202, 161, 92, 0.25);
+    border: 1px solid var(--border-light);
     margin-bottom: 14px;
 }
 .institutional-title {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 2.5rem;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 0 0 10px;
     letter-spacing: 0.5px;
 }
 .institutional-subtitle {
     font-size: 1rem;
-    color: #9e978e;
+    color: var(--text-secondary);
     max-width: 680px;
     margin: 0 auto;
     line-height: 1.5;
@@ -119,8 +120,8 @@ use App\Core\View;
     padding-top: 40px;
 }
 .institutional-card {
-    background-color: var(--page-card-bg, var(--surface-dark, #141312));
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: var(--page-card-bg, var(--surface-dark));
+    border: 1px solid var(--border-light);
     border-radius: 16px;
     padding: 45px 50px;
     max-width: 900px;
@@ -131,21 +132,21 @@ use App\Core\View;
     font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
     font-size: 0.95rem;
     line-height: 1.8;
-    color: #c9c2b8;
+    color: var(--text-secondary);
 }
 .editorial-body h3 {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.7rem;
-    color: #caa15c;
+    color: var(--gold-accent);
     margin: 0 0 16px;
     letter-spacing: 0.5px;
 }
 .editorial-body h4 {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
     font-size: 1.3rem;
-    color: #ffffff;
+    color: var(--text-primary);
     margin: 28px 0 10px;
-    border-bottom: 1px solid rgba(202, 161, 92, 0.2);
+    border-bottom: 1px solid var(--border-light);
     padding-bottom: 6px;
 }
 .editorial-body p {
@@ -161,7 +162,7 @@ use App\Core\View;
 .institutional-footer-strip {
     margin-top: 40px;
     padding-top: 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -173,10 +174,10 @@ use App\Core\View;
     align-items: center;
     gap: 8px;
     font-size: 0.78rem;
-    color: #888;
+    color: var(--text-secondary);
 }
 .seal-sparkle {
-    color: #caa15c;
+    color: var(--gold-accent);
 }
 .strip-right {
     display: flex;
@@ -193,21 +194,21 @@ use App\Core\View;
 }
 .btn-back-store {
     background: transparent;
-    color: #ded7cf;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
 }
 .btn-back-store:hover {
-    border-color: #caa15c;
-    color: #caa15c;
+    border-color: var(--gold-accent);
+    color: var(--gold-accent);
 }
 .btn-concierge-help {
-    background: #caa15c;
-    color: #0d0c0b;
-    border: 1px solid #caa15c;
+    background: var(--gold-accent);
+    color: var(--bg-dark, #0d0c0b);
+    border: 1px solid var(--gold-accent);
 }
 .btn-concierge-help:hover {
-    background: #e0c080;
-    border-color: #e0c080;
+    background: var(--gold-hover);
+    border-color: var(--gold-hover);
 }
 @media (max-width: 768px) {
     .institutional-card {

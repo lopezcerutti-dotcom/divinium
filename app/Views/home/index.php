@@ -353,7 +353,7 @@ foreach ($activeCollections as $c) {
                     <?php if (count($activeCollections) > 1 || !empty($col['subtitle']) || !empty($col['promo_text'])): ?>
                     <div class="collection-block-header" style="margin-bottom: 24px;">
                         <?php if (!empty($col['badge'])): ?>
-                            <span class="badge-tag" style="position: static; display: inline-block; margin-bottom: 8px; background: rgba(167,173,180,0.15); color: var(--gold-accent, #A7ADB4); border: 1px solid rgba(167,173,180,0.3);">
+                            <span class="badge-tag" style="position: static; display: inline-block; margin-bottom: 8px; background: rgba(167,173,180,0.15); color: var(--gold-accent); border: 1px solid var(--border-light);">
                                 <?= View::e($col['badge']) ?>
                             </span>
                         <?php endif; ?>
@@ -366,7 +366,7 @@ foreach ($activeCollections as $c) {
                             </p>
                         <?php endif; ?>
                         <?php if (!empty($col['promo_text'])): ?>
-                            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(212,186,136,0.08); border: 1px solid rgba(212,186,136,0.25); color: #b8924b; font-size: 0.8rem; font-weight: 600; padding: 4px 14px; border-radius: 20px;">
+                            <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--card-bg); border: 1px solid var(--border-light); color: var(--gold-accent); font-size: 0.8rem; font-weight: 600; padding: 4px 14px; border-radius: 20px;">
                                 <span>✦</span>
                                 <span><?= View::e($col['promo_text']) ?></span>
                             </div>

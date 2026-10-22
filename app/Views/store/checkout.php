@@ -114,8 +114,8 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                         <!-- Painel Dinâmico de Instruções de Pagamento -->
                         <div id="paymentInstructionsBox" class="payment-instructions-card">
                             <div id="pixInstructions">
-                                <h4 style="color: #caa15c; margin: 0 0 8px; font-size: 1rem;">Pagamento Imediato via Pix com 5% OFF</h4>
-                                <p style="font-size: 0.85rem; color: #b8b1a7; margin: 0 0 14px;">
+                                <h4 style="color: var(--gold-accent); margin: 0 0 8px; font-size: 1rem;">Pagamento Imediato via Pix com 5% OFF</h4>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 14px;">
                                     Após clicar em <strong>"Confirmar Pedido & Gerar Pix"</strong>, você receberá a chave e o QR Code oficial para pagamento instantâneo com envio prioritário.
                                 </p>
                                 <div class="pix-key-preview">
@@ -127,14 +127,14 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 
                             <div id="waInstructions" style="display: none;">
                                 <h4 style="color: #4ade80; margin: 0 0 8px; font-size: 1rem;">Finalização com Concierge Exclusivo</h4>
-                                <p style="font-size: 0.85rem; color: #b8b1a7; margin: 0;">
+                                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
                                     Ao avançar, nossa equipe já receberá a lista exata das joias selecionadas e o endereço para gerar seu link de pagamento com seguro cortesia.
                                 </p>
                             </div>
 
                             <div id="cardInstructions" style="display: none;">
-                                <h4 style="color: #ffffff; margin: 0 0 8px; font-size: 1rem;">Cartão de Crédito com Parcelamento Sem Juros</h4>
-                                <p style="font-size: 0.85rem; color: #b8b1a7; margin: 0;">
+                                <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;">Cartão de Crédito com Parcelamento Sem Juros</h4>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
                                     Você será direcionado para o gateway seguro homologado da Divinium para inserção protegida dos dados do cartão em até 10x.
                                 </p>
                             </div>
@@ -164,8 +164,8 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                             <span id="summarySubtotal">R$ 0,00</span>
                         </div>
                         <div class="summary-row" id="summaryPixRow">
-                            <span style="color: #caa15c;">Desconto Pix (5%):</span>
-                            <span id="summaryPixDiscount" style="color: #caa15c;">- R$ 0,00</span>
+                            <span style="color: var(--gold-accent);">Desconto Pix (5%):</span>
+                            <span id="summaryPixDiscount" style="color: var(--gold-accent);">- R$ 0,00</span>
                         </div>
                         <div class="summary-row">
                             <span>Frete:</span>

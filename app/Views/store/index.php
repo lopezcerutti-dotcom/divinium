@@ -339,9 +339,9 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                 <?php endforeach; ?>
             </div>
             <div class="store-empty-state" id="storeEmptyState" style="display: none; margin-top: 40px; text-align: center; padding: 40px 20px;">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#caa15c" stroke-width="1" style="margin-bottom: 12px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                <h3 style="color: #ffffff; font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 8px;"><?= View::e(Setting::get('store_empty_title', 'Em Breve Novos Lançamentos Desta Coleção')) ?></h3>
-                <p style="color: #9e978e; font-size: 0.9rem; max-width: 520px; margin: 0 auto 20px;"><?= View::e(Setting::get('store_empty_desc', 'Novas joias e gemas exclusivas estão sendo lapidadas no atelier. Selecione outra categoria ou explore todas as peças disponíveis.')) ?></p>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold-accent)" stroke-width="1" style="margin-bottom: 12px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <h3 style="color: var(--text-primary); font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 8px;"><?= View::e(Setting::get('store_empty_title', 'Em Breve Novos Lançamentos Desta Coleção')) ?></h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; max-width: 520px; margin: 0 auto 20px;"><?= View::e(Setting::get('store_empty_desc', 'Novas joias e gemas exclusivas estão sendo lapidadas no atelier. Selecione outra categoria ou explore todas as peças disponíveis.')) ?></p>
                 <button type="button" class="btn-store-back" style="cursor: pointer;" onclick="filterStore('all', document.querySelector('.store-filter-pill'))">
                     Ver Todas as Joias Disponíveis
                 </button>
