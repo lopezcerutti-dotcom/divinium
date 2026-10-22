@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: GESTÃO DE TEMAS & IDENTIDADE VISUAL - ADMIN DIVINIUM
  */
