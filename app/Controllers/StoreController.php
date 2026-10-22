@@ -581,6 +581,11 @@ class StoreController
      */
     public function checkout(): void
     {
+        if (\App\Models\Setting::get('checkout_direct_cart_enabled', '1') !== '1') {
+            header('Location: /loja');
+            exit;
+        }
+
         View::render('store/checkout', [
             'pageTitle' => 'Finalizar Escolhas | Sacola Divinium',
             'pageDescription' => 'Conclua seu pedido com atendimento exclusivo, Pix instantâneo com 5% de desconto ou canais homologados.'
@@ -594,33 +599,38 @@ class StoreController
      */
     public function institutionalPage(array $params = []): void
     {
+        if (\App\Models\Setting::get('institutional_pages_content_enabled', '1') !== '1') {
+            header('Location: /');
+            exit;
+        }
+
         $uri = trim((string)($_SERVER['REQUEST_URI'] ?? ''), '/');
         $parts = explode('?', $uri)[0];
         $slug = $params['slug'] ?? $parts;
 
         $pageMap = [
             'trocas-e-devolucoes' => [
-                'title' => \App\Models\Setting::get('page_returns_title', 'Política de Trocas e Devoluções'),
+                'title' => \App\Models\Setting::get('page_trocas_title', \App\Models\Setting::get('page_returns_title', 'Política de Trocas e Devoluções')),
                 'desc' => 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.',
-                'content_key' => 'policy_returns_content',
+                'content_key' => 'page_trocas_content',
                 'default_content' => "<h3>Compromisso de Excelência e Confiança DIVINIUM</h3><p>Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje realizar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.</p><h4>1. Direito de Arrependimento (CDC Art. 49)</h4><p>Você possui até <strong>7 (sete) dias corridos</strong> a contar da data de recebimento do pedido para solicitar a devolução com reembolso integral ou troca por outra gema mineral.</p><h4>2. Condições da Peça</h4><p>A joia deverá ser devolvida em sua embalagem de veludo original, acompanhada do Certificado de Garantia e sem sinais de uso indevido ou avarias mecânicas.</p><h4>3. Como Solicitar</h4><p>Entre em contato direto com o nosso <strong>Concierge VIP</strong> pelo WhatsApp oficial informado no rodapé ou pelo e-mail <strong>atendimento@divinium.com.br</strong> para receber o código postal de postagem reversa cortesia com seguro total de transporte.</p>"
             ],
             'garantia-e-cuidados' => [
-                'title' => \App\Models\Setting::get('page_warranty_title', 'Certificado de Garantia & Cuidados'),
+                'title' => \App\Models\Setting::get('page_garantia_title', \App\Models\Setting::get('page_warranty_title', 'Certificado de Garantia & Cuidados')),
                 'desc' => 'Conheça o compromisso de autenticidade da prata de lei 925, gemas naturais e as orientações para conservação.',
-                'content_key' => 'policy_warranty_content',
+                'content_key' => 'page_garantia_content',
                 'default_content' => "<h3>Autenticidade & Nobreza dos Materiais</h3><p>A DIVINIUM assegura a autenticidade de cada joia autoral. Nossos aros são confeccionados em Prata de Lei 925 legítima e as mandalas abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.</p><h4>1. Garantia Vitalícia do Metal</h4><p>Garantimos permanentemente a pureza da prata 925 empregada em todas as nossas criações contra defeitos originários de manufatura.</p><h4>2. Cuidados com a sua Joia</h4><ul><li>Evite contato direto com produtos químicos abrasivos, alvejantes, cloro de piscina ou perfumes aplicados diretamente sobre as gemas.</li><li>Para higienização, utilize apenas flanela mágica de polimento ou água morna com sabão neutro, secando com pano macio e suave.</li><li>Armazene suas joias individualmente na embalagem aveludada original DIVINIUM para prevenir atritos entre metais.</li></ul>"
             ],
             'politica-de-privacidade' => [
-                'title' => \App\Models\Setting::get('page_privacy_title', 'Política de Privacidade & Proteção de Dados (LGPD)'),
+                'title' => \App\Models\Setting::get('page_privacidade_title', \App\Models\Setting::get('page_privacy_title', 'Política de Privacidade & Proteção de Dados (LGPD)')),
                 'desc' => 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).',
-                'content_key' => 'policy_privacy_content',
+                'content_key' => 'page_privacidade_content',
                 'default_content' => "<h3>Privacidade e Respeito aos Seus Dados</h3><p>A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD)</strong>.</p><h4>1. Coleta de Informações</h4><p>Coletamos apenas dados estritamente necessários para viabilizar o processamento seguro de seus pedidos, cálculo de frete, emissão de nota fiscal e comunicação sobre suas joias.</p><h4>2. Segurança e Sigilo</h4><p>Não compartilhamos, comercializamos ou alugamos dados cadastrais a terceiros. Todo o tráfego é criptografado por protocolo SSL/TLS de 256 bits.</p><h4>3. Seus Direitos</h4><p>Você pode a qualquer momento consultar, retificar ou solicitar a eliminação dos seus dados entrando em contato com nosso Encarregado de Proteção de Dados (DPO) através de dpo@divinium.com.br.</p>"
             ],
             'termos-de-uso' => [
-                'title' => \App\Models\Setting::get('page_terms_title', 'Termos de Uso & Condições Gerais'),
+                'title' => \App\Models\Setting::get('page_termos_title', \App\Models\Setting::get('page_terms_title', 'Termos de Uso & Condições Gerais')),
                 'desc' => 'Termos de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.',
-                'content_key' => 'terms_of_use_content',
+                'content_key' => 'page_termos_content',
                 'default_content' => "<h3>Termos de Uso do Site DIVINIUM</h3><p>Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.</p><h4>1. Propriedade Intelectual</h4><p>Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Lei de Propriedade Industrial (Lei nº 9.279/1996).</p><h4>2. Exatidão das Informações</h4><p>As fotografias reproduzem fielmente os modelos. Por se tratarem de gemas minerais autênticas extraídas da natureza, pequenas nuances de cor e grafismos naturais nas conchas e pedras comprovam a singularidade e exclusividade de cada joia.</p>"
             ],
             'guia-de-medidas' => [

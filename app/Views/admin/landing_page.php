@@ -2650,108 +2650,130 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?>">
                 </div>
 
-                <!-- Configurações de Checkout Direto & Pix -->
+                <!-- ============================================================== -->
+                <!-- BLOCO: CHECKOUT DIRETO, PAGAMENTO PIX & SACOLA DE COMPRAS -->
+                <!-- ============================================================== -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        ⚡ Checkout Direto, Pagamento Pix & Sacola de Compras (/checkout)
-                    </h4>
-                    <span class="field-hint">Defina a chave Pix oficial da joalheria e personalize todos os textos da sacola e tela de pagamento.</span>
+                    <div class="field-label-row" style="background: rgba(212,186,136,0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212,186,136,0.2);">
+                        <div>
+                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                <span>⚡</span> Checkout Direto, Pagamento Pix & Sacola de Compras (/checkout)
+                            </h4>
+                            <span class="field-hint" style="margin: 0;">Ative ou desative toda a sacola de compras, gaveta lateral, checkout direto e pagamentos via Pix.</span>
+                        </div>
+                        <?= $renderToggle('checkout_direct_cart_enabled') ?>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="payment_pix_key">Chave Pix Oficial (E-mail, CNPJ, Telefone ou Aleatória)</label>
-                    <input type="text" id="payment_pix_key" name="payment_pix_key" class="form-input"
-                           value="<?= View::e(Setting::get('payment_pix_key', 'contato@divinium.com.br')) ?>"
-                           placeholder="ex: contato@divinium.com.br ou CNPJ">
+                <div id="checkoutConfigFields" class="sub-section-fields-container <?= Setting::get('checkout_direct_cart_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="transition: all 0.3s ease; <?= Setting::get('checkout_direct_cart_enabled', '1') !== '1' ? 'opacity: 0.35; pointer-events: none;' : '' ?>">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="payment_pix_key">Chave Pix Oficial (E-mail, CNPJ, Telefone ou Aleatória)</label>
+                            <input type="text" id="payment_pix_key" name="payment_pix_key" class="form-input"
+                                   value="<?= View::e(Setting::get('payment_pix_key', 'contato@divinium.com.br')) ?>"
+                                   placeholder="ex: contato@divinium.com.br ou CNPJ">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payment_pix_name">Nome do Titular / Beneficiário do Pix</label>
+                            <input type="text" id="payment_pix_name" name="payment_pix_name" class="form-input"
+                                   value="<?= View::e(Setting::get('payment_pix_name', 'DIVINIUM JOIAS AUTORAIS')) ?>"
+                                   placeholder="DIVINIUM JOIAS AUTORAIS">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cart_drawer_title">Título da Gaveta da Sacola</label>
+                            <input type="text" id="cart_drawer_title" name="cart_drawer_title" class="form-input"
+                                   value="<?= View::e(Setting::get('cart_drawer_title', 'Sua Sacola de Escolhas')) ?>"
+                                   placeholder="Sua Sacola de Escolhas">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cart_checkout_btn">Texto do Botão de Finalizar Compra</label>
+                            <input type="text" id="cart_checkout_btn" name="cart_checkout_btn" class="form-input"
+                                   value="<?= View::e(Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?>"
+                                   placeholder="Finalizar Compra">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cart_drawer_empty">Mensagem de Sacola Vazia</label>
+                            <input type="text" id="cart_drawer_empty" name="cart_drawer_empty" class="form-input"
+                                   value="<?= View::e(Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cart_drawer_discover">Texto do Botão 'Descobrir Coleção' (Sacola Vazia)</label>
+                            <input type="text" id="cart_drawer_discover" name="cart_drawer_discover" class="form-input"
+                                   value="<?= View::e(Setting::get('cart_drawer_discover', 'Descobrir Coleção')) ?>">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="cart_security_badge">Texto de Segurança do Rodapé da Sacola</label>
+                            <input type="text" id="cart_security_badge" name="cart_security_badge" class="form-input"
+                                   value="<?= View::e(Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?>">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="payment_pix_name">Nome do Titular / Beneficiário do Pix</label>
-                    <input type="text" id="payment_pix_name" name="payment_pix_name" class="form-input"
-                           value="<?= View::e(Setting::get('payment_pix_name', 'DIVINIUM JOIAS AUTORAIS')) ?>"
-                           placeholder="DIVINIUM JOIAS AUTORAIS">
-                </div>
-
-                <div class="form-group">
-                    <label for="cart_drawer_title">Título da Gaveta da Sacola</label>
-                    <input type="text" id="cart_drawer_title" name="cart_drawer_title" class="form-input"
-                           value="<?= View::e(Setting::get('cart_drawer_title', 'Sua Sacola de Escolhas')) ?>"
-                           placeholder="Sua Sacola de Escolhas">
-                </div>
-
-                <div class="form-group">
-                    <label for="cart_checkout_btn">Texto do Botão de Finalizar Compra</label>
-                    <input type="text" id="cart_checkout_btn" name="cart_checkout_btn" class="form-input"
-                           value="<?= View::e(Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?>"
-                           placeholder="Finalizar Compra">
-                </div>
-
-                <div class="form-group">
-                    <label for="cart_drawer_empty">Mensagem de Sacola Vazia</label>
-                    <input type="text" id="cart_drawer_empty" name="cart_drawer_empty" class="form-input"
-                           value="<?= View::e(Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="cart_drawer_discover">Texto do Botão 'Descobrir Coleção' (Sacola Vazia)</label>
-                    <input type="text" id="cart_drawer_discover" name="cart_drawer_discover" class="form-input"
-                           value="<?= View::e(Setting::get('cart_drawer_discover', 'Descobrir Coleção')) ?>">
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="cart_security_badge">Texto de Segurança do Rodapé da Sacola</label>
-                    <input type="text" id="cart_security_badge" name="cart_security_badge" class="form-input"
-                           value="<?= View::e(Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?>">
-                </div>
+                <!-- ============================================================== -->
+                <!-- BLOCO: CONTEÚDO DAS PÁGINAS INSTITUCIONAIS OFICIAIS -->
+                <!-- ============================================================== -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        📄 Conteúdo das Páginas Institucionais Oficiais
-                    </h4>
-                    <span class="field-hint">Personalize o texto de cada página clicando nos botões para visualizar online.</span>
+                    <div class="field-label-row" style="background: rgba(212,186,136,0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212,186,136,0.2);">
+                        <div>
+                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                <span>📄</span> Conteúdo das Páginas Institucionais Oficiais
+                            </h4>
+                            <span class="field-hint" style="margin: 0;">Ative ou desative o conteúdo editorial e páginas oficiais (Trocas, Garantia, LGPD e Termos de Uso).</span>
+                        </div>
+                        <?= $renderToggle('institutional_pages_content_enabled') ?>
+                    </div>
                 </div>
 
-                <!-- Página 1: Trocas e Devoluções -->
-                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="color: #ffffff;">1. Trocas e Devoluções (CDC 7 Dias)</strong>
-                        <a href="/trocas-e-devolucoes" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                <div id="institutionalPagesFields" class="sub-section-fields-container <?= Setting::get('institutional_pages_content_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="transition: all 0.3s ease; <?= Setting::get('institutional_pages_content_enabled', '1') !== '1' ? 'opacity: 0.35; pointer-events: none;' : '' ?>">
+                    <!-- Página 1: Trocas e Devoluções -->
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="color: #ffffff;">1. Trocas e Devoluções (CDC 7 Dias)</strong>
+                            <a href="/trocas-e-devolucoes" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                        </div>
+                        <input type="text" name="page_trocas_title" class="form-input" style="margin-bottom: 8px;"
+                               value="<?= View::e(Setting::get('page_trocas_title', 'Política de Trocas e Devoluções')) ?>" placeholder="Título da Página">
+                        <textarea name="page_trocas_content" class="form-textarea" rows="4" placeholder="Conteúdo da página de trocas e devoluções..."><?= View::e(Setting::get('page_trocas_content', 'Na DIVINIUM, respeitamos integralmente o Código de Defesa do Consumidor (Lei nº 8.078/1990). Você possui até 7 (sete) dias corridos a partir da data de entrega para solicitar a troca ou devolução da sua joia sem qualquer custo adicional.')) ?></textarea>
                     </div>
-                    <input type="text" name="page_trocas_title" class="form-input" style="margin-bottom: 8px;"
-                           value="<?= View::e(Setting::get('page_trocas_title', 'Política de Trocas e Devoluções')) ?>" placeholder="Título da Página">
-                    <textarea name="page_trocas_content" class="form-textarea" rows="4" placeholder="Conteúdo da página de trocas e devoluções..."><?= View::e(Setting::get('page_trocas_content', 'Na DIVINIUM, respeitamos integralmente o Código de Defesa do Consumidor (Lei nº 8.078/1990). Você possui até 7 (sete) dias corridos a partir da data de entrega para solicitar a troca ou devolução da sua joia sem qualquer custo adicional.')) ?></textarea>
-                </div>
 
-                <!-- Página 2: Garantia e Cuidados -->
-                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="color: #ffffff;">2. Garantia e Cuidados com a Joia</strong>
-                        <a href="/garantia-e-cuidados" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    <!-- Página 2: Garantia e Cuidados -->
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="color: #ffffff;">2. Garantia e Cuidados com a Joia</strong>
+                            <a href="/garantia-e-cuidados" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                        </div>
+                        <input type="text" name="page_garantia_title" class="form-input" style="margin-bottom: 8px;"
+                               value="<?= View::e(Setting::get('page_garantia_title', 'Certificado de Garantia & Cuidados')) ?>" placeholder="Título da Página">
+                        <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia Vitalícia quanto ao teor da Prata de Lei 925 e autenticidade das pedras e cristais nobres.')) ?></textarea>
                     </div>
-                    <input type="text" name="page_garantia_title" class="form-input" style="margin-bottom: 8px;"
-                           value="<?= View::e(Setting::get('page_garantia_title', 'Certificado de Garantia & Cuidados')) ?>" placeholder="Título da Página">
-                    <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia Vitalícia quanto ao teor da Prata de Lei 925 e autenticidade das pedras e cristais nobres.')) ?></textarea>
-                </div>
 
-                <!-- Página 3: LGPD & Privacidade -->
-                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="color: #ffffff;">3. Política de Privacidade (LGPD)</strong>
-                        <a href="/politica-de-privacidade" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    <!-- Página 3: LGPD & Privacidade -->
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="color: #ffffff;">3. Política de Privacidade (LGPD)</strong>
+                            <a href="/politica-de-privacidade" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                        </div>
+                        <input type="text" name="page_privacidade_title" class="form-input" style="margin-bottom: 8px;"
+                               value="<?= View::e(Setting::get('page_privacidade_title', 'Política de Privacidade e Proteção de Dados')) ?>" placeholder="Título da Página">
+                        <textarea name="page_privacidade_content" class="form-textarea" rows="4" placeholder="Conteúdo da política de privacidade..."><?= View::e(Setting::get('page_privacidade_content', 'A sua privacidade é sagrada para a DIVINIUM. Em conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações VIP autorizadas.')) ?></textarea>
                     </div>
-                    <input type="text" name="page_privacidade_title" class="form-input" style="margin-bottom: 8px;"
-                           value="<?= View::e(Setting::get('page_privacidade_title', 'Política de Privacidade e Proteção de Dados')) ?>" placeholder="Título da Página">
-                    <textarea name="page_privacidade_content" class="form-textarea" rows="4" placeholder="Conteúdo da política de privacidade..."><?= View::e(Setting::get('page_privacidade_content', 'A sua privacidade é sagrada para a DIVINIUM. Em conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações VIP autorizadas.')) ?></textarea>
-                </div>
 
-                <!-- Página 4: Termos de Uso -->
-                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <strong style="color: #ffffff;">4. Termos de Uso do Site</strong>
-                        <a href="/termos-de-uso" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                    <!-- Página 4: Termos de Uso -->
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="color: #ffffff;">4. Termos de Uso do Site</strong>
+                            <a href="/termos-de-uso" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                        </div>
+                        <input type="text" name="page_termos_title" class="form-input" style="margin-bottom: 8px;"
+                               value="<?= View::e(Setting::get('page_termos_title', 'Termos de Uso')) ?>" placeholder="Título da Página">
+                        <textarea name="page_termos_content" class="form-textarea" rows="4" placeholder="Conteúdo dos termos de uso..."><?= View::e(Setting::get('page_termos_content', 'Ao navegar e efetuar compras no ambiente digital DIVINIUM, você concorda com nossos termos operacionais de compra, prazos de confecção e modalidades de entrega.')) ?></textarea>
                     </div>
-                    <input type="text" name="page_termos_title" class="form-input" style="margin-bottom: 8px;"
-                           value="<?= View::e(Setting::get('page_termos_title', 'Termos de Uso')) ?>" placeholder="Título da Página">
-                    <textarea name="page_termos_content" class="form-textarea" rows="4" placeholder="Conteúdo dos termos de uso..."><?= View::e(Setting::get('page_termos_content', 'Ao navegar e efetuar compras no ambiente digital DIVINIUM, você concorda com nossos termos operacionais de compra, prazos de confecção e modalidades de entrega.')) ?></textarea>
                 </div>
             </div>
         </div>
@@ -3115,6 +3137,36 @@ function handleToggleSwitch(chk) {
         }
         if (textSpan) textSpan.textContent = 'Oculto';
         if (formGroup) formGroup.classList.add('is-dimmed');
+    }
+
+    if (chk.name === 'checkout_direct_cart_enabled') {
+        const container = document.getElementById('checkoutConfigFields');
+        if (container) {
+            if (chk.checked) {
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+                container.classList.remove('is-dimmed');
+            } else {
+                container.style.opacity = '0.35';
+                container.style.pointerEvents = 'none';
+                container.classList.add('is-dimmed');
+            }
+        }
+    }
+
+    if (chk.name === 'institutional_pages_content_enabled') {
+        const container = document.getElementById('institutionalPagesFields');
+        if (container) {
+            if (chk.checked) {
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+                container.classList.remove('is-dimmed');
+            } else {
+                container.style.opacity = '0.35';
+                container.style.pointerEvents = 'none';
+                container.classList.add('is-dimmed');
+            }
+        }
     }
 
     if (chk.name && chk.name.startsWith('about_')) {

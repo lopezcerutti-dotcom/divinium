@@ -451,10 +451,12 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 </a>
 
+                <?php if (\App\Models\Setting::get('checkout_direct_cart_enabled', '1') === '1'): ?>
                 <button class="action-btn cart-trigger" id="cartTrigger" aria-label="Sacola de Compras">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span class="cart-counter" id="cartCount">0</span>
                 </button>
+                <?php endif; ?>
 
                 <button type="button" class="login-pill-btn" id="loginModalTrigger" aria-label="Acessar Painel Administrativo"><?= \App\Core\View::e(\App\Models\Setting::get('header_login_label', 'Entrar')) ?></button>
             </div>
@@ -617,6 +619,7 @@
     <?php endif; ?>
 
     <!-- 3. GAVETA LATERAL DO CARRINHO (CART DRAWER) -->
+    <?php if (\App\Models\Setting::get('checkout_direct_cart_enabled', '1') === '1'): ?>
     <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
     <aside class="cart-drawer" id="cartDrawer" aria-label="Sacola de compras">
         <div class="cart-drawer-header">
@@ -641,6 +644,7 @@
             <a href="/checkout" class="btn-checkout-primary"><?= \App\Core\View::e(\App\Models\Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?></a>
         </div>
     </aside>
+    <?php endif; ?>
 
     <!-- 4. CONTEÚDO PRINCIPAL DA VIEW -->
     <main class="page-content" id="mainContent">
@@ -681,6 +685,7 @@
                 </ul>
             </div>
 
+            <?php if (\App\Models\Setting::get('institutional_pages_content_enabled', '1') === '1'): ?>
             <div class="footer-col">
                 <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col3_title', 'Segurança & Privacidade')) ?></h4>
                 <ul>
@@ -690,6 +695,7 @@
                     <li><span><?= \App\Core\View::e(\App\Models\Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?></span></li>
                 </ul>
             </div>
+            <?php endif; ?>
         </div>
 
         <div class="container footer-middle">
