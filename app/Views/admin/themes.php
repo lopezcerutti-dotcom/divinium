@@ -5,13 +5,13 @@
 ?>
 
 <!-- BANNER DE APRESENTAÇÃO DE TEMAS -->
-<div class="admin-card" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); margin-bottom: 28px; padding: 26px 30px;">
+<div class="admin-card" style="background: linear-gradient(135deg, rgba(167, 173, 180, 0.14) 0%, rgba(20, 22, 26, 0.95) 100%); border: 1px solid rgba(167, 173, 180, 0.35); margin-bottom: 28px; padding: 26px 30px;">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
         <div>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                <span style="color: #caa15c; font-size: 1.3rem;">✦</span>
-                <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: #ffffff; margin: 0; letter-spacing: 0.5px;">Gestão de Temas & Paletas Quiet Luxury</h2>
-                <span style="background: rgba(202, 161, 92, 0.2); color: #caa15c; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">4 Paletas Nobres</span>
+                <span style="color: #cbd0d6; font-size: 1.3rem;">✦</span>
+                <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: #ffffff; margin: 0; letter-spacing: 0.5px;">Gestão de Temas & Identidade Visual Nobre</h2>
+                <span style="background: rgba(203, 208, 214, 0.15); color: #cbd0d6; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">Prata, Platina, Nude Pérola & Grafite</span>
             </div>
             <p style="font-size: 0.88rem; color: #b8b1a7; margin: 0; max-width: 720px; line-height: 1.5;">
                 Defina o tema visual padrão que será carregado automaticamente para todos os visitantes da loja e landing page. Você também pode testar cada tema no seu navegador em tempo real.
@@ -66,25 +66,26 @@
             <!-- AMOSTRA DE PALETA DE CORES -->
             <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
                 <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">Paleta Harmônica:</div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div title="Cor Primária: <?= $theme['primary_color'] ?>" style="width: 32px; height: 32px; border-radius: 50%; background: <?= $theme['primary_color'] ?>; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 10px <?= $theme['primary_color'] ?>55;"></div>
-                    <div title="Cor de Destaque: <?= $theme['accent_color'] ?>" style="width: 32px; height: 32px; border-radius: 50%; background: <?= $theme['accent_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div title="Fundo Base: <?= $theme['bg_color'] ?>" style="width: 32px; height: 32px; border-radius: 50%; background: <?= $theme['bg_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div title="Texto Nobre: <?= $theme['text_color'] ?>" style="width: 32px; height: 32px; border-radius: 50%; background: <?= $theme['text_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div style="margin-left: auto; font-size: 0.72rem; color: #bbb; font-family: monospace;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <div title="Paleta Principal: <?= $theme['primary_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['primary_color'] ?>; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 10px <?= $theme['primary_color'] ?>55;"></div>
+                    <div title="Realces / Acentos: <?= $theme['accent_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['accent_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
+                    <div title="Fundo do Tema: <?= $theme['bg_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['bg_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
+                    <div title="Superfícies & Cards: <?= $theme['surface_color'] ?? '#FFFFFF' ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['surface_color'] ?? '#FFFFFF' ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
+                    <div title="Texto: <?= $theme['text_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['text_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
+                    <div style="margin-left: auto; font-size: 0.72rem; color: #cbd5e1; font-family: monospace; font-weight: 600;">
                         <?= $theme['primary_color'] ?>
                     </div>
                 </div>
             </div>
 
             <!-- MINI PREVIEW VISUAL -->
-            <div style="background: <?= $theme['bg_color'] ?>; border: 1px solid <?= $theme['primary_color'] ?>44; border-radius: 10px; padding: 14px; margin-bottom: 22px; position: relative; overflow: hidden;">
-                <div style="font-size: 0.68rem; text-transform: uppercase; color: <?= $theme['primary_color'] ?>; font-weight: 700; margin-bottom: 4px;">Exemplo de Botão & Tipografia:</div>
+            <div style="background: <?= $theme['bg_color'] ?>; border: 1px solid <?= $theme['accent_color'] ?>55; border-radius: 10px; padding: 14px; margin-bottom: 22px; position: relative; overflow: hidden; box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);">
+                <div style="font-size: 0.68rem; text-transform: uppercase; color: <?= $theme['accent_color'] ?>; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px;">Exemplo de Botão & Tipografia:</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-serif); font-size: 1.05rem; background: <?= $theme['gradient'] ?>; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+                    <span style="font-family: var(--font-serif); font-size: 1.15rem; color: <?= $theme['text_color'] ?>; font-weight: 700; letter-spacing: 0.5px;">
                         Divinium Joias
                     </span>
-                    <span style="font-size: 0.72rem; font-weight: 700; padding: 6px 12px; border-radius: 20px; background: <?= $theme['primary_color'] ?>; color: #000; box-shadow: 0 2px 8px <?= $theme['primary_color'] ?>66;">
+                    <span style="font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; background: <?= $theme['primary_color'] ?>; color: <?= $theme['text_color'] ?>; border: 1px solid <?= $theme['accent_color'] ?>; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                         Comprar Joia
                     </span>
                 </div>
