@@ -51,6 +51,21 @@
             'theme-rose' => 'theme-contemporary-graphite'
         ];
         $canonicalTheme = $themeClassMap[$rawServerTheme] ?? $rawServerTheme;
+
+        // Identificação da Página Atual para Aplicação Estrita de Cores Específicas
+        $reqUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $bodyPageClass = 'page-home';
+        if ($reqUri === '/' || $reqUri === '') {
+            $bodyPageClass = 'page-home';
+        } elseif (str_starts_with($reqUri, '/loja')) {
+            $bodyPageClass = 'page-store';
+        } elseif (str_starts_with($reqUri, '/produto')) {
+            $bodyPageClass = 'page-product';
+        } elseif (str_starts_with($reqUri, '/checkout')) {
+            $bodyPageClass = 'page-checkout';
+        } elseif (str_starts_with($reqUri, '/pagina') || str_starts_with($reqUri, '/privacidade') || str_starts_with($reqUri, '/termos')) {
+            $bodyPageClass = 'page-institutional';
+        }
     ?>
     <script>
         (function() {
@@ -578,7 +593,7 @@
         <?php endif; ?>
     </style>
 </head>
-<body class="luxury-theme <?= \App\Core\View::e($canonicalTheme) ?> <?= $rawServerTheme !== $canonicalTheme ? \App\Core\View::e($rawServerTheme) : '' ?>">
+<body class="luxury-theme <?= \App\Core\View::e($canonicalTheme) ?> <?= \App\Core\View::e($bodyPageClass) ?> <?= $rawServerTheme !== $canonicalTheme ? \App\Core\View::e($rawServerTheme) : '' ?>">
     <?= \App\Models\Setting::get('custom_body_scripts', '') ?>
 
     <!-- 1. BARRA SUPERIOR DE ANÚNCIO (TOP BANNER) -->
