@@ -609,19 +609,19 @@
         </div>
 
         <!-- PRÉ-VISUALIZADOR DA SUA PALETA AO VIVO -->
-        <div id="customPalettePreviewBox" style="margin-top: 20px; background: #0d0c0b; border: 1px solid #caa15c; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div id="customPalettePreviewBox" style="margin-top: 20px; background: #FFFFFF; border: 1px solid rgba(167, 173, 180, 0.4); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div>
-                <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.4rem; color: #caa15c; display: block; font-weight: 700;">
+                <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.4rem; color: #25272A; display: block; font-weight: 700;">
                     Divinium Joias Contemporâneas
                 </span>
-                <span id="previewSampleText" style="font-size: 0.85rem; color: #f4efea; display: block; margin-top: 2px;">
+                <span id="previewSampleText" style="font-size: 0.85rem; color: #25272A; display: block; margin-top: 2px;">
                     Joias autorais em prata de lei 925 e gemas minerais raras.
                 </span>
-                <span id="previewSampleMuted" style="font-size: 0.76rem; color: #9e978e;">
+                <span id="previewSampleMuted" style="font-size: 0.76rem; color: #737B85;">
                     Prévia em tempo real das cores e tipografia selecionadas acima.
                 </span>
             </div>
-            <button type="button" id="previewBtnSample" class="btn-admin-gold" style="background: #caa15c; color: #000; border-radius: 8px;">
+            <button type="button" id="previewBtnSample" style="background: #A7ADB4; color: #14161A; border: 1px solid #A7ADB4; padding: 9px 18px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
                 <span>Exemplo de Botão</span>
             </button>
         </div>
