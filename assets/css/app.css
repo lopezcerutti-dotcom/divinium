@@ -4,31 +4,35 @@
    ============================================================================== */
 
 :root {
-    --bg-light: #FAF8F5;
+    --bg-light: #F7F7F5;
     --bg-white: #FFFFFF;
-    --bg-dark: #121110;
-    --bg-dark-card: rgba(28, 26, 24, 0.75);
+    --bg-dark: #1E2023;
+    --bg-dark-card: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --surface-dark: #FFFFFF;
     
-    --text-primary: #181716;
-    --text-secondary: #6B665F;
-    --text-muted: #9E9991;
-    --text-light: #F4EFEB;
-    --text-light-muted: #B8B2A9;
+    --text-primary: #25272A;
+    --text-secondary: #737B85;
+    --text-muted: #8A929B;
+    --text-light: #25272A;
+    --text-light-muted: #737B85;
 
-    --gold-accent: #D4BA88;
-    --gold-hover: #E2CCA0;
-    --bronze-dark: #3D2D20;
-    --bronze-warm: #5A4331;
+    --gold-accent: #A7ADB4;
+    --gold-hover: #737B85;
+    --silver-accent: #A7ADB4;
+    --silver-hover: #737B85;
+    --bronze-dark: #25272A;
+    --bronze-warm: #737B85;
     
-    --border-light: rgba(24, 23, 22, 0.08);
-    --border-dark: rgba(255, 255, 255, 0.12);
+    --border-light: rgba(37, 39, 42, 0.08);
+    --border-dark: rgba(37, 39, 42, 0.12);
     
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     
     --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
-    --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 *, *::before, *::after {
