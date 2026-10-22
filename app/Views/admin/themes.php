@@ -1291,6 +1291,54 @@ function setQuickBg(color) {
     updateCustomPreview();
 }
 
+function setQuickSurface(color) {
+    const picker = document.getElementById('picker_surface');
+    const input = document.getElementById('custom_color_surface');
+    if (picker) picker.value = color;
+    if (input) input.value = color;
+    updateCustomPreview();
+}
+
+function setQuickPrimary(color) {
+    const picker = document.getElementById('picker_primary');
+    const input = document.getElementById('custom_color_primary');
+    if (picker) picker.value = color;
+    if (input) input.value = color;
+    updateCustomPreview();
+}
+
+function clearSpecificColor(textId, pickerId) {
+    const input = document.getElementById(textId);
+    const picker = document.getElementById(pickerId);
+    if (input) input.value = '';
+    if (picker) {
+        if (textId.includes('_card')) {
+            const surfaceGlobal = document.getElementById('custom_color_surface')?.value || '#FFFFFF';
+            picker.value = surfaceGlobal;
+        } else if (textId.includes('_text')) {
+            if (textId.includes('header')) {
+                picker.value = document.getElementById('custom_color_text')?.value || '#25272A';
+            } else if (textId.includes('footer')) {
+                picker.value = '#CBD0D6';
+            } else {
+                picker.value = '#FFFFFF';
+            }
+        } else {
+            const bgGlobal = document.getElementById('custom_color_bg')?.value || '#F7F7F5';
+            picker.value = bgGlobal;
+        }
+    }
+}
+
+function getContrastColor(hex) {
+    if (!hex || hex.length < 7) return '#14161A';
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 140 ? '#121110' : '#FFFFFF';
+}
+
 function updateCustomPreview() {
     const primary = document.getElementById('custom_color_primary')?.value || '#A7ADB4';
     const accent = document.getElementById('custom_color_accent')?.value || '#737B85';
@@ -1303,7 +1351,7 @@ function updateCustomPreview() {
 
     const box = document.getElementById('customPalettePreviewBox');
     if (box) {
-        box.style.backgroundColor = bg;
+        box.style.backgroundColor = surface;
         box.style.borderColor = primary;
     }
     const title = document.getElementById('previewSerifTitle');
@@ -1322,12 +1370,16 @@ function updateCustomPreview() {
     const btn = document.getElementById('previewBtnSample');
     if (btn) {
         btn.style.backgroundColor = primary;
-        btn.style.color = text;
+        btn.style.color = getContrastColor(primary);
+        btn.style.borderColor = accent;
         btn.style.borderRadius = radius;
     }
 }
 
 function resetToThemeDefaults() {
+    if (!confirm('Deseja realmente restaurar os padrões visuais originais (Prata 925 & Platina)? Quaisquer alterações não salvas serão substituídas.')) {
+        return;
+    }
     document.getElementById('custom_color_primary').value = '#A7ADB4';
     document.getElementById('picker_primary').value = '#A7ADB4';
     document.getElementById('custom_color_accent').value = '#737B85';
@@ -1346,6 +1398,29 @@ function resetToThemeDefaults() {
     document.getElementById('picker_text_muted').value = '#737B85';
     document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
     document.getElementById('custom_border_radius').value = '8px';
+
+    const specificFields = [
+        ['home_bg_color', 'picker_home_bg'],
+        ['home_card_bg', 'picker_home_card'],
+        ['store_bg_color', 'picker_store_bg'],
+        ['store_card_bg', 'picker_store_card'],
+        ['product_bg_color', 'picker_product_bg'],
+        ['product_card_bg', 'picker_product_card'],
+        ['checkout_bg_color', 'picker_checkout_bg'],
+        ['checkout_card_bg', 'picker_checkout_card'],
+        ['institutional_bg_color', 'picker_institutional_bg'],
+        ['institutional_card_bg', 'picker_institutional_card'],
+        ['header_bg_color', 'picker_header_bg'],
+        ['header_text_color', 'picker_header_text'],
+        ['footer_bg_color', 'picker_footer_bg'],
+        ['footer_text_color', 'picker_footer_text'],
+        ['top_banner_bg_color', 'picker_top_banner_bg'],
+        ['top_banner_text_color', 'picker_top_banner_text']
+    ];
+    specificFields.forEach(([textId, pickerId]) => {
+        clearSpecificColor(textId, pickerId);
+    });
+
     updateCustomPreview();
 }
 
