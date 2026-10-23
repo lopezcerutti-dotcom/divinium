@@ -766,7 +766,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <!-- CARD INFORMATIVO COM ATALHO PARA CORES GLOBAIS -->
-            <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
+            <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(167, 173, 180, 0.12) 0%, rgba(37, 37, 37, 0.95) 100%); border: 1px solid rgba(167, 173, 180, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                     <div>
                         <strong style="color: #CBD0D6; font-size: 0.92rem; display: block; margin-bottom: 4px;">✦ Estúdio Global de Cores & Fundo de Todas as Páginas</strong>
