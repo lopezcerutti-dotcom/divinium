@@ -11,7 +11,7 @@
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
                 <span style="color: #cbd0d6; font-size: 1.3rem;">✦</span>
                 <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: #ffffff; margin: 0; letter-spacing: 0.5px;">Gestão de Temas & Identidade Visual Nobre</h2>
-                <span style="background: rgba(203, 208, 214, 0.15); color: #cbd0d6; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">Prata, Platina, Nude Pérola & Grafite</span>
+                <span style="background: rgba(167, 173, 180, 0.15); color: #cbd0d6; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">Branco, Preto, Prata & Grafite</span>
             </div>
             <p style="font-size: 0.88rem; color: #b8b1a7; margin: 0; max-width: 720px; line-height: 1.5;">
                 Defina o tema visual padrão que será carregado automaticamente para todos os visitantes da loja e landing page. Você também pode testar cada tema no seu navegador em tempo real.
@@ -29,7 +29,7 @@
 <div class="themes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 35px;">
     <?php foreach ($themes as $theme): ?>
         <?php $isActive = $theme['is_default']; ?>
-        <div class="theme-card <?= $isActive ? 'active-theme' : '' ?>" id="card-<?= $theme['id'] ?>" style="background: #14161a; border: 1px solid <?= $isActive ? $theme['primary_color'] : 'rgba(255, 255, 255, 0.1)' ?>; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; box-shadow: <?= $isActive ? '0 12px 30px rgba(0,0,0,0.5), 0 0 25px ' . $theme['primary_color'] . '33' : '0 8px 20px rgba(0,0,0,0.3)' ?>;">
+        <div class="theme-card <?= $isActive ? 'active-theme' : '' ?>" id="card-<?= $theme['id'] ?>" style="background: #1e1e1e; border: 1px solid <?= $isActive ? $theme['primary_color'] : 'rgba(255, 255, 255, 0.1)' ?>; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; box-shadow: <?= $isActive ? '0 12px 30px rgba(0,0,0,0.5), 0 0 25px ' . $theme['primary_color'] . '33' : '0 8px 20px rgba(0,0,0,0.3)' ?>;">
             
             <!-- BADGE SUPERIOR -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -38,13 +38,13 @@
                 </span>
                 
                 <?php if ($isActive): ?>
-                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(74, 222, 128, 0.3);">
-                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80;"></span>
+                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #FFFFFF; background: rgba(167, 173, 180, 0.2); padding: 4px 10px; border-radius: 8px; border: 1px solid #A7ADB4;">
+                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #A7ADB4; box-shadow: 0 0 8px #A7ADB4;"></span>
                         Tema Padrão do Site
                     </span>
                 <?php else: ?>
-                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: none; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(74, 222, 128, 0.3);">
-                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80;"></span>
+                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: none; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #FFFFFF; background: rgba(167, 173, 180, 0.2); padding: 4px 10px; border-radius: 8px; border: 1px solid #A7ADB4;">
+                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #A7ADB4; box-shadow: 0 0 8px #A7ADB4;"></span>
                         Tema Padrão do Site
                     </span>
                 <?php endif; ?>
