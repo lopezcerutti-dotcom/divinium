@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: EDITOR DA LANDING PAGE E TEXTOS DO SITE (PAINEL ADMINISTRATIVO)
  * Permite editar qualquer elemento textual, títulos, preços e mídias da loja e da Home.
@@ -139,7 +139,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(212,186,136,0.2); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-                    <span style="font-size: 0.85rem; color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <span style="font-size: 0.85rem; color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         ✦ Sequência Atual da Página Inicial:
                     </span>
                     <button type="button" class="btn-admin-secondary" style="font-size: 0.76rem; padding: 6px 12px;" onclick="resetSectionsOrder()">
@@ -156,7 +156,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     ?>
                     <div class="section-order-row" data-section-key="<?= $secKey ?>" style="display: flex; align-items: center; justify-content: space-between; background: #161513; border: 1px solid <?= $isSecVisible ? 'rgba(212,186,136,0.3)' : 'rgba(255,255,255,0.06)' ?>; border-radius: 10px; padding: 14px 18px; gap: 14px; flex-wrap: wrap;">
                         <div style="display: flex; align-items: center; gap: 14px;">
-                            <span class="order-badge" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(212,186,136,0.15); color: #d4ba88; border: 1px solid #d4ba88; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                            <span class="order-badge" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(212,186,136,0.15); color: #CBD0D6; border: 1px solid #CBD0D6; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
                                 <?= $idx + 1 ?>
                             </span>
                             <span style="font-size: 1.3rem;"><?= $secInfo['icon'] ?></span>
@@ -200,7 +200,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <div class="form-group full-width" style="background: rgba(202,161,92,0.06); border: 1px solid rgba(202,161,92,0.25); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
                     <div>
-                        <strong style="color: #caa15c; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; display: block;">
+                        <strong style="color: #CBD0D6; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; display: block;">
                             ✦ Aplicar Paleta Quiet Luxury Pronta (1 Clique):
                         </strong>
                         <span style="font-size: 0.78rem; color: #b8b1a7;">Clique para preencher automaticamente as tonalidades harmônicas em todos os campos.</span>
@@ -213,15 +213,15 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
                     <button type="button" class="btn-admin-cancel" style="background: #141312; border: 1px solid rgba(202,161,92,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #caa15c; border: 1px solid #fff;"></span>
-                            <strong style="color: #caa15c; font-size: 0.84rem;">Noir Ateliê Ouro</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #CBD0D6; border: 1px solid #fff;"></span>
+                            <strong style="color: #CBD0D6; font-size: 0.84rem;">Noir Ateliê Ouro</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #0D0C0B • Ouro #CAA15C</span>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #252525 • Ouro #A7ADB4</span>
                     </button>
 
                     <button type="button" class="btn-admin-cancel" style="background: #1e1e1d; border: 1px solid rgba(255,255,255,0.2); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #caa15c;"></span>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #CBD0D6;"></span>
                             <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Prata de Lei</strong>
                         </div>
                         <span style="font-size: 0.72rem; color: #8e8880;">Fundo #FBF9F5 • Prata #FFFFFF</span>
@@ -247,7 +247,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <!-- 1. CORES GLOBAIS DA MARCA -->
             <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 16px;">
-                <h4 style="color: #caa15c; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                     ✦ 1. Cores Globais da Marca (Aplicam-se em Todas as Páginas do Site)
                 </h4>
             </div>
@@ -258,11 +258,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="lp_custom_color_bg">Fundo Base Global (Dark Noir)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_bg" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#0D0C0B')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
                                oninput="document.getElementById('lp_custom_color_bg').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_bg" name="custom_color_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#0D0C0B')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_bg').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Aplica-se ao fundo de todas as páginas da loja (Home, Boutique, Produto, Checkout, etc.)</span>
@@ -288,11 +288,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="lp_custom_color_primary">Cor Primária (Ouro / Botões Principais)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_primary" 
-                               value="<?= View::e(Setting::get('custom_color_primary', '#CAA15C')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
                                oninput="document.getElementById('lp_custom_color_primary').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_primary" name="custom_color_primary" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_primary', '#CAA15C')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_primary').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Define o tom dos botões de compra, títulos e detalhes nobres.</span>
@@ -349,7 +349,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div style="margin-bottom: 14px;">
                     <strong style="color: #ded7cf; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                         <span>✦ 2. Personalização de Cores Específicas por Página</span>
-                        <span style="font-size: 0.68rem; color: #caa15c; background: rgba(202,161,92,0.18); padding: 2px 8px; border-radius: 6px;">Opcional</span>
+                        <span style="font-size: 0.68rem; color: #CBD0D6; background: rgba(202,161,92,0.18); padding: 2px 8px; border-radius: 6px;">Opcional</span>
                     </strong>
                     <p style="font-size: 0.78rem; color: #8e8880; margin: 4px 0 0;">
                         Deixe em branco para que cada página herde automaticamente as cores globais configuradas acima.
@@ -359,7 +359,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
                     <!-- Boutique -->
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
-                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">🛍️ Boutique (/loja)</span>
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #CBD0D6; text-transform: uppercase; display: block; margin-bottom: 8px;">🛍️ Boutique (/loja)</span>
                         <div class="form-group" style="margin-bottom: 8px;">
                             <label style="font-size: 0.74rem;">Fundo da Loja:</label>
                             <input type="text" name="store_bg_color" class="form-input" 
@@ -376,7 +376,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                     <!-- Detalhes do Produto -->
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
-                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">💎 Detalhes da Joia (/produto)</span>
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #CBD0D6; text-transform: uppercase; display: block; margin-bottom: 8px;">💎 Detalhes da Joia (/produto)</span>
                         <div class="form-group" style="margin-bottom: 8px;">
                             <label style="font-size: 0.74rem;">Fundo da Página:</label>
                             <input type="text" name="product_bg_color" class="form-input" 
@@ -393,7 +393,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                     <!-- Checkout Seguro -->
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
-                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">🔒 Checkout Seguro (/checkout)</span>
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #CBD0D6; text-transform: uppercase; display: block; margin-bottom: 8px;">🔒 Checkout Seguro (/checkout)</span>
                         <div class="form-group" style="margin-bottom: 8px;">
                             <label style="font-size: 0.74rem;">Fundo do Checkout:</label>
                             <input type="text" name="checkout_bg_color" class="form-input" 
@@ -410,7 +410,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                     <!-- Institucional -->
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
-                        <span style="font-size: 0.76rem; font-weight: 700; color: #caa15c; text-transform: uppercase; display: block; margin-bottom: 8px;">📜 Páginas Institucionais</span>
+                        <span style="font-size: 0.76rem; font-weight: 700; color: #CBD0D6; text-transform: uppercase; display: block; margin-bottom: 8px;">📜 Páginas Institucionais</span>
                         <div class="form-group" style="margin-bottom: 8px;">
                             <label style="font-size: 0.74rem;">Fundo das Políticas:</label>
                             <input type="text" name="institutional_bg_color" class="form-input" 
@@ -429,7 +429,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <!-- 3. IMAGEM OU TEXTURA DE FUNDO -->
             <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 16px;">
-                <h4 style="color: #caa15c; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                     ✦ 3. Imagem ou Textura de Fundo do Site & Páginas
                 </h4>
             </div>
@@ -457,7 +457,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                     <!-- Presets Rápidos de Texturas Nobres -->
                     <div class="form-group full-width">
-                        <label style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; display: block; margin-bottom: 8px;">
+                        <label style="font-size: 0.78rem; text-transform: uppercase; color: #CBD0D6; font-weight: 700; display: block; margin-bottom: 8px;">
                             ✦ Escolher Textura de Alta Joalheria Pronta:
                         </label>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
@@ -488,7 +488,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             </label>
                             <input type="range" id="lp_site_bg_overlay" name="site_bg_overlay" min="0.10" max="0.95" step="0.05" 
                                    value="<?= View::e(Setting::get('site_bg_overlay', '0.75')) ?>" 
-                                   style="width: 100%; accent-color: #caa15c;"
+                                   style="width: 100%; accent-color: #CBD0D6;"
                                    oninput="document.getElementById('valOverlayLanding').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
                             <span class="field-hint">Garante legibilidade dos textos sobre a foto.</span>
                         </div>
@@ -506,21 +506,21 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <!-- Card Lateral de Pré-Visualização Ao Vivo -->
                 <div>
                     <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Loja em Tempo Real:</label>
-                    <div id="lpColorsLivePreviewCard" style="height: 320px; border-radius: 12px; border: 1px solid #caa15c; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); background-color: #0d0c0b;">
+                    <div id="lpColorsLivePreviewCard" style="height: 320px; border-radius: 12px; border: 1px solid #CBD0D6; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); background-color: #252525;">
                         <div id="lpColorsLivePreviewOverlay" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
                         <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
                             <span id="lpPreviewLogo" style="font-family: var(--font-serif); font-size: 1.05rem; color: #fff; font-weight: 700; letter-spacing: 1px;">DIVINIUM</span>
-                            <span style="font-size: 0.65rem; background: rgba(202,161,92,0.25); color: #caa15c; border: 1px solid #caa15c; padding: 2px 8px; border-radius: 10px; font-weight: 600;">PRÉVIA AO VIVO</span>
+                            <span style="font-size: 0.65rem; background: rgba(202,161,92,0.25); color: #CBD0D6; border: 1px solid #CBD0D6; padding: 2px 8px; border-radius: 10px; font-weight: 600;">PRÉVIA AO VIVO</span>
                         </div>
                         <div style="position: relative; z-index: 2; text-align: center; margin: auto 0;">
                             <h4 id="lpPreviewTitle" style="font-family: var(--font-serif); font-size: 1.25rem; color: #fff; margin: 0 0 4px;">Joias que Revelam</h4>
-                            <span id="lpPreviewHighlight" style="font-family: var(--font-serif); font-size: 1.1rem; color: #caa15c; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
+                            <span id="lpPreviewHighlight" style="font-family: var(--font-serif); font-size: 1.1rem; color: #CBD0D6; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
                             <div id="lpPreviewCardBox" style="display: inline-block; background: #141312; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 14px;">
                                 <span id="lpPreviewCardText" style="font-size: 0.72rem; color: #ded7cf;">✦ Alta Joalheria em Prata de Lei</span>
                             </div>
                         </div>
                         <div style="position: relative; z-index: 2; text-align: center;">
-                            <button type="button" id="lpPreviewBtn" style="background: #caa15c; color: #000; border: none; font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; cursor: default;">
+                            <button type="button" id="lpPreviewBtn" style="background: #CBD0D6; color: #000; border: none; font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; cursor: default;">
                                 Ver Coleção ↗
                             </button>
                         </div>
@@ -546,7 +546,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 8px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                         <div>
-                            <strong style="color: #caa15c; font-size: 0.92rem; display: block; margin-bottom: 4px;">🎨 Personalizar Cores & Fundo de Todas as Páginas</strong>
+                            <strong style="color: #CBD0D6; font-size: 0.92rem; display: block; margin-bottom: 4px;">🎨 Personalizar Cores & Fundo de Todas as Páginas</strong>
                             <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0; line-height: 1.4;">
                                 Edite as cores da marca (fundo dark noir, superfícies de cards, ouro nobre, textos) ou aplique imagens e texturas de fundo em todas as páginas do site.
                             </p>
@@ -559,16 +559,16 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Modo do Logotipo -->
                 <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 10px; border: 1px solid rgba(212,186,136,0.2);">
-                    <label style="font-size: 0.9rem; color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 8px;">
+                    <label style="font-size: 0.9rem; color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 8px;">
                         Formato do Logotipo no Cabeçalho
                     </label>
                     <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
                         <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #ffffff; font-size: 0.88rem;">
-                            <input type="radio" name="site_logo_type" value="text" <?= Setting::get('site_logo_type', 'text') === 'text' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #d4ba88; width: 18px; height: 18px;">
+                            <input type="radio" name="site_logo_type" value="text" <?= Setting::get('site_logo_type', 'text') === 'text' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #CBD0D6; width: 18px; height: 18px;">
                             <span>Tipografia Editorial Nobre (Texto Puro estilizado)</span>
                         </label>
                         <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #ffffff; font-size: 0.88rem;">
-                            <input type="radio" name="site_logo_type" value="image" <?= Setting::get('site_logo_type') === 'image' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #d4ba88; width: 18px; height: 18px;">
+                            <input type="radio" name="site_logo_type" value="image" <?= Setting::get('site_logo_type') === 'image' ? 'checked' : '' ?> onchange="toggleLogoFields()" style="accent-color: #CBD0D6; width: 18px; height: 18px;">
                             <span>Imagem / Arquivo Gráfico (PNG transparente, SVG ou WebP)</span>
                         </label>
                     </div>
@@ -700,7 +700,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-checkbox-row full-width">
                     <input type="checkbox" id="top_banner_active" name="top_banner_active" value="1" 
                            <?= Setting::get('top_banner_active', '1') === '1' ? 'checked' : '' ?>
-                           style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                           style="width: 18px; height: 18px; accent-color: #CBD0D6;">
                     <label for="top_banner_active">Exibir esta barra no topo do site</label>
                 </div>
             </div>
@@ -736,7 +736,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Links da Navegação Principal Desktop -->
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-top: 10px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         🧭 Itens do Menu Desktop (Topo Esquerda)
                     </h4>
                 </div>
@@ -845,7 +845,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Sub-itens do Menu Coleções -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         💎 Sub-itens da Gaveta / Dropdown de Coleções
                     </h4>
                 </div>
@@ -931,7 +931,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         🛍️ Gaveta Lateral da Sacola de Compras
                     </h4>
                 </div>
@@ -987,7 +987,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Modal de Acesso Administrativo -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; margin-top: 10px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         🔐 Botão & Modal de Acesso aos Bastidores (Entrar)
                     </h4>
                 </div>
@@ -1036,7 +1036,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <!-- Painel Informativo com Atalho -->
             <div style="margin-bottom: 24px; padding: 14px 18px; background: rgba(212, 186, 136, 0.06); border-radius: 10px; border: 1px solid rgba(212, 186, 136, 0.2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
                 <div style="font-size: 0.85rem; color: #ded7cf; line-height: 1.4;">
-                    <strong style="color: #d4ba88;">✦ Controle Total no Celular:</strong> 
+                    <strong style="color: #CBD0D6;">✦ Controle Total no Celular:</strong> 
                     Cada link, botão e selo possui um interruptor individual <em>Exibindo / Oculto</em>. Você pode ocultar itens sem perder o que escreveu.
                 </div>
                 <a href="/#mobileNavDrawer" target="_blank" class="btn-admin-secondary" style="font-size: 0.8rem; padding: 6px 14px;">
@@ -1048,7 +1048,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 1. COMPORTAMENTO GERAL -->
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         ⚙️ 1. Comportamento & Abertura da Gaveta
                     </h4>
                 </div>
@@ -1094,7 +1094,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 2. CORES E ESTÉTICA VISUAL -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         🎨 2. Paleta de Cores do Menu Mobile
                     </h4>
                     <span class="field-hint">Deixe o menu personalizado com tonalidades exclusivas da joalheria.</span>
@@ -1104,15 +1104,15 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="mobile_nav_bg_color">Cor de Fundo da Gaveta</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="mobile_nav_bg_color_picker" 
-                               value="<?= Setting::get('mobile_nav_bg_color', '#0d0c0b') ?>" 
+                               value="<?= Setting::get('mobile_nav_bg_color', '#252525') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('mobile_nav_bg_color').value = this.value; updateMobileMenuLivePreview();">
                         <input type="text" id="mobile_nav_bg_color" name="mobile_nav_bg_color" class="form-input" 
-                               value="<?= View::e(Setting::get('mobile_nav_bg_color', '#0d0c0b')) ?>" 
-                               placeholder="#0d0c0b"
+                               value="<?= View::e(Setting::get('mobile_nav_bg_color', '#252525')) ?>" 
+                               placeholder="#252525"
                                oninput="if(this.value.length===7){document.getElementById('mobile_nav_bg_color_picker').value=this.value;} updateMobileMenuLivePreview();">
                     </div>
-                    <span class="field-hint">Sugestões: #0d0c0b (Ônix Nobre), #141210 (Café Diamante), #0f172a (Safira Noite).</span>
+                    <span class="field-hint">Sugestões: #252525 (Ônix Nobre), #141210 (Café Diamante), #0f172a (Safira Noite).</span>
                 </div>
 
                 <div class="form-group">
@@ -1134,12 +1134,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="mobile_nav_accent_color">Cor de Destaque / Dourado (Bordas Ativas & Selos)</label>
                     <div style="display: flex; gap: 8px; align-items: center; max-width: 400px;">
                         <input type="color" id="mobile_nav_accent_color_picker" 
-                               value="<?= Setting::get('mobile_nav_accent_color', '#d4ba88') ?>" 
+                               value="<?= Setting::get('mobile_nav_accent_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('mobile_nav_accent_color').value = this.value; updateMobileMenuLivePreview();">
                         <input type="text" id="mobile_nav_accent_color" name="mobile_nav_accent_color" class="form-input" 
-                               value="<?= View::e(Setting::get('mobile_nav_accent_color', '#d4ba88')) ?>" 
-                               placeholder="#d4ba88"
+                               value="<?= View::e(Setting::get('mobile_nav_accent_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('mobile_nav_accent_color_picker').value=this.value;} updateMobileMenuLivePreview();">
                     </div>
                     <span class="field-hint">Cor da borda lateral do link selecionado, selo 'Exclusivo' e contorno dourado.</span>
@@ -1147,7 +1147,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 3. CABEÇALHO DO MENU -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         👑 3. Cabeçalho do Menu Mobile (Marca & Selo)
                     </h4>
                 </div>
@@ -1189,7 +1189,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 4. LINKS DE NAVEGAÇÃO -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         🧭 4. Links de Navegação Mobile (Texto, URL & Exibição)
                     </h4>
                     <span class="field-hint">Altere o texto, destino e a visibilidade de cada link individualmente.</span>
@@ -1403,7 +1403,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 5. RODAPÉ E AÇÕES -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         📞 5. Rodapé & Ações da Gaveta (WhatsApp & Acesso)
                     </h4>
                 </div>
@@ -1454,7 +1454,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- 6. PRÉ-VISUALIZAÇÃO EM TEMPO REAL -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 12px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 10px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 10px; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between;">
                         <span>📱 Pré-visualização Interativa do Menu no Smartphone</span>
                         <span style="font-size: 0.72rem; color: #8e8880; font-weight: normal; text-transform: none;">Atualiza em tempo real enquanto você digita</span>
                     </h4>
@@ -1473,13 +1473,13 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             </div>
                             
                             <!-- Conteúdo do Menu dentro do Mockup -->
-                            <div id="mobileMenuLivePreviewDrawer" style="background: <?= Setting::get('mobile_nav_bg_color', '#0d0c0b') ?>; color: <?= Setting::get('mobile_nav_text_color', '#ded7cf') ?>; padding: 16px 18px; display: flex; flex-direction: column; min-height: 480px; justify-content: space-between;">
+                            <div id="mobileMenuLivePreviewDrawer" style="background: <?= Setting::get('mobile_nav_bg_color', '#252525') ?>; color: <?= Setting::get('mobile_nav_text_color', '#ded7cf') ?>; padding: 16px 18px; display: flex; flex-direction: column; min-height: 480px; justify-content: space-between;">
                                 
                                 <div>
                                     <!-- Header do Mockup -->
                                     <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
                                         <div id="previewBrandWrap">
-                                            <div id="previewHeaderBadge" style="display: <?= Setting::get('mobile_nav_show_header_badge', '0') === '1' ? 'inline-block' : 'none' ?>; font-size: 0.52rem; font-weight: 700; color: #d4ba88; border: 1px solid rgba(212,186,136,0.3); padding: 1px 6px; border-radius: 10px; margin-bottom: 3px;"><?= View::e(Setting::get('mobile_nav_header_badge', 'JOALHERIA AUTORAL')) ?></div>
+                                            <div id="previewHeaderBadge" style="display: <?= Setting::get('mobile_nav_show_header_badge', '0') === '1' ? 'inline-block' : 'none' ?>; font-size: 0.52rem; font-weight: 700; color: #CBD0D6; border: 1px solid rgba(212,186,136,0.3); padding: 1px 6px; border-radius: 10px; margin-bottom: 3px;"><?= View::e(Setting::get('mobile_nav_header_badge', 'JOALHERIA AUTORAL')) ?></div>
                                             <div id="previewLogoText" style="font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.15em; color: #fff;"><?= View::e(Setting::get('mobile_nav_logo_text', 'DIVINIUM')) ?></div>
                                             <div id="previewLogoSub" style="font-size: 0.45rem; letter-spacing: 0.25em; color: #8e8880;"><?= View::e(Setting::get('mobile_nav_logo_sub', 'HAUTE JOAILLERIE')) ?></div>
                                         </div>
@@ -1488,14 +1488,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                                     <!-- Links do Mockup -->
                                     <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 12px;">
-                                        <div id="previewLinkHome" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; background: rgba(212, 186, 136, 0.08); border-left: 2px solid #d4ba88; color: #fff; font-size: 0.88rem;">
+                                        <div id="previewLinkHome" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; background: rgba(212, 186, 136, 0.08); border-left: 2px solid #CBD0D6; color: #fff; font-size: 0.88rem;">
                                             <span id="previewTextHome"><?= View::e(Setting::get('mobile_nav_home_text', 'Início')) ?></span>
-                                            <span style="font-size: 0.7rem; color: #d4ba88;">›</span>
+                                            <span style="font-size: 0.7rem; color: #CBD0D6;">›</span>
                                         </div>
 
                                         <div id="previewLinkStore" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
                                             <span id="previewTextStore"><?= View::e(Setting::get('mobile_nav_store_text', 'Boutique / Loja')) ?></span>
-                                            <span id="previewBadgeStore" style="font-size: 0.58rem; background: rgba(212, 186, 136, 0.15); color: #d4ba88; padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.3);"><?= View::e(Setting::get('mobile_nav_store_badge_text', 'Exclusivo')) ?></span>
+                                            <span id="previewBadgeStore" style="font-size: 0.58rem; background: rgba(212, 186, 136, 0.15); color: #CBD0D6; padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.3);"><?= View::e(Setting::get('mobile_nav_store_badge_text', 'Exclusivo')) ?></span>
                                         </div>
 
                                         <div id="previewLinkCollections" style="display: flex; flex-direction: column; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; color: #ded7cf;">
@@ -1642,7 +1642,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width" style="background: rgba(202, 161, 92, 0.08); border: 1px solid rgba(202, 161, 92, 0.25); border-radius: 10px; padding: 18px; margin-top: 10px;">
-                    <label for="hero_bg_image" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #caa15c;">
+                    <label for="hero_bg_image" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #CBD0D6;">
                         <span>🖼️ Imagem de Fundo do Hero (Banner Principal)</span>
                         <a href="/admin/temas" target="_blank" style="color: #fff; font-size: 0.74rem; text-decoration: none; background: rgba(202, 161, 92, 0.2); padding: 2px 8px; border-radius: 6px;">Gerenciar Texturas ↗</a>
                     </label>
@@ -1702,7 +1702,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="margin-top: 8px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
                         <div>
-                            <h4 style="color: #d4ba88; font-size: 0.95rem; font-weight: 600; margin: 0;">Imagens do Carrossel (<span id="carouselSlidesCount">0</span>)</h4>
+                            <h4 style="color: #CBD0D6; font-size: 0.95rem; font-weight: 600; margin: 0;">Imagens do Carrossel (<span id="carouselSlidesCount">0</span>)</h4>
                             <span class="field-hint" style="margin: 2px 0 0;">Adicione, reordene, configure links e textos alternativos para cada imagem.</span>
                         </div>
                         <button type="button" class="btn-admin-gold" onclick="addNewCarouselSlide()" style="font-size: 0.8rem; padding: 8px 16px;">
@@ -1741,7 +1741,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                         <div>
-                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                                 <span>🎨</span> 1. Cores & Estética Visual do Manifesto
                             </h4>
                             <span class="field-hint">Personalize as cores de fundo, tipografia, destaque dourado, botões e cards com visualização ao vivo antes de salvar.</span>
@@ -1769,15 +1769,15 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="about_bg_color">Cor de Fundo da Seção</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_bg_color_picker" 
-                               value="<?= Setting::get('about_bg_color', '#0d0c0b') ?>" 
+                               value="<?= Setting::get('about_bg_color', '#252525') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_bg_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_bg_color" name="about_bg_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_bg_color', '#0d0c0b')) ?>" 
-                               placeholder="#0d0c0b"
+                               value="<?= View::e(Setting::get('about_bg_color', '#252525')) ?>" 
+                               placeholder="#252525"
                                oninput="if(this.value.length===7){document.getElementById('about_bg_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
-                    <span class="field-hint">Fundo principal (sugestões: #0d0c0b, #141210, #fbf9f5).</span>
+                    <span class="field-hint">Fundo principal (sugestões: #252525, #141210, #fbf9f5).</span>
                 </div>
 
                 <div class="form-group">
@@ -1814,12 +1814,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="about_accent_color">Cor de Destaque / Ouro (Citação & Detalhes)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_accent_color_picker" 
-                               value="<?= Setting::get('about_accent_color', '#d4ba88') ?>" 
+                               value="<?= Setting::get('about_accent_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_accent_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_accent_color" name="about_accent_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>" 
-                               placeholder="#d4ba88"
+                               value="<?= View::e(Setting::get('about_accent_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_accent_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor da citação poética em itálico e toques nobres.</span>
@@ -1829,12 +1829,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="about_tag_color">Cor da Tag / Selo Superior</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_tag_color_picker" 
-                               value="<?= Setting::get('about_tag_color', '#d4ba88') ?>" 
+                               value="<?= Setting::get('about_tag_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_tag_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_tag_color" name="about_tag_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_tag_color', '#d4ba88')) ?>" 
-                               placeholder="#d4ba88"
+                               value="<?= View::e(Setting::get('about_tag_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_tag_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do selo 'MANIFESTO DIVINIUM' acima do título.</span>
@@ -1844,12 +1844,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="about_btn_color">Cor do Botão de Ação (Borda & Texto)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_btn_color_picker" 
-                               value="<?= Setting::get('about_btn_color', '#d4ba88') ?>" 
+                               value="<?= Setting::get('about_btn_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_btn_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_btn_color" name="about_btn_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>" 
-                               placeholder="#d4ba88"
+                               value="<?= View::e(Setting::get('about_btn_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_btn_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do botão 'Conheça Nossa História'.</span>
@@ -1894,14 +1894,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- PREVIEW AO VIVO DO MANIFESTO NO PAINEL -->
                 <div class="form-group full-width" style="margin: 10px 0 20px;">
-                    <label style="color: #d4ba88; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+                    <label style="color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
                         <span>👁️</span> Pré-Visualização em Tempo Real do Manifesto
                     </label>
-                    <div id="aboutLivePreviewContainer" style="background: <?= View::e(Setting::get('about_bg_color', '#0d0c0b')) ?>; border: 1px solid rgba(212,186,136,0.3); border-radius: 12px; padding: 26px; transition: background 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div id="aboutLivePreviewContainer" style="background: <?= View::e(Setting::get('about_bg_color', '#252525')) ?>; border: 1px solid rgba(212,186,136,0.3); border-radius: 12px; padding: 26px; transition: background 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center;">
                             <!-- Coluna de Textos -->
                             <div>
-                                <span id="aboutPreviewTag" style="display: inline-block; font-size: 0.72rem; letter-spacing: 0.15em; font-weight: 600; text-transform: uppercase; color: <?= View::e(Setting::get('about_tag_color', '#d4ba88')) ?>; margin-bottom: 8px;">
+                                <span id="aboutPreviewTag" style="display: inline-block; font-size: 0.72rem; letter-spacing: 0.15em; font-weight: 600; text-transform: uppercase; color: <?= View::e(Setting::get('about_tag_color', '#CBD0D6')) ?>; margin-bottom: 8px;">
                                     <?= View::e(Setting::get('about_tag', 'MANIFESTO DIVINIUM')) ?>
                                 </span>
                                 <h3 id="aboutPreviewTitle" style="font-family: serif; font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; font-weight: normal; color: <?= View::e(Setting::get('about_title_color', '#ffffff')) ?>;">
@@ -1910,11 +1910,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                 <p id="aboutPreviewP1" style="font-size: 0.84rem; line-height: 1.6; margin: 0 0 10px; color: <?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>;">
                                     <?= View::e(Setting::get('about_p1', 'A DIVINIUM nasceu da convicção de que o verdadeiro luxo é autoral, sutil e profundamente conectado à sua identidade...')) ?>
                                 </p>
-                                <p id="aboutPreviewQuote" style="font-family: serif; font-style: italic; font-size: 1.05rem; margin: 0 0 16px; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>; <?= Setting::get('about_quote_visible', '1') !== '1' ? 'display: none;' : '' ?>">
+                                <p id="aboutPreviewQuote" style="font-family: serif; font-style: italic; font-size: 1.05rem; margin: 0 0 16px; color: <?= View::e(Setting::get('about_accent_color', '#CBD0D6')) ?>; <?= Setting::get('about_quote_visible', '1') !== '1' ? 'display: none;' : '' ?>">
                                     "<?= View::e(Setting::get('about_quote', 'Qual delas conversa com você hoje?')) ?>"
                                 </p>
                                 <div id="aboutPreviewBtnWrap" style="margin-bottom: 16px; <?= Setting::get('about_cta_visible', '1') !== '1' ? 'display: none;' : '' ?>">
-                                    <span id="aboutPreviewBtn" style="display: inline-block; padding: 7px 20px; font-size: 0.76rem; border: 1px solid <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; color: <?= View::e(Setting::get('about_btn_color', '#d4ba88')) ?>; border-radius: 20px; letter-spacing: 0.05em; font-weight: 500;">
+                                    <span id="aboutPreviewBtn" style="display: inline-block; padding: 7px 20px; font-size: 0.76rem; border: 1px solid <?= View::e(Setting::get('about_btn_color', '#CBD0D6')) ?>; color: <?= View::e(Setting::get('about_btn_color', '#CBD0D6')) ?>; border-radius: 20px; letter-spacing: 0.05em; font-weight: 500;">
                                         <?= View::e(Setting::get('about_cta_text', 'Conheça Nossa História')) ?>
                                     </span>
                                 </div>
@@ -1937,7 +1937,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <!-- Coluna Imagem Editorial -->
                             <div style="position: relative; border-radius: 8px; overflow: hidden; height: 280px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
                                 <img src="<?= View::e(Setting::get('about_banner_img', '/assets/images/about/banner-caminhos.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/about/banner-caminhos.png'">
-                                <div id="aboutPreviewCaption" style="position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.65rem; text-align: center; letter-spacing: 0.1em; font-weight: 600; background: <?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>; color: <?= View::e(Setting::get('about_accent_color', '#d4ba88')) ?>; <?= Setting::get('about_editorial_caption_visible', '1') !== '1' ? 'display: none;' : '' ?>">
+                                <div id="aboutPreviewCaption" style="position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.65rem; text-align: center; letter-spacing: 0.1em; font-weight: 600; background: <?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>; color: <?= View::e(Setting::get('about_accent_color', '#CBD0D6')) ?>; <?= Setting::get('about_editorial_caption_visible', '1') !== '1' ? 'display: none;' : '' ?>">
                                     <?= View::e(Setting::get('about_editorial_caption', 'COLEÇÃO CAMINHOS • UM MESMO DESIGN, DIFERENTES FORMAS DE SENTIR')) ?>
                                 </div>
                             </div>
@@ -1949,7 +1949,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <!-- 2. TEXTOS, CHAMADAS E FOTOS DO MANIFESTO -->
                 <!-- ============================================================== -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                         <span>✍️</span> 2. Textos, Chamadas & Imagens do Manifesto
                     </h4>
                     <span class="field-hint">Altere o conteúdo editorial do Manifesto Divinium.</span>
@@ -2116,7 +2116,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <div style="background: rgba(212,186,136,0.1); border: 1px solid rgba(212,186,136,0.25); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                 <div>
-                    <strong style="color: #d4ba88; display: block; margin-bottom: 4px;">🚀 Gerenciamento de Coleções centralizado na aba Lançamentos</strong>
+                    <strong style="color: #CBD0D6; display: block; margin-bottom: 4px;">🚀 Gerenciamento de Coleções centralizado na aba Lançamentos</strong>
                     <span style="color: #a8a096; font-size: 0.85rem;">Você pode criar, editar, reordenar coleções e gerenciar produtos separados por categoria (Braceletes, Colares, Anéis) na aba Lançamentos.</span>
                 </div>
                 <a href="/admin/lancamentos" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.82rem; padding: 8px 16px; text-decoration: none;">
@@ -2224,7 +2224,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Serviço 01 -->
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
-                    <label for="service_1_title" style="color: #caa15c; font-weight: 700;">Serviço 01 - Título</label>
+                    <label for="service_1_title" style="color: #CBD0D6; font-weight: 700;">Serviço 01 - Título</label>
                     <input type="text" id="service_1_title" name="service_1_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('service_1_title', 'Consultoria de Sintonia Mineral')) ?>">
                 </div>
@@ -2246,7 +2246,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Serviço 02 -->
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
-                    <label for="service_2_title" style="color: #caa15c; font-weight: 700;">Serviço 02 - Título</label>
+                    <label for="service_2_title" style="color: #CBD0D6; font-weight: 700;">Serviço 02 - Título</label>
                     <input type="text" id="service_2_title" name="service_2_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção da Prata')) ?>">
                 </div>
@@ -2268,7 +2268,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Serviço 03 -->
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
-                    <label for="service_3_title" style="color: #caa15c; font-weight: 700;">Serviço 03 - Título</label>
+                    <label for="service_3_title" style="color: #CBD0D6; font-weight: 700;">Serviço 03 - Título</label>
                     <input type="text" id="service_3_title" name="service_3_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('service_3_title', 'Ajuste de Conforto & Garantia')) ?>">
                 </div>
@@ -2408,7 +2408,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Miniaturas da Faixa de Clientes -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         📸 Faixa de Miniaturas da Galeria de Clientes (5 Fotos)
                     </h4>
                     <span class="field-hint">Fotos quadradas exibidas logo abaixo da citação na Home.</span>
@@ -2456,7 +2456,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <div class="form-grid">
                 <!-- Botões do Hero Principal -->
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 14px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         👑 Botões da Dobra Principal (Hero)
                     </h4>
                 </div>
@@ -2534,7 +2534,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Botões da Boutique e Estilos Globais -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 12px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 12px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         🛍️ Botões dos Cards da Vitrine & Formas Globais
                     </h4>
                 </div>
@@ -2591,7 +2591,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <div class="form-grid">
                 <!-- Informações Oficiais da Empresa -->
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         📋 Dados Jurídicos & Comerciais (Exibidos no Rodapé e Faturas)
                     </h4>
                 </div>
@@ -2656,7 +2656,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
                     <div class="field-label-row" style="background: rgba(212,186,136,0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212,186,136,0.2);">
                         <div>
-                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                                 <span>⚡</span> Checkout Direto, Pagamento Pix & Sacola de Compras (/checkout)
                             </h4>
                             <span class="field-hint" style="margin: 0;">Ative ou desative toda a sacola de compras, gaveta lateral, checkout direto e pagamentos via Pix.</span>
@@ -2721,7 +2721,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
                     <div class="field-label-row" style="background: rgba(212,186,136,0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212,186,136,0.2);">
                         <div>
-                            <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                                 <span>📄</span> Conteúdo das Páginas Institucionais Oficiais
                             </h4>
                             <span class="field-hint" style="margin: 0;">Ative ou desative o conteúdo editorial e páginas oficiais (Trocas, Garantia, LGPD e Termos de Uso).</span>
@@ -2828,7 +2828,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         📊 Scripts de Rastreamento & Marketing Digital
                     </h4>
                     <span class="field-hint">Códigos fornecidos pelo Google, Meta, TikTok ou ferramentas de atendimento para mensuração de tráfego.</span>
@@ -3004,7 +3004,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="section-icon">🛍️</div>
                 <div>
                     <h3>Textos & Chamadas da Boutique (/loja)</h3>
-                    <p>Configure os títulos e elementos da vitrine oficial. Você também pode acessar o módulo completo em <a href="/admin/boutique" style="color: #d4ba88; text-decoration: underline;">Personalizar Boutique</a>.</p>
+                    <p>Configure os títulos e elementos da vitrine oficial. Você também pode acessar o módulo completo em <a href="/admin/boutique" style="color: #CBD0D6; text-decoration: underline;">Personalizar Boutique</a>.</p>
                 </div>
             </div>
 
@@ -3203,7 +3203,7 @@ async function handleEditorSubmit(e) {
     btn.disabled = true;
     btn.innerHTML = '<span>Salvando no banco de dados...</span>';
     status.innerText = 'Gravando configurações e atualizando o site...';
-    status.style.color = '#d4ba88';
+    status.style.color = '#CBD0D6';
 
     // Sincronizar dados do carrossel antes de coletar o FormData
     if (typeof syncCarouselSlidesToForm === 'function') {
@@ -3241,7 +3241,7 @@ async function handleEditorSubmit(e) {
 
         if (data.success) {
             status.innerText = '✓ Sucesso! Todos os textos e conteúdos foram atualizados ao vivo no site.';
-            status.style.color = '#4ade80';
+            status.style.color = '#FFFFFF';
             btn.innerHTML = '<span>✓ Salvo com Sucesso!</span>';
             setTimeout(() => {
                 btn.disabled = false;
@@ -3633,7 +3633,7 @@ function renderCarouselSlides() {
                             </div>
 
                             <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ded7cf; cursor: pointer; margin-bottom: 8px; user-select: none;">
-                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="updateCarouselSlide(${idx}, 'is_active', this.checked ? 1 : 0); renderCarouselSlides();" style="accent-color: #d4ba88; width: 16px; height: 16px;">
+                                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="updateCarouselSlide(${idx}, 'is_active', this.checked ? 1 : 0); renderCarouselSlides();" style="accent-color: #CBD0D6; width: 16px; height: 16px;">
                                 <span>Exibir imagem</span>
                             </label>
                         </div>
@@ -3750,9 +3750,9 @@ if (document.readyState === 'loading') {
 function updateMobileMenuLivePreview() {
     const getVal = (id, def) => document.getElementById(id)?.value || def;
 
-    const bg = getVal('mobile_nav_bg_color', '#0d0c0b');
+    const bg = getVal('mobile_nav_bg_color', '#252525');
     const txt = getVal('mobile_nav_text_color', '#ded7cf');
-    const accent = getVal('mobile_nav_accent_color', '#d4ba88');
+    const accent = getVal('mobile_nav_accent_color', '#CBD0D6');
 
     const drawer = document.getElementById('mobileMenuLivePreviewDrawer');
     if (drawer) {
@@ -3800,14 +3800,14 @@ function updateMobileMenuLivePreview() {
 function updateAboutLivePreview() {
     const getVal = (id, def) => document.getElementById(id)?.value || def;
 
-    const bg = getVal('about_bg_color', '#0d0c0b');
+    const bg = getVal('about_bg_color', '#252525');
     const title = getVal('about_title_color', '#ffffff');
     const text = getVal('about_text_color', '#ded7cf');
-    const accent = getVal('about_accent_color', '#d4ba88');
-    const tag = getVal('about_tag_color', '#d4ba88');
+    const accent = getVal('about_accent_color', '#CBD0D6');
+    const tag = getVal('about_tag_color', '#CBD0D6');
     const cardBg = getVal('about_card_bg', '#161513');
     const cardBorder = getVal('about_card_border', 'rgba(212, 186, 136, 0.25)');
-    const btn = getVal('about_btn_color', '#d4ba88');
+    const btn = getVal('about_btn_color', '#CBD0D6');
     const captionBg = getVal('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
 
     const previewContainer = document.getElementById('aboutLivePreviewContainer');
@@ -3886,14 +3886,14 @@ function updateAboutLivePreview() {
 function applyAboutColorPreset(preset) {
     const presets = {
         'default': {
-            about_bg_color: '#0d0c0b',
+            about_bg_color: '#252525',
             about_title_color: '#ffffff',
             about_text_color: '#ded7cf',
-            about_accent_color: '#d4ba88',
-            about_tag_color: '#d4ba88',
+            about_accent_color: '#CBD0D6',
+            about_tag_color: '#CBD0D6',
             about_card_bg: '#161513',
             about_card_border: 'rgba(212, 186, 136, 0.25)',
-            about_btn_color: '#d4ba88',
+            about_btn_color: '#CBD0D6',
             about_caption_bg: 'rgba(18, 17, 16, 0.85)'
         },
         'light': {
@@ -3912,7 +3912,7 @@ function applyAboutColorPreset(preset) {
             about_title_color: '#ffffff',
             about_text_color: '#d2dfd8',
             about_accent_color: '#e5c98d',
-            about_tag_color: '#4ade80',
+            about_tag_color: '#CBD0D6',
             about_card_bg: '#0e221b',
             about_card_border: 'rgba(74, 222, 128, 0.25)',
             about_btn_color: '#e5c98d',
@@ -3963,9 +3963,9 @@ function checkInitialEditorTab() {
 function applyThemePalette(themeName) {
     const palettes = {
         'gold': {
-            bg: '#0D0C0B',
+            bg: '#252525',
             surface: '#141312',
-            primary: '#CAA15C',
+            primary: '#A7ADB4',
             accent: '#E0C080',
             text: '#F4EFEA',
             textMuted: '#9E978E'
@@ -4017,9 +4017,9 @@ function applyThemePalette(themeName) {
 }
 
 function updateThemeColorsLivePreview() {
-    const bgVal = document.getElementById('lp_custom_color_bg')?.value || '#0d0c0b';
+    const bgVal = document.getElementById('lp_custom_color_bg')?.value || '#252525';
     const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#141312';
-    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#caa15c';
+    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#CBD0D6';
     const textVal = document.getElementById('lp_custom_color_text')?.value || '#ffffff';
     const imgVal = document.getElementById('lp_site_bg_image')?.value || '';
     const overlayVal = parseFloat(document.getElementById('lp_site_bg_overlay')?.value || '0.75');

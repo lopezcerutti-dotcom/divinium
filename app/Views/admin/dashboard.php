@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: DASHBOARD ADMINISTRATIVO DIVINIUM
  */
@@ -74,10 +74,10 @@
     <!-- MÓDULO 2: GESTÃO DE TEMAS -->
     <div class="exec-module-card" style="border-left: 3px solid #caa15c;">
         <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(202, 161, 92, 0.12); color: #caa15c;">
+            <div class="exec-card-icon" style="background: rgba(202, 161, 92, 0.12); color: #CBD0D6;">
                 ✦
             </div>
-            <span style="background: rgba(202, 161, 92, 0.15); color: #caa15c; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+            <span style="background: rgba(202, 161, 92, 0.15); color: #CBD0D6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
                 4 Paletas Autorais
             </span>
         </div>
@@ -94,12 +94,12 @@
     </div>
 
     <!-- MÓDULO 3: EDITOR DA LANDING PAGE -->
-    <div class="exec-module-card" style="border-left: 3px solid #34d399;">
+    <div class="exec-module-card" style="border-left: 3px solid #A7ADB4;">
         <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(52, 211, 153, 0.12); color: #34d399;">
+            <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
                 ✎
             </div>
-            <span style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+            <span style="background: rgba(167, 173, 180, 0.15); color: #FFFFFF; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
                 CMS Ao Vivo
             </span>
         </div>
@@ -118,7 +118,7 @@
     <!-- MÓDULO 4: INTEGRAÇÃO BLING ERP -->
     <div class="exec-module-card" style="border-left: 3px solid #10b981;">
         <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399;">
+            <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
                 📦
             </div>
             <?php if (!empty($blingConfig['is_connected'])): ?>
@@ -160,7 +160,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
         <div>
             <h2 class="card-title" style="display: flex; align-items: center; gap: 8px;">
-                <span style="color: #caa15c;">✦</span>
+                <span style="color: #CBD0D6;">✦</span>
                 Configurações da Boutique & Vendas
             </h2>
             <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
@@ -234,7 +234,7 @@
             <div class="form-group" style="margin: 0;">
                 <label for="dashboard_site_bg_image" style="display: flex; justify-content: space-between; align-items: center;">
                     <span>🖼️ Imagem de Fundo Global da Loja</span>
-                    <a href="/admin/temas" style="color: #caa15c; font-size: 0.74rem; text-decoration: none;">Ver Texturas ↗</a>
+                    <a href="/admin/temas" style="color: #CBD0D6; font-size: 0.74rem; text-decoration: none;">Ver Texturas ↗</a>
                 </label>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" id="dashboard_site_bg_image" name="site_bg_image" class="form-input" 
@@ -251,7 +251,7 @@
             <div class="form-group" style="margin: 0;">
                 <label for="dashboard_hero_bg_image" style="display: flex; justify-content: space-between; align-items: center;">
                     <span>👑 Imagem de Fundo do Hero (Banner Principal)</span>
-                    <a href="/admin/landing-page" style="color: #caa15c; font-size: 0.74rem; text-decoration: none;">Editor Home ↗</a>
+                    <a href="/admin/landing-page" style="color: #CBD0D6; font-size: 0.74rem; text-decoration: none;">Editor Home ↗</a>
                 </label>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" id="dashboard_hero_bg_image" name="hero_bg_image" class="form-input" 
@@ -340,7 +340,7 @@
                                 </strong>
                             </td>
                             <td>
-                                <strong style="color: #34d399; font-size: 0.88rem;">
+                                <strong style="color: #CBD0D6; font-size: 0.88rem;">
                                     R$ <?= number_format((($p['promotional_price_cents'] ?? ($p['price_cents'] ?? 0) * 0.95) / 100), 2, ',', '.') ?>
                                 </strong>
                             </td>
@@ -436,7 +436,7 @@
             <div class="form-group">
                 <label for="prodShopee">Link do Produto na Shopee / Loja Externa *</label>
                 <input type="url" id="prodShopee" name="external_url" class="form-input" placeholder="https://shopee.com.br/produto-exemplo-divinium...">
-                <span style="font-size: 0.72rem; color: #d4ba88;">Quando o cliente clicar no produto na loja, será redirecionado para este link para finalizar a compra na Shopee.</span>
+                <span style="font-size: 0.72rem; color: #CBD0D6;">Quando o cliente clicar no produto na loja, será redirecionado para este link para finalizar a compra na Shopee.</span>
             </div>
 
             <div class="form-group">
@@ -451,7 +451,7 @@
             </div>
 
             <div class="form-checkbox-row">
-                <input type="checkbox" id="prodActive" name="is_active" value="1" checked style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                <input type="checkbox" id="prodActive" name="is_active" value="1" checked style="width: 18px; height: 18px; accent-color: #CBD0D6;">
                 <label for="prodActive" style="margin: 0; cursor: pointer;">Exibir imediatamente na loja pública</label>
             </div>
 
@@ -715,7 +715,7 @@ async function triggerBlingSync(e, mode = 'auto') {
                 resDiv.style.display = 'block';
                 resDiv.style.background = 'rgba(16, 185, 129, 0.15)';
                 resDiv.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-                resDiv.style.color = '#34d399';
+                resDiv.style.color = '#FFFFFF';
                 resDiv.innerHTML = '<strong>✓ ' + msg + '</strong><br><small style="color:#ded7cf;">Atualizando catálogo...</small>';
             }
 
@@ -907,7 +907,7 @@ async function uploadDashboardBg(input, inputId, targetKey) {
                         <span>Forçar Consulta Completa via API Bling v3</span>
                     </button>
                 <?php else: ?>
-                    <div style="background: rgba(202, 161, 92, 0.1); border: 1px solid rgba(202, 161, 92, 0.25); border-radius: 8px; padding: 12px 16px; margin-top: 6px; font-size: 0.8rem; color: #d4ba88; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="background: rgba(202, 161, 92, 0.1); border: 1px solid rgba(202, 161, 92, 0.25); border-radius: 8px; padding: 12px 16px; margin-top: 6px; font-size: 0.8rem; color: #CBD0D6; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <span>Conecte o aplicativo para sincronizar em tempo real pela API do Bling.</span>
                         <button type="button" class="btn-admin-gold" onclick="switchBlingTab('config')" style="padding: 6px 12px; font-size: 0.75rem; white-space: nowrap;">
                             Conectar API ↗
@@ -975,7 +975,7 @@ async function uploadDashboardBg(input, inputId, targetKey) {
         <!-- ABA 3: PASSO A PASSO ILUSTRADO -->
         <div id="blingTabHelp" class="bling-tab-content" style="display: none; font-size: 0.85rem; color: #ded7cf; line-height: 1.6;">
             <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 18px; margin-bottom: 14px;">
-                <h4 style="color: #34d399; margin: 0 0 10px; font-size: 0.95rem;">Como pegar o Client ID e Secret no seu Bling:</h4>
+                <h4 style="color: #CBD0D6; margin: 0 0 10px; font-size: 0.95rem;">Como pegar o Client ID e Secret no seu Bling:</h4>
                 <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
                     <li>No Bling, vá no menu de engrenagem <strong>Preferências &gt; Central de Extensões</strong> ou clique em <strong>Área do Integrador</strong>.</li>
                     <li>Clique no aplicativo que você criou (<strong>Gest Estoques PHP</strong>).</li>

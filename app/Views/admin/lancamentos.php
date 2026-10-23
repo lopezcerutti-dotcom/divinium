@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: GESTÃO CENTRALIZADA DE COLEÇÕES & LANÇAMENTOS DA DIVINIUM
  * Permite gerenciar coleções organizadas por categorias independentes (Braceletes, Colares, Anéis, etc.)
@@ -330,7 +330,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
                 </div>
 
                 <div class="form-checkbox-row" style="margin-top: 15px;">
-                    <input type="checkbox" id="fieldColActive" name="is_active" value="1" checked style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                    <input type="checkbox" id="fieldColActive" name="is_active" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
                     <label for="fieldColActive" style="margin: 0; cursor: pointer; color: #ede7df;">
                         <strong>Coleção Ativa e Visível na Loja</strong>
                         <span style="display: block; font-size: 0.8rem; color: #a8a096;">Ao desmarcar, a coleção é ocultada do público sem apagar nenhuma informação.</span>
@@ -367,7 +367,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 
                 <div class="form-divider" style="margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.08);"></div>
 
-                <h4 style="color: #d4ba88; font-size: 0.95rem; margin-bottom: 15px;">✦ Botão de Ação Principal (CTA)</h4>
+                <h4 style="color: #CBD0D6; font-size: 0.95rem; margin-bottom: 15px;">✦ Botão de Ação Principal (CTA)</h4>
 
                 <div class="form-row-2">
                     <div class="form-group">
@@ -487,10 +487,10 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 <!-- MODAL DE PRÉ-VISUALIZAÇÃO AO VIVO DA COLEÇÃO -->
 <!-- ======================================================================= -->
 <div class="modal-overlay" id="previewModal">
-    <div class="modal-content modal-content-large" style="background: #0d0c0b; border: 1px solid rgba(212,186,136,0.3); padding: 0; max-height: 90vh;">
+    <div class="modal-content modal-content-large" style="background: #202020; border: 1px solid rgba(167,173,180,0.3); padding: 0; max-height: 90vh;">
         <div class="modal-header" style="padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(20,22,26,0.95);">
             <div>
-                <h3 class="modal-title" style="color: #d4ba88; font-size: 1.15rem;">✦ Pré-visualização ao Vivo na Loja Pública</h3>
+                <h3 class="modal-title" style="color: #CBD0D6; font-size: 1.15rem;">✦ Pré-visualização ao Vivo na Loja Pública</h3>
                 <span class="modal-subtitle">Assim é como o cliente visualizará esta coleção no site DIVINIUM.</span>
             </div>
             <button type="button" class="close-modal-btn" onclick="closePreviewModal()">&times;</button>
@@ -537,7 +537,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 }
 .lancamento-cat-tab.active {
     background: linear-gradient(135deg, rgba(212, 186, 136, 0.18), rgba(202, 161, 92, 0.08));
-    border-color: #d4ba88;
+    border-color: #737B85;
     color: #ffffff;
     box-shadow: 0 4px 15px rgba(212, 186, 136, 0.12);
 }
@@ -547,16 +547,17 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     border-radius: 12px;
     font-size: 0.72rem;
     font-weight: 600;
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 .lancamento-cat-tab.active .cat-tab-badge {
-    background: #d4ba88;
-    color: #0d0c0b;
+    background: #CBD0D6;
+    color: #202020;
+    font-weight: 700;
 }
 .add-cat-tab-btn {
     border-style: dashed;
     border-color: rgba(212, 186, 136, 0.3);
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 
 /* Áreas Independentes */
@@ -588,7 +589,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 .cat-summary-tag {
     font-size: 0.68rem;
     letter-spacing: 2px;
-    color: #d4ba88;
+    color: #CBD0D6;
     font-weight: 700;
     margin-bottom: 4px;
 }
@@ -619,7 +620,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     display: block;
     font-size: 1.25rem;
     font-weight: 700;
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 .stat-lbl {
     font-size: 0.7rem;
@@ -662,7 +663,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 }
 .col-order-pill {
     background: rgba(212, 186, 136, 0.12);
-    color: #d4ba88;
+    color: #CBD0D6;
     border: 1px solid rgba(212, 186, 136, 0.25);
     padding: 3px 9px;
     border-radius: 4px;
@@ -692,7 +693,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 .col-display-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.15rem;
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 .col-card-actions {
     display: flex;
@@ -757,8 +758,8 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 }
 .btn-order-arrow:hover {
     background: rgba(212, 186, 136, 0.2);
-    border-color: #d4ba88;
-    color: #d4ba88;
+    border-color: #737B85;
+    color: #CBD0D6;
 }
 
 .btn-card-action {
@@ -776,7 +777,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 .btn-card-action.btn-preview {
     background: rgba(212, 186, 136, 0.1);
     border-color: rgba(212, 186, 136, 0.25);
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 .btn-card-action.btn-preview:hover {
     background: rgba(212, 186, 136, 0.2);
@@ -841,8 +842,8 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     align-items: center;
     gap: 8px;
     padding: 10px 18px;
-    background: linear-gradient(135deg, #d4ba88, #caa15c);
-    color: #0d0c0b;
+    background: linear-gradient(135deg, #CBD0D6, #A7ADB4);
+    color: #202020;
     border-radius: 6px;
     text-decoration: none;
     font-size: 0.85rem;
@@ -864,7 +865,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 }
 .col-subtitle-text {
     font-size: 0.95rem;
-    color: #d4ba88;
+    color: #CBD0D6;
     font-weight: 500;
 }
 .col-desc-text {
@@ -881,11 +882,11 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     border-radius: 6px;
     padding: 6px 12px;
     font-size: 0.8rem;
-    color: #d4ba88;
+    color: #CBD0D6;
     align-self: flex-start;
 }
 .promo-sparkle {
-    color: #caa15c;
+    color: #CBD0D6;
 }
 
 /* Chips de Produtos */
@@ -910,7 +911,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 .btn-link-gold {
     background: none;
     border: none;
-    color: #d4ba88;
+    color: #CBD0D6;
     font-size: 0.8rem;
     cursor: pointer;
     text-decoration: underline;
@@ -963,7 +964,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 }
 .chip-price {
     font-size: 0.7rem;
-    color: #d4ba88;
+    color: #CBD0D6;
 }
 .chip-visibility-btn {
     background: none;
@@ -1010,8 +1011,8 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     color: #ede7df;
 }
 .modal-tab-btn.active {
-    color: #d4ba88;
-    border-bottom-color: #d4ba88;
+    color: #CBD0D6;
+    border-bottom-color: #CBD0D6;
 }
 .modal-tab-content {
     display: none;
@@ -1246,7 +1247,7 @@ function renderModalProductSelectors(assignedProducts = []) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td style="text-align: center;">
-                <input type="checkbox" class="prod-selector-chk" value="${prod.id}" ${isLinked ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                <input type="checkbox" class="prod-selector-chk" value="${prod.id}" ${isLinked ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: #737B85;">
             </td>
             <td>
                 <img src="${prod.image_url || '/assets/images/products/bracelete-verde.jpg'}" style="width: 34px; height: 34px; border-radius: 4px; object-fit: cover;">
@@ -1255,7 +1256,7 @@ function renderModalProductSelectors(assignedProducts = []) {
                 <strong style="color: #ffffff; font-size: 0.85rem; display: block;">${escapeHtml(prod.name)}</strong>
                 <span style="color: #8e8880; font-size: 0.75rem;">SKU: ${escapeHtml(prod.sku || 'DIV-CAM')}</span>
             </td>
-            <td style="color: #d4ba88; font-size: 0.82rem;">R$ ${priceFmt}</td>
+            <td style="color: #CBD0D6; font-size: 0.82rem;">R$ ${priceFmt}</td>
             <td style="color: #a8a096; font-size: 0.8rem;">${escapeHtml(prod.category_name || 'Braceletes')}</td>
             <td>
                 <input type="number" class="form-input prod-order-input" data-id="${prod.id}" value="${prodOrder}" min="1" style="padding: 4px 8px; font-size: 0.8rem; width: 65px;">
@@ -1581,27 +1582,27 @@ function previewCollectionModal(col) {
                 <img src="${p.image_url || '/assets/images/products/bracelete-verde.jpg'}" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div style="padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1;">
-                <span style="font-size: 0.68rem; letter-spacing: 1px; color: #d4ba88; text-transform: uppercase;">${escapeHtml(p.badge || 'ALTA JOALHERIA')}</span>
+                <span style="font-size: 0.68rem; letter-spacing: 1px; color: #CBD0D6; text-transform: uppercase;">${escapeHtml(p.badge || 'ALTA JOALHERIA')}</span>
                 <strong style="color: #ffffff; font-size: 0.95rem;">${escapeHtml(p.name)}</strong>
-                <span style="color: #d4ba88; font-size: 1rem; font-weight: 600; margin-top: auto;">R$ ${(p.price_cents ? (p.price_cents/100).toFixed(2).replace('.', ',') : '380,00')}</span>
+                <span style="color: #CBD0D6; font-size: 1rem; font-weight: 600; margin-top: auto;">R$ ${(p.price_cents ? (p.price_cents/100).toFixed(2).replace('.', ',') : '380,00')}</span>
             </div>
         </div>
     `).join('');
 
     container.innerHTML = `
         <div style="text-align: center; max-width: 650px; margin: 0 auto 30px;">
-            <span style="display: inline-block; font-size: 0.75rem; letter-spacing: 2px; color: #caa15c; font-weight: 700; margin-bottom: 8px;">${escapeHtml(col.badge || 'LANÇAMENTO EXCLUSIVO')}</span>
+            <span style="display: inline-block; font-size: 0.75rem; letter-spacing: 2px; color: #CBD0D6; font-weight: 700; margin-bottom: 8px;">${escapeHtml(col.badge || 'LANÇAMENTO EXCLUSIVO')}</span>
             <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: #ffffff; margin: 0 0 10px;">${escapeHtml(col.title || col.name)}</h2>
-            ${col.subtitle ? `<p style="font-size: 1rem; color: #d4ba88; margin: 0 0 10px;">${escapeHtml(col.subtitle)}</p>` : ''}
+            ${col.subtitle ? `<p style="font-size: 1rem; color: #CBD0D6; margin: 0 0 10px;">${escapeHtml(col.subtitle)}</p>` : ''}
             ${col.description ? `<p style="font-size: 0.9rem; color: #a8a096; line-height: 1.6; margin: 0 0 20px;">${escapeHtml(col.description)}</p>` : ''}
             <div style="display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap;">
                 <a href="${escapeHtml(col.button_url || '/loja')}" target="${escapeHtml(col.button_target || '_self')}" 
-                   style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; background: linear-gradient(135deg, #d4ba88, #caa15c); color: #0d0c0b; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(212,186,136,0.3);">
+                   style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; background: linear-gradient(135deg, #CBD0D6, #A7ADB4); color: #202020; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(167,173,180,0.3);">
                     <span>${escapeHtml(col.button_text || 'Explorar Coleção')}</span>
                     <span>↗</span>
                 </a>
                 ${col.button_secondary_text ? `
-                    <a href="${escapeHtml(col.button_secondary_url || '#')}" target="_blank" style="padding: 11px 22px; border: 1px solid rgba(212,186,136,0.4); color: #d4ba88; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">
+                    <a href="${escapeHtml(col.button_secondary_url || '#')}" target="_blank" style="padding: 11px 22px; border: 1px solid rgba(167,173,180,0.4); color: #CBD0D6; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">
                         ${escapeHtml(col.button_secondary_text)}
                     </a>
                 ` : ''}

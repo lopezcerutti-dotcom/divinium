@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: GESTÃO COMPLETA DE CATEGORIAS, PRODUTOS & VARIANTES BLING
  * DIVINIUM ADMIN SUITE - QUIET LUXURY EXECUTION
@@ -463,7 +463,7 @@ function renderCategoryProductsList(products) {
                                 <span style="font-size: 0.78rem; color: #E5E7EB; font-weight: 500;">
                                     ${escapeHtml(prod.price_formatted || 'R$ 380,00')}
                                 </span>
-                                <span style="font-size: 0.74rem; padding: 1px 6px; border-radius: 4px; background: rgba(74, 222, 128, 0.1); color: #4ade80;">
+                                <span style="font-size: 0.74rem; padding: 1px 6px; border-radius: 4px; background: rgba(167, 173, 180, 0.15); color: #FFFFFF;">
                                     ${prod.stock_quantity || 0} un. estoque
                                 </span>
                                 <span style="font-size: 0.74rem; padding: 1px 6px; border-radius: 4px; background: rgba(167, 173, 180, 0.15); color: #D1D5DB; font-weight: 600;">
