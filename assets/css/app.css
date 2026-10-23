@@ -89,10 +89,10 @@ body.luxury-theme {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: rgba(14, 13, 12, 0.88);
+    background-color: var(--header-bg, #FFFFFF);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
     transition: var(--transition);
 }
 
@@ -110,7 +110,7 @@ body.luxury-theme {
 }
 
 .nav-link {
-    color: #f3efe6;
+    color: var(--header-text, #202020);
     text-decoration: none;
     font-size: 0.88rem;
     font-weight: 500;
@@ -120,7 +120,7 @@ body.luxury-theme {
 }
 
 .nav-link:hover, .nav-link.active {
-    color: var(--gold-accent);
+    color: var(--gold-hover, #737B85);
 }
 
 .nav-item-dropdown {
@@ -131,11 +131,11 @@ body.luxury-theme {
     position: absolute;
     top: 100%;
     left: 0;
-    background: #191816;
+    background: var(--card-bg, #FFFFFF);
     min-width: 220px;
     padding: 12px 0;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.1));
     border-radius: 8px;
     display: none;
     flex-direction: column;
@@ -147,15 +147,15 @@ body.luxury-theme {
 
 .dropdown-menu a {
     padding: 10px 20px;
-    color: #e0dad3;
+    color: var(--text-primary, #202020);
     text-decoration: none;
     font-size: 0.84rem;
     transition: var(--transition);
 }
 
 .dropdown-menu a:hover {
-    background-color: rgba(197, 168, 128, 0.12);
-    color: var(--gold-accent);
+    background-color: var(--bg-alt, #F0F0EF);
+    color: var(--gold-hover, #737B85);
 }
 
 .brand-logo-container {
@@ -174,20 +174,19 @@ body.luxury-theme {
     font-size: 2.1rem;
     font-weight: 600;
     letter-spacing: 0.22em;
-    color: #ffffff;
+    color: var(--header-text, #202020);
     line-height: 1;
-    text-shadow: 0 0 24px rgba(197, 168, 128, 0.25);
     transition: var(--transition);
 }
 
 .brand-logo:hover .logo-text {
-    color: #f7e7ce;
+    color: var(--gold-hover, #737B85);
 }
 
 .logo-sub {
     font-size: 0.55rem;
     letter-spacing: 0.35em;
-    color: var(--gold-accent);
+    color: var(--gold-accent, #A7ADB4);
     margin-top: 4px;
     font-weight: 600;
 }
@@ -201,7 +200,7 @@ body.luxury-theme {
 .action-btn {
     background: none;
     border: none;
-    color: #f3efe6;
+    color: var(--header-text, #202020);
     cursor: pointer;
     display: flex;
     align-items: center;
