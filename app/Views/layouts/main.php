@@ -236,10 +236,10 @@
             <?php if (!empty($dynSerif)): ?>--font-serif: <?= $dynSerif ?> !important;<?php endif; ?>
             <?php if (!empty($dynSans)): ?>--font-sans: <?= $dynSans ?> !important;<?php endif; ?>
 
-            /* Cores Globais da Marca Centralizadas */
+            /* Cores Globais da Marca Centralizadas (Paleta Branco, Preto, Prata e Grafite) */
             --bg-light: <?= $effGlobalBg ?> !important;
             --bg-white: <?= $effGlobalSurface ?> !important;
-            --bg-dark: <?= $effGlobalBg ?> !important;
+            --bg-dark: #252525 !important;
             --bg-alt: <?= $effGlobalBgAlt ?> !important;
             --surface-alt: <?= $effGlobalBgAlt ?> !important;
             --bg-dark-card: <?= $effGlobalSurface ?> !important;
@@ -282,9 +282,9 @@
             --top-banner-bg: <?= $effTopBannerBg ?> !important;
             --top-banner-text: <?= $effTopBannerText ?> !important;
 
-            --border-light: rgba(167, 173, 180, 0.22) !important;
-            --border-color: rgba(167, 173, 180, 0.22) !important;
-            --border-medium: rgba(167, 173, 180, 0.35) !important;
+            --border-light: rgba(115, 123, 133, 0.22) !important;
+            --border-color: rgba(115, 123, 133, 0.22) !important;
+            --border-medium: rgba(115, 123, 133, 0.35) !important;
             --border-gold: <?= $effGlobalPrimary ?> !important;
             --primary-color: <?= $effGlobalPrimary ?> !important;
             --accent-color: <?= $effGlobalAccent ?> !important;
@@ -344,6 +344,40 @@
             color: <?= $effGlobalTextMuted ?> !important;
         }
 
+        /* Destaque Metálico Nobre (Substitui Antigo Gradiente Dourado) */
+        body.luxury-theme .gold-gradient-glow {
+            background: linear-gradient(135deg, <?= $effGlobalText ?> 0%, <?= $effGlobalAccent ?> 50%, <?= $effGlobalPrimary ?> 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            filter: drop-shadow(0 2px 10px rgba(167, 173, 180, 0.25)) !important;
+        }
+
+        /* Efeitos Atmosféricos Prateados Refinados */
+        body.luxury-theme .hero-ambient-glow,
+        body.luxury-theme .hero-spotlight,
+        body.luxury-theme .store-hero-glow,
+        body.luxury-theme .editorial-ambient-glow,
+        body.luxury-theme .stage-halo {
+            background: radial-gradient(circle, rgba(167, 173, 180, 0.12) 0%, rgba(167, 173, 180, 0.02) 55%, transparent 70%) !important;
+        }
+
+        /* Selos, Badges & Detalhes Metálicos */
+        body.luxury-theme .badge-sparkle,
+        body.luxury-theme .seal-sparkle,
+        body.luxury-theme .trust-dot,
+        body.luxury-theme .shopee-dot {
+            color: <?= $effGlobalAccent ?> !important;
+        }
+        body.luxury-theme .badge-tag,
+        body.luxury-theme .badge-metal,
+        body.luxury-theme .hero-editorial-badge,
+        body.luxury-theme .institutional-hero-badge,
+        body.luxury-theme .store-hero-badge {
+            background: rgba(167, 173, 180, 0.12) !important;
+            color: <?= $effGlobalText ?> !important;
+            border: 1px solid rgba(167, 173, 180, 0.3) !important;
+        }
+
         /* 2. PÁGINA INICIAL (HOME) */
         body.luxury-theme.page-home .hero-section,
         body.luxury-theme.page-home .about-manifesto-section,
@@ -359,6 +393,7 @@
         body.luxury-theme.page-home .about-micro-feature {
             background-color: <?= $effHomeCard ?> !important;
             background: <?= $effHomeCard ?> !important;
+            border-color: rgba(115, 123, 133, 0.22) !important;
         }
 
         /* 3. BOUTIQUE & CATÁLOGO (/loja) */
@@ -372,6 +407,8 @@
         body.luxury-theme.page-store .related-product-card {
             background-color: <?= $effStoreCard ?> !important;
             background: <?= $effStoreCard ?> !important;
+            border: 1px solid rgba(115, 123, 133, 0.22) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
         }
 
         /* 4. DETALHE DO PRODUTO (/produto/{slug}) */
@@ -390,6 +427,7 @@
         body.luxury-theme.page-product .product-guarantee-card {
             background-color: <?= $effProductCard ?> !important;
             background: <?= $effProductCard ?> !important;
+            border-color: rgba(115, 123, 133, 0.22) !important;
         }
 
         /* 5. CHECKOUT SEGURO (/checkout) */
@@ -401,6 +439,7 @@
         body.luxury-theme.page-checkout .payment-instructions-card {
             background-color: <?= $effCheckoutCard ?> !important;
             background: <?= $effCheckoutCard ?> !important;
+            border-color: rgba(115, 123, 133, 0.22) !important;
         }
 
         /* 6. PÁGINAS INSTITUCIONAIS & POLÍTICAS */
@@ -411,12 +450,14 @@
         body.luxury-theme.page-institutional .institutional-card {
             background-color: <?= $effInstitutionalCard ?> !important;
             background: <?= $effInstitutionalCard ?> !important;
+            border-color: rgba(115, 123, 133, 0.22) !important;
         }
 
         /* 7. CABEÇALHO / MENU SUPERIOR */
         body.luxury-theme .main-header {
             background-color: <?= $effHeaderBg ?> !important;
             background: <?= $effHeaderBg ?> !important;
+            border-bottom: 1px solid rgba(115, 123, 133, 0.18) !important;
         }
         body.luxury-theme .main-header .nav-link,
         body.luxury-theme .main-header .brand-name,
@@ -425,6 +466,10 @@
         body.luxury-theme .main-header .logo-text,
         body.luxury-theme .main-header .theme-toggle-btn {
             color: <?= $effHeaderText ?> !important;
+        }
+        body.luxury-theme .main-header .nav-link:hover,
+        body.luxury-theme .main-header .action-btn:hover {
+            color: <?= $effGlobalAccent ?> !important;
         }
 
         /* 8. RODAPÉ OFICIAL */
@@ -442,11 +487,15 @@
         body.luxury-theme .main-footer .footer-bottom {
             color: <?= $effFooterText ?> !important;
         }
+        body.luxury-theme .main-footer a:hover {
+            color: <?= $effGlobalPrimary ?> !important;
+        }
 
         /* 9. TOP BANNER DE ANÚNCIOS */
         body.luxury-theme .top-announcement-bar {
             background-color: <?= $effTopBannerBg ?> !important;
             background: <?= $effTopBannerBg ?> !important;
+            border-bottom: 1px solid rgba(115, 123, 133, 0.2) !important;
         }
         body.luxury-theme .top-announcement-bar,
         body.luxury-theme .top-announcement-bar span,
@@ -464,11 +513,14 @@
         body.luxury-theme .overlay-cta-text,
         body.luxury-theme .btn-store-back,
         body.luxury-theme .btn-concierge-help,
+        body.luxury-theme .btn-col-cta-lifestyle,
+        body.luxury-theme .btn-add-cart,
         body.luxury-theme .store-filter-pill.active {
             background: <?= $effGlobalPrimary ?> !important;
             background-color: <?= $effGlobalPrimary ?> !important;
             color: <?= $effBtnText ?> !important;
             border-color: <?= $effGlobalAccent ?> !important;
+            font-weight: 700 !important;
         }
 
         body.luxury-theme .btn-hero-gold:hover,
@@ -478,6 +530,8 @@
         body.luxury-theme .btn-checkout-submit:hover,
         body.luxury-theme .btn-card-explore:hover,
         body.luxury-theme .btn-concierge-help:hover,
+        body.luxury-theme .btn-col-cta-lifestyle:hover,
+        body.luxury-theme .btn-add-cart:hover,
         body.luxury-theme .store-filter-pill:hover {
             background: <?= $effGlobalAccent ?> !important;
             background-color: <?= $effGlobalAccent ?> !important;
@@ -515,15 +569,16 @@
             color: <?= $effBtnHoverText ?> !important;
         }
 
-        /* 10.1 PRESERVAÇÃO DE CORES FUNCIONAIS (Checkout, Estoque, Pix) */
+        /* 10.1 INFORMAÇÕES DE PREÇO & DESTAQUES SUTIS */
         .stock-status-available, .channel-price-label, .pix-badge-nob, .badge-nob-pix {
-            color: #10b981 !important;
+            color: <?= $effGlobalText ?> !important;
+            font-weight: 700 !important;
         }
         .stock-status-out, .checkout-error-text {
-            color: #f87171 !important;
+            color: #e53e3e !important;
         }
         .stock-status-preorder, .checkout-warning-text {
-            color: #fbbf24 !important;
+            color: <?= $effGlobalTextMuted ?> !important;
         }
 
         /* 10.2 CAMPOS DE FORMULÁRIO, BORDAS & MENUS SUSPENSOS */
@@ -537,7 +592,7 @@
         body.luxury-theme textarea {
             background-color: <?= $effGlobalSurface ?> !important;
             color: <?= $effGlobalText ?> !important;
-            border-color: rgba(167, 173, 180, 0.28) !important;
+            border-color: rgba(115, 123, 133, 0.28) !important;
         }
         body.luxury-theme .form-input:focus,
         body.luxury-theme .form-select:focus,
@@ -552,15 +607,18 @@
         body.luxury-theme .nav-dropdown-menu,
         body.luxury-theme .dropdown-menu {
             background-color: <?= $effHeaderBg ?> !important;
-            border-color: rgba(167, 173, 180, 0.25) !important;
+            border: 1px solid rgba(115, 123, 133, 0.22) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
         }
         body.luxury-theme .nav-dropdown-item,
-        body.luxury-theme .dropdown-item {
+        body.luxury-theme .dropdown-item,
+        body.luxury-theme .dropdown-menu a {
             color: <?= $effHeaderText ?> !important;
         }
         body.luxury-theme .nav-dropdown-item:hover,
-        body.luxury-theme .dropdown-item:hover {
-            background-color: rgba(167, 173, 180, 0.12) !important;
+        body.luxury-theme .dropdown-item:hover,
+        body.luxury-theme .dropdown-menu a:hover {
+            background-color: <?= $effGlobalBgAlt ?> !important;
             color: <?= $effGlobalAccent ?> !important;
         }
 
