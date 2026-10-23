@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: PERSONALIZAR BOUTIQUE DIVINIUM (/loja)
  * QUIET LUXURY BOUTIQUE VISUAL CUSTOMIZER
@@ -359,11 +359,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="store_btn_default_color" style="color: #ded7cf; font-weight: 500; font-size: 0.85rem;">Cor Padrão dos Botões</label>
                     <select id="store_btn_default_color" name="store_btn_default_color" class="form-input">
                         <option value="default" <?= Setting::get('store_btn_default_color', 'default') === 'default' ? 'selected' : '' ?>>Automático por Plataforma (Shopee Laranja, ML Amarelo...)</option>
-                        <option value="gold" <?= Setting::get('store_btn_default_color') === 'gold' ? 'selected' : '' ?>>👑 Ouro Imperial DIVINIUM (#D4BA88)</option>
-                        <option value="dark" <?= Setting::get('store_btn_default_color') === 'dark' ? 'selected' : '' ?>>🖤 Ônix Nobre (#121110 com Dourado)</option>
-                        <option value="silver" <?= Setting::get('store_btn_default_color') === 'silver' ? 'selected' : '' ?>>🪙 Prata de Lei 925 (#E2E8F0)</option>
-                        <option value="emerald" <?= Setting::get('store_btn_default_color') === 'emerald' ? 'selected' : '' ?>>💎 Verde Esmeralda (#10B981)</option>
-                        <option value="rose" <?= Setting::get('store_btn_default_color') === 'rose' ? 'selected' : '' ?>>🌸 Rose Gold (#FB7185)</option>
+                        <option value="gold" <?= Setting::get('store_btn_default_color') === 'gold' ? 'selected' : '' ?>>🪙 Prata Nobre Divinium (#A7ADB4)</option>
+                        <option value="dark" <?= Setting::get('store_btn_default_color') === 'dark' ? 'selected' : '' ?>>🖤 Ônix & Grafite (#252525)</option>
+                        <option value="silver" <?= Setting::get('store_btn_default_color') === 'silver' ? 'selected' : '' ?>>🪙 Prata de Lei 925 (#CBD0D6)</option>
+                        <option value="platinum" <?= Setting::get('store_btn_default_color') === 'platinum' ? 'selected' : '' ?>>⚪ Platina Pura (#F0F0EF)</option>
+                        <option value="titanium" <?= Setting::get('store_btn_default_color') === 'titanium' ? 'selected' : '' ?>>🔘 Titânio Grafite (#737B85)</option>
                         <option value="shopee" <?= Setting::get('store_btn_default_color') === 'shopee' ? 'selected' : '' ?>>🟠 Shopee Oficial (#EE4D2D)</option>
                         <option value="mercadolivre" <?= Setting::get('store_btn_default_color') === 'mercadolivre' ? 'selected' : '' ?>>🟡 Mercado Livre (#FFE600)</option>
                         <option value="amazon" <?= Setting::get('store_btn_default_color') === 'amazon' ? 'selected' : '' ?>>📦 Amazon (#FF9900)</option>

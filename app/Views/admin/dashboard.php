@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: DASHBOARD ADMINISTRATIVO DIVINIUM
  */
@@ -17,7 +17,7 @@
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(74, 222, 128, 0.12); color: #4ade80;">
+        <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
         <div class="metric-data">
@@ -72,18 +72,18 @@
     </div>
 
     <!-- MÓDULO 2: GESTÃO DE TEMAS -->
-    <div class="exec-module-card" style="border-left: 3px solid #caa15c;">
+    <div class="exec-module-card" style="border-left: 3px solid #A7ADB4;">
         <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(202, 161, 92, 0.12); color: #CBD0D6;">
+            <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
                 ✦
             </div>
-            <span style="background: rgba(202, 161, 92, 0.15); color: #CBD0D6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+            <span style="background: rgba(167, 173, 180, 0.15); color: #CBD0D6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
                 4 Paletas Autorais
             </span>
         </div>
         <div class="exec-card-body">
             <h3>Gestão de Temas & Identidade</h3>
-            <p>Alterne a estética da boutique entre Ouro Nobre, Prata 925, Esmeralda e Rose Gold com um clique.</p>
+            <p>Alterne a estética da boutique entre Prata Nobre & Noir, Branco Perolado & Platina e Grafite com um clique.</p>
         </div>
         <div class="exec-card-footer">
             <span style="font-size: 0.78rem; color: #8e8880;">Design System dinâmico</span>
@@ -116,7 +116,7 @@
     </div>
 
     <!-- MÓDULO 4: INTEGRAÇÃO BLING ERP -->
-    <div class="exec-module-card" style="border-left: 3px solid #10b981;">
+    <div class="exec-module-card" style="border-left: 3px solid #737B85;">
         <div class="exec-card-top">
             <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
                 📦
