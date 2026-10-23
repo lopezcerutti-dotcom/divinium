@@ -22,7 +22,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                 <span class="checkout-badge">CHECKOUT SEGURO</span>
             </div>
             <div class="checkout-security-status">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#737B85" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 <span>Criptografia SSL de 256 bits • Ambiente Protegido</span>
             </div>
         </div>
@@ -126,7 +126,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                             </div>
 
                             <div id="waInstructions" style="display: none;">
-                                <h4 style="color: #4ade80; margin: 0 0 8px; font-size: 1rem;">Finalização com Concierge Exclusivo</h4>
+                                <h4 style="color: var(--text-primary, #202020); margin: 0 0 8px; font-size: 1rem;">Finalização com Concierge Exclusivo</h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
                                     Ao avançar, nossa equipe já receberá a lista exata das joias selecionadas e o endereço para gerar seu link de pagamento com seguro cortesia.
                                 </p>
@@ -169,7 +169,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                         </div>
                         <div class="summary-row">
                             <span>Frete:</span>
-                            <span style="color: #4ade80; font-weight: 600;">CORTESIA COM SEGURO</span>
+                            <span style="color: var(--gold-accent, #737B85); font-weight: 600;">CORTESIA COM SEGURO</span>
                         </div>
                         <div class="summary-row total-row">
                             <span>Total Estimado:</span>
@@ -381,8 +381,9 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 .opt-tag-nob {
     font-size: 0.68rem;
     font-weight: 700;
-    color: #15803d;
-    background: rgba(34, 197, 94, 0.15);
+    color: var(--text-primary, #202020);
+    background: rgba(167, 173, 180, 0.2);
+    border: 1px solid rgba(167, 173, 180, 0.4);
     padding: 2px 8px;
     border-radius: 4px;
 }
