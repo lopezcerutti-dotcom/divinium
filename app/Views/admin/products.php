@@ -1159,8 +1159,8 @@ function renderPlatformLinks() {
                                 <option value="mercadolivre" ${btnColor === 'mercadolivre' ? 'selected' : ''}>🟡 Amarelo Mercado Livre (#FFE600)</option>
                                 <option value="amazon" ${btnColor === 'amazon' ? 'selected' : ''}>📦 Âmbar Amazon (#FF9900)</option>
                                 <option value="whatsapp" ${btnColor === 'whatsapp' ? 'selected' : ''}>🟢 Verde WhatsApp (#25D366)</option>
-                                <option value="emerald" ${btnColor === 'emerald' ? 'selected' : ''}>💎 Verde Esmeralda (#10B981)</option>
-                                <option value="rose" ${btnColor === 'rose' ? 'selected' : ''}>🌸 Rose Gold (#FB7185)</option>
+                                <option value="platinum" ${btnColor === 'platinum' ? 'selected' : ''}>⚪ Platina Pura (#F0F0EF)</option>
+                                <option value="titanium" ${btnColor === 'titanium' ? 'selected' : ''}>🔘 Titânio Grafite (#737B85)</option>
                                 <option value="custom" ${isCustomColor ? 'selected' : ''}>🎨 Cor Personalizada (Hex)...</option>
                             </select>
                             <div id="customColorPickerWrap_${idx}" style="display: ${isCustomColor ? 'flex' : 'none'}; align-items: center; gap: 6px;">
@@ -1337,12 +1337,14 @@ function updateLiveButtonPreview(idx) {
     } else if (color === 'whatsapp') {
         bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
         textColor = '#ffffff';
-    } else if (color === 'emerald') {
-        bgStyle = 'linear-gradient(135deg, #065f46 0%, #10b981 100%)';
+    } else if (color === 'platinum') {
+        bgStyle = 'linear-gradient(135deg, #FFFFFF 0%, #F0F0EF 100%)';
+        textColor = '#202020';
+        borderColor = '#CBD0D6';
+    } else if (color === 'titanium') {
+        bgStyle = 'linear-gradient(135deg, #737B85 0%, #505660 100%)';
         textColor = '#ffffff';
-    } else if (color === 'rose') {
-        bgStyle = 'linear-gradient(135deg, #be185d 0%, #fb7185 100%)';
-        textColor = '#ffffff';
+        borderColor = '#737B85';
     } else if (color.startsWith('#')) {
         bgStyle = color;
         borderColor = color;
