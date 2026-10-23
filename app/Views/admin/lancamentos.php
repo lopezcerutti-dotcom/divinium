@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: GESTÃO CENTRALIZADA DE COLEÇÕES & LANÇAMENTOS DA DIVINIUM
  * Permite gerenciar coleções organizadas por categorias independentes (Braceletes, Colares, Anéis, etc.)
@@ -736,7 +736,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
     transition: transform 0.25s ease;
 }
 .switch-toggle-wrap input:checked + .switch-slider {
-    background: #10b981;
+    background: #A7ADB4;
 }
 .switch-toggle-wrap input:checked + .switch-slider::before {
     transform: translateX(18px);
@@ -1262,7 +1262,7 @@ function renderModalProductSelectors(assignedProducts = []) {
                 <input type="number" class="form-input prod-order-input" data-id="${prod.id}" value="${prodOrder}" min="1" style="padding: 4px 8px; font-size: 0.8rem; width: 65px;">
             </td>
             <td style="text-align: center;">
-                <input type="checkbox" class="prod-active-chk" data-id="${prod.id}" value="1" ${prodActive == 1 ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: #10b981;">
+                <input type="checkbox" class="prod-active-chk" data-id="${prod.id}" value="1" ${prodActive == 1 ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: #737B85;">
             </td>
         `;
         tbody.appendChild(tr);
@@ -1679,7 +1679,8 @@ function showToast(msg) {
         position: fixed;
         bottom: 25px;
         right: 25px;
-        background: #10b981;
+        background: #252525;
+        border: 1px solid rgba(167, 173, 180, 0.4);
         color: #ffffff;
         padding: 12px 24px;
         border-radius: 8px;

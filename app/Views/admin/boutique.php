@@ -298,7 +298,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
                     <div class="field-label-row">
-                        <label>Indicador Mineral da Joia (Ponto Dourado + Nome)</label>
+                        <label>Indicador Mineral da Joia (Ponto de Prata + Nome)</label>
                         <?= $renderToggle('store_card_mineral_visible') ?>
                     </div>
                     <span class="field-hint">Exibe a gema mineral lapidada logo acima do título do produto.</span>
@@ -952,7 +952,7 @@ async function handleBoutiqueSubmit(e) {
 
         if (data.success) {
             btn.innerText = '✓ Salvo com Sucesso!';
-            btn.style.background = '#10b981';
+            btn.style.background = '#737B85';
             setTimeout(() => {
                 btn.disabled = false;
                 btn.innerText = 'Salvar Alterações da Boutique';
