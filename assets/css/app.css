@@ -2479,7 +2479,7 @@ body.luxury-theme {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.12em;
-    color: #d4ba88;
+    color: var(--gold-accent, #A7ADB4);
     margin-bottom: 24px;
 }
 
@@ -2488,21 +2488,21 @@ body.luxury-theme {
     font-size: clamp(2.4rem, 5vw, 3.8rem);
     font-weight: 400;
     line-height: 1.15;
-    color: #f7f4ee;
+    color: var(--text-primary, #202020);
     margin-bottom: 20px;
     letter-spacing: -0.02em;
 }
 
 .store-hero-subtitle {
     font-size: 1.05rem;
-    color: #b8b1a7;
+    color: var(--text-secondary, #686868);
     line-height: 1.7;
     max-width: 780px;
     margin: 0 auto 36px;
 }
 
 .store-hero-subtitle strong {
-    color: #d4ba88;
+    color: var(--text-primary, #202020);
     font-weight: 600;
 }
 
@@ -2519,23 +2519,23 @@ body.luxury-theme {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.8rem;
-    color: #ded7cf;
+    color: var(--text-primary, #202020);
     backdrop-filter: blur(10px);
 }
 
 .trust-badge-item svg {
-    color: #d4ba88;
+    color: var(--gold-accent, #A7ADB4);
 }
 
 /* 13.2 BARRA DE FILTROS DO CATÁLOGO */
 .store-catalog-section {
     padding: 60px 0 100px;
-    background: #0d0c0b;
+    background: var(--store-bg, #F8F8F7);
 }
 
 .store-filter-bar {
@@ -2546,7 +2546,7 @@ body.luxury-theme {
     gap: 16px;
     margin-bottom: 40px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
 }
 
 .store-search-container {
@@ -2558,21 +2558,21 @@ body.luxury-theme {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(212, 186, 136, 0.25);
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.15));
     border-radius: 24px;
     padding: 6px 14px;
     transition: all 0.25s ease;
 }
 
 .store-search-box:focus-within {
-    border-color: #d4ba88;
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 0 12px rgba(212, 186, 136, 0.2);
+    border-color: var(--gold-accent, #A7ADB4);
+    background: #FFFFFF;
+    box-shadow: 0 0 12px rgba(167, 173, 180, 0.25);
 }
 
 .store-search-box svg {
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
     flex-shrink: 0;
 }
 
@@ -2580,7 +2580,7 @@ body.luxury-theme {
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: var(--text-primary, #202020);
     font-size: 0.84rem;
     font-family: inherit;
     width: 240px;
@@ -2588,13 +2588,13 @@ body.luxury-theme {
 }
 
 .store-search-input::placeholder {
-    color: #8a8278;
+    color: var(--text-muted, #686868);
 }
 
 .store-search-clear {
     background: transparent;
     border: none;
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
     font-size: 1.1rem;
     line-height: 1;
     cursor: pointer;
@@ -2621,9 +2621,9 @@ body.luxury-theme {
 }
 
 .store-filter-pill {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #c4bcb2;
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.12));
+    color: var(--text-primary, #202020);
     padding: 8px 18px;
     border-radius: 24px;
     font-size: 0.84rem;
@@ -2636,17 +2636,17 @@ body.luxury-theme {
 }
 
 .store-filter-pill:hover {
-    background: rgba(212, 186, 136, 0.12);
-    border-color: rgba(212, 186, 136, 0.4);
-    color: #f7f4ee;
+    background: var(--bg-alt, #F0F0EF);
+    border-color: var(--gold-hover, #737B85);
+    color: var(--text-primary, #202020);
 }
 
 .store-filter-pill.active {
-    background: #d4ba88;
-    color: #0d0c0b;
-    border-color: #d4ba88;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(212, 186, 136, 0.25);
+    background: var(--gold-accent, #A7ADB4);
+    color: #202020;
+    border-color: var(--gold-hover, #737B85);
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 .store-filter-pill .count-pill {
