@@ -1,38 +1,42 @@
-﻿/* ==============================================================================
+/* ==============================================================================
    DIVINIUM - HAUTE JOAILLERIE & QUIET LUXURY DESIGN SYSTEM
    Paleta: Marfim Sedoso (#FAF8F5), Bronze Nobre (#9C7A58), Grafite Profundo (#11100F)
    ============================================================================== */
 
 :root {
-    --bg-light: #F7F7F5;
+    --bg-light: #F8F8F7;
+    --bg-main: #F8F8F7;
+    --bg-alt: #F0F0EF;
     --bg-white: #FFFFFF;
-    --bg-dark: #1E2023;
+    --bg-dark: #252525;
     --bg-dark-card: #FFFFFF;
     --card-bg: #FFFFFF;
-    --surface-dark: #FFFFFF;
+    --surface-dark: #252525;
     
-    --text-primary: #25272A;
-    --text-secondary: #737B85;
-    --text-muted: #8A929B;
-    --text-light: #25272A;
-    --text-light-muted: #737B85;
+    --text-primary: #202020;
+    --text-secondary: #686868;
+    --text-muted: #686868;
+    --text-light: #202020;
+    --text-light-muted: #686868;
 
     --gold-accent: #A7ADB4;
     --gold-hover: #737B85;
+    --primary-color: #A7ADB4;
+    --accent-color: #737B85;
     --silver-accent: #A7ADB4;
     --silver-hover: #737B85;
-    --bronze-dark: #25272A;
+    --bronze-dark: #202020;
     --bronze-warm: #737B85;
     
-    --border-light: rgba(37, 39, 42, 0.08);
-    --border-dark: rgba(37, 39, 42, 0.12);
+    --border-light: rgba(32, 32, 32, 0.08);
+    --border-dark: rgba(32, 32, 32, 0.15);
     
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     
     --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
-    --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.12);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.04);
+    --shadow-float: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 *, *::before, *::after {
