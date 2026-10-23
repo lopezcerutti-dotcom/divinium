@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * VIEW: GESTÃO DEDICADA DE PRODUTOS & ESTOQUE BLING ERP
  * QUIET LUXURY EXECUTIVE CATALOG MANAGEMENT
@@ -481,7 +481,7 @@
                 </div>
 
                 <div class="form-checkbox-row">
-                    <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #d4ba88;">
+                    <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #737B85;">
                     <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar esta joia no topo da Vitrine Principal</label>
                 </div>
 
@@ -520,26 +520,26 @@
                     <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_badge" value="0">
-                            <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir selos flutuantes na foto (Prata 925 / Sob Encomenda / Canais)</span>
                         </label>
                         <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Desmarque para ocultar selos que cubram detalhes ou ocupem espaço excessivo na fotografia desta peça.</span>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_specs" value="0">
-                            <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir especificações técnicas (Materiais, Medidas e SKU)</span>
                         </label>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_description" value="0">
-                            <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir descrição resumida da peça no card</span>
                         </label>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_channels" value="0">
-                            <input type="checkbox" id="prodShowChannels" name="show_channels" value="1" checked style="width: 16px; height: 16px; accent-color: #d4ba88;">
+                            <input type="checkbox" id="prodShowChannels" name="show_channels" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir painel de canais de compra na página de detalhes</span>
                         </label>
                     </div>
@@ -721,7 +721,7 @@
                         <span>Forçar Consulta Completa via API Bling v3</span>
                     </button>
                 <?php else: ?>
-                    <div style="background: rgba(202, 161, 92, 0.1); border: 1px solid rgba(202, 161, 92, 0.25); border-radius: 8px; padding: 12px 16px; margin-top: 6px; font-size: 0.8rem; color: #d4ba88; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <div style="background: rgba(167, 173, 180, 0.1); border: 1px solid rgba(167, 173, 180, 0.3); border-radius: 8px; padding: 12px 16px; margin-top: 6px; font-size: 0.8rem; color: #CBD0D6; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <span>Conecte suas credenciais para sincronizar via API ao vivo.</span>
                         <button type="button" class="btn-admin-gold" onclick="switchBlingTab('config')" style="padding: 6px 12px; font-size: 0.75rem; white-space: nowrap;">
                             Conectar API ↗
@@ -788,7 +788,7 @@
         <!-- ABA 3: PASSO A PASSO -->
         <div id="blingTabHelp" class="bling-tab-content" style="display: none; font-size: 0.85rem; color: #ded7cf; line-height: 1.6;">
             <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 18px; margin-bottom: 14px;">
-                <h4 style="color: #34d399; margin: 0 0 10px; font-size: 0.95rem;">Como conectar com seu Bling:</h4>
+                <h4 style="color: #FFFFFF; margin: 0 0 10px; font-size: 0.95rem;">Como conectar com seu Bling:</h4>
                 <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
                     <li>No Bling, vá em <strong>Preferências &gt; Central de Extensões</strong> ou <strong>Área do Integrador</strong>.</li>
                     <li>Abra seu aplicativo (<strong>Gest Estoques PHP</strong>).</li>
@@ -1084,7 +1084,7 @@ function renderPlatformLinks() {
         const btnColor = link.button_color || 'default';
         const btnSize = link.button_size || 'md';
         const isCustomColor = (btnColor && btnColor.startsWith('#'));
-        const customColorHex = isCustomColor ? btnColor : '#d4ba88';
+        const customColorHex = isCustomColor ? btnColor : '#CBD0D6';
 
         html += `
             <div class="platform-link-card ${isActive ? '' : 'is-inactive'}" id="linkCard_${idx}">
@@ -1129,7 +1129,7 @@ function renderPlatformLinks() {
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <label style="margin: 0;">Preço Específico neste Canal (R$)</label>
-                            <button type="button" onclick="copyBasePriceToLink(${idx})" style="background: none; border: none; color: #d4ba88; font-size: 0.72rem; cursor: pointer; text-decoration: underline;">
+                            <button type="button" onclick="copyBasePriceToLink(${idx})" style="background: none; border: none; color: #CBD0D6; font-size: 0.72rem; cursor: pointer; text-decoration: underline;">
                                 Usar Preço Base
                             </button>
                         </div>
@@ -1145,7 +1145,7 @@ function renderPlatformLinks() {
                 <!-- Customização Visual: Cor, Tamanho e Destino do Botão de Compra -->
                 <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-top: 10px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #d4ba88; display: flex; align-items: center; justify-content: space-between;">
+                        <label style="font-size: 0.76rem; color: #CBD0D6; display: flex; align-items: center; justify-content: space-between;">
                             <span>🎨 Cor do Botão</span>
                             ${isCustomColor ? `<span style="font-size: 0.68rem; color: #a8a096;">Hex: ${escapeHtml(btnColor)}</span>` : ''}
                         </label>
@@ -1165,7 +1165,7 @@ function renderPlatformLinks() {
                             </select>
                             <div id="customColorPickerWrap_${idx}" style="display: ${isCustomColor ? 'flex' : 'none'}; align-items: center; gap: 6px;">
                                 <input type="color" value="${customColorHex}" style="width: 32px; height: 32px; padding: 0; border: none; border-radius: 6px; cursor: pointer; background: none;" onchange="handleCustomColorPicker(${idx}, this.value)" title="Escolher cor visualmente">
-                                <input type="text" class="form-input" style="width: 82px; font-size: 0.78rem; padding: 6px 8px; text-transform: uppercase;" value="${isCustomColor ? btnColor : ''}" placeholder="#D4BA88" oninput="handleCustomColorText(${idx}, this.value)">
+                                <input type="text" class="form-input" style="width: 82px; font-size: 0.78rem; padding: 6px 8px; text-transform: uppercase;" value="${isCustomColor ? btnColor : ''}" placeholder="#CBD0D6" oninput="handleCustomColorText(${idx}, this.value)">
                             </div>
                         </div>
                     </div>
@@ -1197,7 +1197,7 @@ function renderPlatformLinks() {
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ded7cf; cursor: pointer; margin: 0;">
-                        <input type="checkbox" class="link-is-active" ${isActive ? 'checked' : ''} onchange="updateLinkData(${idx}, 'is_active', this.checked ? 1 : 0); renderPlatformLinks();" style="accent-color: #d4ba88;">
+                        <input type="checkbox" class="link-is-active" ${isActive ? 'checked' : ''} onchange="updateLinkData(${idx}, 'is_active', this.checked ? 1 : 0); renderPlatformLinks();" style="accent-color: #737B85;">
                         <span>Canal ativo e visível na Boutique pública</span>
                     </label>
 
@@ -1257,7 +1257,7 @@ function handlePlatformChange(idx, newPlat) {
 function handleButtonColorChange(idx, val) {
     if (!currentProductLinks[idx]) return;
     if (val === 'custom') {
-        currentProductLinks[idx].button_color = '#d4ba88';
+        currentProductLinks[idx].button_color = '#CBD0D6';
     } else {
         currentProductLinks[idx].button_color = val;
     }
@@ -1312,13 +1312,14 @@ function updateLiveButtonPreview(idx) {
     }
 
     if (color === 'gold') {
-        bgStyle = 'linear-gradient(135deg, #d4ba88 0%, #b89758 100%)';
-        textColor = '#0d0c0b';
-        borderColor = 'rgba(212, 186, 136, 0.6)';
+        bgStyle = 'linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%)';
+        textColor = '#202020';
+        borderColor = '#737B85';
+        borderColor = '#737B85';
     } else if (color === 'dark') {
         bgStyle = 'linear-gradient(135deg, #1f1c19 0%, #0d0c0b 100%)';
         textColor = '#ffffff';
-        borderColor = 'rgba(212, 186, 136, 0.4)';
+        borderColor = 'rgba(167, 173, 180, 0.4)';
     } else if (color === 'silver') {
         bgStyle = 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)';
         textColor = '#0f172a';
@@ -1351,7 +1352,7 @@ function updateLiveButtonPreview(idx) {
             const g = parseInt(hex.substr(2, 2), 16) || 0;
             const b = parseInt(hex.substr(4, 2), 16) || 0;
             const lum = r * 0.299 + g * 0.587 + b * 0.114;
-            textColor = lum > 160 ? '#121110' : '#ffffff';
+            textColor = lum > 140 ? '#202020' : '#ffffff';
         }
     } else {
         // default / canal
@@ -1919,9 +1920,9 @@ async function triggerBlingSync(e, mode = 'auto') {
             const resDiv = document.getElementById('blingSyncResult');
             if (resDiv) {
                 resDiv.style.display = 'block';
-                resDiv.style.background = 'rgba(16, 185, 129, 0.15)';
-                resDiv.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-                resDiv.style.color = '#34d399';
+                resDiv.style.background = 'rgba(167, 173, 180, 0.15)';
+                resDiv.style.border = '1px solid rgba(167, 173, 180, 0.4)';
+                resDiv.style.color = '#FFFFFF';
                 resDiv.innerHTML = '<strong>✓ ' + msg + '</strong><br><small style="color:#ded7cf;">Atualizando catálogo...</small>';
             }
 
