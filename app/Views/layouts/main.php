@@ -138,31 +138,35 @@
         $customColorText = \App\Models\Setting::get('custom_color_text');
         $customColorTextMuted = \App\Models\Setting::get('custom_color_text_muted');
 
-        // Padrões do tema canônico selecionado caso a cor global não esteja definida
+        // Padrões dos temas da DIVINIUM (Branco, Preto, Prata e Grafite)
         $themeDefaults = [
             'theme-silver-noir' => [
-                'bg' => '#F7F7F5', 'bg_alt' => '#FAFAF8', 'surface' => '#FFFFFF',
+                'bg' => '#F8F8F7', 'bg_alt' => '#F0F0EF', 'surface' => '#FFFFFF',
                 'primary' => '#A7ADB4', 'accent' => '#737B85',
-                'text' => '#25272A', 'text_muted' => '#737B85',
-                'footer_bg' => '#1E2023', 'footer_text' => '#CBD0D6'
+                'text' => '#202020', 'text_muted' => '#686868',
+                'footer_bg' => '#252525', 'footer_text' => '#FFFFFF',
+                'header_bg' => '#FFFFFF', 'header_text' => '#202020'
             ],
             'theme-pearl-platinum' => [
-                'bg' => '#FAFAF8', 'bg_alt' => '#FFFFFF', 'surface' => '#FFFFFF',
-                'primary' => '#CBD0D6', 'accent' => '#858C95',
-                'text' => '#242629', 'text_muted' => '#858C95',
-                'footer_bg' => '#1A1C1E', 'footer_text' => '#CBD0D6'
+                'bg' => '#FFFFFF', 'bg_alt' => '#F0F0EF', 'surface' => '#FFFFFF',
+                'primary' => '#A7ADB4', 'accent' => '#737B85',
+                'text' => '#202020', 'text_muted' => '#686868',
+                'footer_bg' => '#252525', 'footer_text' => '#FFFFFF',
+                'header_bg' => '#FFFFFF', 'header_text' => '#202020'
             ],
             'theme-nude-pearl' => [
-                'bg' => '#F8F5F2', 'bg_alt' => '#FAF8F5', 'surface' => '#FFFFFF',
-                'primary' => '#C8B9AE', 'accent' => '#B3A49A',
-                'text' => '#302C29', 'text_muted' => '#81766F',
-                'footer_bg' => '#24201D', 'footer_text' => '#D5CBC3'
+                'bg' => '#F8F8F7', 'bg_alt' => '#F0F0EF', 'surface' => '#FFFFFF',
+                'primary' => '#A7ADB4', 'accent' => '#737B85',
+                'text' => '#202020', 'text_muted' => '#686868',
+                'footer_bg' => '#252525', 'footer_text' => '#FFFFFF',
+                'header_bg' => '#FFFFFF', 'header_text' => '#202020'
             ],
             'theme-contemporary-graphite' => [
-                'bg' => '#F2F3F4', 'bg_alt' => '#FAFAF8', 'surface' => '#FFFFFF',
-                'primary' => '#9DA5AE', 'accent' => '#626B75',
-                'text' => '#25272A', 'text_muted' => '#626B75',
-                'footer_bg' => '#1C1E21', 'footer_text' => '#CBD0D6'
+                'bg' => '#F0F0EF', 'bg_alt' => '#F8F8F7', 'surface' => '#FFFFFF',
+                'primary' => '#A7ADB4', 'accent' => '#737B85',
+                'text' => '#202020', 'text_muted' => '#686868',
+                'footer_bg' => '#252525', 'footer_text' => '#FFFFFF',
+                'header_bg' => '#FFFFFF', 'header_text' => '#202020'
             ]
         ];
         $activeThemeDef = $themeDefaults[$canonicalTheme] ?? $themeDefaults['theme-silver-noir'];
@@ -197,10 +201,11 @@
         $effFooterBg = !empty($footerBgColor) ? $footerBgColor : $activeThemeDef['footer_bg'];
         $effFooterText = !empty($footerTextColor) ? $footerTextColor : $activeThemeDef['footer_text'];
 
-        $effTopBannerBg = !empty($topBannerBgColor) ? $topBannerBgColor : '#1A1C1E';
-        $effTopBannerText = !empty($topBannerTextColor) ? $topBannerTextColor : '#CBD0D6';
+        $effTopBannerBg = !empty($topBannerBgColor) ? $topBannerBgColor : '#252525';
+        $effTopBannerText = !empty($topBannerTextColor) ? $topBannerTextColor : '#FFFFFF';
 
         // Cálculo dinâmico de contraste para textos de botões e estados interativos
+        // Evita texto branco sobre prata clara ou cinza claro para garantir legibilidade máxima
         $calcContrastColor = function($hexColor) {
             $h = ltrim((string)$hexColor, '#');
             if (strlen($h) === 3) {
@@ -211,7 +216,7 @@
             $g = hexdec(substr($h, 2, 2));
             $b = hexdec(substr($h, 4, 2));
             $yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-            return ($yiq >= 140) ? '#121110' : '#FFFFFF';
+            return ($yiq >= 140) ? '#202020' : '#FFFFFF';
         };
         $effBtnText = $calcContrastColor($effGlobalPrimary);
         $effBtnHoverText = $calcContrastColor($effGlobalAccent);
