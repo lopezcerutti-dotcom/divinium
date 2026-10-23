@@ -2,7 +2,7 @@
    DIVINIUM - PAINEL ADMINISTRATIVO (QUIET LUXURY EXECUTIVE)
    ============================================================================== */
 body.admin-theme {
-    background-color: #0d0c0b;
+    background-color: #252525;
     color: #ede7df;
     font-family: var(--font-sans);
     margin: 0;
@@ -18,7 +18,7 @@ body.admin-theme {
 /* SIDEBAR */
 .admin-sidebar {
     width: 260px;
-    background-color: #141312;
+    background-color: #1e1e1e;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
@@ -49,7 +49,7 @@ body.admin-theme {
 .brand-badge {
     font-size: 0.62rem;
     letter-spacing: 0.16em;
-    color: #d4ba88;
+    color: #A7ADB4;
     margin-top: 2px;
     font-weight: 600;
 }
@@ -83,15 +83,15 @@ body.admin-theme {
 }
 
 .admin-nav-item:hover {
-    background-color: rgba(212, 186, 136, 0.08);
+    background-color: rgba(167, 173, 180, 0.12);
     color: #ffffff;
 }
 
 .admin-nav-item.active {
-    background-color: rgba(212, 186, 136, 0.15);
-    color: #d4ba88;
+    background-color: rgba(167, 173, 180, 0.2);
+    color: #FFFFFF;
     font-weight: 600;
-    border-left: 3px solid #d4ba88;
+    border-left: 3px solid #A7ADB4;
 }
 
 .logout-item:hover {
@@ -114,8 +114,8 @@ body.admin-theme {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ebd5a0, #d4ba88);
-    color: #0e0d0c;
+    background: linear-gradient(135deg, #CBD0D6, #A7ADB4);
+    color: #202020;
     display: flex;
     align-items: center;
     justify-content: center;
