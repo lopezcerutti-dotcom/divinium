@@ -202,13 +202,15 @@ use App\Core\View;
     color: var(--gold-accent);
 }
 .btn-concierge-help {
-    background: var(--gold-accent);
-    color: var(--bg-dark, #0d0c0b);
-    border: 1px solid var(--gold-accent);
+    background: var(--gold-accent, #CBD0D6);
+    color: #202020;
+    font-weight: 700;
+    border: 1px solid var(--gold-hover, #737B85);
 }
 .btn-concierge-help:hover {
-    background: var(--gold-hover);
-    border-color: var(--gold-hover);
+    background: var(--gold-hover, #737B85);
+    color: #FFFFFF;
+    border-color: var(--gold-hover, #737B85);
 }
 @media (max-width: 768px) {
     .institutional-card {
