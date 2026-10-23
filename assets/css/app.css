@@ -323,8 +323,8 @@ body.luxury-theme {
     bottom: 0;
     width: 86%;
     max-width: 360px;
-    background: radial-gradient(circle at top left, #1c1a17 0%, #11100f 65%, #0d0c0b 100%);
-    border-right: 1px solid rgba(212, 186, 136, 0.25);
+    background: radial-gradient(circle at top left, #2c2c2c 0%, #202020 65%, #181818 100%);
+    border-right: 1px solid rgba(167, 173, 180, 0.25);
     box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
     z-index: 251;
     transform: translateX(-100%);
@@ -580,7 +580,7 @@ body.luxury-theme {
    ============================================================================== */
 .hero-section {
     position: relative;
-    background: radial-gradient(ellipse at 70% 40%, rgba(201, 168, 128, 0.12) 0%, rgba(20, 18, 16, 0.98) 55%, #0d0c0b 100%);
+    background: radial-gradient(ellipse at 70% 40%, rgba(167, 173, 180, 0.12) 0%, rgba(37, 37, 37, 0.98) 55%, #252525 100%);
     color: var(--text-light);
     min-height: auto;
     display: flex;
@@ -1150,7 +1150,7 @@ body.luxury-theme {
    ============================================================================== */
 .about-manifesto-section {
     padding: 120px 0;
-    background-color: var(--about-bg, #0d0c0b);
+    background-color: var(--about-bg, #252525);
     transition: background-color 0.3s ease;
 }
 
@@ -1181,12 +1181,12 @@ body.luxury-theme {
 
 .about-manifesto-section .btn-outline-dark:hover {
     background: var(--about-btn, var(--gold-accent));
-    color: var(--about-bg, #0d0c0b);
+    color: var(--about-bg, #202020);
 }
 
 .about-manifesto-section .about-micro-feature {
-    background: var(--about-card-bg, #161513);
-    border-color: var(--about-card-border, rgba(212, 186, 136, 0.25));
+    background: var(--about-card-bg, #202020);
+    border-color: var(--about-card-border, rgba(167, 173, 180, 0.25));
 }
 
 .about-manifesto-section .micro-info strong {
@@ -2444,8 +2444,8 @@ body.luxury-theme {
 .store-hero-section {
     position: relative;
     padding: 90px 0 60px;
-    background: radial-gradient(circle at 50% 20%, #1c1a17 0%, #0d0c0b 80%);
-    border-bottom: 1px solid rgba(212, 186, 136, 0.15);
+    background: radial-gradient(circle at 50% 20%, #2c2c2c 0%, #1e1e1e 80%);
+    border-bottom: 1px solid rgba(167, 173, 180, 0.15);
     overflow: hidden;
     text-align: center;
 }
@@ -2457,7 +2457,7 @@ body.luxury-theme {
     transform: translateX(-50%);
     width: 600px;
     height: 400px;
-    background: radial-gradient(circle, rgba(212, 186, 136, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(167, 173, 180, 0.12) 0%, transparent 70%);
     filter: blur(80px);
     pointer-events: none;
 }
@@ -2960,7 +2960,7 @@ body.luxury-theme {
 
 .price-pix {
     font-size: 0.78rem;
-    color: #4ade80;
+    color: var(--gold-accent, #737B85);
     font-weight: 600;
 }
 
@@ -3273,36 +3273,36 @@ body.luxury-theme {
     box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
 }
 
-.btn-color-emerald {
-    background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
+.btn-color-emerald, .btn-color-platinum {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0EF 100%) !important;
+    color: #202020 !important;
+    border: 1px solid #CBD0D6 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
 }
-.btn-color-emerald .platform-btn-price-tag {
-    border-left-color: rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
+.btn-color-emerald .platform-btn-price-tag, .btn-color-platinum .platform-btn-price-tag {
+    border-left-color: rgba(32, 32, 32, 0.2) !important;
+    color: #202020 !important;
 }
-.btn-color-emerald:hover {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+.btn-color-emerald:hover, .btn-color-platinum:hover {
+    background: linear-gradient(135deg, #F0F0EF 0%, #E2E4E7 100%) !important;
+    color: #202020 !important;
+    box-shadow: 0 6px 20px rgba(115, 123, 133, 0.25) !important;
 }
 
-.btn-color-rose {
-    background: linear-gradient(135deg, #be185d 0%, #fb7185 100%) !important;
+.btn-color-rose, .btn-color-titanium {
+    background: linear-gradient(135deg, #737B85 0%, #505660 100%) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(251, 113, 133, 0.4) !important;
-    box-shadow: 0 4px 14px rgba(251, 113, 133, 0.3) !important;
+    border: 1px solid #737B85 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
 }
-.btn-color-rose .platform-btn-price-tag {
+.btn-color-rose .platform-btn-price-tag, .btn-color-titanium .platform-btn-price-tag {
     border-left-color: rgba(255, 255, 255, 0.25) !important;
     color: #ffffff !important;
 }
-.btn-color-rose:hover {
-    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+.btn-color-rose:hover, .btn-color-titanium:hover {
+    background: linear-gradient(135deg, #848D98 0%, #606873 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(251, 113, 133, 0.45) !important;
+    box-shadow: 0 6px 20px rgba(115, 123, 133, 0.4) !important;
 }
 
 /* Aplicação a canais secundários de venda */
@@ -3316,15 +3316,15 @@ body.luxury-theme {
     border-color: rgba(226, 232, 240, 0.5) !important;
     color: #e2e8f0 !important;
 }
-.store-channel-pill.btn-color-emerald {
-    background: rgba(16, 185, 129, 0.12) !important;
-    border-color: rgba(16, 185, 129, 0.4) !important;
-    color: #10b981 !important;
+.store-channel-pill.btn-color-emerald, .store-channel-pill.btn-color-platinum {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #CBD0D6 !important;
+    color: #202020 !important;
 }
-.store-channel-pill.btn-color-rose {
-    background: rgba(251, 113, 133, 0.12) !important;
-    border-color: rgba(251, 113, 133, 0.4) !important;
-    color: #fb7185 !important;
+.store-channel-pill.btn-color-rose, .store-channel-pill.btn-color-titanium {
+    background: rgba(115, 123, 133, 0.15) !important;
+    border-color: rgba(115, 123, 133, 0.4) !important;
+    color: #CBD0D6 !important;
 }
 
 /* 13.3.2 CANAIS SECUNDÁRIOS DE VENDA */
@@ -4833,8 +4833,8 @@ body.theme-rose .btn-store-back {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    background: var(--gold-accent, #A7ADB4);
+    box-shadow: 0 0 8px rgba(167, 173, 180, 0.6);
 }
 
 /* THUMBNAILS DA GALERIA */
@@ -4930,7 +4930,8 @@ body.theme-rose .btn-store-back {
 }
 
 .product-stock-status-tag.in-stock {
-    color: #34d399;
+    color: var(--text-primary);
+    font-weight: 600;
 }
 
 .product-stock-status-tag.made-to-order {
@@ -4979,7 +4980,7 @@ body.theme-rose .btn-store-back {
 }
 
 .product-pix-tag {
-    color: #34d399;
+    color: var(--gold-accent, #737B85);
     font-weight: 600;
     display: inline-flex;
     align-items: center;
@@ -5114,9 +5115,9 @@ body.theme-rose .btn-store-back {
 }
 
 .btn-share-icon.whatsapp:hover {
-    background: rgba(37, 211, 102, 0.15);
-    border-color: #25d366;
-    color: #4ade80;
+    background: rgba(115, 123, 133, 0.15);
+    border-color: #CBD0D6;
+    color: #FFFFFF;
 }
 
 /* HEADER DO PRODUTO */
@@ -5174,9 +5175,9 @@ body.theme-rose .btn-store-back {
 }
 
 .price-pix-badge {
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.35);
-    color: #34d399;
+    background: rgba(167, 173, 180, 0.15);
+    border: 1px solid rgba(167, 173, 180, 0.35);
+    color: var(--text-primary);
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.78rem;
@@ -5492,7 +5493,7 @@ body.theme-rose .btn-store-back {
 }
 
 .channels-security-footnote svg {
-    color: #34d399;
+    color: var(--gold-accent, #737B85);
     flex-shrink: 0;
 }
 
