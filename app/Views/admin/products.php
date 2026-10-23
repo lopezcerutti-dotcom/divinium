@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: GESTÃO DEDICADA DE PRODUTOS & ESTOQUE BLING ERP
  * QUIET LUXURY EXECUTIVE CATALOG MANAGEMENT
@@ -46,7 +46,7 @@
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(74, 222, 128, 0.12); color: #4ade80;">
+        <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
         <div class="metric-data">
@@ -66,7 +66,7 @@
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(16, 185, 129, 0.12); color: #34d399;">
+        <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
         </div>
         <div class="metric-data">
@@ -241,7 +241,7 @@
                                     R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?>
                                 </strong>
                                 <?php if (!empty($p['promotional_price_cents'])): ?>
-                                    <div style="font-size: 0.72rem; color: #34d399;">
+                                    <div style="font-size: 0.72rem; color: #CBD0D6;">
                                         De: R$ <?= number_format($p['promotional_price_cents'] / 100, 2, ',', '.') ?>
                                     </div>
                                 <?php endif; ?>
@@ -467,7 +467,7 @@
                     <div class="status-radio-group">
                         <label class="status-radio-label">
                             <input type="radio" name="status" id="statusPublished" value="published" checked>
-                            <span style="color: #4ade80;">● Publicado (Visível na Boutique)</span>
+                            <span style="color: #FFFFFF;">● Publicado (Visível na Boutique)</span>
                         </label>
                         <label class="status-radio-label">
                             <input type="radio" name="status" id="statusDraft" value="draft">
@@ -1152,9 +1152,9 @@ function renderPlatformLinks() {
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <select class="form-select link-btn-color" style="font-size: 0.78rem; flex: 1;" onchange="handleButtonColorChange(${idx}, this.value)">
                                 <option value="default" ${btnColor === 'default' ? 'selected' : ''}>✦ Padrão do Canal / Tema</option>
-                                <option value="gold" ${btnColor === 'gold' ? 'selected' : ''}>👑 Ouro Imperial (#D4BA88)</option>
-                                <option value="dark" ${btnColor === 'dark' ? 'selected' : ''}>🖤 Ônix Nobre (#121110)</option>
-                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Prata de Lei 925 (#E2E8F0)</option>
+                                <option value="gold" ${btnColor === 'gold' ? 'selected' : ''}>🪙 Prata Nobre Divinium (#A7ADB4)</option>
+                                <option value="dark" ${btnColor === 'dark' ? 'selected' : ''}>🖤 Ônix & Grafite (#252525)</option>
+                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Prata de Lei 925 (#CBD0D6)</option>
                                 <option value="shopee" ${btnColor === 'shopee' ? 'selected' : ''}>🟠 Laranja Shopee (#EE4D2D)</option>
                                 <option value="mercadolivre" ${btnColor === 'mercadolivre' ? 'selected' : ''}>🟡 Amarelo Mercado Livre (#FFE600)</option>
                                 <option value="amazon" ${btnColor === 'amazon' ? 'selected' : ''}>📦 Âmbar Amazon (#FF9900)</option>
@@ -1317,7 +1317,7 @@ function updateLiveButtonPreview(idx) {
         borderColor = '#737B85';
         borderColor = '#737B85';
     } else if (color === 'dark') {
-        bgStyle = 'linear-gradient(135deg, #1f1c19 0%, #0d0c0b 100%)';
+        bgStyle = 'linear-gradient(135deg, #252525 0%, #1e1e1e 100%)';
         textColor = '#ffffff';
         borderColor = 'rgba(167, 173, 180, 0.4)';
     } else if (color === 'silver') {
@@ -1368,8 +1368,9 @@ function updateLiveButtonPreview(idx) {
         } else if (p.includes('whatsapp')) {
             bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
         } else {
-            bgStyle = 'linear-gradient(135deg, #d4ba88 0%, #b89758 100%)';
-            textColor = '#0d0c0b';
+            bgStyle = 'linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%)';
+            textColor = '#202020';
+            borderColor = '#737B85';
         }
     }
 
