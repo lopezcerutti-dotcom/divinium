@@ -215,15 +215,15 @@ ob_start();
 <!-- ======================================================================= -->
 <?php
 // Configurações dinâmicas de cores da Seção Manifesto & Sobre a Marca
-$aboutBg = Setting::get('about_bg_color', '#0d0c0b');
+$aboutBg = Setting::get('about_bg_color', '#252525');
 $aboutTitleColor = Setting::get('about_title_color', '#ffffff');
-$aboutTextColor = Setting::get('about_text_color', '#ded7cf');
+$aboutTextColor = Setting::get('about_text_color', '#E2E4E7');
 $aboutAccentColor = Setting::get('about_accent_color', '#A7ADB4');
 $aboutTagColor = Setting::get('about_tag_color', '#A7ADB4');
-$aboutCardBg = Setting::get('about_card_bg', '#161513');
+$aboutCardBg = Setting::get('about_card_bg', '#202020');
 $aboutCardBorder = Setting::get('about_card_border', 'rgba(167, 173, 180, 0.25)');
 $aboutBtnColor = Setting::get('about_btn_color', '#A7ADB4');
-$aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)');
+$aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(37, 37, 37, 0.85)');
 ?>
 <section class="about-manifesto-section" id="about" style="
     --about-bg: <?= \App\Core\View::e($aboutBg) ?>;
