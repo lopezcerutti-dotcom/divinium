@@ -295,10 +295,10 @@
                             <button type="button" onclick="clearSpecificColor('home_bg_color', 'picker_home_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_home_bg" value="<?= !empty($customSettings['home_bg_color']) ? $customSettings['home_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('home_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_home_bg" value="<?= !empty($customSettings['home_bg_color']) ? $customSettings['home_bg_color'] : '#F8F8F7' ?>" onchange="document.getElementById('home_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="home_bg_color" name="home_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['home_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado do global (#F7F7F5)"
+                                   placeholder="Padrão: herdado do global (#F8F8F7)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_home_bg').value = this.value;">
                         </div>
                     </div>
@@ -326,10 +326,10 @@
                             <button type="button" onclick="clearSpecificColor('store_bg_color', 'picker_store_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_store_bg" value="<?= !empty($customSettings['store_bg_color']) ? $customSettings['store_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('store_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_store_bg" value="<?= !empty($customSettings['store_bg_color']) ? $customSettings['store_bg_color'] : '#F8F8F7' ?>" onchange="document.getElementById('store_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="store_bg_color" name="store_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['store_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   placeholder="Padrão: herdado (#F8F8F7)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_store_bg').value = this.value;">
                         </div>
                     </div>
@@ -357,10 +357,10 @@
                             <button type="button" onclick="clearSpecificColor('product_bg_color', 'picker_product_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_product_bg" value="<?= !empty($customSettings['product_bg_color']) ? $customSettings['product_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('product_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_product_bg" value="<?= !empty($customSettings['product_bg_color']) ? $customSettings['product_bg_color'] : '#F8F8F7' ?>" onchange="document.getElementById('product_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="product_bg_color" name="product_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['product_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   placeholder="Padrão: herdado (#F8F8F7)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_product_bg').value = this.value;">
                         </div>
                     </div>
@@ -388,10 +388,10 @@
                             <button type="button" onclick="clearSpecificColor('checkout_bg_color', 'picker_checkout_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_checkout_bg" value="<?= !empty($customSettings['checkout_bg_color']) ? $customSettings['checkout_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('checkout_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_checkout_bg" value="<?= !empty($customSettings['checkout_bg_color']) ? $customSettings['checkout_bg_color'] : '#F8F8F7' ?>" onchange="document.getElementById('checkout_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="checkout_bg_color" name="checkout_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['checkout_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   placeholder="Padrão: herdado (#F8F8F7)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_checkout_bg').value = this.value;">
                         </div>
                     </div>
@@ -419,10 +419,10 @@
                             <button type="button" onclick="clearSpecificColor('institutional_bg_color', 'picker_institutional_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_institutional_bg" value="<?= !empty($customSettings['institutional_bg_color']) ? $customSettings['institutional_bg_color'] : '#F7F7F5' ?>" onchange="document.getElementById('institutional_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_institutional_bg" value="<?= !empty($customSettings['institutional_bg_color']) ? $customSettings['institutional_bg_color'] : '#F8F8F7' ?>" onchange="document.getElementById('institutional_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="institutional_bg_color" name="institutional_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['institutional_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado (#F7F7F5)"
+                                   placeholder="Padrão: herdado (#F8F8F7)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_institutional_bg').value = this.value;">
                         </div>
                     </div>
@@ -453,7 +453,7 @@
                             <input type="color" id="picker_header_bg" value="<?= !empty($customSettings['header_bg_color']) ? $customSettings['header_bg_color'] : '#FFFFFF' ?>" onchange="document.getElementById('header_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="header_bg_color" name="header_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['header_bg_color'] ?? '') ?>" 
-                                   placeholder="Ex: #FFFFFF ou #F7F7F5"
+                                   placeholder="Ex: #FFFFFF ou #F8F8F7"
                                    oninput="if(this.value.length===7) document.getElementById('picker_header_bg').value = this.value;">
                         </div>
                     </div>
@@ -463,10 +463,10 @@
                             <button type="button" onclick="clearSpecificColor('header_text_color', 'picker_header_text')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_header_text" value="<?= !empty($customSettings['header_text_color']) ? $customSettings['header_text_color'] : '#25272A' ?>" onchange="document.getElementById('header_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_header_text" value="<?= !empty($customSettings['header_text_color']) ? $customSettings['header_text_color'] : '#202020' ?>" onchange="document.getElementById('header_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="header_text_color" name="header_text_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['header_text_color'] ?? '') ?>" 
-                                   placeholder="Padrão: herdado (#25272A)"
+                                   placeholder="Padrão: herdado (#202020)"
                                    oninput="if(this.value.length===7) document.getElementById('picker_header_text').value = this.value;">
                         </div>
                     </div>
@@ -481,10 +481,10 @@
                             <button type="button" onclick="clearSpecificColor('footer_bg_color', 'picker_footer_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_footer_bg" value="<?= !empty($customSettings['footer_bg_color']) ? $customSettings['footer_bg_color'] : '#1E2023' ?>" onchange="document.getElementById('footer_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_footer_bg" value="<?= !empty($customSettings['footer_bg_color']) ? $customSettings['footer_bg_color'] : '#252525' ?>" onchange="document.getElementById('footer_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="footer_bg_color" name="footer_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['footer_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: #1E2023 ou #F7F7F5"
+                                   placeholder="Padrão: #252525 ou #F8F8F7"
                                    oninput="if(this.value.length===7) document.getElementById('picker_footer_bg').value = this.value;">
                         </div>
                     </div>
@@ -494,10 +494,10 @@
                             <button type="button" onclick="clearSpecificColor('footer_text_color', 'picker_footer_text')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_footer_text" value="<?= !empty($customSettings['footer_text_color']) ? $customSettings['footer_text_color'] : '#CBD0D6' ?>" onchange="document.getElementById('footer_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_footer_text" value="<?= !empty($customSettings['footer_text_color']) ? $customSettings['footer_text_color'] : '#FFFFFF' ?>" onchange="document.getElementById('footer_text_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="footer_text_color" name="footer_text_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['footer_text_color'] ?? '') ?>" 
-                                   placeholder="Padrão: #CBD0D6"
+                                   placeholder="Padrão: #FFFFFF"
                                    oninput="if(this.value.length===7) document.getElementById('picker_footer_text').value = this.value;">
                         </div>
                     </div>
@@ -512,10 +512,10 @@
                             <button type="button" onclick="clearSpecificColor('top_banner_bg_color', 'picker_top_banner_bg')" title="Limpar e voltar a herdar a cor global" style="background: none; border: none; color: #8e8880; cursor: pointer; font-size: 0.72rem; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8e8880'">✕ Limpar</button>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="color" id="picker_top_banner_bg" value="<?= !empty($customSettings['top_banner_bg_color']) ? $customSettings['top_banner_bg_color'] : '#1A1C1E' ?>" onchange="document.getElementById('top_banner_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="color" id="picker_top_banner_bg" value="<?= !empty($customSettings['top_banner_bg_color']) ? $customSettings['top_banner_bg_color'] : '#252525' ?>" onchange="document.getElementById('top_banner_bg_color').value = this.value" style="width: 38px; height: 34px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="top_banner_bg_color" name="top_banner_bg_color" class="form-input" 
                                    value="<?= \App\Core\View::e($customSettings['top_banner_bg_color'] ?? '') ?>" 
-                                   placeholder="Padrão: #1A1C1E ou prata"
+                                   placeholder="Padrão: #252525 ou prata"
                                    oninput="if(this.value.length===7) document.getElementById('picker_top_banner_bg').value = this.value;">
                         </div>
                     </div>
