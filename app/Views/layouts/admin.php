@@ -20,14 +20,14 @@
     <?php if (!empty($adminBgImage)): ?>
     <style id="admin-dynamic-bg">
         body.admin-theme {
-            background-color: #0d0c0b !important;
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$adminBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$adminBgOverlay + 0.10) ?>)), url('<?= \App\Core\View::e($adminBgImage) ?>') !important;
+            background-color: #252525 !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$adminBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$adminBgOverlay + 0.10) ?>)), url('<?= \App\Core\View::e($adminBgImage) ?>') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
             background-position: center center !important;
         }
         .admin-main, .admin-card {
-            background-color: rgba(20, 22, 26, 0.75) !important;
+            background-color: rgba(32, 32, 32, 0.85) !important;
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
         }
