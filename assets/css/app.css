@@ -2235,7 +2235,7 @@ body.luxury-theme {
 }
 
 .login-modal-close:hover {
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
     transform: scale(1.1);
 }
 
@@ -2247,7 +2247,7 @@ body.luxury-theme {
 }
 
 .brand-sparkle {
-    color: #ebd5a0;
+    color: var(--gold-accent, #A7ADB4);
     font-size: 0.9rem;
 }
 
@@ -2262,7 +2262,7 @@ body.luxury-theme {
 .login-modal-brand .brand-sub {
     font-size: 0.6rem;
     letter-spacing: 0.14em;
-    color: #d4ba88;
+    color: var(--gold-accent, #A7ADB4);
     font-weight: 600;
     border-left: 1px solid rgba(255, 255, 255, 0.15);
     padding-left: 8px;
@@ -2333,15 +2333,15 @@ body.luxury-theme {
 
 .modal-input:focus {
     outline: none;
-    border-color: #d4ba88;
+    border-color: var(--gold-accent, #A7ADB4);
     background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 15px rgba(212, 186, 136, 0.25);
+    box-shadow: 0 0 15px rgba(167, 173, 180, 0.25);
 }
 
 .btn-modal-submit {
     width: 100%;
-    background: linear-gradient(135deg, #ebd5a0 0%, #d4ba88 50%, #c2a36e 100%);
-    color: #0e0d0c;
+    background: linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 50%, #737B85 100%);
+    color: #202020;
     border: none;
     padding: 13px;
     border-radius: 10px;
@@ -2354,13 +2354,13 @@ body.luxury-theme {
     justify-content: center;
     gap: 8px;
     margin-top: 20px;
-    box-shadow: 0 10px 25px rgba(212, 186, 136, 0.28);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-modal-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 35px rgba(212, 186, 136, 0.42);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
 }
 
 .btn-modal-submit:disabled {
@@ -2370,8 +2370,8 @@ body.luxury-theme {
 }
 
 .first-access-card {
-    background: rgba(212, 186, 136, 0.06);
-    border: 1px dashed rgba(212, 186, 136, 0.3);
+    background: rgba(167, 173, 180, 0.08);
+    border: 1px dashed rgba(167, 173, 180, 0.3);
     border-radius: 12px;
     padding: 14px;
     margin-top: 22px;
@@ -2382,7 +2382,7 @@ body.luxury-theme {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
     font-weight: 600;
     margin-bottom: 6px;
 }
