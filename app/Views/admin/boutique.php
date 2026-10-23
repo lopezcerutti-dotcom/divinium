@@ -272,7 +272,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Elementos dos Cards de Produtos -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 16px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         👁️ Elementos Visuais Globais dos Cards de Produtos
                     </h4>
                     <span class="field-hint">Defina a visibilidade geral dos elementos nos cards. Lembre-se que cada joia também possui controles individuais no cadastro de produtos.</span>
@@ -349,7 +349,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Estilo Padrão dos Botões de Compra -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; padding-top: 16px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         🎨 Estilo Padrão dos Botões de Compra da Vitrine
                     </h4>
                     <span class="field-hint">Defina a cor e o tamanho padrão para os botões de compra. Cada produto também pode ter botões com cores e tamanhos personalizados na aba de Produtos.</span>
@@ -385,7 +385,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Comportamento de Clique nos Cards -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; padding-top: 16px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         🎯 Comportamento de Clique nos Cards da Boutique
                     </h4>
                     <span class="field-hint">Defina para onde o cliente é direcionado ao clicar na foto, no título ou no card da joia. Cada produto também pode ter exceção individual cadastrada.</span>
@@ -424,8 +424,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <div class="form-grid">
                 
                 <!-- Layout e Imparcialidade dos Botões -->
-                <div class="form-group full-width" style="background: rgba(212, 186, 136, 0.05); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(212, 186, 136, 0.2);">
-                    <h4 style="color: #d4ba88; margin: 0 0 6px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                <div class="form-group full-width" style="background: rgba(167, 173, 180, 0.06); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.25);">
+                    <h4 style="color: #CBD0D6; margin: 0 0 6px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         ⚖️ Imparcialidade & Disposição dos Canais de Venda
                     </h4>
                     <p style="margin: 0; font-size: 0.82rem; color: #b5ada3;">
@@ -471,7 +471,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- Seções Informativas da Página de Detalhes -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
-                    <h4 style="color: #d4ba88; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         👁️ Visibilidade de Seções na Página de Detalhes
                     </h4>
                     <span class="field-hint">Ative ou desative seções complementares da página da joia.</span>
@@ -769,9 +769,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <div class="form-group full-width" style="background: linear-gradient(135deg, rgba(202, 161, 92, 0.12) 0%, rgba(13, 15, 18, 0.95) 100%); border: 1px solid rgba(202, 161, 92, 0.35); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                     <div>
-                        <strong style="color: #caa15c; font-size: 0.92rem; display: block; margin-bottom: 4px;">✦ Estúdio Global de Cores & Fundo de Todas as Páginas</strong>
+                        <strong style="color: #CBD0D6; font-size: 0.92rem; display: block; margin-bottom: 4px;">✦ Estúdio Global de Cores & Fundo de Todas as Páginas</strong>
                         <p style="font-size: 0.82rem; color: #b8b1a7; margin: 0; line-height: 1.4;">
-                            Deseja alterar as cores de fundo, superfícies e ouro de <strong>todas as páginas do site simultaneamente</strong> (Home, Boutique, Checkout, Produto, Políticas)?
+                            Deseja alterar as cores de fundo, superfícies e tons de <strong>todas as páginas do site simultaneamente</strong> (Home, Boutique, Checkout, Produto, Políticas)?
                         </p>
                     </div>
                     <a href="/admin/temas" class="btn-admin-gold" style="font-size: 0.8rem; padding: 8px 14px; text-decoration: none;">
@@ -786,12 +786,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="store_bg_color">Cor de Fundo da Boutique</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_store_bg" 
-                               value="<?= View::e(Setting::get('store_bg_color', Setting::get('custom_color_bg', '#0D0C0B'))) ?>" 
+                               value="<?= View::e(Setting::get('store_bg_color', Setting::get('custom_color_bg', '#F8F8F7'))) ?>" 
                                onchange="document.getElementById('store_bg_color').value = this.value;"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="store_bg_color" name="store_bg_color" class="form-input" 
                                value="<?= View::e(Setting::get('store_bg_color', '')) ?>" 
-                               placeholder="Ex: #0D0C0B (Vazio = herda cor global)"
+                               placeholder="Ex: #F8F8F7 (Vazio = herda cor global)"
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_store_bg').value = this.value;">
                     </div>
                     <span class="field-hint">Se deixar em branco, herda a cor global definida em Temas.</span>
@@ -829,16 +829,16 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <!-- PRESETS RÁPIDOS -->
                 <div class="form-group full-width">
-                    <label style="font-size: 0.78rem; text-transform: uppercase; color: #caa15c; font-weight: 700; display: block; margin-bottom: 8px;">✦ Texturas Rápidas de Alta Joalheria:</label>
+                    <label style="font-size: 0.78rem; text-transform: uppercase; color: #CBD0D6; font-weight: 700; display: block; margin-bottom: 8px;">✦ Texturas Rápidas de Alta Joalheria:</label>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/marble-noir.svg';">
-                            Mármore Noir & Ouro
+                            Mármore Noir & Prata
                         </button>
                         <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/carbon-noir.svg';">
                             Carbono Texturizado
                         </button>
                         <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/backgrounds/stardust-noir.svg';">
-                            Poeira Dourada ✦
+                            Poeira de Estrelas ✦
                         </button>
                         <button type="button" class="btn-admin-cancel" style="font-size: 0.78rem; padding: 6px 12px;" onclick="document.getElementById('store_bg_image').value = '/assets/images/hero/hero-caminhos.jpg';">
                             Joia Divinium
@@ -851,7 +851,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="store_bg_overlay">Escurecimento de Contraste</label>
                     <input type="range" id="store_bg_overlay" name="store_bg_overlay" min="0.10" max="0.95" step="0.05" 
                            value="<?= View::e(Setting::get('store_bg_overlay', '0.75')) ?>" 
-                           style="width: 100%; accent-color: #caa15c;">
+                           style="width: 100%; accent-color: #737B85;">
                     <span class="field-hint">Garante legibilidade dos textos e cards sobre a imagem.</span>
                 </div>
 
