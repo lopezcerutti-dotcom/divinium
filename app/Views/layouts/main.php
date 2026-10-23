@@ -626,7 +626,7 @@
         <?php if (!empty($siteBgImage)): ?>
         body.luxury-theme {
             background-color: <?= $effGlobalBg ?> !important;
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$siteBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$siteBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$siteBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$siteBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($siteBgImage) ?>') !important;
             background-size: <?= $siteBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
             background-repeat: <?= $siteBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
             background-attachment: fixed !important;
@@ -637,7 +637,7 @@
         /* 12. HERO DA PÁGINA INICIAL COM IMAGEM */
         <?php if (!empty($heroBgImage)): ?>
         .hero-section {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$heroBgOverlay ?>), rgba(13, 12, 11, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$heroBgOverlay ?>), rgba(37, 37, 37, <?= min(0.95, (float)$heroBgOverlay + 0.25) ?>)), url('<?= \App\Core\View::e($heroBgImage) ?>') !important;
             background-size: cover !important;
             background-position: center center !important;
             background-repeat: no-repeat !important;
@@ -647,7 +647,7 @@
         /* 13. BOUTIQUE COM IMAGEM */
         <?php if (!empty($storeBgImage)): ?>
         .store-hero-section {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$storeBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$storeBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($storeBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$storeBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$storeBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($storeBgImage) ?>') !important;
             background-size: <?= $storeBgRepeat === 'repeat' ? 'auto' : 'cover' ?> !important;
             background-repeat: <?= $storeBgRepeat === 'repeat' ? 'repeat' : 'no-repeat' ?> !important;
             background-position: center center !important;
@@ -657,7 +657,7 @@
         /* 14. DETALHE DO PRODUTO COM IMAGEM */
         <?php if (!empty($productBgImage)): ?>
         .product-detail-page {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$productBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$productBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($productBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$productBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$productBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($productBgImage) ?>') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
             background-position: center center !important;
@@ -667,7 +667,7 @@
         /* 15. CHECKOUT COM IMAGEM */
         <?php if (!empty($checkoutBgImage)): ?>
         .checkout-page-container {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$checkoutBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$checkoutBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($checkoutBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$checkoutBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$checkoutBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($checkoutBgImage) ?>') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
             background-position: center center !important;
@@ -677,7 +677,7 @@
         /* 16. INSTITUCIONAIS COM IMAGEM */
         <?php if (!empty($institutionalBgImage)): ?>
         .institutional-page-container {
-            background-image: linear-gradient(rgba(13, 12, 11, <?= (float)$institutionalBgOverlay ?>), rgba(13, 12, 11, <?= min(0.98, (float)$institutionalBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($institutionalBgImage) ?>') !important;
+            background-image: linear-gradient(rgba(37, 37, 37, <?= (float)$institutionalBgOverlay ?>), rgba(37, 37, 37, <?= min(0.98, (float)$institutionalBgOverlay + 0.15) ?>)), url('<?= \App\Core\View::e($institutionalBgImage) ?>') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
             background-position: center center !important;
