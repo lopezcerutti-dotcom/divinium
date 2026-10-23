@@ -56,7 +56,7 @@
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(202, 161, 92, 0.12); color: #d4ba88;">
+        <div class="metric-icon-wrap" style="background: rgba(202, 161, 92, 0.12); color: #CBD0D6;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
         </div>
         <div class="metric-data">
@@ -210,7 +210,7 @@
                                 <strong style="color: #ffffff; font-size: 0.92rem; display: block; margin-bottom: 2px;">
                                     <?= \App\Core\View::e($p['name']) ?>
                                     <?php if (!empty($p['is_featured'])): ?>
-                                        <span style="color: #d4ba88; font-size: 0.72rem; margin-left: 4px;" title="Destaque na vitrine">✦</span>
+                                        <span style="color: #CBD0D6; font-size: 0.72rem; margin-left: 4px;" title="Destaque na vitrine">✦</span>
                                     <?php endif; ?>
                                 </strong>
                                 <span style="font-family: monospace; font-size: 0.72rem; color: #a8a096; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;">
@@ -292,7 +292,7 @@
                             <td style="text-align: right; padding-right: 20px;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
                                     <?php $pSlug = !empty($p['slug']) ? $p['slug'] : \App\Controllers\StoreController::slugify($p['name'] ?? ('joia-' . $p['id'])); ?>
-                                    <a href="/produto/<?= urlencode($pSlug) ?>" target="_blank" class="btn-table-action" title="Ver página exclusiva da joia na Boutique" style="text-decoration: none; color: #d4ba88; border-color: rgba(212,186,136,0.3);">
+                                    <a href="/produto/<?= urlencode($pSlug) ?>" target="_blank" class="btn-table-action" title="Ver página exclusiva da joia na Boutique" style="text-decoration: none; color: #CBD0D6; border-color: rgba(212,186,136,0.3);">
                                         Ver ↗
                                     </a>
                                     <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)" title="Alternar status na loja">
@@ -379,7 +379,7 @@
             </button>
             <button type="button" class="modal-tab-btn" id="tabBtnLinks" onclick="switchProductTab('links')">
                 <span>🔗 Canais de Venda Externos</span>
-                <span id="linksCountBadge" style="background: rgba(212, 186, 136, 0.2); color: #d4ba88; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">0</span>
+                <span id="linksCountBadge" style="background: rgba(212, 186, 136, 0.2); color: #CBD0D6; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">0</span>
             </button>
             <button type="button" class="modal-tab-btn" id="tabBtnMedia" onclick="switchProductTab('media')">
                 <span>🖼️ Fotos & Detalhes</span>
@@ -487,7 +487,7 @@
 
                 <!-- Painel de Navegação, Card e Página de Detalhes -->
                 <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px; margin-top: 14px;">
-                    <label style="color: #d4ba88; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
+                    <label style="color: #CBD0D6; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
                         👁️ Navegação Individual do Card & Página de Detalhes
                     </label>
                     
@@ -1171,7 +1171,7 @@ function renderPlatformLinks() {
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #d4ba88;">📐 Tamanho</label>
+                        <label style="font-size: 0.76rem; color: #CBD0D6;">📐 Tamanho</label>
                         <select class="form-select link-btn-size" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'button_size', this.value); updateLiveButtonPreview(${idx});">
                             <option value="sm" ${btnSize === 'sm' ? 'selected' : ''}>▫️ Compacto / Pequeno</option>
                             <option value="md" ${btnSize === 'md' ? 'selected' : ''}>◻️ Padrão / Médio (Recomendado)</option>
@@ -1181,7 +1181,7 @@ function renderPlatformLinks() {
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #d4ba88;">↗️ Abertura do Link</label>
+                        <label style="font-size: 0.76rem; color: #CBD0D6;">↗️ Abertura do Link</label>
                         <select class="form-select link-target" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'target', this.value)">
                             <option value="_blank" ${target === '_blank' ? 'selected' : ''}>↗ Nova Aba (_blank)</option>
                             <option value="_self" ${target === '_self' ? 'selected' : ''}>↳ Mesma Aba (_self)</option>
