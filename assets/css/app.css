@@ -2773,12 +2773,12 @@ body.luxury-theme {
 }
 
 .overlay-cta-text {
-    background: #d4ba88;
-    color: #0d0c0b;
+    background: var(--gold-accent, #A7ADB4);
+    color: #202020;
     padding: 10px 20px;
     border-radius: 24px;
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -2813,20 +2813,20 @@ body.luxury-theme {
 }
 
 .store-card-title-clean a {
-    color: #f7f4ee;
+    color: var(--text-primary, #202020);
     text-decoration: none;
     transition: color 0.25s ease;
 }
 
 .store-card-title-clean a:hover {
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
 }
 
 .store-card-price-clean {
     font-family: 'Outfit', 'Inter', sans-serif;
     font-size: 1.15rem;
-    font-weight: 600;
-    color: #d4ba88;
+    font-weight: 700;
+    color: var(--text-primary, #202020);
     margin-bottom: 18px;
     letter-spacing: 0.02em;
 }
@@ -2834,7 +2834,7 @@ body.luxury-theme {
 .store-card-price-clean .price-prefix {
     font-size: 0.78rem;
     font-weight: 400;
-    color: #9c9489;
+    color: var(--text-secondary, #686868);
     margin-right: 4px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -2848,12 +2848,12 @@ body.luxury-theme {
     width: 100%;
     padding: 11px 20px;
     background: transparent;
-    border: 1px solid rgba(212, 186, 136, 0.35);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.15));
     border-radius: 8px;
-    color: #e8e2d8;
+    color: var(--text-primary, #202020);
     font-family: 'Outfit', 'Inter', sans-serif;
     font-size: 0.82rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-decoration: none;
@@ -2862,11 +2862,11 @@ body.luxury-theme {
 }
 
 .btn-card-discreet:hover {
-    background: rgba(212, 186, 136, 0.12);
-    border-color: #d4ba88;
-    color: #ffffff;
+    background: var(--gold-accent, #A7ADB4);
+    border-color: var(--gold-hover, #737B85);
+    color: #202020;
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
 .btn-card-discreet svg {
@@ -2895,14 +2895,14 @@ body.luxury-theme {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #d4ba88;
+    background: var(--gold-accent, #A7ADB4);
 }
 
 .mineral-text {
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    color: #d4ba88;
+    color: var(--text-secondary, #686868);
     text-transform: uppercase;
 }
 
@@ -2915,13 +2915,13 @@ body.luxury-theme {
 }
 
 .store-card-title a {
-    color: #ffffff;
+    color: var(--text-primary, #202020);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .store-card-title a:hover {
-    color: #d4ba88;
+    color: var(--gold-hover, #737B85);
 }
 
 .store-card-desc {
