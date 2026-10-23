@@ -1315,35 +1315,37 @@ function clearSpecificColor(textId, pickerId) {
             picker.value = surfaceGlobal;
         } else if (textId.includes('_text')) {
             if (textId.includes('header')) {
-                picker.value = document.getElementById('custom_color_text')?.value || '#25272A';
+                picker.value = document.getElementById('custom_color_text')?.value || '#202020';
             } else if (textId.includes('footer')) {
-                picker.value = '#CBD0D6';
+                picker.value = '#FFFFFF';
             } else {
                 picker.value = '#FFFFFF';
             }
+        } else if (textId.includes('footer_bg') || textId.includes('top_banner_bg')) {
+            picker.value = '#252525';
         } else {
-            const bgGlobal = document.getElementById('custom_color_bg')?.value || '#F7F7F5';
+            const bgGlobal = document.getElementById('custom_color_bg')?.value || '#F8F8F7';
             picker.value = bgGlobal;
         }
     }
 }
 
 function getContrastColor(hex) {
-    if (!hex || hex.length < 7) return '#14161A';
+    if (!hex || hex.length < 7) return '#202020';
     const r = parseInt(hex.substr(1, 2), 16);
     const g = parseInt(hex.substr(3, 2), 16);
     const b = parseInt(hex.substr(5, 2), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 140 ? '#121110' : '#FFFFFF';
+    return yiq >= 140 ? '#202020' : '#FFFFFF';
 }
 
 function updateCustomPreview() {
     const primary = document.getElementById('custom_color_primary')?.value || '#A7ADB4';
     const accent = document.getElementById('custom_color_accent')?.value || '#737B85';
-    const bg = document.getElementById('custom_color_bg')?.value || '#F7F7F5';
+    const bg = document.getElementById('custom_color_bg')?.value || '#F8F8F7';
     const surface = document.getElementById('custom_color_surface')?.value || '#FFFFFF';
-    const text = document.getElementById('custom_color_text')?.value || '#25272A';
-    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#737B85';
+    const text = document.getElementById('custom_color_text')?.value || '#202020';
+    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#686868';
     const fontSerif = document.getElementById('custom_font_serif')?.value || "'Cormorant Garamond', Georgia, serif";
     const radius = document.getElementById('custom_border_radius')?.value || '8px';
 
@@ -1375,25 +1377,25 @@ function updateCustomPreview() {
 }
 
 function resetToThemeDefaults() {
-    if (!confirm('Deseja realmente restaurar os padrões visuais originais (Prata 925 & Platina)? Quaisquer alterações não salvas serão substituídas.')) {
+    if (!confirm('Deseja realmente restaurar os padrões visuais originais (Prata Nobre & Noir)? Quaisquer alterações não salvas serão substituídas.')) {
         return;
     }
     document.getElementById('custom_color_primary').value = '#A7ADB4';
     document.getElementById('picker_primary').value = '#A7ADB4';
     document.getElementById('custom_color_accent').value = '#737B85';
     document.getElementById('picker_accent').value = '#737B85';
-    document.getElementById('custom_color_bg').value = '#F7F7F5';
-    document.getElementById('picker_bg').value = '#F7F7F5';
+    document.getElementById('custom_color_bg').value = '#F8F8F7';
+    document.getElementById('picker_bg').value = '#F8F8F7';
     if (document.getElementById('custom_color_bg_alt')) {
-        document.getElementById('custom_color_bg_alt').value = '#FAFAF8';
-        document.getElementById('picker_bg_alt').value = '#FAFAF8';
+        document.getElementById('custom_color_bg_alt').value = '#F0F0EF';
+        document.getElementById('picker_bg_alt').value = '#F0F0EF';
     }
     document.getElementById('custom_color_surface').value = '#FFFFFF';
     document.getElementById('picker_surface').value = '#FFFFFF';
-    document.getElementById('custom_color_text').value = '#25272A';
-    document.getElementById('picker_text').value = '#25272A';
-    document.getElementById('custom_color_text_muted').value = '#737B85';
-    document.getElementById('picker_text_muted').value = '#737B85';
+    document.getElementById('custom_color_text').value = '#202020';
+    document.getElementById('picker_text').value = '#202020';
+    document.getElementById('custom_color_text_muted').value = '#686868';
+    document.getElementById('picker_text_muted').value = '#686868';
     document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
     document.getElementById('custom_border_radius').value = '8px';
 
@@ -1512,9 +1514,9 @@ function updateBgPreview(target) {
             card.style.backgroundPosition = 'center';
         } else {
             card.style.backgroundImage = 'none';
-            card.style.backgroundColor = (target === 'hero') ? '#141312' : '#0d0c0b';
+            card.style.backgroundColor = (target === 'hero') ? '#252525' : '#1e1e1e';
         }
-        overlayEl.style.backgroundColor = `rgba(13, 12, 11, ${overlay})`;
+        overlayEl.style.backgroundColor = `rgba(37, 37, 37, ${overlay})`;
     }
 }
 
