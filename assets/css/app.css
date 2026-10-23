@@ -289,12 +289,12 @@ body.luxury-theme {
 
 .mobile-menu-toggle.active span:nth-child(1) {
     transform: translateY(3.75px) rotate(45deg);
-    background: #d4ba88;
+    background: var(--gold-accent, #A7ADB4);
 }
 
 .mobile-menu-toggle.active span:nth-child(2) {
     transform: translateY(-3.75px) rotate(-45deg);
-    background: #d4ba88;
+    background: var(--gold-accent, #A7ADB4);
 }
 
 /* Overlay Escuro com Desfoque de Vidro */
