@@ -145,25 +145,23 @@
                 <label for="custom_color_bg">Fundo Base Principal da Loja</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_bg" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F8F8F7') ?>" 
                            onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F7F7F5') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F8F8F7') ?>" 
                            oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
                 </div>
                 <!-- Paleta de Tons Rápidos de Fundo -->
                 <div style="margin-top: 8px;">
-                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Nobres Rápidos:</span>
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Rápidos (Fundo):</span>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button type="button" onclick="setQuickBg('#F8F8F7')" title="Branco Perolado (#F8F8F7 - Principal)" style="width: 20px; height: 20px; border-radius: 50%; background: #F8F8F7; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#F0F0EF')" title="Cinza Muito Claro (#F0F0EF - Secundário)" style="width: 20px; height: 20px; border-radius: 50%; background: #F0F0EF; border: 1px solid #ccc; cursor: pointer;"></button>
                         <button type="button" onclick="setQuickBg('#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#FAFAF8')" title="Branco Perolado (#FAFAF8 - Quiet Luxury)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAFAF8; border: 1px solid #ccc; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#F7F7F5')" title="Prata Nobre (#F7F7F5 - Clássico)" style="width: 20px; height: 20px; border-radius: 50%; background: #F7F7F5; border: 1px solid #bbb; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#F8F5F2')" title="Nude & Bege Pérola (#F8F5F2 - Nude)" style="width: 20px; height: 20px; border-radius: 50%; background: #F8F5F2; border: 1px solid #bbb; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#F2F3F4')" title="Cinza Contemporâneo (#F2F3F4)" style="width: 20px; height: 20px; border-radius: 50%; background: #F2F3F4; border: 1px solid #aaa; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#F4EFEA')" title="Areia Acetinada (#F4EFEA)" style="width: 20px; height: 20px; border-radius: 50%; background: #F4EFEA; border: 1px solid #bbb; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#25272A')" title="Grafite Suave (#25272A)" style="width: 20px; height: 20px; border-radius: 50%; background: #25272A; border: 1px solid #555; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickBg('#0D0C0B')" title="Noir Noturno (#0D0C0B)" style="width: 20px; height: 20px; border-radius: 50%; background: #0D0C0B; border: 1px solid #333; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#E5E7EB')" title="Cinza Suave (#E5E7EB)" style="width: 20px; height: 20px; border-radius: 50%; background: #E5E7EB; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#CBD0D6')" title="Platina (#CBD0D6)" style="width: 20px; height: 20px; border-radius: 50%; background: #CBD0D6; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickBg('#252525')" title="Preto Grafite (#252525 - Fundo Escuro)" style="width: 20px; height: 20px; border-radius: 50%; background: #252525; border: 1px solid #555; cursor: pointer;"></button>
                     </div>
                 </div>
             </div>
@@ -172,14 +170,14 @@
                 <label for="custom_color_bg_alt">Fundo Secundário (Seções Alternadas)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_bg_alt" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#FAFAF8') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#F0F0EF') ?>" 
                            onchange="document.getElementById('custom_color_bg_alt').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_bg_alt" name="custom_color_bg_alt" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#FAFAF8') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#F0F0EF') ?>" 
                            oninput="document.getElementById('picker_bg_alt').value = this.value; updateCustomPreview();">
                 </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Usado para contraste em seções secundárias e vitrines.</span>
+                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Cinza muito claro #F0F0EF para contraste suave em seções e vitrines.</span>
             </div>
 
             <div class="form-group" style="margin: 0;">
@@ -195,20 +193,18 @@
                 </div>
                 <!-- Paleta de Tons Rápidos de Superfície -->
                 <div style="margin-top: 8px;">
-                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Nobres Rápidos:</span>
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Rápidos (Cards):</span>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                        <button type="button" onclick="setQuickSurface('#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickSurface('#FAFAF8')" title="Branco Perolado (#FAFAF8)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAFAF8; border: 1px solid #ccc; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickSurface('#FAF8F5')" title="Bege Pérola (#FAF8F5)" style="width: 20px; height: 20px; border-radius: 50%; background: #FAF8F5; border: 1px solid #bbb; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickSurface('#F2F3F4')" title="Cinza Contemporâneo (#F2F3F4)" style="width: 20px; height: 20px; border-radius: 50%; background: #F2F3F4; border: 1px solid #aaa; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickSurface('#1E2023')" title="Grafite Escuro (#1E2023)" style="width: 20px; height: 20px; border-radius: 50%; background: #1E2023; border: 1px solid #555; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickSurface('#14161A')" title="Noir Noturno (#14161A)" style="width: 20px; height: 20px; border-radius: 50%; background: #14161A; border: 1px solid #333; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#FFFFFF')" title="Branco Puro (#FFFFFF - Padrão)" style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#F8F8F7')" title="Branco Perolado (#F8F8F7)" style="width: 20px; height: 20px; border-radius: 50%; background: #F8F8F7; border: 1px solid #ccc; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#F0F0EF')" title="Cinza Muito Claro (#F0F0EF)" style="width: 20px; height: 20px; border-radius: 50%; background: #F0F0EF; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickSurface('#252525')" title="Preto Grafite (#252525)" style="width: 20px; height: 20px; border-radius: 50%; background: #252525; border: 1px solid #555; cursor: pointer;"></button>
                     </div>
                 </div>
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_primary">Cor Primária (Metais Nobres / Botões)</label>
+                <label for="custom_color_primary">Cor Primária (Prata Fosca / Botões)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_primary" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" 
@@ -218,22 +214,21 @@
                            value="<?= \App\Core\View::e($customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" 
                            oninput="document.getElementById('picker_primary').value = this.value; updateCustomPreview();">
                 </div>
-                <!-- Paleta de Metais Nobres Rápidos -->
+                <!-- Paleta de Metais Rápidos -->
                 <div style="margin-top: 8px;">
-                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Metais Nobres Rápidos:</span>
+                    <span style="font-size: 0.65rem; color: #888; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px;">Tons Rápidos (Primária/Metais):</span>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                        <button type="button" onclick="setQuickPrimary('#A7ADB4')" title="Prata 925 Nobre (#A7ADB4)" style="width: 20px; height: 20px; border-radius: 50%; background: #A7ADB4; border: 1px solid #bbb; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#A7ADB4')" title="Prata Fosca (#A7ADB4 - Principal)" style="width: 20px; height: 20px; border-radius: 50%; background: #A7ADB4; border: 1px solid #bbb; cursor: pointer;"></button>
                         <button type="button" onclick="setQuickPrimary('#CBD0D6')" title="Platina Radiante (#CBD0D6)" style="width: 20px; height: 20px; border-radius: 50%; background: #CBD0D6; border: 1px solid #ccc; cursor: pointer;"></button>
                         <button type="button" onclick="setQuickPrimary('#858C95')" title="Titânio Acetinado (#858C95)" style="width: 20px; height: 20px; border-radius: 50%; background: #858C95; border: 1px solid #777; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickPrimary('#626B75')" title="Grafite Imperial (#626B75)" style="width: 20px; height: 20px; border-radius: 50%; background: #626B75; border: 1px solid #555; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickPrimary('#25272A')" title="Grafite Noturno (#25272A)" style="width: 20px; height: 20px; border-radius: 50%; background: #25272A; border: 1px solid #444; cursor: pointer;"></button>
-                        <button type="button" onclick="setQuickPrimary('#C8B9AE')" title="Nude Pérola Nobre (#C8B9AE)" style="width: 20px; height: 20px; border-radius: 50%; background: #C8B9AE; border: 1px solid #aaa; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#737B85')" title="Cinza-Prata (#737B85)" style="width: 20px; height: 20px; border-radius: 50%; background: #737B85; border: 1px solid #555; cursor: pointer;"></button>
+                        <button type="button" onclick="setQuickPrimary('#202020')" title="Preto Suave (#202020)" style="width: 20px; height: 20px; border-radius: 50%; background: #202020; border: 1px solid #444; cursor: pointer;"></button>
                     </div>
                 </div>
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_accent">Cor de Realce (Hover & Acentos)</label>
+                <label for="custom_color_accent">Cor de Realce (Bordas & Hover)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_accent" 
                            value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#737B85') ?>" 
@@ -243,32 +238,35 @@
                            value="<?= \App\Core\View::e($customSettings['custom_color_accent'] ?? '#737B85') ?>" 
                            oninput="document.getElementById('picker_accent').value = this.value; updateCustomPreview();">
                 </div>
+                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Cinza-prata #737B85.</span>
             </div>
 
             <div class="form-group" style="margin: 0;">
                 <label for="custom_color_text">Texto Principal (Leitura)</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_text" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#25272A') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#202020') ?>" 
                            onchange="document.getElementById('custom_color_text').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_text" name="custom_color_text" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#25272A') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#202020') ?>" 
                            oninput="document.getElementById('picker_text').value = this.value; updateCustomPreview();">
                 </div>
+                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Preto suave #202020.</span>
             </div>
 
             <div class="form-group" style="margin: 0;">
-                <label for="custom_color_text_muted">Texto Suave (Secundário)</label>
+                <label for="custom_color_text_muted">Texto Secundário</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="color" id="picker_text_muted" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#737B85') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#686868') ?>" 
                            onchange="document.getElementById('custom_color_text_muted').value = this.value; updateCustomPreview();"
                            style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                     <input type="text" id="custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
-                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#737B85') ?>" 
+                           value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#686868') ?>" 
                            oninput="document.getElementById('picker_text_muted').value = this.value; updateCustomPreview();">
                 </div>
+                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Cinza grafite #686868.</span>
             </div>
         </div>
 
