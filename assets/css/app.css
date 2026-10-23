@@ -3090,20 +3090,20 @@ body.luxury-theme {
 
 .platform-btn-default,
 .platform-btn-loja-oficial {
-    background: linear-gradient(135deg, #d4ba88 0%, #b89758 100%);
-    color: #0d0c0b;
-    box-shadow: 0 4px 14px rgba(212, 186, 136, 0.3);
+    background: linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%);
+    color: #202020;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 .platform-btn-default .platform-btn-price-tag,
 .platform-btn-loja-oficial .platform-btn-price-tag {
-    border-left-color: rgba(13, 12, 11, 0.25);
-    color: #0d0c0b;
+    border-left-color: rgba(32, 32, 32, 0.2);
+    color: #202020;
 }
 .platform-btn-default:hover,
 .platform-btn-loja-oficial:hover {
-    background: linear-gradient(135deg, #e0c99a 0%, #c9a96e 100%);
-    box-shadow: 0 6px 20px rgba(212, 186, 136, 0.45);
-    color: #0d0c0b;
+    background: linear-gradient(135deg, #E5E7EB 0%, #CBD0D6 100%);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    color: #202020;
 }
 
 .shopee-icon-svg {
@@ -3161,35 +3161,36 @@ body.luxury-theme {
 /* Modificadores de Cores dos Botões */
 .btn-color-gold {
     background: var(--gold-accent) !important;
-    color: var(--text-primary) !important;
+    color: #202020 !important;
     border: 1px solid var(--border-light) !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+    font-weight: 700 !important;
 }
 .btn-color-gold .platform-btn-price-tag {
-    border-left-color: var(--border-light) !important;
-    color: var(--text-primary) !important;
+    border-left-color: rgba(32, 32, 32, 0.2) !important;
+    color: #202020 !important;
 }
 .btn-color-gold:hover {
     background: var(--gold-hover) !important;
-    color: var(--text-primary) !important;
+    color: #ffffff !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 .btn-color-dark {
-    background: linear-gradient(135deg, #1f1c19 0%, #0d0c0b 100%) !important;
+    background: linear-gradient(135deg, #252525 0%, #1e1e1e 100%) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(212, 186, 136, 0.45) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(167, 173, 180, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
 }
 .btn-color-dark .platform-btn-price-tag {
     border-left-color: rgba(255, 255, 255, 0.2) !important;
-    color: #d4ba88 !important;
+    color: #ffffff !important;
 }
 .btn-color-dark:hover {
-    background: linear-gradient(135deg, #2b2723 0%, #151311 100%) !important;
-    border-color: #d4ba88 !important;
+    background: linear-gradient(135deg, #333333 0%, #252525 100%) !important;
+    border-color: #A7ADB4 !important;
     color: #ffffff !important;
-    box-shadow: 0 6px 22px rgba(212, 186, 136, 0.25) !important;
+    box-shadow: 0 6px 22px rgba(167, 173, 180, 0.25) !important;
 }
 
 .btn-color-silver {
