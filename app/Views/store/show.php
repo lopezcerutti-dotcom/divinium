@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: DETALHES DA JOIA DIVINIUM (/produto/{slug} ou /loja/{slug})
  * QUIET LUXURY HIGH-JEWELRY PRODUCT DETAIL PAGE
@@ -336,10 +336,10 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                                 <div class="channel-btn-right">
                                     <div class="channel-price-wrap">
-                                        <span class="channel-price-label" style="color: #4ade80;">Pix (-5%)</span>
+                                        <span class="channel-price-label" style="color: var(--text-secondary);">Pix (-5%)</span>
                                         <span class="channel-price-val vip-pix-val" style="color: var(--gold-accent); font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
                                     </div>
-                                    <span class="channel-arrow-circle" style="background: var(--gold-accent); color: var(--bg-dark, #0d0c0b);">
+                                    <span class="channel-arrow-circle" style="background: var(--gold-accent); color: var(--bg-dark, #202020);">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                     </span>
                                 </div>
@@ -511,11 +511,11 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 <dt class="spec-term">Disponibilidade</dt>
                                 <dd class="spec-value" id="specStockValue">
                                     <?php if ($prodStockStatus === 'preorder'): ?>
-                                        <span style="color: #fbbf24;">● Manufatura Sob Encomenda (Envio prioritário)</span>
+                                        <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● Manufatura Sob Encomenda (Envio prioritário)</span>
                                     <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
                                         <span style="color: #f87171;">● Temporariamente Esgotado</span>
                                     <?php else: ?>
-                                        <span style="color: #4ade80;">● Pronta Entrega para Envio Imediato</span>
+                                        <span style="color: var(--text-primary); font-weight: 600;">● Pronta Entrega para Envio Imediato</span>
                                     <?php endif; ?>
                                 </dd>
                             </div>
@@ -674,9 +674,9 @@ function selectProductVariation(btn) {
     const specStock = document.getElementById('specStockValue');
     if (specStock) {
         if (stock === 'out_of_stock') {
-            specStock.innerHTML = '<span style="color: #fbbf24;">● Manufatura Sob Encomenda (Envio prioritário)</span>';
+            specStock.innerHTML = '<span style="color: var(--gold-accent, #737B85); font-weight: 600;">● Manufatura Sob Encomenda (Envio prioritário)</span>';
         } else {
-            specStock.innerHTML = '<span style="color: #4ade80;">● Pronta Entrega para Envio Imediato</span>';
+            specStock.innerHTML = '<span style="color: var(--text-primary, #202020); font-weight: 600;">● Pronta Entrega para Envio Imediato</span>';
         }
     }
     
