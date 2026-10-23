@@ -3365,9 +3365,9 @@ body.luxury-theme {
 }
 
 .store-channel-pill:hover {
-    background: rgba(212, 186, 136, 0.08);
-    border-color: rgba(212, 186, 136, 0.35);
-    color: #ffffff;
+    background: rgba(167, 173, 180, 0.12);
+    border-color: rgba(167, 173, 180, 0.35);
+    color: var(--text-primary, #202020);
     transform: translateX(3px);
 }
 
@@ -3386,7 +3386,7 @@ body.luxury-theme {
     font-family: 'Cormorant Garamond', serif;
     font-size: 0.96rem;
     font-weight: 700;
-    color: #d4ba88;
+    color: var(--text-primary, #202020);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -3404,25 +3404,25 @@ body.luxury-theme {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--bg-alt, #F0F0EF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
     border-radius: 4px;
     padding: 2px 7px;
     font-size: 0.7rem;
-    color: #b8b1a7;
+    color: var(--text-secondary, #686868);
 }
 
 .store-card-sku {
     font-size: 0.68rem;
-    color: #7a746c;
+    color: var(--text-muted, #686868);
     letter-spacing: 0.05em;
     font-family: monospace;
 }
 
 .badge-stock-preorder {
-    background: rgba(212, 186, 136, 0.15);
-    border: 1px solid rgba(212, 186, 136, 0.4);
-    color: #d4ba88;
+    background: rgba(167, 173, 180, 0.15);
+    border: 1px solid rgba(167, 173, 180, 0.4);
+    color: var(--text-primary, #202020);
 }
 
 .badge-stock-out {
@@ -3434,8 +3434,8 @@ body.luxury-theme {
 /* 13.4 POR QUE COMPRAR VIA SHOPEE */
 .store-reasons-section {
     padding: 90px 0;
-    background: radial-gradient(circle at 50% 100%, #171513 0%, #0d0c0b 90%);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--bg-alt, #F0F0EF);
+    border-top: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
 }
 
 .reasons-container {
@@ -3452,7 +3452,7 @@ body.luxury-theme {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.14em;
-    color: #d4ba88;
+    color: var(--gold-accent, #A7ADB4);
     text-transform: uppercase;
     display: block;
     margin-bottom: 12px;
@@ -3462,13 +3462,13 @@ body.luxury-theme {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 400;
-    color: #ffffff;
+    color: var(--text-primary, #202020);
     margin-bottom: 16px;
 }
 
 .reasons-desc {
     font-size: 0.95rem;
-    color: #9e978e;
+    color: var(--text-secondary, #686868);
     line-height: 1.6;
 }
 
@@ -3480,8 +3480,8 @@ body.luxury-theme {
 }
 
 .reason-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.08));
     border-radius: 14px;
     padding: 28px 24px;
     transition: transform 0.3s ease, border-color 0.3s ease;
@@ -3489,7 +3489,7 @@ body.luxury-theme {
 
 .reason-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(212, 186, 136, 0.3);
+    border-color: rgba(167, 173, 180, 0.45);
 }
 
 .reason-icon {
@@ -3500,20 +3500,20 @@ body.luxury-theme {
 .reason-card h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.25rem;
-    color: #f7f4ee;
+    color: var(--text-primary, #202020);
     margin-bottom: 8px;
     font-weight: 600;
 }
 
 .reason-card p {
     font-size: 0.82rem;
-    color: #a8a096;
+    color: var(--text-secondary, #686868);
     line-height: 1.6;
 }
 
 .store-whatsapp-cta {
-    background: linear-gradient(135deg, rgba(212, 186, 136, 0.08) 0%, rgba(37, 211, 102, 0.06) 100%);
-    border: 1px solid rgba(212, 186, 136, 0.25);
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border-light, rgba(32, 32, 32, 0.12));
     border-radius: 16px;
     padding: 30px 40px;
     display: flex;
@@ -3526,13 +3526,13 @@ body.luxury-theme {
 .whatsapp-cta-content h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.45rem;
-    color: #ffffff;
+    color: var(--text-primary, #202020);
     margin-bottom: 4px;
 }
 
 .whatsapp-cta-content p {
     font-size: 0.85rem;
-    color: #b8b1a7;
+    color: var(--text-secondary, #686868);
 }
 
 .btn-whatsapp-concierge {
@@ -3560,30 +3560,30 @@ body.luxury-theme {
 .store-empty-state {
     text-align: center;
     padding: 80px 20px;
-    color: #8e8880;
+    color: var(--text-secondary, #686868);
 }
 
 .store-empty-state svg {
-    stroke: #d4ba88;
+    stroke: var(--gold-accent, #A7ADB4);
     margin-bottom: 16px;
 }
 
 .store-empty-state h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.8rem;
-    color: #ffffff;
+    color: var(--text-primary, #202020);
     margin-bottom: 8px;
 }
 
 .btn-store-back {
     display: inline-block;
     margin-top: 20px;
-    background: #d4ba88;
-    color: #0d0c0b;
+    background: var(--gold-accent, #A7ADB4);
+    color: #202020;
     padding: 10px 24px;
     border-radius: 20px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.85rem;
 }
 
