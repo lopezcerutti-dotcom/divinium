@@ -505,6 +505,21 @@
             background-color: var(--header-text, var(--icon-nav-color, #202020)) !important;
         }
 
+        /* PREVENÇÃO TOTAL DE CORTE DE IMAGENS DE JOIAS E PRODUTOS */
+        body.luxury-theme .store-card-img,
+        body.luxury-theme .product-thumb img,
+        body.luxury-theme .product-main-image,
+        body.luxury-theme .product-gallery-main img,
+        body.luxury-theme .gallery-thumb-item img,
+        body.luxury-theme .related-card-media img,
+        body.luxury-theme .hero-carousel-img,
+        body.luxury-theme .editorial-main-img,
+        body.luxury-theme .editorial-floating-img,
+        body.luxury-theme .lifestyle-media img,
+        body.luxury-theme .checkout-item-img {
+            object-fit: contain !important;
+        }
+
         /* LINKS INDEPENDENTES */
         body.luxury-theme a.nav-link,
         body.luxury-theme .nav-link,

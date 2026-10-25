@@ -38,7 +38,7 @@ function updateCartUI() {
         } else {
             drawerBody.innerHTML = cart.map((item, idx) => `
                 <div class="cart-item-row" style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.08);align-items:center;">
-                    ${item.image ? `<img src="${item.image}" alt="${item.name}" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid #737B85;">` : ''}
+                    ${item.image ? `<img src="${item.image}" alt="${item.name}" style="width:52px;height:52px;object-fit:contain;background:#ffffff;padding:2px;box-sizing:border-box;border-radius:6px;border:1px solid #737B85;">` : ''}
                     <div style="flex-grow:1;">
                         <h4 style="font-family:var(--font-serif, 'Cormorant Garamond', serif);font-size:1.05rem;color:#ffffff;margin:0 0 2px;">${item.name}</h4>
                         ${item.stone ? `<span style="font-size:0.75rem;color:#CBD0D6;display:block;margin-bottom:4px;">Pedra: ${item.stone}</span>` : ''}
