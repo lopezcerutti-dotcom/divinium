@@ -4774,6 +4774,36 @@ function updateServicesLivePreview() {
     }
 }
 
+function updateTestimonialsLivePreview() {
+    const getVal = (id, def) => {
+        const el = document.getElementById(id);
+        const val = el ? el.value.trim() : '';
+        return val !== '' ? val : def;
+    };
+
+    const titleEl = document.getElementById('testimonialPreviewTitle');
+    if (titleEl) titleEl.textContent = getVal('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal');
+
+    const starsEl = document.getElementById('testimonialPreviewStars');
+    if (starsEl) starsEl.textContent = getVal('testimonial_stars', '★★★★★');
+
+    const quoteEl = document.getElementById('testimonialPreviewQuote');
+    if (quoteEl) quoteEl.textContent = '"' + getVal('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!') + '"';
+
+    const authorEl = document.getElementById('testimonialPreviewAuthor');
+    if (authorEl) authorEl.textContent = getVal('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]');
+
+    const bgImg = document.getElementById('testimonial_backdrop_img')?.value?.trim();
+    const bgPreview = document.getElementById('testimonialPreviewBackdrop');
+    if (bgPreview && bgImg) bgPreview.src = bgImg;
+
+    for (let i = 1; i <= 5; i++) {
+        const thumbInput = document.getElementById('testimonial_thumb_' + i)?.value?.trim();
+        const thumbImg = document.getElementById('testimonialPreviewThumb' + i);
+        if (thumbImg && thumbInput) thumbImg.src = thumbInput;
+    }
+}
+
 // Suporte a abertura direta de abas por URL (ex: ?tab=sec-mobile-menu ou #sec-mobile-menu)
 function checkInitialEditorTab() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -4788,6 +4818,7 @@ function checkInitialEditorTab() {
     updateMobileMenuLivePreview();
     updateAboutLivePreview();
     updateServicesLivePreview();
+    updateTestimonialsLivePreview();
     updateThemeColorsLivePreview();
 }
 
