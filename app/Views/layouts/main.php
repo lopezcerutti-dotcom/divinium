@@ -491,13 +491,18 @@
         /* ÍCONES FUNCIONAIS & DE NAVEGAÇÃO */
         body.luxury-theme .action-btn svg,
         body.luxury-theme .header-action-btn svg,
-        body.luxury-theme .mobile-menu-toggle span,
         body.luxury-theme .store-search-box svg,
         body.luxury-theme .input-icon-wrap svg,
         body.luxury-theme .modal-close-btn svg,
         body.luxury-theme .btn-card-discreet svg {
             color: var(--icon-nav-color) !important;
             stroke: var(--icon-nav-color) !important;
+        }
+
+        /* BARRAS DO ÍCONE DE MENU MOBILE (HAMBÚRGUER) */
+        body.luxury-theme .mobile-menu-toggle span {
+            background: var(--header-text, var(--icon-nav-color, #202020)) !important;
+            background-color: var(--header-text, var(--icon-nav-color, #202020)) !important;
         }
 
         /* LINKS INDEPENDENTES */
@@ -929,6 +934,7 @@
             <!-- Menu Hambúrguer (Mobile) -->
             <?php if (\App\Models\Setting::get('mobile_menu_enabled', '1') === '1'): ?>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="mobileNavDrawer">
+                <span></span>
                 <span></span>
                 <span></span>
             </button>
