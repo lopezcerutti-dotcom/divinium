@@ -76,7 +76,7 @@ body.luxury-theme {
     letter-spacing: 0.05em;
     padding: 8px 0;
     text-align: center;
-    border-bottom: 1px solid rgba(197, 168, 128, 0.15);
+    border-bottom: 1px solid rgba(115, 123, 133, 0.2);
 }
 .top-announcement-bar strong {
     color: #fff;
@@ -248,7 +248,7 @@ body.luxury-theme {
     background: var(--gold-accent);
     color: #121110;
     border-color: var(--gold-accent);
-    box-shadow: 0 0 16px rgba(197, 168, 128, 0.3);
+    box-shadow: 0 0 16px rgba(167, 173, 180, 0.25);
 }
 
 /* ==============================================================================
@@ -595,7 +595,7 @@ body.luxury-theme {
     right: 15%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 50%, transparent 70%);
+    background: radial-gradient(circle, rgba(167, 173, 180, 0.12) 0%, rgba(167, 173, 180, 0.02) 50%, transparent 70%);
     filter: blur(80px);
     pointer-events: none;
     z-index: 1;
@@ -635,8 +635,8 @@ body.luxury-theme {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(197, 168, 128, 0.1);
-    border: 1px solid rgba(197, 168, 128, 0.25);
+    background: rgba(167, 173, 180, 0.1);
+    border: 1px solid rgba(167, 173, 180, 0.25);
     padding: 5px 14px;
     border-radius: 30px;
     font-size: 0.7rem;
@@ -854,7 +854,7 @@ body.luxury-theme {
     transform: translate(-50%, -50%);
     width: 420px;
     height: 420px;
-    background: radial-gradient(circle, rgba(212, 186, 136, 0.22) 0%, rgba(197, 168, 128, 0.05) 50%, transparent 75%);
+    background: radial-gradient(circle, rgba(167, 173, 180, 0.18) 0%, rgba(167, 173, 180, 0.04) 50%, transparent 75%);
     filter: blur(55px);
     pointer-events: none;
     z-index: 1;

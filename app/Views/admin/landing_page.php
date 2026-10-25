@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: EDITOR DA LANDING PAGE E TEXTOS DO SITE (PAINEL ADMINISTRATIVO)
  * Permite editar qualquer elemento textual, títulos, preços e mídias da loja e da Home.
@@ -434,9 +434,40 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </h4>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; margin-bottom: 24px;">
                 <div>
-                    <!-- Upload Direto ou URL da Imagem Global -->
+                    <!-- 1. COR DE FUNDO BASE (SÓLIDA) -->
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label for="lp_site_bg_color" style="font-size: 0.8rem; font-weight: 700; color: #CBD0D6; margin: 0; text-transform: uppercase; letter-spacing: 0.04em;">
+                                🎨 Cor de Fundo Base do Site:
+                            </label>
+                            <button type="button" class="btn-admin-cancel" style="padding: 2px 8px; font-size: 0.7rem;" onclick="document.getElementById('lp_site_bg_color').value = ''; document.getElementById('picker_site_bg_color').value = '#252525'; updateThemeColorsLivePreview();">
+                                ✕ Limpar / Herdar Padrão
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="color" id="picker_site_bg_color" 
+                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
+                                   oninput="document.getElementById('lp_site_bg_color').value = this.value; updateThemeColorsLivePreview();"
+                                   style="width: 48px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                            <input type="text" id="lp_site_bg_color" name="site_bg_color" class="form-input" 
+                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
+                                   placeholder="Ex: #F8F8F7 ou #252525"
+                                   oninput="if(this.value.startsWith('#') && (this.value.length === 4 || this.value.length === 7)) document.getElementById('picker_site_bg_color').value = this.value; updateThemeColorsLivePreview();">
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
+                            <span style="font-size: 0.7rem; color: #888;">Paleta Rápida:</span>
+                            <button type="button" onclick="document.getElementById('lp_site_bg_color').value = '#F8F8F7'; document.getElementById('picker_site_bg_color').value = '#F8F8F7'; updateThemeColorsLivePreview();" title="Branco Perolado" style="padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; background: #F8F8F7; color: #202020; border: 1px solid #ccc; cursor: pointer;">Pérola #F8F8F7</button>
+                            <button type="button" onclick="document.getElementById('lp_site_bg_color').value = '#FFFFFF'; document.getElementById('picker_site_bg_color').value = '#FFFFFF'; updateThemeColorsLivePreview();" title="Branco Puro" style="padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; background: #FFFFFF; color: #202020; border: 1px solid #ccc; cursor: pointer;">Branco #FFFFFF</button>
+                            <button type="button" onclick="document.getElementById('lp_site_bg_color').value = '#F0F0EF'; document.getElementById('picker_site_bg_color').value = '#F0F0EF'; updateThemeColorsLivePreview();" title="Cinza Platina" style="padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; background: #F0F0EF; color: #202020; border: 1px solid #aaa; cursor: pointer;">Platina #F0F0EF</button>
+                            <button type="button" onclick="document.getElementById('lp_site_bg_color').value = '#252525'; document.getElementById('picker_site_bg_color').value = '#252525'; updateThemeColorsLivePreview();" title="Preto Grafite" style="padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; background: #252525; color: #FFFFFF; border: 1px solid #555; cursor: pointer;">Grafite #252525</button>
+                            <button type="button" onclick="document.getElementById('lp_site_bg_color').value = '#14161a'; document.getElementById('picker_site_bg_color').value = '#14161a'; updateThemeColorsLivePreview();" title="Dark Noir" style="padding: 3px 8px; font-size: 0.7rem; border-radius: 4px; background: #14161a; color: #FFFFFF; border: 1px solid #333; cursor: pointer;">Noir #14161a</button>
+                        </div>
+                        <span class="field-hint" style="margin-top: 6px;">Pode ser usada como cor sólida exclusiva ou combinada como base sob imagem/textura translúcida.</span>
+                    </div>
+
+                    <!-- 2. UPLOAD DIRETO OU URL DA IMAGEM GLOBAL -->
                     <div class="form-group full-width">
                         <label for="lp_site_bg_image">Imagem de Fundo Global (Aplica-se em Todo o Site):</label>
                         <div style="display: flex; gap: 10px;">
@@ -461,61 +492,215 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             ✦ Escolher Textura de Alta Joalheria Pronta:
                         </label>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/linen-pearl.svg', 'repeat')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Linho Nobre Claro</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Trama suave iluminada</span>
+                            </button>
                             <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/marble-noir.svg', 'repeat')">
-                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Mármore Noir & Ouro</span>
-                                <span style="font-size: 0.68rem; color: #8e8880;">Repetição suave</span>
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Mármore Noir & Prata</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Veios nobres sutis</span>
                             </button>
                             <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/carbon-noir.svg', 'repeat')">
                                 <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Carbono Quiet Luxury</span>
                                 <span style="font-size: 0.68rem; color: #8e8880;">Trama geométrica</span>
                             </button>
                             <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/stardust-noir.svg', 'repeat')">
-                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Poeira Dourada ✦</span>
-                                <span style="font-size: 0.68rem; color: #8e8880;">Brilho estelar</span>
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Poeira Prateada ✦</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Microbrilho discreto</span>
                             </button>
-                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/hero/hero-caminhos.jpg', 'cover')">
-                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Joia Divinium Nobre</span>
-                                <span style="font-size: 0.68rem; color: #8e8880;">Foto editorial</span>
+                            <button type="button" class="btn-admin-cancel" style="padding: 8px 10px; text-align: left;" onclick="applyBgPresetLanding('/assets/images/backgrounds/granite-silver.svg', 'repeat')">
+                                <span style="font-size: 0.78rem; color: #fff; font-weight: 600; display: block;">Granito Mineral Fino</span>
+                                <span style="font-size: 0.68rem; color: #8e8880;">Textura mineral natural</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- Contraste & Modo de Exibição -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                         <div class="form-group" style="margin: 0;">
                             <label for="lp_site_bg_overlay">
-                                Escurecimento de Contraste: <strong id="valOverlayLanding"><?= round(((float)Setting::get('site_bg_overlay', '0.75')) * 100) ?>%</strong>
+                                Escurecimento / Sobreposição: <strong id="valOverlayLanding"><?= round(((float)Setting::get('site_bg_overlay', '0.75')) * 100) ?>%</strong>
                             </label>
-                            <input type="range" id="lp_site_bg_overlay" name="site_bg_overlay" min="0.10" max="0.95" step="0.05" 
+                            <input type="range" id="lp_site_bg_overlay" name="site_bg_overlay" min="0.00" max="0.95" step="0.05" 
                                    value="<?= View::e(Setting::get('site_bg_overlay', '0.75')) ?>" 
                                    style="width: 100%; accent-color: #CBD0D6;"
                                    oninput="document.getElementById('valOverlayLanding').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
-                            <span class="field-hint">Garante legibilidade dos textos sobre a foto.</span>
+                            <span class="field-hint">Garante legibilidade dos textos e intensidade da foto.</span>
                         </div>
 
                         <div class="form-group" style="margin: 0;">
                             <label for="lp_site_bg_repeat">Modo de Enquadramento</label>
                             <select id="lp_site_bg_repeat" name="site_bg_repeat" class="form-select" onchange="updateThemeColorsLivePreview()">
                                 <option value="cover" <?= Setting::get('site_bg_repeat', 'cover') === 'cover' ? 'selected' : '' ?>>Cobrir Inteira (Cover fixo)</option>
+                                <option value="contain" <?= Setting::get('site_bg_repeat', '') === 'contain' ? 'selected' : '' ?>>Conter Proporção (Contain)</option>
                                 <option value="repeat" <?= Setting::get('site_bg_repeat', '') === 'repeat' ? 'selected' : '' ?>>Repetir Textura (Seamless)</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- 3. CONTROLE DE SOMBRAS (ATIVAR, DESATIVAR, COR, INTENSIDADE & ALCANCE) -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 10px; padding: 16px 18px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em;">
+                                ✦ Sombras de Superfície & Cards:
+                            </span>
+                            <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.78rem; color: #CBD0D6;">
+                                <input type="hidden" name="site_shadows_enabled" value="0">
+                                <input type="checkbox" id="site_shadows_enabled" name="site_shadows_enabled" value="1" 
+                                       <?= Setting::get('site_shadows_enabled', '1') === '1' ? 'checked' : '' ?> 
+                                       onchange="updateThemeColorsLivePreview()"
+                                       style="width: 16px; height: 16px; accent-color: #A7ADB4; cursor: pointer;">
+                                <strong id="lbl_shadows_status"><?= Setting::get('site_shadows_enabled', '1') === '1' ? 'Sombras Ativadas' : 'Sombras Desativadas' ?></strong>
+                            </label>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+                            <!-- Cor da Sombra -->
+                            <div class="form-group" style="margin: 0;">
+                                <label for="site_shadow_color" style="font-size: 0.74rem;">Cor da Sombra:</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="color" id="picker_site_shadow_color" 
+                                           value="<?= View::e(Setting::get('site_shadow_color', '#000000')) ?>" 
+                                           oninput="document.getElementById('site_shadow_color').value = this.value; updateThemeColorsLivePreview();"
+                                           style="width: 44px; height: 36px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                                    <input type="text" id="site_shadow_color" name="site_shadow_color" class="form-input" 
+                                           value="<?= View::e(Setting::get('site_shadow_color', '#000000')) ?>" 
+                                           oninput="if(this.value.startsWith('#') && (this.value.length === 4 || this.value.length === 7)) document.getElementById('picker_site_shadow_color').value = this.value; updateThemeColorsLivePreview();">
+                                </div>
+                            </div>
+
+                            <!-- Intensidade da Sombra -->
+                            <div class="form-group" style="margin: 0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.74rem; margin-bottom: 4px;">
+                                    <span>Intensidade:</span>
+                                    <strong id="val_shadow_intensity"><?= round(((float)Setting::get('site_shadow_intensity', '0.25')) * 100) ?>%</strong>
+                                </div>
+                                <input type="range" id="site_shadow_intensity" name="site_shadow_intensity" min="0.05" max="0.80" step="0.05" 
+                                       value="<?= View::e(Setting::get('site_shadow_intensity', '0.25')) ?>" 
+                                       style="width: 100%; accent-color: #A7ADB4;"
+                                       oninput="document.getElementById('val_shadow_intensity').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
+                                <span class="field-hint">Suave (15%) a Marcada (60%).</span>
+                            </div>
+
+                            <!-- Alcance / Blur da Sombra -->
+                            <div class="form-group" style="margin: 0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.74rem; margin-bottom: 4px;">
+                                    <span>Desfoque (Blur):</span>
+                                    <strong id="val_shadow_blur"><?= (int)Setting::get('site_shadow_blur', '24') ?>px</strong>
+                                </div>
+                                <input type="range" id="site_shadow_blur" name="site_shadow_blur" min="4" max="50" step="2" 
+                                       value="<?= View::e(Setting::get('site_shadow_blur', '24')) ?>" 
+                                       style="width: 100%; accent-color: #A7ADB4;"
+                                       oninput="document.getElementById('val_shadow_blur').innerText = this.value + 'px'; updateThemeColorsLivePreview();">
+                                <span class="field-hint">Espalhamento nas bordas dos cards.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. EFEITOS VISUAIS DE FUNDO (GLASSMORPHISM, VINHETA & AMBIENT GLOW) -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 12px;">
+                            ✦ Efeitos Visuais de Fundo:
+                        </span>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+                            <!-- Efeito 1: Glassmorphism / Vidro Translúcido -->
+                            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="font-size: 0.76rem; color: #CBD0D6;">Efeito Vidro (Glass)</strong>
+                                    <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.7rem; color: #aaa;">
+                                        <input type="hidden" name="site_fx_glass_enabled" value="0">
+                                        <input type="checkbox" id="site_fx_glass_enabled" name="site_fx_glass_enabled" value="1" 
+                                               <?= Setting::get('site_fx_glass_enabled', '1') === '1' ? 'checked' : '' ?> 
+                                               onchange="updateThemeColorsLivePreview()"
+                                               style="width: 14px; height: 14px; accent-color: #A7ADB4; cursor: pointer;">
+                                        <span>Ativar</span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
+                                    <span>Desfoque de Vidro:</span>
+                                    <strong id="val_fx_glass_blur"><?= (int)Setting::get('site_fx_glass_blur', '12') ?>px</strong>
+                                </div>
+                                <input type="range" id="site_fx_glass_blur" name="site_fx_glass_blur" min="2" max="25" step="1" 
+                                       value="<?= View::e(Setting::get('site_fx_glass_blur', '12')) ?>" 
+                                       style="width: 100%; accent-color: #A7ADB4;"
+                                       oninput="document.getElementById('val_fx_glass_blur').innerText = this.value + 'px'; updateThemeColorsLivePreview();">
+                                <span class="field-hint" style="font-size: 0.65rem;">Desfoque elegante sob cabeçalho e cards.</span>
+                            </div>
+
+                            <!-- Efeito 2: Vinheta Periférica Suave -->
+                            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="font-size: 0.76rem; color: #CBD0D6;">Vinheta Periférica</strong>
+                                    <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.7rem; color: #aaa;">
+                                        <input type="hidden" name="site_fx_vignette_enabled" value="0">
+                                        <input type="checkbox" id="site_fx_vignette_enabled" name="site_fx_vignette_enabled" value="1" 
+                                               <?= Setting::get('site_fx_vignette_enabled', '0') === '1' ? 'checked' : '' ?> 
+                                               onchange="updateThemeColorsLivePreview()"
+                                               style="width: 14px; height: 14px; accent-color: #A7ADB4; cursor: pointer;">
+                                        <span>Ativar</span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
+                                    <span>Intensidade:</span>
+                                    <strong id="val_fx_vignette"><?= round(((float)Setting::get('site_fx_vignette_intensity', '0.40')) * 100) ?>%</strong>
+                                </div>
+                                <input type="range" id="site_fx_vignette_intensity" name="site_fx_vignette_intensity" min="0.10" max="0.80" step="0.05" 
+                                       value="<?= View::e(Setting::get('site_fx_vignette_intensity', '0.40')) ?>" 
+                                       style="width: 100%; accent-color: #A7ADB4;"
+                                       oninput="document.getElementById('val_fx_vignette').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
+                                <span class="field-hint" style="font-size: 0.65rem;">Escurecimento suave nas bordas da tela.</span>
+                            </div>
+
+                            <!-- Efeito 3: Brilho Ambiente Nobre (Spotlight) -->
+                            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="font-size: 0.76rem; color: #CBD0D6;">Brilho Ambiente (Glow)</strong>
+                                    <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.7rem; color: #aaa;">
+                                        <input type="hidden" name="site_fx_glow_enabled" value="0">
+                                        <input type="checkbox" id="site_fx_glow_enabled" name="site_fx_glow_enabled" value="1" 
+                                               <?= Setting::get('site_fx_glow_enabled', '1') === '1' ? 'checked' : '' ?> 
+                                               onchange="updateThemeColorsLivePreview()"
+                                               style="width: 14px; height: 14px; accent-color: #A7ADB4; cursor: pointer;">
+                                        <span>Ativar</span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                                    <input type="color" id="picker_fx_glow_color" 
+                                           value="<?= View::e(Setting::get('site_fx_glow_color', '#A7ADB4')) ?>" 
+                                           oninput="document.getElementById('site_fx_glow_color').value = this.value; updateThemeColorsLivePreview();"
+                                           style="width: 32px; height: 26px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                                    <input type="text" id="site_fx_glow_color" name="site_fx_glow_color" class="form-input" 
+                                           value="<?= View::e(Setting::get('site_fx_glow_color', '#A7ADB4')) ?>" 
+                                           style="padding: 4px 8px; font-size: 0.72rem; height: 26px;"
+                                           oninput="if(this.value.startsWith('#') && (this.value.length === 4 || this.value.length === 7)) document.getElementById('picker_fx_glow_color').value = this.value; updateThemeColorsLivePreview();">
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
+                                    <span>Intensidade:</span>
+                                    <strong id="val_fx_glow"><?= round(((float)Setting::get('site_fx_glow_intensity', '0.14')) * 100) ?>%</strong>
+                                </div>
+                                <input type="range" id="site_fx_glow_intensity" name="site_fx_glow_intensity" min="0.05" max="0.40" step="0.01" 
+                                       value="<?= View::e(Setting::get('site_fx_glow_intensity', '0.14')) ?>" 
+                                       style="width: 100%; accent-color: #A7ADB4;"
+                                       oninput="document.getElementById('val_fx_glow').innerText = Math.round(this.value * 100) + '%'; updateThemeColorsLivePreview();">
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card Lateral de Pré-Visualização Ao Vivo -->
-                <div>
+                <div style="position: sticky; top: 20px;">
                     <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #ded7cf; margin-bottom: 8px;">Prévia da Loja em Tempo Real:</label>
-                    <div id="lpColorsLivePreviewCard" style="height: 320px; border-radius: 12px; border: 1px solid #CBD0D6; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); background-color: #252525;">
-                        <div id="lpColorsLivePreviewOverlay" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1;"></div>
+                    <div id="lpColorsLivePreviewCard" style="height: 380px; border-radius: 12px; border: 1px solid #CBD0D6; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); background-color: #252525; transition: all 0.3s ease;">
+                        <div id="lpColorsLivePreviewOverlay" style="position: absolute; inset: 0; background: rgba(13,12,11,0.75); z-index: 1; pointer-events: none; transition: background 0.3s ease;"></div>
                         <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;">
                             <span id="lpPreviewLogo" style="font-family: var(--font-serif); font-size: 1.05rem; color: #fff; font-weight: 700; letter-spacing: 1px;">DIVINIUM</span>
-                            <span style="font-size: 0.65rem; background: rgba(202,161,92,0.25); color: #CBD0D6; border: 1px solid #CBD0D6; padding: 2px 8px; border-radius: 10px; font-weight: 600;">PRÉVIA AO VIVO</span>
+                            <span style="font-size: 0.65rem; background: rgba(167,173,180,0.2); color: #CBD0D6; border: 1px solid #CBD0D6; padding: 2px 8px; border-radius: 10px; font-weight: 600;">PRÉVIA AO VIVO</span>
                         </div>
                         <div style="position: relative; z-index: 2; text-align: center; margin: auto 0;">
                             <h4 id="lpPreviewTitle" style="font-family: var(--font-serif); font-size: 1.25rem; color: #fff; margin: 0 0 4px;">Joias que Revelam</h4>
                             <span id="lpPreviewHighlight" style="font-family: var(--font-serif); font-size: 1.1rem; color: #CBD0D6; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
-                            <div id="lpPreviewCardBox" style="display: inline-block; background: #141312; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 14px;">
+                            <div id="lpPreviewCardBox" style="display: inline-block; background: #141312; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 16px; transition: all 0.3s ease;">
                                 <span id="lpPreviewCardText" style="font-size: 0.72rem; color: #ded7cf;">✦ Alta Joalheria em Prata de Lei</span>
                             </div>
                         </div>
@@ -4017,13 +4202,30 @@ function applyThemePalette(themeName) {
 }
 
 function updateThemeColorsLivePreview() {
-    const bgVal = document.getElementById('lp_custom_color_bg')?.value || '#252525';
+    const bgVal = document.getElementById('lp_site_bg_color')?.value || document.getElementById('lp_custom_color_bg')?.value || '#252525';
     const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#141312';
     const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#CBD0D6';
     const textVal = document.getElementById('lp_custom_color_text')?.value || '#ffffff';
-    const imgVal = document.getElementById('lp_site_bg_image')?.value || '';
+    const imgVal = document.getElementById('lp_site_bg_image')?.value?.trim() || '';
     const overlayVal = parseFloat(document.getElementById('lp_site_bg_overlay')?.value || '0.75');
     const repeatVal = document.getElementById('lp_site_bg_repeat')?.value || 'cover';
+
+    // Sombras
+    const shadowsEnabled = document.getElementById('site_shadows_enabled')?.checked ?? true;
+    const shadowColor = document.getElementById('site_shadow_color')?.value || '#000000';
+    const shadowIntensity = parseFloat(document.getElementById('site_shadow_intensity')?.value || '0.25');
+    const shadowBlur = parseInt(document.getElementById('site_shadow_blur')?.value || '24');
+    const lblShadows = document.getElementById('lbl_shadows_status');
+    if (lblShadows) lblShadows.innerText = shadowsEnabled ? 'Sombras Ativadas' : 'Sombras Desativadas';
+
+    // Efeitos Visuais
+    const glassEnabled = document.getElementById('site_fx_glass_enabled')?.checked ?? true;
+    const glassBlur = parseInt(document.getElementById('site_fx_glass_blur')?.value || '12');
+    const vignetteEnabled = document.getElementById('site_fx_vignette_enabled')?.checked ?? false;
+    const vignetteIntensity = parseFloat(document.getElementById('site_fx_vignette_intensity')?.value || '0.40');
+    const glowEnabled = document.getElementById('site_fx_glow_enabled')?.checked ?? true;
+    const glowColor = document.getElementById('site_fx_glow_color')?.value || '#A7ADB4';
+    const glowIntensity = parseFloat(document.getElementById('site_fx_glow_intensity')?.value || '0.14');
 
     const card = document.getElementById('lpColorsLivePreviewCard');
     const overlay = document.getElementById('lpColorsLivePreviewOverlay');
@@ -4032,28 +4234,80 @@ function updateThemeColorsLivePreview() {
     const btn = document.getElementById('lpPreviewBtn');
     const title = document.getElementById('lpPreviewTitle');
 
+    // Helper Hex -> RGBA
+    const toRgba = (hex, a) => {
+        let c = (hex || '#000000').replace('#', '');
+        if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+        const r = parseInt(c.substring(0, 2), 16) || 0;
+        const g = parseInt(c.substring(2, 4), 16) || 0;
+        const b = parseInt(c.substring(4, 6), 16) || 0;
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+    };
+
     if (card) {
         card.style.backgroundColor = bgVal;
-        if (imgVal) {
-            card.style.backgroundImage = `url('${imgVal}')`;
-            card.style.backgroundSize = (repeatVal === 'repeat') ? 'auto' : 'cover';
-            card.style.backgroundRepeat = (repeatVal === 'repeat') ? 'repeat' : 'no-repeat';
-            card.style.backgroundPosition = 'center center';
+        if (glowEnabled) {
+            const glowRgba = toRgba(glowColor, glowIntensity);
+            if (imgVal) {
+                card.style.backgroundImage = `radial-gradient(circle at 50% 20%, ${glowRgba} 0%, transparent 70%), url('${imgVal}')`;
+            } else {
+                card.style.backgroundImage = `radial-gradient(circle at 50% 20%, ${glowRgba} 0%, transparent 70%)`;
+            }
         } else {
-            card.style.backgroundImage = 'none';
+            if (imgVal) {
+                card.style.backgroundImage = `url('${imgVal}')`;
+            } else {
+                card.style.backgroundImage = 'none';
+            }
+        }
+        card.style.backgroundSize = (repeatVal === 'repeat') ? 'auto' : 'cover';
+        card.style.backgroundRepeat = (repeatVal === 'repeat') ? 'repeat' : 'no-repeat';
+        card.style.backgroundPosition = 'center center';
+
+        if (shadowsEnabled) {
+            const sRgba = toRgba(shadowColor, shadowIntensity);
+            card.style.boxShadow = `0 14px ${Math.round(shadowBlur * 1.4)}px ${sRgba}`;
+        } else {
+            card.style.boxShadow = 'none';
         }
     }
 
     if (overlay) {
-        overlay.style.background = `rgba(13, 12, 11, ${overlayVal})`;
+        if (vignetteEnabled) {
+            const vigRgba = `rgba(0, 0, 0, ${vignetteIntensity})`;
+            overlay.style.background = `radial-gradient(ellipse at 50% 50%, rgba(13, 12, 11, ${overlayVal * 0.5}) 30%, ${vigRgba} 100%)`;
+        } else {
+            overlay.style.background = `rgba(13, 12, 11, ${overlayVal})`;
+        }
+    }
+
+    if (cardBox) {
+        cardBox.style.backgroundColor = surfaceVal;
+        if (shadowsEnabled) {
+            const sRgba = toRgba(shadowColor, shadowIntensity);
+            cardBox.style.boxShadow = `0 8px ${shadowBlur}px ${sRgba}`;
+        } else {
+            cardBox.style.boxShadow = 'none';
+        }
+        if (glassEnabled) {
+            cardBox.style.backdropFilter = `blur(${glassBlur}px)`;
+            cardBox.style.webkitBackdropFilter = `blur(${glassBlur}px)`;
+        } else {
+            cardBox.style.backdropFilter = 'none';
+            cardBox.style.webkitBackdropFilter = 'none';
+        }
     }
 
     if (highlight) highlight.style.color = primaryVal;
-    if (cardBox) cardBox.style.backgroundColor = surfaceVal;
     if (title) title.style.color = textVal;
     if (btn) {
         btn.style.backgroundColor = primaryVal;
-        btn.style.color = (bgVal === '#FBF9F5' || primaryVal === '#1A1918') ? '#ffffff' : '#000000';
+        btn.style.color = (bgVal === '#FBF9F5' || bgVal === '#FFFFFF' || bgVal === '#F8F8F7' || primaryVal === '#1A1918') ? '#202020' : '#FFFFFF';
+        if (shadowsEnabled) {
+            btn.style.boxShadow = `0 4px 12px ${toRgba(shadowColor, shadowIntensity * 0.7)}`;
+        } else {
+            btn.style.boxShadow = 'none';
+        }
     }
 }
 
