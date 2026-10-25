@@ -2970,40 +2970,100 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <div class="form-grid">
+                <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL DOS DEPOIMENTOS (RESPONSIVA) -->
+                <div class="form-group full-width" style="margin: 0 0 20px;">
+                    <label style="color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+                        <span>👁️</span> Pré-Visualização em Tempo Real (Responsiva)
+                    </label>
+                    <div id="testimonialLivePreviewContainer" style="background: #14161a; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 28px 20px; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        
+                        <div style="text-align: center; margin-bottom: 22px;">
+                            <h3 id="testimonialPreviewTitle" style="font-family: serif; font-size: 1.45rem; line-height: 1.3; margin: 0; font-weight: normal; color: #ffffff;">
+                                <?= View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>
+                            </h3>
+                        </div>
+
+                        <!-- Card Showcase -->
+                        <div style="position: relative; max-width: 680px; margin: 0 auto 24px; border-radius: 12px; overflow: hidden; min-height: 260px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
+                            <div style="position: absolute; inset: 0;">
+                                <img id="testimonialPreviewBackdrop" src="<?= View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/images/about/model-wrist-sunglasses.png';">
+                                <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(14, 13, 12, 0.45) 0%, rgba(14, 13, 12, 0.8) 100%);"></div>
+                            </div>
+                            <div style="position: relative; z-index: 2; width: calc(100% - 36px); margin: 24px auto; background: rgba(18, 17, 16, 0.78); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 24px 22px; text-align: center; color: #fff;">
+                                <div id="testimonialPreviewStars" style="color: #CBD0D6; font-size: 1.15rem; letter-spacing: 4px; margin-bottom: 12px; line-height: 1;">
+                                    <?= View::e(Setting::get('testimonial_stars', '★★★★★')) ?>
+                                </div>
+                                <blockquote id="testimonialPreviewQuote" style="font-family: serif; font-size: 1.15rem; font-style: italic; line-height: 1.5; margin: 0 0 16px; color: #fff;">
+                                    "<?= View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?>"
+                                </blockquote>
+                                <cite id="testimonialPreviewAuthor" style="font-size: 0.78rem; letter-spacing: 0.1em; color: #CBD0D6; font-style: normal; text-transform: uppercase;">
+                                    <?= View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>
+                                </cite>
+                            </div>
+                        </div>
+
+                        <!-- Miniaturas strip preview -->
+                        <?php 
+                            $defaultThumbs = [
+                                1 => '/assets/images/products/bracelete-verde.jpg',
+                                2 => '/assets/images/products/bracelete-madreperola.jpg',
+                                3 => '/assets/images/products/bracelete-vermelho.jpg',
+                                4 => '/assets/images/products/bracelete-onix.jpg',
+                                5 => '/assets/images/about/macro-texture.jpg',
+                            ];
+                        ?>
+                        <div id="testimonialPreviewThumbsStrip" style="display: flex; justify-content: center; gap: 10px; overflow-x: auto; padding: 4px 0;">
+                            <?php for ($t = 1; $t <= 5; $t++): 
+                                $tKey = 'testimonial_thumb_' . $t;
+                                $tVal = Setting::get($tKey, $defaultThumbs[$t]);
+                            ?>
+                            <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; background: #222;">
+                                <img id="testimonialPreviewThumb<?= $t ?>" src="<?= View::e($tVal) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            </div>
+                            <?php endfor; ?>
+                        </div>
+
+                    </div>
+                </div>
+
                 <div class="form-group full-width">
                     <label for="testimonials_title">Título da Seção de Depoimentos</label>
                     <input type="text" id="testimonials_title" name="testimonials_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>"
-                           placeholder="Amado por Quem Valoriza a Beleza Atemporal">
+                           placeholder="Amado por Quem Valoriza a Beleza Atemporal"
+                           oninput="updateTestimonialsLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="testimonial_stars">Avaliação (Estrelas / Símbolos)</label>
                     <input type="text" id="testimonial_stars" name="testimonial_stars" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('testimonial_stars', '★★★★★')) ?>"
-                           placeholder="★★★★★">
+                           placeholder="★★★★★"
+                           oninput="updateTestimonialsLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="testimonial_author">Autor do Depoimento</label>
                     <input type="text" id="testimonial_author" name="testimonial_author" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>"
-                           placeholder="[ Marcela R. • São Paulo/SP • Cliente Verificada ]">
+                           placeholder="[ Marcela R. • São Paulo/SP • Cliente Verificada ]"
+                           oninput="updateTestimonialsLivePreview()">
                 </div>
 
                 <div class="form-group full-width">
                     <label for="testimonial_quote">Citação / Depoimento Completo</label>
-                    <textarea id="testimonial_quote" name="testimonial_quote" class="form-textarea" rows="3"><?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?></textarea>
+                    <textarea id="testimonial_quote" name="testimonial_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?></textarea>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="testimonial_backdrop_img">Imagem de Fundo do Depoimento (Foto da Modelo)</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="testimonial_backdrop_img" name="testimonial_backdrop_img" class="form-input"
-                               value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>">
+                               value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>"
+                               oninput="updateTestimonialsLivePreview()">
                         <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
                             <span>📁 Enviar</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_backdrop_img', 'editorials')">
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
                         </label>
                     </div>
                 </div>
@@ -3017,13 +3077,6 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <?php 
-                    $defaultThumbs = [
-                        1 => '/assets/images/products/bracelete-verde.jpg',
-                        2 => '/assets/images/products/bracelete-madreperola.jpg',
-                        3 => '/assets/images/products/bracelete-vermelho.jpg',
-                        4 => '/assets/images/products/bracelete-onix.jpg',
-                        5 => '/assets/images/about/macro-texture.jpg',
-                    ];
                     for ($t = 1; $t <= 5; $t++): 
                         $thumbKey = 'testimonial_thumb_' . $t;
                         $thumbVal = Setting::get($thumbKey, $defaultThumbs[$t]);
@@ -3032,10 +3085,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="<?= $thumbKey ?>">Miniatura 0<?= $t ?></label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="<?= $thumbKey ?>" name="<?= $thumbKey ?>" class="form-input"
-                               value="<?= View::e($thumbVal) ?>">
+                               value="<?= View::e($thumbVal) ?>"
+                               oninput="updateTestimonialsLivePreview()">
                         <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 10px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px;">
                             <span>📁 Enviar</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, '<?= $thumbKey ?>', 'editorials')">
+                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, '<?= $thumbKey ?>', 'editorials'); updateTestimonialsLivePreview();">
                         </label>
                     </div>
                 </div>
