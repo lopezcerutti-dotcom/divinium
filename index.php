@@ -53,7 +53,7 @@ foreach ($possibleBootstraps as $candidate) {
 
 if ($bootstrapFile === null) {
     header('Content-Type: text/html; charset=UTF-8');
-    echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}</style></head><body><h2>DIVINIUM</h2><p style="color:#aaa;">Atualizando serviços com segurança. Por favor, recarregue a página em alguns instantes.</p></body></html>';
+    echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Divinium Joalheria</title><style>body{background:#F8F8F7;color:#202020;font-family:sans-serif;text-align:center;padding:80px 20px;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;box-sizing:border-box;}.box{background:#FFFFFF;border:1px solid #737B85;border-radius:16px;padding:48px 32px;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.05);}h2{letter-spacing:4px;font-weight:600;margin:0 0 12px;color:#202020;}p{color:#686868;line-height:1.6;margin:0;}</style></head><body><div class="box"><h2>DIVINIUM</h2><p>Atualizando serviços com segurança. Por favor, recarregue a página em alguns instantes.</p></div></body></html>';
     exit(0);
 }
 
@@ -110,7 +110,7 @@ try {
             if (!headers_sent()) {
                 header('Content-Type: text/html; charset=UTF-8');
             }
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Divinium Joalheria</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h2{letter-spacing:2px;font-weight:400;}p{color:#aaa;font-size:0.95rem;}a{color:#0d0c0b;background:#d4ba88;padding:10px 22px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>A boutique está inicializando os serviços com segurança.</p><a href="/">Atualizar Página</a></body></html>';
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Divinium Joalheria</title><style>body{background:#F8F8F7;color:#202020;font-family:sans-serif;text-align:center;padding:80px 20px;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;box-sizing:border-box;}.box{background:#FFFFFF;border:1px solid #737B85;border-radius:16px;padding:48px 32px;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.05);}h2{letter-spacing:4px;font-weight:600;margin:0 0 12px;color:#202020;}p{color:#686868;line-height:1.6;margin:0 0 24px;}a{color:#202020;background:linear-gradient(135deg,#CBD0D6 0%,#A7ADB4 100%);border:1px solid #737B85;padding:12px 28px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:700;}</style></head><body><div class="box"><h2>DIVINIUM</h2><p>A boutique está inicializando os serviços com segurança.</p><a href="/">Atualizar Página</a></div></body></html>';
             exit(0);
         }
     }
