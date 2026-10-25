@@ -2825,7 +2825,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
                     <label for="service_1_title" style="color: #CBD0D6; font-weight: 700;">Serviço 01 - Título</label>
                     <input type="text" id="service_1_title" name="service_1_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('service_1_title', 'Consultoria de Sintonia Mineral')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('service_1_title', 'Consultoria de Sintonia Mineral')) ?>"
+                           oninput="updateServicesLivePreview()">
                 </div>
                 <div class="form-group">
                     <label for="service_1_item_1">Serviço 01 - Item 1</label>
@@ -2847,7 +2848,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
                     <label for="service_2_title" style="color: #CBD0D6; font-weight: 700;">Serviço 02 - Título</label>
                     <input type="text" id="service_2_title" name="service_2_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção da Prata')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção da Prata')) ?>"
+                           oninput="updateServicesLivePreview()">
                 </div>
                 <div class="form-group">
                     <label for="service_2_item_1">Serviço 02 - Item 1</label>
@@ -2869,7 +2871,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
                     <label for="service_3_title" style="color: #CBD0D6; font-weight: 700;">Serviço 03 - Título</label>
                     <input type="text" id="service_3_title" name="service_3_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('service_3_title', 'Ajuste de Conforto & Garantia')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('service_3_title', 'Ajuste de Conforto & Garantia')) ?>"
+                           oninput="updateServicesLivePreview()">
                 </div>
                 <div class="form-group">
                     <label for="service_3_item_1">Serviço 03 - Item 1</label>
