@@ -4545,6 +4545,181 @@ function applyAboutColorPreset(preset) {
     updateAboutLivePreview();
 }
 
+// Funções de Cores & Pré-Visualização em Tempo Real: Experiência de Serviços Exclusivos
+function clearFieldServices(textId, pickerId, defaultVal) {
+    const txt = document.getElementById(textId);
+    if (txt) txt.value = '';
+    const pkr = document.getElementById(pickerId);
+    if (pkr && defaultVal) pkr.value = defaultVal;
+    updateServicesLivePreview();
+}
+
+function setQuickColorServices(textId, pickerId, hex) {
+    const txt = document.getElementById(textId);
+    if (txt) txt.value = hex;
+    const pkr = document.getElementById(pickerId);
+    if (pkr && hex.startsWith('#') && (hex.length === 7 || hex.length === 4)) {
+        pkr.value = hex;
+    }
+    updateServicesLivePreview();
+}
+
+function applyServicesColorPreset(preset) {
+    const presets = {
+        'default': {
+            services_bg_color: '#252525',
+            services_card_bg: '',
+            services_title_color: '#ffffff',
+            services_subtitle_color: '#CBD0D6',
+            services_text_color: '#a3a8b0',
+            services_icon_color: '#CBD0D6',
+            services_border_color: 'rgba(255, 255, 255, 0.08)',
+            services_btn_bg: '#CBD0D6',
+            services_btn_text: '#121212',
+            services_btn_border: '#CBD0D6'
+        },
+        'light': {
+            services_bg_color: '#F8F8F7',
+            services_card_bg: '#FFFFFF',
+            services_title_color: '#14161a',
+            services_subtitle_color: '#4a525d',
+            services_text_color: '#606975',
+            services_icon_color: '#14161a',
+            services_border_color: 'rgba(0, 0, 0, 0.08)',
+            services_btn_bg: '#14161a',
+            services_btn_text: '#FFFFFF',
+            services_btn_border: '#14161a'
+        },
+        'noir': {
+            services_bg_color: '#0d0f12',
+            services_card_bg: '#14171d',
+            services_title_color: '#FFFFFF',
+            services_subtitle_color: '#CBD0D6',
+            services_text_color: '#8f96a3',
+            services_icon_color: '#CBD0D6',
+            services_border_color: 'rgba(203, 208, 214, 0.18)',
+            services_btn_bg: '#1e232b',
+            services_btn_text: '#CBD0D6',
+            services_btn_border: '#CBD0D6'
+        }
+    };
+
+    const config = presets[preset] || presets['default'];
+    for (const [key, val] of Object.entries(config)) {
+        const textInput = document.getElementById(key);
+        if (textInput) textInput.value = val;
+        const pickerInput = document.getElementById(key + '_picker');
+        if (pickerInput && val.startsWith('#') && val.length === 7) {
+            pickerInput.value = val;
+        }
+    }
+    updateServicesLivePreview();
+}
+
+function resetServicesColors() {
+    const defaultPickers = {
+        'services_bg_color': '#252525',
+        'services_card_bg': '#1a1d22',
+        'services_title_color': '#ffffff',
+        'services_subtitle_color': '#CBD0D6',
+        'services_text_color': '#a3a8b0',
+        'services_icon_color': '#CBD0D6',
+        'services_border_color': '#444444',
+        'services_btn_bg': '#CBD0D6',
+        'services_btn_text': '#121212',
+        'services_btn_border': '#CBD0D6'
+    };
+    for (const [key, defHex] of Object.entries(defaultPickers)) {
+        const txt = document.getElementById(key);
+        if (txt) txt.value = '';
+        const pkr = document.getElementById(key + '_picker');
+        if (pkr) pkr.value = defHex;
+    }
+    updateServicesLivePreview();
+}
+
+function updateServicesLivePreview() {
+    const getVal = (id, def) => {
+        const el = document.getElementById(id);
+        const val = el ? el.value.trim() : '';
+        return val !== '' ? val : def;
+    };
+
+    const bg = getVal('services_bg_color', '#252525');
+    const cardBg = getVal('services_card_bg', 'transparent');
+    const titleColor = getVal('services_title_color', '#ffffff');
+    const subtitleColor = getVal('services_subtitle_color', '#CBD0D6');
+    const textColor = getVal('services_text_color', '#a3a8b0');
+    const iconColor = getVal('services_icon_color', '#CBD0D6');
+    const borderColor = getVal('services_border_color', 'rgba(255, 255, 255, 0.08)');
+    const btnBg = getVal('services_btn_bg', '#CBD0D6');
+    const btnText = getVal('services_btn_text', '#121212');
+    const btnBorder = getVal('services_btn_border', '#CBD0D6');
+
+    // Container
+    const container = document.getElementById('servicesLivePreviewContainer');
+    if (container) {
+        container.style.backgroundColor = bg;
+    }
+
+    // Main Title & Subtitle
+    const previewMainTitle = document.getElementById('servicesPreviewMainTitle');
+    if (previewMainTitle) {
+        previewMainTitle.textContent = getVal('services_title', 'Experiência de Serviços Exclusivos');
+        previewMainTitle.style.color = titleColor;
+    }
+
+    const previewSubtitle = document.getElementById('servicesPreviewSubtitle');
+    if (previewSubtitle) {
+        previewSubtitle.textContent = getVal('services_subtitle', 'Mais do que uma joia — um vínculo de bem-estar e sintonia. Cada bracelete Divinium é acompanhado de cuidados minuciosos e suporte sob medida.');
+        previewSubtitle.style.color = subtitleColor;
+    }
+
+    // Cards
+    const cards = document.querySelectorAll('.servicesPreviewItemCard');
+    cards.forEach(card => {
+        card.style.backgroundColor = cardBg;
+        card.style.borderColor = borderColor;
+    });
+
+    // Numerals & bullets
+    const nums = document.querySelectorAll('.servicesPreviewNum');
+    nums.forEach(num => num.style.color = iconColor);
+
+    const bullets = document.querySelectorAll('.servicesPreviewBullet');
+    bullets.forEach(b => b.style.color = iconColor);
+
+    // Card Titles
+    const itemTitles = document.querySelectorAll('.servicesPreviewItemTitle');
+    const titlesArray = [
+        getVal('service_1_title', 'Consultoria de Sintonia Mineral'),
+        getVal('service_2_title', 'Cuidado Artesanal & Manutenção'),
+        getVal('service_3_title', 'Ajuste de Conforto & Garantia')
+    ];
+    itemTitles.forEach((t, idx) => {
+        if (titlesArray[idx]) t.textContent = titlesArray[idx];
+        t.style.color = titleColor;
+    });
+
+    // Details text
+    const lists = document.querySelectorAll('.servicesPreviewList');
+    lists.forEach(l => l.style.color = textColor);
+
+    // Button
+    const isCtaActive = document.getElementById('services_cta_visible')?.checked ?? true;
+    const btnWrap = document.getElementById('servicesPreviewBtnWrap');
+    if (btnWrap) {
+        btnWrap.style.display = isCtaActive ? '' : 'none';
+    }
+    const btn = document.getElementById('servicesPreviewBtn');
+    if (btn) {
+        btn.textContent = getVal('services_cta_text', 'Falar com o Concierge no WhatsApp ↗');
+        btn.style.backgroundColor = btnBg;
+        btn.style.color = btnText;
+        btn.style.borderColor = btnBorder;
+    }
+}
+
 // Suporte a abertura direta de abas por URL (ex: ?tab=sec-mobile-menu ou #sec-mobile-menu)
 function checkInitialEditorTab() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -4558,6 +4733,7 @@ function checkInitialEditorTab() {
     toggleLogoFields();
     updateMobileMenuLivePreview();
     updateAboutLivePreview();
+    updateServicesLivePreview();
     updateThemeColorsLivePreview();
 }
 
