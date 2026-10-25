@@ -106,8 +106,7 @@ class CsrfMiddleware
                 }
                 // Retorna 200 com página de retorno para não ser interceptada pelo LiteSpeed Hostinger
                 http_response_code(200);
-                header('Content-Type: text/html; charset=UTF-8');
-                echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Sessão Expirada</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:50px;}h2{letter-spacing:1px;}p{color:#aaa;}a{color:#0d0c0b;background:#d4ba88;padding:10px 20px;border-radius:4px;text-decoration:none;display:inline-block;margin-top:15px;font-weight:600;}</style></head><body><h2>DIVINIUM</h2><p>Sua sessão expirou por segurança. Por favor, atualize a página e tente novamente.</p><a href="javascript:history.back()">Voltar</a></body></html>';
+                echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sessão Expirada | Divinium</title><style>body{background:#F8F8F7;color:#202020;font-family:sans-serif;text-align:center;padding:80px 20px;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;box-sizing:border-box;}.box{background:#FFFFFF;border:1px solid #737B85;border-radius:16px;padding:48px 32px;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.05);}h2{letter-spacing:4px;font-weight:600;margin:0 0 12px;color:#202020;}p{color:#686868;line-height:1.6;margin:0 0 24px;}a{color:#202020;background:linear-gradient(135deg,#CBD0D6 0%,#A7ADB4 100%);border:1px solid #737B85;padding:12px 28px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:700;}</style></head><body><div class="box"><h2>DIVINIUM</h2><p>Sua sessão expirou por segurança. Por favor, retorne e tente novamente.</p><a href="javascript:history.back()">Voltar</a></div></body></html>';
             }
             exit;
         }
