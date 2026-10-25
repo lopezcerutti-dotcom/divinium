@@ -53,7 +53,7 @@ class Router
         CsrfMiddleware::validate();
 
         // Interceptar callback OAuth do Bling caso retorne na raiz ou em /admin/bling/callback
-        if (isset($_GET['code']) && ($path === '/' || $path === '/admin/bling/callback')) {
+        if (isset($_GET['code']) && ($path === '/' || str_ends_with($path, '/bling/callback'))) {
             $controller = new \App\Controllers\AdminController();
             $controller->blingCallback();
             return;
@@ -85,7 +85,7 @@ class Router
             echo json_encode(['error' => 'Página ou recurso não encontrado.'], JSON_UNESCAPED_UNICODE);
         } else {
             header('Content-Type: text/html; charset=UTF-8');
-            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Página Não Encontrada | Divinium</title><style>body{background:#0d0c0b;color:#d4ba88;font-family:sans-serif;text-align:center;padding:80px 20px;}h1{letter-spacing:4px;font-weight:300;font-size:3rem;margin-bottom:10px;}p{color:#aaa;font-size:1.1rem;margin-bottom:25px;}a{color:#0d0c0b;background:#d4ba88;padding:12px 28px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:600;letter-spacing:1px;}</style></head><body><h1>404</h1><p>A joia ou página que você procura não foi encontrada.</p><a href="/">Voltar à Boutique</a></body></html>';
+            echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Página Não Encontrada | Divinium</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{background:#F8F8F7;color:#202020;font-family:\'Inter\',sans-serif;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;box-sizing:border-box;}.error-card{background:#FFFFFF;border:1px solid #737B85;border-radius:16px;padding:48px 32px;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.06);}h1{font-family:\'Cormorant Garamond\',Georgia,serif;letter-spacing:4px;font-weight:400;font-size:3.5rem;margin:0 0 10px;color:#202020;}p{color:#686868;font-size:1.05rem;line-height:1.6;margin:0 0 28px;}a{color:#202020;background:linear-gradient(135deg,#CBD0D6 0%,#A7ADB4 100%);border:1px solid #737B85;padding:12px 30px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:700;letter-spacing:0.5px;transition:all 0.3s ease;}a:hover{filter:brightness(0.95);transform:translateY(-2px);}</style></head><body><div class="error-card"><h1>404</h1><p>A joia ou página que você procura não foi encontrada ou foi movida.</p><a href="/">Voltar à Boutique</a></div></body></html>';
         }
         exit;
     }
