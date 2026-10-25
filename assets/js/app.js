@@ -727,9 +727,170 @@ function initHeroCarousel() {
     startAutoplay();
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHeroCarousel);
-} else {
-    initHeroCarousel();
+// ==============================================================================
+// 11. CARROSSEL DE DEPOIMENTOS DA HOME (QUIET LUXURY TESTIMONIALS CAROUSEL)
+// ==============================================================================
+function initTestimonialsCarousel() {
+    const container = document.getElementById('testimonialsCarousel');
+    if (!container) return;
+
+    const slides = Array.from(container.querySelectorAll('.testimonial-slide'));
+    const dots = Array.from(container.querySelectorAll('.testimonials-carousel-dot'));
+    const prevBtn = document.getElementById('testimonialsCarouselPrev');
+    const nextBtn = document.getElementById('testimonialsCarouselNext');
+
+    if (slides.length <= 1) {
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        const dotsWrap = document.getElementById('testimonialsCarouselDots');
+        if (dotsWrap) dotsWrap.style.display = 'none';
+        return;
+    }
+
+    let currentIndex = 0;
+    let autoplayTimer = null;
+    let isPaused = false;
+
+    const autoplayEnabled = container.getAttribute('data-autoplay') !== '0';
+    const intervalMs = parseInt(container.getAttribute('data-interval'), 10) || 6000;
+
+    function goToSlide(index) {
+        if (index < 0) {
+            index = slides.length - 1;
+        } else if (index >= slides.length) {
+            index = 0;
+        }
+
+        slides.forEach((slide, i) => {
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+
+        currentIndex = index;
+    }
+
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentIndex - 1);
+    }
+
+    function startAutoplay() {
+        if (!autoplayEnabled || autoplayTimer !== null) return;
+        autoplayTimer = setInterval(() => {
+            if (!isPaused) {
+                nextSlide();
+            }
+        }, intervalMs);
+    }
+
+    function stopAutoplay() {
+        if (autoplayTimer !== null) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+
+    function resetAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+    }
+
+    // Setas manuais
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            nextSlide();
+            resetAutoplay();
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            prevSlide();
+            resetAutoplay();
+        });
+    }
+
+    // Indicadores minimalistas
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToSlide(i);
+            resetAutoplay();
+        });
+    });
+
+    // Pausar ao passar o mouse ou focar
+    container.addEventListener('mouseenter', () => { isPaused = true; });
+    container.addEventListener('mouseleave', () => { isPaused = false; });
+    container.addEventListener('focusin', () => { isPaused = true; });
+    container.addEventListener('focusout', () => { isPaused = false; });
+
+    // Suporte a swipe por toque (Mobile)
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    container.addEventListener('touchstart', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+            touchStartX = e.changedTouches[0].screenX;
+            isPaused = true;
+        }
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+            touchEndX = e.changedTouches[0].screenX;
+            const diffX = touchStartX - touchEndX;
+            if (Math.abs(diffX) > 35) {
+                if (diffX > 0) {
+                    nextSlide(); // swipe esquerda -> próximo depoimento
+                } else {
+                    prevSlide(); // swipe direita -> depoimento anterior
+                }
+                resetAutoplay();
+            }
+        }
+        setTimeout(() => { isPaused = false; }, 1200);
+    }, { passive: true });
+
+    // Suporte a teclas direcionais
+    container.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            nextSlide();
+            resetAutoplay();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+            resetAutoplay();
+        }
+    });
+
+    startAutoplay();
 }
+
+function initAllCarousels() {
+    initHeroCarousel();
+    initTestimonialsCarousel();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllCarousels);
+} else {
+    initAllCarousels();
+}
+
 

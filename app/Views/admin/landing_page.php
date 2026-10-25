@@ -2970,36 +2970,97 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <div class="form-grid">
-                <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL DOS DEPOIMENTOS (RESPONSIVA) -->
-                <div class="form-group full-width" style="margin: 0 0 20px;">
-                    <label style="color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                        <span>👁️</span> Pré-Visualização em Tempo Real (Responsiva)
+                <!-- ============================================================== -->
+                <!-- CONFIGURAÇÕES GERAIS DO CARROSSEL DE DEPOIMENTOS -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px; margin-bottom: 14px;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                        <span>🎡</span> 1. Carrossel de Depoimentos & Prova Social VIP
+                    </h4>
+                    <span class="field-hint">Apresente múltiplos depoimentos reais em um carrossel fluido e responsivo.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="testimonials_title">Título Principal da Seção</label>
+                    <input type="text" id="testimonials_title" name="testimonials_title" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>"
+                           placeholder="Amado por Quem Valoriza a Beleza Atemporal"
+                           oninput="updateTestimonialsLivePreview()">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ffffff; font-weight: 600;">
+                        <input type="checkbox" id="testimonials_carousel_autoplay" name="testimonials_carousel_autoplay" value="1"
+                               <?= Setting::get('testimonials_carousel_autoplay', '1') === '1' ? 'checked' : '' ?>>
+                        <span>Transição Automática (Autoplay)</span>
                     </label>
+                    <span class="field-hint">Avança para o próximo depoimento automaticamente.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="testimonials_carousel_interval">Tempo por Depoimento (segundos)</label>
+                    <input type="number" id="testimonials_carousel_interval" name="testimonials_carousel_interval" class="form-input"
+                           min="3" max="20" step="1"
+                           value="<?= View::e(Setting::get('testimonials_carousel_interval', '6')) ?>" style="max-width: 140px;">
+                    <span class="field-hint">Padrão recomendado: 6 segundos.</span>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- PRÉ-VISUALIZAÇÃO INTERATIVA EM TEMPO REAL -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="margin: 10px 0 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                        <label style="color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <span>👁️</span> Pré-Visualização ao Vivo do Carrossel
+                        </label>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <span style="font-size: 0.72rem; color: #888;">Ver slide:</span>
+                            <button type="button" class="btn-admin-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="previewTestimonialSlide(1)">1</button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="previewTestimonialSlide(2)">2</button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="previewTestimonialSlide(3)">3</button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="previewTestimonialSlide(4)">4</button>
+                        </div>
+                    </div>
+
                     <div id="testimonialLivePreviewContainer" style="background: #14161a; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 28px 20px; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                         
-                        <div style="text-align: center; margin-bottom: 22px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
                             <h3 id="testimonialPreviewTitle" style="font-family: serif; font-size: 1.45rem; line-height: 1.3; margin: 0; font-weight: normal; color: #ffffff;">
                                 <?= View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>
                             </h3>
                         </div>
 
-                        <!-- Card Showcase -->
-                        <div style="position: relative; max-width: 680px; margin: 0 auto 24px; border-radius: 12px; overflow: hidden; min-height: 260px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
-                            <div style="position: absolute; inset: 0;">
-                                <img id="testimonialPreviewBackdrop" src="<?= View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/images/about/model-wrist-sunglasses.png';">
-                                <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(14, 13, 12, 0.45) 0%, rgba(14, 13, 12, 0.8) 100%);"></div>
-                            </div>
-                            <div style="position: relative; z-index: 2; width: calc(100% - 36px); margin: 24px auto; background: rgba(18, 17, 16, 0.78); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 24px 22px; text-align: center; color: #fff;">
-                                <div id="testimonialPreviewStars" style="color: #CBD0D6; font-size: 1.15rem; letter-spacing: 4px; margin-bottom: 12px; line-height: 1;">
-                                    <?= View::e(Setting::get('testimonial_stars', '★★★★★')) ?>
+                        <!-- Card Showcase do Preview com Setas -->
+                        <div style="position: relative; max-width: 680px; margin: 0 auto 16px;">
+                            <div style="position: relative; border-radius: 12px; overflow: hidden; min-height: 260px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
+                                <div style="position: absolute; inset: 0;">
+                                    <img id="testimonialPreviewBackdrop" src="<?= View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/images/about/model-wrist-sunglasses.png';">
+                                    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(14, 13, 12, 0.45) 0%, rgba(14, 13, 12, 0.8) 100%);"></div>
                                 </div>
-                                <blockquote id="testimonialPreviewQuote" style="font-family: serif; font-size: 1.15rem; font-style: italic; line-height: 1.5; margin: 0 0 16px; color: #fff;">
-                                    "<?= View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?>"
-                                </blockquote>
-                                <cite id="testimonialPreviewAuthor" style="font-size: 0.78rem; letter-spacing: 0.1em; color: #CBD0D6; font-style: normal; text-transform: uppercase;">
-                                    <?= View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>
-                                </cite>
+                                <div style="position: relative; z-index: 2; width: calc(100% - 36px); margin: 24px auto; background: rgba(18, 17, 16, 0.78); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 24px 22px; text-align: center; color: #fff;">
+                                    <div id="testimonialPreviewStars" style="color: #CBD0D6; font-size: 1.15rem; letter-spacing: 4px; margin-bottom: 12px; line-height: 1;">
+                                        <?= View::e(Setting::get('testimonial_stars', '★★★★★')) ?>
+                                    </div>
+                                    <blockquote id="testimonialPreviewQuote" style="font-family: serif; font-size: 1.15rem; font-style: italic; line-height: 1.5; margin: 0 0 16px; color: #fff;">
+                                        "<?= View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?>"
+                                    </blockquote>
+                                    <cite id="testimonialPreviewAuthor" style="font-size: 0.78rem; letter-spacing: 0.1em; color: #CBD0D6; font-style: normal; text-transform: uppercase;">
+                                        <?= View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>
+                                    </cite>
+                                </div>
                             </div>
+
+                            <!-- Setas do Preview -->
+                            <button type="button" onclick="stepAdminTestimonial(-1)" style="position: absolute; left: -14px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; background: rgba(18,17,16,0.8); border: 1px solid rgba(255,255,255,0.2); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;">‹</button>
+                            <button type="button" onclick="stepAdminTestimonial(1)" style="position: absolute; right: -14px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; background: rgba(18,17,16,0.8); border: 1px solid rgba(255,255,255,0.2); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;">›</button>
+                        </div>
+
+                        <!-- Indicadores do Preview -->
+                        <div style="display: flex; justify-content: center; gap: 6px; margin-bottom: 20px;">
+                            <span id="adminTestimonialDot1" style="width: 24px; height: 4px; border-radius: 2px; background: #CBD0D6; display: inline-block;"></span>
+                            <span id="adminTestimonialDot2" style="width: 14px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); display: inline-block;"></span>
+                            <span id="adminTestimonialDot3" style="width: 14px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); display: inline-block;"></span>
+                            <span id="adminTestimonialDot4" style="width: 14px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); display: inline-block;"></span>
                         </div>
 
                         <!-- Miniaturas strip preview -->
@@ -3017,7 +3078,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                 $tKey = 'testimonial_thumb_' . $t;
                                 $tVal = Setting::get($tKey, $defaultThumbs[$t]);
                             ?>
-                            <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; background: #222;">
+                            <div style="width: 58px; height: 58px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; background: #222;">
                                 <img id="testimonialPreviewThumb<?= $t ?>" src="<?= View::e($tVal) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                             </div>
                             <?php endfor; ?>
@@ -3026,54 +3087,195 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </div>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="testimonials_title">Título da Seção de Depoimentos</label>
-                    <input type="text" id="testimonials_title" name="testimonials_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal')) ?>"
-                           placeholder="Amado por Quem Valoriza a Beleza Atemporal"
-                           oninput="updateTestimonialsLivePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label for="testimonial_stars">Avaliação (Estrelas / Símbolos)</label>
-                    <input type="text" id="testimonial_stars" name="testimonial_stars" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('testimonial_stars', '★★★★★')) ?>"
-                           placeholder="★★★★★"
-                           oninput="updateTestimonialsLivePreview()">
-                </div>
-
-                <div class="form-group">
-                    <label for="testimonial_author">Autor do Depoimento</label>
-                    <input type="text" id="testimonial_author" name="testimonial_author" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>"
-                           placeholder="[ Marcela R. • São Paulo/SP • Cliente Verificada ]"
-                           oninput="updateTestimonialsLivePreview()">
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="testimonial_quote">Citação / Depoimento Completo</label>
-                    <textarea id="testimonial_quote" name="testimonial_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?></textarea>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="testimonial_backdrop_img">Imagem de Fundo do Depoimento (Foto da Modelo)</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="testimonial_backdrop_img" name="testimonial_backdrop_img" class="form-input"
-                               value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>"
-                               oninput="updateTestimonialsLivePreview()">
-                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
-                            <span>📁 Enviar</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
-                        </label>
+                <!-- ============================================================== -->
+                <!-- ABAS PARA EDITAR CADA UM DOS 4 DEPOIMENTOS DO CARROSSEL -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                        <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            ✍️ 2. Edição dos 4 Depoimentos do Carrossel
+                        </h4>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            <button type="button" id="btnTabTestimonial1" class="btn-admin-gold" style="padding: 6px 12px; font-size: 0.76rem;" onclick="switchTestimonialAdminTab(1)">
+                                Depoimento 01
+                            </button>
+                            <button type="button" id="btnTabTestimonial2" class="btn-admin-secondary" style="padding: 6px 12px; font-size: 0.76rem;" onclick="switchTestimonialAdminTab(2)">
+                                Depoimento 02
+                            </button>
+                            <button type="button" id="btnTabTestimonial3" class="btn-admin-secondary" style="padding: 6px 12px; font-size: 0.76rem;" onclick="switchTestimonialAdminTab(3)">
+                                Depoimento 03
+                            </button>
+                            <button type="button" id="btnTabTestimonial4" class="btn-admin-secondary" style="padding: 6px 12px; font-size: 0.76rem;" onclick="switchTestimonialAdminTab(4)">
+                                Depoimento 04
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Miniaturas da Faixa de Clientes -->
+                <!-- PAINEL DEPOIMENTO 01 -->
+                <div id="panelTestimonial1" class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        ✦ Depoimento 01 (Principal)
+                    </h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label for="testimonial_author">Autor / Cidade / Selo</label>
+                            <input type="text" id="testimonial_author" name="testimonial_author" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?>"
+                                   placeholder="[ Marcela R. • São Paulo/SP • Cliente Verificada ]"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                        <div>
+                            <label for="testimonial_stars">Avaliação (Estrelas / Símbolos)</label>
+                            <input type="text" id="testimonial_stars" name="testimonial_stars" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_stars', '★★★★★')) ?>"
+                                   placeholder="★★★★★"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="testimonial_quote">Citação / Depoimento Completo</label>
+                        <textarea id="testimonial_quote" name="testimonial_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?></textarea>
+                    </div>
+                    <div>
+                        <label for="testimonial_backdrop_img">Imagem de Fundo (Foto da Modelo)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="testimonial_backdrop_img" name="testimonial_backdrop_img" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>"
+                                   oninput="updateTestimonialsLivePreview()">
+                            <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                                <span>📁 Enviar</span>
+                                <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL DEPOIMENTO 02 -->
+                <div id="panelTestimonial2" class="form-group full-width" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        ✦ Depoimento 02
+                    </h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label for="testimonial_2_author">Autor / Cidade / Selo</label>
+                            <input type="text" id="testimonial_2_author" name="testimonial_2_author" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_2_author', '[ Helena Castro • Rio de Janeiro/RJ • Colecionadora Divinium ]')) ?>"
+                                   placeholder="[ Helena Castro • Rio de Janeiro/RJ • Colecionadora Divinium ]"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                        <div>
+                            <label for="testimonial_2_stars">Avaliação (Estrelas / Símbolos)</label>
+                            <input type="text" id="testimonial_2_stars" name="testimonial_2_stars" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_2_stars', '★★★★★')) ?>"
+                                   placeholder="★★★★★"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="testimonial_2_quote">Citação / Depoimento Completo</label>
+                        <textarea id="testimonial_2_quote" name="testimonial_2_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_2_quote', 'O peso da prata 925 maciça e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.')) ?></textarea>
+                    </div>
+                    <div>
+                        <label for="testimonial_2_backdrop_img">Imagem de Fundo (Foto Editorial)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="testimonial_2_backdrop_img" name="testimonial_2_backdrop_img" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_2_backdrop_img', '/assets/images/about/banner-unica.jpg')) ?>"
+                                   oninput="updateTestimonialsLivePreview()">
+                            <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                                <span>📁 Enviar</span>
+                                <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_2_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL DEPOIMENTO 03 -->
+                <div id="panelTestimonial3" class="form-group full-width" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        ✦ Depoimento 03
+                    </h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label for="testimonial_3_author">Autor / Cidade / Selo</label>
+                            <input type="text" id="testimonial_3_author" name="testimonial_3_author" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_3_author', '[ Dr. Eduardo Valença • Belo Horizonte/MG • Compra Verificada ]')) ?>"
+                                   placeholder="[ Dr. Eduardo Valença • Belo Horizonte/MG • Compra Verificada ]"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                        <div>
+                            <label for="testimonial_3_stars">Avaliação (Estrelas / Símbolos)</label>
+                            <input type="text" id="testimonial_3_stars" name="testimonial_3_stars" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_3_stars', '★★★★★')) ?>"
+                                   placeholder="★★★★★"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="testimonial_3_quote">Citação / Depoimento Completo</label>
+                        <textarea id="testimonial_3_quote" name="testimonial_3_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_3_quote', 'Presenteei minha esposa com o bracelete em Madrepérola e ela ficou maravilhada. O cuidado da embalagem com fita, o certificado mineral e a atenção do Concierge no WhatsApp elevaram a experiência a outro patamar.')) ?></textarea>
+                    </div>
+                    <div>
+                        <label for="testimonial_3_backdrop_img">Imagem de Fundo (Foto Editorial)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="testimonial_3_backdrop_img" name="testimonial_3_backdrop_img" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_3_backdrop_img', '/assets/images/about/banner-caminhos.jpg')) ?>"
+                                   oninput="updateTestimonialsLivePreview()">
+                            <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                                <span>📁 Enviar</span>
+                                <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_3_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL DEPOIMENTO 04 -->
+                <div id="panelTestimonial4" class="form-group full-width" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        ✦ Depoimento 04
+                    </h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label for="testimonial_4_author">Autor / Cidade / Selo</label>
+                            <input type="text" id="testimonial_4_author" name="testimonial_4_author" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_4_author', '[ Beatriz Mendonça • Curitiba/PR • Arquiteta & Designer ]')) ?>"
+                                   placeholder="[ Beatriz Mendonça • Curitiba/PR • Arquiteta & Designer ]"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                        <div>
+                            <label for="testimonial_4_stars">Avaliação (Estrelas / Símbolos)</label>
+                            <input type="text" id="testimonial_4_stars" name="testimonial_4_stars" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_4_stars', '★★★★★')) ?>"
+                                   placeholder="★★★★★"
+                                   oninput="updateTestimonialsLivePreview()">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="testimonial_4_quote">Citação / Depoimento Completo</label>
+                        <textarea id="testimonial_4_quote" name="testimonial_4_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_4_quote', 'O minimalismo escultural do aro duplo com a resina mineral verde esmeralda tem uma aura única. Transita do ambiente executivo a eventos de gala com elegância sem esforço. Simplesmente magnífico.')) ?></textarea>
+                    </div>
+                    <div>
+                        <label for="testimonial_4_backdrop_img">Imagem de Fundo (Foto Editorial)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="testimonial_4_backdrop_img" name="testimonial_4_backdrop_img" class="form-input"
+                                   value="<?= \App\Core\View::e(Setting::get('testimonial_4_backdrop_img', '/assets/images/about/macro-texture.jpg')) ?>"
+                                   oninput="updateTestimonialsLivePreview()">
+                            <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+                                <span>📁 Enviar</span>
+                                <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'testimonial_4_backdrop_img', 'editorials'); updateTestimonialsLivePreview();">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- MINIATURAS DA FAIXA DE CLIENTES (5 FOTOS) -->
+                <!-- ============================================================== -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 8px;">
                     <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        📸 Faixa de Miniaturas da Galeria de Clientes (5 Fotos)
+                        📸 3. Faixa de Miniaturas da Galeria de Clientes (5 Fotos)
                     </h4>
-                    <span class="field-hint">Fotos quadradas exibidas logo abaixo da citação na Home.</span>
+                    <span class="field-hint">Fotos quadradas com rolagem por toque exibidas logo abaixo do carrossel na Home.</span>
                 </div>
 
                 <?php 
@@ -4774,6 +4976,103 @@ function updateServicesLivePreview() {
     }
 }
 
+let currentAdminTestimonialIndex = 1;
+
+function switchTestimonialAdminTab(tabIndex) {
+    currentAdminTestimonialIndex = tabIndex;
+    for (let i = 1; i <= 4; i++) {
+        const panel = document.getElementById('panelTestimonial' + i);
+        const btn = document.getElementById('btnTabTestimonial' + i);
+        if (panel) {
+            panel.style.display = (i === tabIndex) ? 'block' : 'none';
+        }
+        if (btn) {
+            if (i === tabIndex) {
+                btn.className = 'btn-admin-gold';
+            } else {
+                btn.className = 'btn-admin-secondary';
+            }
+        }
+    }
+    previewTestimonialSlide(tabIndex);
+}
+
+function stepAdminTestimonial(delta) {
+    let nextIndex = currentAdminTestimonialIndex + delta;
+    if (nextIndex < 1) nextIndex = 4;
+    if (nextIndex > 4) nextIndex = 1;
+    switchTestimonialAdminTab(nextIndex);
+}
+
+function previewTestimonialSlide(slideIndex) {
+    currentAdminTestimonialIndex = slideIndex;
+    const getVal = (id, def) => {
+        const el = document.getElementById(id);
+        const val = el ? el.value.trim() : '';
+        return val !== '' ? val : def;
+    };
+
+    const titleEl = document.getElementById('testimonialPreviewTitle');
+    if (titleEl) titleEl.textContent = getVal('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal');
+
+    const defaults = {
+        1: {
+            author: '[ Marcela R. • São Paulo/SP • Cliente Verificada ]',
+            stars: '★★★★★',
+            quote: 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!',
+            bg: '/assets/images/about/model-wrist-sunglasses.jpg'
+        },
+        2: {
+            author: '[ Helena Castro • Rio de Janeiro/RJ • Colecionadora ]',
+            stars: '★★★★★',
+            quote: 'Uma verdadeira obra de arte vestível. A lapidação suave e o aro dourado criam uma harmonia perfeita. Usei numa recepção no Copacabana Palace e chamou atenção com discrição e luxo incomparável.',
+            bg: '/assets/images/about/artisan-hands-gem.jpg'
+        },
+        3: {
+            author: '[ Dr. Eduardo Valença • Belo Horizonte/MG • Cliente Exclusivo ]',
+            stars: '★★★★★',
+            quote: 'Presenteei minha esposa com o bracelete em Madrepérola e ela ficou maravilhada. O cuidado da embalagem com fita, o certificado mineral e a atenção do Concierge no WhatsApp elevaram a experiência a outro patamar.',
+            bg: '/assets/images/about/banner-caminhos.jpg'
+        },
+        4: {
+            author: '[ Beatriz Mendonça • Curitiba/PR • Arquiteta & Designer ]',
+            stars: '★★★★★',
+            quote: 'O minimalismo escultural do aro duplo com a resina mineral verde esmeralda tem uma aura única. Transita do ambiente executivo a eventos de gala com elegância sem esforço. Simplesmente magnífico.',
+            bg: '/assets/images/about/macro-texture.jpg'
+        }
+    };
+
+    const def = defaults[slideIndex] || defaults[1];
+    const prefix = slideIndex === 1 ? 'testimonial_' : `testimonial_${slideIndex}_`;
+
+    const starsEl = document.getElementById('testimonialPreviewStars');
+    if (starsEl) starsEl.textContent = getVal(prefix + 'stars', def.stars);
+
+    const quoteEl = document.getElementById('testimonialPreviewQuote');
+    if (quoteEl) quoteEl.textContent = '"' + getVal(prefix + 'quote', def.quote) + '"';
+
+    const authorEl = document.getElementById('testimonialPreviewAuthor');
+    if (authorEl) authorEl.textContent = getVal(prefix + 'author', def.author);
+
+    const bgVal = getVal(prefix + 'backdrop_img', def.bg);
+    const bgPreview = document.getElementById('testimonialPreviewBackdrop');
+    if (bgPreview && bgVal) bgPreview.src = bgVal;
+
+    // Indicadores de slide no preview
+    for (let d = 1; d <= 4; d++) {
+        const dot = document.getElementById('adminTestimonialDot' + d);
+        if (dot) {
+            if (d === slideIndex) {
+                dot.style.width = '24px';
+                dot.style.background = '#CBD0D6';
+            } else {
+                dot.style.width = '14px';
+                dot.style.background = 'rgba(255,255,255,0.2)';
+            }
+        }
+    }
+}
+
 function updateTestimonialsLivePreview() {
     const getVal = (id, def) => {
         const el = document.getElementById(id);
@@ -4784,18 +5083,7 @@ function updateTestimonialsLivePreview() {
     const titleEl = document.getElementById('testimonialPreviewTitle');
     if (titleEl) titleEl.textContent = getVal('testimonials_title', 'Amado por Quem Valoriza a Beleza Atemporal');
 
-    const starsEl = document.getElementById('testimonialPreviewStars');
-    if (starsEl) starsEl.textContent = getVal('testimonial_stars', '★★★★★');
-
-    const quoteEl = document.getElementById('testimonialPreviewQuote');
-    if (quoteEl) quoteEl.textContent = '"' + getVal('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!') + '"';
-
-    const authorEl = document.getElementById('testimonialPreviewAuthor');
-    if (authorEl) authorEl.textContent = getVal('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]');
-
-    const bgImg = document.getElementById('testimonial_backdrop_img')?.value?.trim();
-    const bgPreview = document.getElementById('testimonialPreviewBackdrop');
-    if (bgPreview && bgImg) bgPreview.src = bgImg;
+    previewTestimonialSlide(currentAdminTestimonialIndex);
 
     for (let i = 1; i <= 5; i++) {
         const thumbInput = document.getElementById('testimonial_thumb_' + i)?.value?.trim();

@@ -591,21 +591,123 @@ ob_start();
             </h2>
         </div>
 
-        <div class="testimonial-showcase-box">
-            <div class="testimonial-backdrop">
-                <img src="<?= \App\Core\View::e(Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg')) ?>" 
-                     alt="Modelo usando Bracelete Divinium"
-                     loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/about/model-wrist-sunglasses.png';">
+        <?php
+            $defaultTestimonials = [
+                [
+                    'id' => 1,
+                    'stars' => Setting::get('testimonial_stars', '★★★★★'),
+                    'quote' => Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!'),
+                    'author' => Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]'),
+                    'backdrop' => Setting::get('testimonial_backdrop_img', '/assets/images/about/model-wrist-sunglasses.jpg'),
+                    'is_active' => 1
+                ],
+                [
+                    'id' => 2,
+                    'stars' => Setting::get('testimonial_2_stars', '★★★★★'),
+                    'quote' => Setting::get('testimonial_2_quote', 'O peso da prata 925 maciça e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.'),
+                    'author' => Setting::get('testimonial_2_author', '[ Helena Castro • Rio de Janeiro/RJ • Colecionadora Divinium ]'),
+                    'backdrop' => Setting::get('testimonial_2_backdrop_img', '/assets/images/about/banner-unica.jpg'),
+                    'is_active' => 1
+                ],
+                [
+                    'id' => 3,
+                    'stars' => Setting::get('testimonial_3_stars', '★★★★★'),
+                    'quote' => Setting::get('testimonial_3_quote', 'Presenteei minha esposa com o bracelete em Madrepérola e ela ficou maravilhada. O cuidado da embalagem com fita, o certificado mineral e a atenção do Concierge no WhatsApp elevaram a experiência a outro patamar.'),
+                    'author' => Setting::get('testimonial_3_author', '[ Dr. Eduardo Valença • Belo Horizonte/MG • Compra Verificada ]'),
+                    'backdrop' => Setting::get('testimonial_3_backdrop_img', '/assets/images/about/banner-caminhos.jpg'),
+                    'is_active' => 1
+                ],
+                [
+                    'id' => 4,
+                    'stars' => Setting::get('testimonial_4_stars', '★★★★★'),
+                    'quote' => Setting::get('testimonial_4_quote', 'O minimalismo escultural do aro duplo com a resina mineral verde esmeralda tem uma aura única. Transita do ambiente executivo a eventos de gala com elegância sem esforço. Simplesmente magnífico.'),
+                    'author' => Setting::get('testimonial_4_author', '[ Beatriz Mendonça • Curitiba/PR • Arquiteta & Designer ]'),
+                    'backdrop' => Setting::get('testimonial_4_backdrop_img', '/assets/images/about/macro-texture.jpg'),
+                    'is_active' => 1
+                ]
+            ];
+
+            $testimonialsSlidesJson = Setting::get('testimonials_slides');
+            $testimonialsList = [];
+            if (!empty($testimonialsSlidesJson)) {
+                $decoded = json_decode($testimonialsSlidesJson, true);
+                if (is_array($decoded) && !empty($decoded)) {
+                    $testimonialsList = $decoded;
+                }
+            }
+            if (empty($testimonialsList)) {
+                $testimonialsList = $defaultTestimonials;
+            }
+            $activeTestimonials = array_values(array_filter($testimonialsList, fn($t) => ($t['is_active'] ?? 1) == 1));
+            if (empty($activeTestimonials)) {
+                $activeTestimonials = array_values($defaultTestimonials);
+            }
+
+            $testimonialsAutoplay = Setting::get('testimonials_carousel_autoplay', '1');
+            $testimonialsInterval = (int) Setting::get('testimonials_carousel_interval', '6');
+            if ($testimonialsInterval < 2) $testimonialsInterval = 6;
+        ?>
+
+        <!-- CARROSSEL DE DEPOIMENTOS -->
+        <div class="testimonials-carousel-wrapper" id="testimonialsCarousel"
+             data-autoplay="<?= $testimonialsAutoplay ?>"
+             data-interval="<?= $testimonialsInterval * 1000 ?>"
+             role="region"
+             aria-roledescription="carousel"
+             aria-label="Carrossel de Depoimentos dos Clientes">
+
+            <div class="testimonials-carousel-viewport">
+                <div class="testimonials-carousel-track" id="testimonialsCarouselTrack">
+                    <?php foreach ($activeTestimonials as $idx => $item): 
+                        $stars = $item['stars'] ?? '★★★★★';
+                        $quote = $item['quote'] ?? '';
+                        $author = $item['author'] ?? '';
+                        $backdrop = $item['backdrop'] ?? '/assets/images/about/model-wrist-sunglasses.jpg';
+                    ?>
+                    <div class="testimonial-slide <?= $idx === 0 ? 'active' : '' ?>" data-index="<?= $idx ?>">
+                        <div class="testimonial-showcase-box">
+                            <div class="testimonial-backdrop">
+                                <img src="<?= \App\Core\View::e($backdrop) ?>" 
+                                     alt="Depoimento <?= $idx + 1 ?> Divinium"
+                                     loading="lazy"
+                                     onerror="this.onerror=null; this.src='/assets/images/about/model-wrist-sunglasses.png';">
+                            </div>
+                            
+                            <div class="testimonial-quote-card">
+                                <div class="quote-stars"><?= \App\Core\View::e($stars) ?></div>
+                                <blockquote class="quote-text">
+                                    "<?= \App\Core\View::e($quote) ?>"
+                                </blockquote>
+                                <cite class="quote-author"><?= \App\Core\View::e($author) ?></cite>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
-            
-            <div class="testimonial-quote-card">
-                <div class="quote-stars"><?= \App\Core\View::e(Setting::get('testimonial_stars', '★★★★★')) ?></div>
-                <blockquote class="quote-text">
-                    "<?= \App\Core\View::e(Setting::get('testimonial_quote', 'Quando coloquei o bracelete no pulso, senti imediatamente a presença e a qualidade do acabamento. A pedra tem uma profundidade de cor inacreditável. Todo mundo elogia e pergunta de onde é!')) ?>"
-                </blockquote>
-                <cite class="quote-author"><?= \App\Core\View::e(Setting::get('testimonial_author', '[ Marcela R. • São Paulo/SP • Cliente Verificada ]')) ?></cite>
+
+            <!-- Setas de Navegação -->
+            <button type="button" class="testimonials-arrow testimonials-prev" id="testimonialsCarouselPrev" aria-label="Depoimento anterior" title="Depoimento anterior">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button type="button" class="testimonials-arrow testimonials-next" id="testimonialsCarouselNext" aria-label="Próximo depoimento" title="Próximo depoimento">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Indicadores (Dots) -->
+            <div class="testimonials-carousel-dots" id="testimonialsCarouselDots">
+                <?php foreach ($activeTestimonials as $idx => $item): ?>
+                <button type="button" 
+                        class="testimonials-carousel-dot <?= $idx === 0 ? 'active' : '' ?>" 
+                        data-index="<?= $idx ?>" 
+                        aria-label="Ir para depoimento <?= $idx + 1 ?>"></button>
+                <?php endforeach; ?>
             </div>
+
         </div>
 
         <!-- Miniaturas Reais das Peças e Detalhes -->

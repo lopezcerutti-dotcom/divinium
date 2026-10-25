@@ -1662,7 +1662,7 @@ body.luxury-theme {
 }
 
 /* ==============================================================================
-   8. DEPOIMENTOS & PROVA SOCIAL (TOTALMENTE RESPONSIVO)
+   8. DEPOIMENTOS & PROVA SOCIAL (CARROSSEL RESPONSIVO)
    ============================================================================== */
 .testimonials-section {
     padding: 90px 0 120px;
@@ -1678,7 +1678,7 @@ body.luxury-theme .testimonials-section {
 
 .testimonials-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 45px;
 }
 
 .testimonials-section .section-serif-title {
@@ -1691,15 +1691,57 @@ body.luxury-theme .testimonials-section {
     word-break: break-word;
 }
 
-/* Caixa Principal de Destaque */
-.testimonial-showcase-box {
+/* Wrapper do Carrossel com Suporte a Setas Flutuantes */
+.testimonials-carousel-wrapper {
     position: relative;
     max-width: 900px;
+    margin: 0 auto 35px;
     width: 100%;
-    margin: 0 auto 40px;
+    box-sizing: border-box;
+}
+
+/* Viewport com overflow hidden para transições suaves */
+.testimonials-carousel-viewport {
+    position: relative;
+    width: 100%;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: var(--shadow-float, 0 16px 40px rgba(0, 0, 0, 0.35));
+}
+
+.testimonials-carousel-track {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+/* Slides com Crossfade Suave e Efeito de Escala */
+.testimonial-slide {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.97);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.65s ease;
+    z-index: 1;
+}
+
+.testimonial-slide.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: scale(1);
+    z-index: 2;
+    position: relative;
+}
+
+/* Caixa Principal de Destaque */
+.testimonial-showcase-box {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1790,6 +1832,79 @@ body.luxury-theme .testimonials-section {
     line-height: 1.4;
 }
 
+/* Setas de Navegação do Carrossel */
+.testimonials-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(18, 17, 16, 0.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    padding: 0;
+}
+
+.testimonials-arrow:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: var(--gold-accent, #CBD0D6);
+    color: var(--gold-accent, #CBD0D6);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.testimonials-arrow:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.testimonials-prev {
+    left: -22px;
+}
+
+.testimonials-next {
+    right: -22px;
+}
+
+/* Indicadores Minimalistas (Pills/Dots) */
+.testimonials-carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 20px auto 35px;
+}
+
+.testimonials-carousel-dot {
+    width: 26px;
+    height: 4px;
+    border-radius: 4px;
+    border: none;
+    background: rgba(255, 255, 255, 0.22);
+    cursor: pointer;
+    transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+}
+
+.testimonials-carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.testimonials-carousel-dot.active {
+    width: 44px;
+    background: var(--gold-accent, #CBD0D6);
+    box-shadow: 0 0 12px rgba(203, 208, 214, 0.45);
+}
+
 /* Faixa de Miniaturas de Clientes */
 .client-gallery-strip {
     display: flex;
@@ -1856,11 +1971,14 @@ body.luxury-theme .testimonials-section {
     }
 
     .testimonials-header {
-        margin-bottom: 38px;
+        margin-bottom: 35px;
+    }
+
+    .testimonials-carousel-wrapper {
+        margin-bottom: 28px;
     }
 
     .testimonial-showcase-box {
-        margin: 0 auto 35px;
         min-height: 380px;
     }
 
@@ -1878,6 +1996,14 @@ body.luxury-theme .testimonials-section {
 
     .quote-author {
         font-size: 0.8rem;
+    }
+
+    .testimonials-prev {
+        left: 8px;
+    }
+
+    .testimonials-next {
+        right: 8px;
     }
 
     .client-gallery-strip {
@@ -1899,12 +2025,18 @@ body.luxury-theme .testimonials-section {
     }
 
     .testimonials-header {
-        margin-bottom: 28px;
+        margin-bottom: 26px;
+    }
+
+    .testimonials-carousel-wrapper {
+        margin-bottom: 22px;
+    }
+
+    .testimonials-carousel-viewport {
+        border-radius: 12px;
     }
 
     .testimonial-showcase-box {
-        margin: 0 auto 28px;
-        border-radius: 12px;
         min-height: 320px;
     }
 
@@ -1935,6 +2067,23 @@ body.luxury-theme .testimonials-section {
     .quote-author {
         font-size: 0.76rem;
         letter-spacing: 0.08em;
+    }
+
+    .testimonials-arrow {
+        width: 36px;
+        height: 36px;
+    }
+
+    .testimonials-prev {
+        left: 6px;
+    }
+
+    .testimonials-next {
+        right: 6px;
+    }
+
+    .testimonials-carousel-dots {
+        margin: 16px auto 26px;
     }
 
     .client-gallery-strip {
@@ -1970,9 +2119,11 @@ body.luxury-theme .testimonials-section {
         line-height: 1.32;
     }
 
-    .testimonial-showcase-box {
-        margin: 0 auto 22px;
+    .testimonials-carousel-viewport {
         border-radius: 10px;
+    }
+
+    .testimonial-showcase-box {
         min-height: 280px;
     }
 
@@ -1999,6 +2150,28 @@ body.luxury-theme .testimonials-section {
     .quote-author {
         font-size: 0.7rem;
         letter-spacing: 0.05em;
+    }
+
+    .testimonials-arrow {
+        width: 32px;
+        height: 32px;
+    }
+
+    .testimonials-prev {
+        left: 4px;
+    }
+
+    .testimonials-next {
+        right: 4px;
+    }
+
+    .testimonials-carousel-dot {
+        width: 20px;
+        height: 3px;
+    }
+
+    .testimonials-carousel-dot.active {
+        width: 32px;
     }
 
     .client-gallery-strip {
