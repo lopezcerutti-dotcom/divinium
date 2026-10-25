@@ -2394,17 +2394,431 @@ $renderToggle = function(string $key, string $default = '1'): string {
             </div>
 
             <div class="form-grid">
+                <!-- ============================================================== -->
+                <!-- 1. PERSONALIZAÇÃO DE CORES & ESTÉTICA DA SEÇÃO -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                <span>🎨</span> 1. Cores & Estética Visual dos Serviços Exclusivos
+                            </h4>
+                            <span class="field-hint">Personalize as cores de fundo, cartões, títulos, textos, números/ícones, bordas e botões da seção.</span>
+                        </div>
+
+                        <!-- Presets Rápidos de Cores -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyServicesColorPreset('default')">
+                                <span>🖤 Quiet Luxury (Padrão)</span>
+                            </button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyServicesColorPreset('light')">
+                                <span>🤍 Pérola & Platina</span>
+                            </button>
+                            <button type="button" class="btn-admin-secondary" style="padding: 6px 11px; font-size: 0.76rem;" onclick="applyServicesColorPreset('noir')">
+                                <span>🌑 Noir Grafite</span>
+                            </button>
+                            <button type="button" class="btn-admin-cancel" style="padding: 6px 11px; font-size: 0.76rem;" onclick="resetServicesColors()">
+                                <span>↺ Restaurar Padrões</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. FUNDO DA SEÇÃO -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_bg_color" style="margin: 0; font-weight: 600;">Cor de Fundo da Seção</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_bg_color', 'services_bg_color_picker', '#252525')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_bg_color_picker" 
+                               value="<?= Setting::get('services_bg_color') ? Setting::get('services_bg_color') : '#252525' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_bg_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_bg_color" name="services_bg_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_bg_color', '')) ?>" 
+                               placeholder="Ex: #252525 ou deixe vazio para padrão"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_bg_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_bg_color', 'services_bg_color_picker', '#252525')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #252525; color: #fff; border: 1px solid #555; cursor: pointer;">#252525</button>
+                        <button type="button" onclick="setQuickColorServices('services_bg_color', 'services_bg_color_picker', '#14161a')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #14161a; color: #fff; border: 1px solid #333; cursor: pointer;">#14161a</button>
+                        <button type="button" onclick="setQuickColorServices('services_bg_color', 'services_bg_color_picker', '#0d0f12')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #0d0f12; color: #fff; border: 1px solid #333; cursor: pointer;">#0d0f12</button>
+                        <button type="button" onclick="setQuickColorServices('services_bg_color', 'services_bg_color_picker', '#F8F8F7')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #F8F8F7; color: #222; border: 1px solid #ccc; cursor: pointer;">#F8F8F7</button>
+                        <button type="button" onclick="setQuickColorServices('services_bg_color', 'services_bg_color_picker', '#FFFFFF')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #FFFFFF; color: #222; border: 1px solid #ccc; cursor: pointer;">#FFFFFF</button>
+                    </div>
+                    <span class="field-hint">Fundo geral da seção no site.</span>
+                </div>
+
+                <!-- 2. FUNDO DOS CARDS DE SERVIÇO -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_card_bg" style="margin: 0; font-weight: 600;">Cor de Fundo dos Cards / Blocos</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_card_bg', 'services_card_bg_picker', '#1a1d22')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_card_bg_picker" 
+                               value="<?= Setting::get('services_card_bg') ? Setting::get('services_card_bg') : '#1a1d22' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_card_bg').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_card_bg" name="services_card_bg" class="form-input" 
+                               value="<?= View::e(Setting::get('services_card_bg', '')) ?>" 
+                               placeholder="Ex: rgba(255,255,255,0.03) ou #1a1d22"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_card_bg_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_card_bg', 'services_card_bg_picker', 'rgba(255,255,255,0.03)')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #2a2a2a; color: #fff; border: 1px solid #444; cursor: pointer;">Translúcido</button>
+                        <button type="button" onclick="setQuickColorServices('services_card_bg', 'services_card_bg_picker', '#14161a')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #14161a; color: #fff; border: 1px solid #333; cursor: pointer;">#14161a</button>
+                        <button type="button" onclick="setQuickColorServices('services_card_bg', 'services_card_bg_picker', '#1f2228')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #1f2228; color: #fff; border: 1px solid #444; cursor: pointer;">#1f2228</button>
+                        <button type="button" onclick="setQuickColorServices('services_card_bg', 'services_card_bg_picker', '#FFFFFF')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #FFFFFF; color: #222; border: 1px solid #ccc; cursor: pointer;">#FFFFFF</button>
+                        <button type="button" onclick="setQuickColorServices('services_card_bg', 'services_card_bg_picker', '#F0F0EF')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #F0F0EF; color: #222; border: 1px solid #aaa; cursor: pointer;">#F0F0EF</button>
+                    </div>
+                    <span class="field-hint">Fundo individual de cada um dos 3 itens de serviço.</span>
+                </div>
+
+                <!-- 3. TÍTULOS -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_title_color" style="margin: 0; font-weight: 600;">Cor dos Títulos (Principal e Serviços)</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_title_color', 'services_title_color_picker', '#ffffff')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_title_color_picker" 
+                               value="<?= Setting::get('services_title_color') ? Setting::get('services_title_color') : '#ffffff' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_title_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_title_color" name="services_title_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_title_color', '')) ?>" 
+                               placeholder="Ex: #FFFFFF ou #14161a"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_title_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_title_color', 'services_title_color_picker', '#FFFFFF')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #FFFFFF; color: #111; border: 1px solid #ccc; cursor: pointer;">Branco #FFF</button>
+                        <button type="button" onclick="setQuickColorServices('services_title_color', 'services_title_color_picker', '#CBD0D6')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #CBD0D6; color: #111; border: 1px solid #aaa; cursor: pointer;">Prata #CBD0D6</button>
+                        <button type="button" onclick="setQuickColorServices('services_title_color', 'services_title_color_picker', '#14161a')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #14161a; color: #fff; border: 1px solid #333; cursor: pointer;">Grafite #14161a</button>
+                    </div>
+                    <span class="field-hint">Aplica-se ao título principal da seção e aos nomes de cada serviço.</span>
+                </div>
+
+                <!-- 4. SUBTÍTULO -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_subtitle_color" style="margin: 0; font-weight: 600;">Cor do Subtítulo Explicativo</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_subtitle_color', 'services_subtitle_color_picker', '#CBD0D6')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_subtitle_color_picker" 
+                               value="<?= Setting::get('services_subtitle_color') ? Setting::get('services_subtitle_color') : '#CBD0D6' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_subtitle_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_subtitle_color" name="services_subtitle_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_subtitle_color', '')) ?>" 
+                               placeholder="Ex: #CBD0D6 ou #555c66"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_subtitle_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_subtitle_color', 'services_subtitle_color_picker', '#CBD0D6')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #CBD0D6; color: #111; border: 1px solid #aaa; cursor: pointer;">Prata #CBD0D6</button>
+                        <button type="button" onclick="setQuickColorServices('services_subtitle_color', 'services_subtitle_color_picker', '#E5E8EC')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #E5E8EC; color: #111; border: 1px solid #ccc; cursor: pointer;">Gelo #E5E8EC</button>
+                        <button type="button" onclick="setQuickColorServices('services_subtitle_color', 'services_subtitle_color_picker', '#4a525d')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #4a525d; color: #fff; border: 1px solid #333; cursor: pointer;">Cinza Médio #4a525d</button>
+                    </div>
+                    <span class="field-hint">Texto descritivo posicionado logo abaixo do título principal.</span>
+                </div>
+
+                <!-- 5. TEXTOS DOS ITENS / DETALHES -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_text_color" style="margin: 0; font-weight: 600;">Cor dos Textos / Lista de Detalhes</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_text_color', 'services_text_color_picker', '#a3a8b0')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_text_color_picker" 
+                               value="<?= Setting::get('services_text_color') ? Setting::get('services_text_color') : '#a3a8b0' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_text_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_text_color" name="services_text_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_text_color', '')) ?>" 
+                               placeholder="Ex: #a3a8b0 ou #606975"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_text_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_text_color', 'services_text_color_picker', '#a3a8b0')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #a3a8b0; color: #111; border: 1px solid #888; cursor: pointer;">Suave #a3a8b0</button>
+                        <button type="button" onclick="setQuickColorServices('services_text_color', 'services_text_color_picker', '#D0D4DA')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #D0D4DA; color: #111; border: 1px solid #aaa; cursor: pointer;">Claro #D0D4DA</button>
+                        <button type="button" onclick="setQuickColorServices('services_text_color', 'services_text_color_picker', '#606975')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #606975; color: #fff; border: 1px solid #444; cursor: pointer;">Grafite #606975</button>
+                    </div>
+                    <span class="field-hint">Cor dos 3 tópicos com marcadores de cada serviço.</span>
+                </div>
+
+                <!-- 6. ÍCONES E NÚMEROS -->
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_icon_color" style="margin: 0; font-weight: 600;">Cor dos Números (01, 02, 03) & Ícones/Marcadores</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_icon_color', 'services_icon_color_picker', '#CBD0D6')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="services_icon_color_picker" 
+                               value="<?= Setting::get('services_icon_color') ? Setting::get('services_icon_color') : '#CBD0D6' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_icon_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_icon_color" name="services_icon_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_icon_color', '')) ?>" 
+                               placeholder="Ex: #CBD0D6 ou #FFFFFF"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_icon_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_icon_color', 'services_icon_color_picker', '#CBD0D6')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #CBD0D6; color: #111; border: 1px solid #aaa; cursor: pointer;">Prata #CBD0D6</button>
+                        <button type="button" onclick="setQuickColorServices('services_icon_color', 'services_icon_color_picker', '#FFFFFF')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #FFFFFF; color: #111; border: 1px solid #ccc; cursor: pointer;">Branco #FFF</button>
+                        <button type="button" onclick="setQuickColorServices('services_icon_color', 'services_icon_color_picker', '#14161a')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #14161a; color: #fff; border: 1px solid #333; cursor: pointer;">Grafite #14161a</button>
+                    </div>
+                    <span class="field-hint">Cor dos numerais '01, 02, 03' e dos marcadores da lista.</span>
+                </div>
+
+                <!-- 7. BORDAS E DIVISÓRIAS -->
+                <div class="form-group full-width">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="services_border_color" style="margin: 0; font-weight: 600;">Cor das Bordas & Linhas Divisórias</label>
+                        <button type="button" class="btn-admin-cancel" style="padding: 2px 7px; font-size: 0.7rem;" onclick="clearFieldServices('services_border_color', 'services_border_color_picker', 'rgba(255, 255, 255, 0.08)')">
+                            ✕ Limpar
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; max-width: 480px;">
+                        <input type="color" id="services_border_color_picker" 
+                               value="<?= (strpos(Setting::get('services_border_color', ''), '#') === 0 && strlen(Setting::get('services_border_color')) === 7) ? Setting::get('services_border_color') : '#444444' ?>" 
+                               style="width: 44px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                               oninput="document.getElementById('services_border_color').value = this.value; updateServicesLivePreview();">
+                        <input type="text" id="services_border_color" name="services_border_color" class="form-input" 
+                               value="<?= View::e(Setting::get('services_border_color', '')) ?>" 
+                               placeholder="Ex: rgba(255, 255, 255, 0.08) ou #333333"
+                               oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_border_color_picker').value=this.value;} updateServicesLivePreview();">
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 0.7rem; color: #888;">Rápido:</span>
+                        <button type="button" onclick="setQuickColorServices('services_border_color', 'services_border_color_picker', 'rgba(255, 255, 255, 0.08)')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #252525; color: #ccc; border: 1px solid #444; cursor: pointer;">Sutil Branco (0.08)</button>
+                        <button type="button" onclick="setQuickColorServices('services_border_color', 'services_border_color_picker', 'rgba(203, 208, 214, 0.25)')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #333; color: #CBD0D6; border: 1px solid #666; cursor: pointer;">Prata Suave (0.25)</button>
+                        <button type="button" onclick="setQuickColorServices('services_border_color', 'services_border_color_picker', 'rgba(0, 0, 0, 0.10)')" style="padding: 2px 6px; font-size: 0.68rem; border-radius: 4px; background: #e0e0e0; color: #222; border: 1px solid #bbb; cursor: pointer;">Sutil Escuro (0.10)</button>
+                    </div>
+                    <span class="field-hint">Linhas divisórias e contornos entre cada serviço.</span>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- 8. PERSONALIZAÇÃO DO BOTÃO DE AÇÃO / CTA -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin: 12px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <label style="font-size: 0.88rem; font-weight: 700; color: #CBD0D6; margin: 0; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 8px;">
+                            <span>🔘</span> Personalização do Botão de Ação (CTA)
+                        </label>
+                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8rem; color: #fff;">
+                            <input type="checkbox" id="services_cta_visible" name="services_cta_visible" value="1" 
+                                   <?= Setting::get('services_cta_visible', '1') === '1' ? 'checked' : '' ?>
+                                   onchange="updateServicesLivePreview()">
+                            <span>Exibir Botão nesta Seção</span>
+                        </label>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 14px;">
+                        <div>
+                            <label for="services_cta_text" style="font-size: 0.8rem;">Texto do Botão</label>
+                            <input type="text" id="services_cta_text" name="services_cta_text" class="form-input"
+                                   value="<?= View::e(Setting::get('services_cta_text', 'Falar com o Concierge no WhatsApp ↗')) ?>"
+                                   placeholder="Falar com o Concierge no WhatsApp ↗"
+                                   oninput="updateServicesLivePreview()">
+                        </div>
+                        <div>
+                            <label for="services_cta_url" style="font-size: 0.8rem;">Link / URL de Destino</label>
+                            <input type="text" id="services_cta_url" name="services_cta_url" class="form-input"
+                                   value="<?= View::e(Setting::get('services_cta_url', 'https://wa.me/5511999999999')) ?>"
+                                   placeholder="https://wa.me/5511999999999 ou #contato"
+                                   oninput="updateServicesLivePreview()">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                        <!-- Cor de Fundo do Botão -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label for="services_btn_bg" style="font-size: 0.78rem; margin: 0;">Fundo do Botão</label>
+                                <button type="button" class="btn-admin-cancel" style="padding: 1px 6px; font-size: 0.65rem;" onclick="clearFieldServices('services_btn_bg', 'services_btn_bg_picker', '#CBD0D6')">✕</button>
+                            </div>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <input type="color" id="services_btn_bg_picker" 
+                                       value="<?= Setting::get('services_btn_bg') ? Setting::get('services_btn_bg') : '#CBD0D6' ?>" 
+                                       style="width: 40px; height: 34px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                                       oninput="document.getElementById('services_btn_bg').value = this.value; updateServicesLivePreview();">
+                                <input type="text" id="services_btn_bg" name="services_btn_bg" class="form-input" 
+                                       value="<?= View::e(Setting::get('services_btn_bg', '')) ?>" 
+                                       placeholder="#CBD0D6"
+                                       oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_btn_bg_picker').value=this.value;} updateServicesLivePreview();">
+                            </div>
+                        </div>
+
+                        <!-- Cor do Texto do Botão -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label for="services_btn_text" style="font-size: 0.78rem; margin: 0;">Texto do Botão</label>
+                                <button type="button" class="btn-admin-cancel" style="padding: 1px 6px; font-size: 0.65rem;" onclick="clearFieldServices('services_btn_text', 'services_btn_text_picker', '#121212')">✕</button>
+                            </div>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <input type="color" id="services_btn_text_picker" 
+                                       value="<?= Setting::get('services_btn_text') ? Setting::get('services_btn_text') : '#121212' ?>" 
+                                       style="width: 40px; height: 34px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                                       oninput="document.getElementById('services_btn_text').value = this.value; updateServicesLivePreview();">
+                                <input type="text" id="services_btn_text" name="services_btn_text" class="form-input" 
+                                       value="<?= View::e(Setting::get('services_btn_text', '')) ?>" 
+                                       placeholder="#121212"
+                                       oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_btn_text_picker').value=this.value;} updateServicesLivePreview();">
+                            </div>
+                        </div>
+
+                        <!-- Cor da Borda do Botão -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label for="services_btn_border" style="font-size: 0.78rem; margin: 0;">Borda do Botão</label>
+                                <button type="button" class="btn-admin-cancel" style="padding: 1px 6px; font-size: 0.65rem;" onclick="clearFieldServices('services_btn_border', 'services_btn_border_picker', '#CBD0D6')">✕</button>
+                            </div>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <input type="color" id="services_btn_border_picker" 
+                                       value="<?= Setting::get('services_btn_border') ? Setting::get('services_btn_border') : '#CBD0D6' ?>" 
+                                       style="width: 40px; height: 34px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
+                                       oninput="document.getElementById('services_btn_border').value = this.value; updateServicesLivePreview();">
+                                <input type="text" id="services_btn_border" name="services_btn_border" class="form-input" 
+                                       value="<?= View::e(Setting::get('services_btn_border', '')) ?>" 
+                                       placeholder="#CBD0D6"
+                                       oninput="if(this.value.length===7 || this.value.length===4){document.getElementById('services_btn_border_picker').value=this.value;} updateServicesLivePreview();">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL DA SEÇÃO DE SERVIÇOS -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="margin: 10px 0 24px;">
+                    <label style="color: #CBD0D6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+                        <span>👁️</span> Pré-Visualização em Tempo Real: Serviços Exclusivos
+                    </label>
+                    
+                    <div id="servicesLivePreviewContainer" style="background: <?= View::e(Setting::get('services_bg_color') ?: '#252525') ?>; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 32px 24px; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                        
+                        <!-- Header Preview -->
+                        <div style="text-align: center; max-width: 680px; margin: 0 auto 28px;">
+                            <h3 id="servicesPreviewMainTitle" style="font-family: serif; font-size: 1.55rem; line-height: 1.25; margin: 0 0 10px; font-weight: normal; color: <?= View::e(Setting::get('services_title_color') ?: '#ffffff') ?>; letter-spacing: 0.03em;">
+                                <?= View::e(Setting::get('services_title', 'Experiência de Serviços Exclusivos')) ?>
+                            </h3>
+                            <p id="servicesPreviewSubtitle" style="font-size: 0.84rem; line-height: 1.6; margin: 0; color: <?= View::e(Setting::get('services_subtitle_color') ?: '#CBD0D6') ?>;">
+                                <?= View::e(Setting::get('services_subtitle', 'Mais do que uma joia — um vínculo de bem-estar e sintonia. Cada bracelete Divinium é acompanhado de cuidados minuciosos e suporte sob medida.')) ?>
+                            </p>
+                        </div>
+
+                        <!-- 3 Cards Grid Preview -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px;">
+                            
+                            <!-- Card 01 -->
+                            <div class="servicesPreviewItemCard" style="border: 1px solid <?= View::e(Setting::get('services_border_color') ?: 'rgba(255,255,255,0.08)') ?>; background-color: <?= View::e(Setting::get('services_card_bg') ?: 'transparent') ?>; border-radius: 8px; padding: 18px 16px; transition: all 0.3s ease;">
+                                <div class="servicesPreviewNum" style="font-family: serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>;">01</div>
+                                <div class="servicesPreviewItemTitle" style="font-weight: 700; font-size: 0.92rem; margin-bottom: 10px; color: <?= View::e(Setting::get('services_title_color') ?: '#ffffff') ?>;">
+                                    <?= View::e(Setting::get('service_1_title', 'Consultoria de Sintonia Mineral')) ?>
+                                </div>
+                                <ul class="servicesPreviewList" style="list-style: none; padding: 0; margin: 0; font-size: 0.76rem; line-height: 1.5; color: <?= View::e(Setting::get('services_text_color') ?: '#a3a8b0') ?>;">
+                                    <li style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Ajuda personalizada para descobrir a pedra que melhor conversa com você</span>
+                                    </li>
+                                    <li style="display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Atendimento direto pelo nosso Concierge no WhatsApp</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 02 -->
+                            <div class="servicesPreviewItemCard" style="border: 1px solid <?= View::e(Setting::get('services_border_color') ?: 'rgba(255,255,255,0.08)') ?>; background-color: <?= View::e(Setting::get('services_card_bg') ?: 'transparent') ?>; border-radius: 8px; padding: 18px 16px; transition: all 0.3s ease;">
+                                <div class="servicesPreviewNum" style="font-family: serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>;">02</div>
+                                <div class="servicesPreviewItemTitle" style="font-weight: 700; font-size: 0.92rem; margin-bottom: 10px; color: <?= View::e(Setting::get('services_title_color') ?: '#ffffff') ?>;">
+                                    <?= View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção')) ?>
+                                </div>
+                                <ul class="servicesPreviewList" style="list-style: none; padding: 0; margin: 0; font-size: 0.76rem; line-height: 1.5; color: <?= View::e(Setting::get('services_text_color') ?: '#a3a8b0') ?>;">
+                                    <li style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Orientações de conservação natural da prata de lei</span>
+                                    </li>
+                                    <li style="display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Polimento artesanal para renovação periódica do brilho</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 03 -->
+                            <div class="servicesPreviewItemCard" style="border: 1px solid <?= View::e(Setting::get('services_border_color') ?: 'rgba(255,255,255,0.08)') ?>; background-color: <?= View::e(Setting::get('services_card_bg') ?: 'transparent') ?>; border-radius: 8px; padding: 18px 16px; transition: all 0.3s ease;">
+                                <div class="servicesPreviewNum" style="font-family: serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>;">03</div>
+                                <div class="servicesPreviewItemTitle" style="font-weight: 700; font-size: 0.92rem; margin-bottom: 10px; color: <?= View::e(Setting::get('services_title_color') ?: '#ffffff') ?>;">
+                                    <?= View::e(Setting::get('service_3_title', 'Ajuste de Conforto & Garantia')) ?>
+                                </div>
+                                <ul class="servicesPreviewList" style="list-style: none; padding: 0; margin: 0; font-size: 0.76rem; line-height: 1.5; color: <?= View::e(Setting::get('services_text_color') ?: '#a3a8b0') ?>;">
+                                    <li style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Aro anatômico maleável com caimento refinado</span>
+                                    </li>
+                                    <li style="display: flex; align-items: flex-start; gap: 6px;">
+                                        <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
+                                        <span>Certificado de autenticidade dos minerais naturais</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <!-- CTA Button Preview -->
+                        <div id="servicesPreviewBtnWrap" style="text-align: center; <?= Setting::get('services_cta_visible', '1') !== '1' ? 'display: none;' : '' ?>">
+                            <span id="servicesPreviewBtn" style="display: inline-flex; align-items: center; justify-content: center; padding: 11px 26px; border-radius: 30px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: <?= View::e(Setting::get('services_btn_bg') ?: '#CBD0D6') ?>; color: <?= View::e(Setting::get('services_btn_text') ?: '#121212') ?>; border: 1px solid <?= View::e(Setting::get('services_btn_border') ?: '#CBD0D6') ?>; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+                                <?= View::e(Setting::get('services_cta_text', 'Falar com o Concierge no WhatsApp ↗')) ?>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- 2. TEXTOS E CONTEÚDO DOS SERVIÇOS -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                        <span>✍️</span> 2. Textos & Conteúdo dos Serviços
+                    </h4>
+                    <span class="field-hint">Altere os títulos, subtítulos e itens explicativos da seção de serviços.</span>
+                </div>
+
                 <div class="form-group">
                     <label for="services_title">Título Principal dos Serviços</label>
                     <input type="text" id="services_title" name="services_title" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('services_title', 'Experiência de Serviços Exclusivos')) ?>"
-                           placeholder="Experiência de Serviços Exclusivos">
+                           placeholder="Experiência de Serviços Exclusivos"
+                           oninput="updateServicesLivePreview()">
                 </div>
 
                 <div class="form-group">
                     <label for="services_subtitle">Subtítulo Explicativo</label>
                     <input type="text" id="services_subtitle" name="services_subtitle" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('services_subtitle', 'Mais do que uma joia — um vínculo de bem-estar e sintonia. Cada bracelete Divinium é acompanhado de cuidados minuciosos e suporte sob medida.')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('services_subtitle', 'Mais do que uma joia — um vínculo de bem-estar e sintonia. Cada bracelete Divinium é acompanhado de cuidados minuciosos e suporte sob medida.')) ?>"
+                           oninput="updateServicesLivePreview()">
                 </div>
 
                 <!-- Serviço 01 -->
