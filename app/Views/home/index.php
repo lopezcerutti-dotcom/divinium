@@ -30,8 +30,7 @@ ob_start();
             </div>
             
             <h1 class="hero-title">
-                <?= \App\Core\View::e(Setting::get('hero_title_line1', 'Joias que Revelam')) ?><br>
-                <span class="gold-gradient-glow"><?= \App\Core\View::e(Setting::get('hero_title_highlight', 'o Luxo Silencioso')) ?></span>
+                <?= \App\Core\View::e(Setting::get('hero_title_line1', 'Joias que Revelam o Luxo Silencioso')) ?>
             </h1>
             
             <p class="hero-subtitle">

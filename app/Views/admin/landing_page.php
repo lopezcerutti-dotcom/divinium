@@ -1756,19 +1756,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            placeholder="HAUTE JOAILLERIE • EDIÇÃO AUTORAL BRASILEIRA">
                 </div>
 
-                <div class="form-group">
-                    <label for="hero_title_line1">Título Principal (Linha 1)</label>
+                <div class="form-group full-width">
+                    <label for="hero_title_line1">Título Principal</label>
                     <input type="text" id="hero_title_line1" name="hero_title_line1" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('hero_title_line1', 'Joias que Revelam')) ?>"
-                           placeholder="Joias que Revelam">
-                </div>
-
-                <div class="form-group">
-                    <label for="hero_title_highlight">Título Principal (Destaque Metálico)</label>
-                    <input type="text" id="hero_title_highlight" name="hero_title_highlight" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('hero_title_highlight', 'o Luxo Silencioso')) ?>"
-                           placeholder="o Luxo Silencioso">
-                    <span class="field-hint">Esta parte ganha o gradiente nobre dourado ou prateado.</span>
+                           value="<?= \App\Core\View::e(Setting::get('hero_title_line1', 'Joias que Revelam o Luxo Silencioso')) ?>"
+                           placeholder="Joias que Revelam o Luxo Silencioso">
                 </div>
 
                 <div class="form-group full-width">
