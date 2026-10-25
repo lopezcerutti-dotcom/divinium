@@ -86,17 +86,23 @@ class AuthController
                     'logged_at' => time()
                 ];
 
+                $targetAdmin = '/admin';
+                $customPrefix = trim((string)\App\Core\Env::get('ADMIN_PREFIX', 'admin'), '/');
+                if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', $customPrefix)) {
+                    $targetAdmin = '/' . $customPrefix;
+                }
+
                 if ($isJson) {
                     header('Content-Type: application/json; charset=UTF-8');
                     echo json_encode([
                         'success' => true,
-                        'redirect' => '/admin',
+                        'redirect' => $targetAdmin,
                         'message' => 'Autenticação realizada com sucesso. Redirecionando...'
                     ]);
                     return;
                 }
 
-                header('Location: /admin');
+                header('Location: ' . $targetAdmin);
                 exit;
             }
 
