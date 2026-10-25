@@ -662,6 +662,91 @@
         }
         <?php endif; ?>
 
+        /* -------------------------------------------------------------------------
+           CORES PERSONALIZADAS: SEÇÃO EXPERIÊNCIA DE SERVIÇOS EXCLUSIVOS
+           ------------------------------------------------------------------------- */
+        <?php
+            $servicesBg = \App\Models\Setting::get('services_bg_color', '');
+            $servicesCardBg = \App\Models\Setting::get('services_card_bg', '');
+            $servicesTitleColor = \App\Models\Setting::get('services_title_color', '');
+            $servicesSubtitleColor = \App\Models\Setting::get('services_subtitle_color', '');
+            $servicesTextColor = \App\Models\Setting::get('services_text_color', '');
+            $servicesIconColor = \App\Models\Setting::get('services_icon_color', '');
+            $servicesBorderColor = \App\Models\Setting::get('services_border_color', '');
+            $servicesBtnBg = \App\Models\Setting::get('services_btn_bg', '');
+            $servicesBtnText = \App\Models\Setting::get('services_btn_text', '');
+            $servicesBtnBorder = \App\Models\Setting::get('services_btn_border', '');
+        ?>
+        <?php if (!empty($servicesBg)): ?>
+        body.luxury-theme .signature-services-section,
+        body.luxury-theme #services {
+            background: <?= $servicesBg ?> !important;
+            background-color: <?= $servicesBg ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesCardBg)): ?>
+        body.luxury-theme .signature-services-section .service-item {
+            background-color: <?= $servicesCardBg ?> !important;
+            padding: 28px 24px !important;
+            border-radius: 10px !important;
+            margin-bottom: 12px !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesTitleColor)): ?>
+        body.luxury-theme .signature-services-section .services-main-title,
+        body.luxury-theme .signature-services-section .service-name {
+            color: <?= $servicesTitleColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesSubtitleColor)): ?>
+        body.luxury-theme .signature-services-section .services-subtitle {
+            color: <?= $servicesSubtitleColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesTextColor)): ?>
+        body.luxury-theme .signature-services-section .service-details,
+        body.luxury-theme .signature-services-section .service-details li,
+        body.luxury-theme .signature-services-section p {
+            color: <?= $servicesTextColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesIconColor)): ?>
+        body.luxury-theme .signature-services-section .service-num,
+        body.luxury-theme .signature-services-section .service-details li::before,
+        body.luxury-theme .signature-services-section .service-icon {
+            color: <?= $servicesIconColor ?> !important;
+            fill: <?= $servicesIconColor ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($servicesBorderColor)): ?>
+        body.luxury-theme .signature-services-section .service-item {
+            border-color: <?= $servicesBorderColor ?> !important;
+        }
+        <?php endif; ?>
+        .signature-services-section .btn-services-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 32px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: <?= !empty($servicesBtnBg) ? $servicesBtnBg : 'var(--btn-primary-bg)' ?> !important;
+            color: <?= !empty($servicesBtnText) ? $servicesBtnText : 'var(--btn-primary-text)' ?> !important;
+            border: 1px solid <?= !empty($servicesBtnBorder) ? $servicesBtnBorder : 'var(--btn-primary-border)' ?> !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+        .signature-services-section .btn-services-cta:hover {
+            transform: translateY(-2px);
+            opacity: 0.92;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+
         /* Tipografia, Alinhamento & Respiro Dinâmico */
         <?php if (!empty($dynBtnRadius)): ?>
         .btn-gold, .btn-secondary, .btn-discover, .btn-checkout-primary, .btn-product-channel, .btn-card-action, .cta-button, .about-btn, .hero-btn-primary, .hero-btn-secondary, .btn-hero-gold, .btn-card-explore, .stage-buy-btn, .btn-checkout-submit, .btn-store-back, .btn-concierge-help {
