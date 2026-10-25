@@ -15,9 +15,8 @@ ob_start();
 <!-- SEÇÃO 1: HERO PRINCIPAL (HAUTE JOAILLERIE & QUIET LUXURY EXPERIENCE) -->
 <!-- ======================================================================= -->
 <section class="hero-section" id="hero">
-    <!-- Efeitos Atmosféricos: Halo Dourado de Iluminação e Ruído Nobre -->
+    <!-- Efeitos Atmosféricos: Halo de Iluminação e Textura Nobre -->
     <div class="hero-ambient-glow"></div>
-    <div class="hero-spotlight"></div>
     <div class="hero-overlay"></div>
 
     <div class="container hero-container">

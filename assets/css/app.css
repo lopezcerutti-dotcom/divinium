@@ -325,10 +325,12 @@ body.luxury-theme {
     max-width: 360px;
     background: radial-gradient(circle at top left, #2c2c2c 0%, #202020 65%, #181818 100%);
     border-right: 1px solid rgba(167, 173, 180, 0.25);
-    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
+    box-shadow: none;
+    visibility: hidden;
+    pointer-events: none;
     z-index: 251;
     transform: translateX(-100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -336,6 +338,9 @@ body.luxury-theme {
 
 .mobile-nav-drawer.active {
     transform: translateX(0);
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .mobile-nav-drawer.position-right {
@@ -348,6 +353,7 @@ body.luxury-theme {
 
 .mobile-nav-drawer.position-right.active {
     transform: translateX(0);
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.9);
 }
 
 .mobile-nav-header-badge {
@@ -580,7 +586,7 @@ body.luxury-theme {
    ============================================================================== */
 .hero-section {
     position: relative;
-    background: radial-gradient(ellipse at 70% 40%, rgba(167, 173, 180, 0.12) 0%, rgba(37, 37, 37, 0.98) 55%, #252525 100%);
+    background: var(--bg-main, #252525);
     color: var(--text-light);
     min-height: auto;
     display: flex;
@@ -602,15 +608,7 @@ body.luxury-theme {
 }
 
 .hero-spotlight {
-    position: absolute;
-    bottom: 5%;
-    left: 10%;
-    width: 380px;
-    height: 380px;
-    background: radial-gradient(circle, rgba(90, 67, 49, 0.16) 0%, transparent 70%);
-    filter: blur(90px);
-    pointer-events: none;
-    z-index: 1;
+    display: none !important;
 }
 
 .hero-overlay {
@@ -2216,14 +2214,19 @@ body.luxury-theme .testimonials-section {
     background: #fff;
     z-index: 201;
     transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
     display: flex;
     flex-direction: column;
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+    box-shadow: none;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .cart-drawer.active {
     transform: translateX(0);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .cart-drawer-header {
