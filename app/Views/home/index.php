@@ -524,6 +524,20 @@ ob_start();
 
         </div>
 
+        <?php 
+            $servicesCtaVisible = Setting::get('services_cta_visible', '1');
+            $servicesCtaText = Setting::get('services_cta_text', 'Falar com o Concierge no WhatsApp ↗');
+            $servicesCtaUrl = Setting::get('services_cta_url', 'https://wa.me/5511999999999');
+        ?>
+        <?php if ($servicesCtaVisible === '1' && !empty($servicesCtaText)): ?>
+        <div class="services-action" style="margin-top: 50px; text-align: center;">
+            <a href="<?= \App\Core\View::e($servicesCtaUrl) ?>" class="btn-services-cta" target="_blank" rel="noopener noreferrer">
+                <?= \App\Core\View::e($servicesCtaText) ?>
+            </a>
+        </div>
+        <?php endif; ?>
+
+    </div>
 </section>
 <?php
 $renderSection['services'] = ob_get_clean();
