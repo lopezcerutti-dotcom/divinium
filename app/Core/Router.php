@@ -273,53 +273,64 @@ class Router
             exit;
         });
 
-        // Rotas de Autenticação Administrativa
-        $this->post('/admin/login', [\App\Controllers\AuthController::class, 'login']);
-        $this->get('/admin/logout', [\App\Controllers\AuthController::class, 'logout']);
-        $this->post('/admin/logout', [\App\Controllers\AuthController::class, 'logout']);
-
-        // Painel Administrativo Protegido por Sessão
+        // Rotas Administrativas e de Autenticação (Suporta /admin e ADMIN_PREFIX customizado)
         $adminAuth = [\App\Middlewares\AdminAuthMiddleware::class];
+        $adminPrefixes = ['admin'];
+        $customPrefix = trim((string) \App\Core\Env::get('ADMIN_PREFIX', ''));
+        if ($customPrefix !== '' && $customPrefix !== 'admin') {
+            $adminPrefixes[] = trim($customPrefix, '/');
+        }
+        $adminPrefixes = array_unique($adminPrefixes);
 
-        $this->get('/admin', [\App\Controllers\AdminController::class, 'dashboard'], $adminAuth);
-        $this->get('/admin/metricas', [\App\Controllers\AdminController::class, 'metrics'], $adminAuth);
-        $this->get('/admin/produtos', [\App\Controllers\AdminController::class, 'products'], $adminAuth);
-        $this->post('/admin/produtos/salvar', [\App\Controllers\AdminController::class, 'saveProduct'], $adminAuth);
-        $this->post('/admin/produtos/duplicar', [\App\Controllers\AdminController::class, 'duplicateProduct'], $adminAuth);
-        $this->post('/admin/produtos/toggle', [\App\Controllers\AdminController::class, 'toggleProduct'], $adminAuth);
-        $this->post('/admin/produtos/excluir', [\App\Controllers\AdminController::class, 'deleteProduct'], $adminAuth);
-        $this->get('/admin/categorias', [\App\Controllers\AdminController::class, 'categories'], $adminAuth);
-        $this->post('/admin/categorias/salvar', [\App\Controllers\AdminController::class, 'saveCategory'], $adminAuth);
-        $this->post('/admin/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);
-        $this->get('/admin/categorias/produtos', [\App\Controllers\AdminController::class, 'categoryProducts'], $adminAuth);
-        $this->post('/admin/categorias/associar-produto', [\App\Controllers\AdminController::class, 'associateCategoryProduct'], $adminAuth);
-        $this->post('/admin/categorias/desassociar-produto', [\App\Controllers\AdminController::class, 'disassociateCategoryProduct'], $adminAuth);
-        $this->post('/admin/categorias/salvar-variante', [\App\Controllers\AdminController::class, 'saveVariant'], $adminAuth);
-        $this->post('/admin/categorias/salvar-canais', [\App\Controllers\AdminController::class, 'saveProductChannels'], $adminAuth);
-        $this->get('/admin/boutique', [\App\Controllers\AdminController::class, 'boutique'], $adminAuth);
-        $this->post('/admin/boutique/salvar', [\App\Controllers\AdminController::class, 'saveBoutique'], $adminAuth);
-        $this->get('/admin/lancamentos', [\App\Controllers\AdminController::class, 'lancamentos'], $adminAuth);
-        $this->post('/admin/lancamentos/salvar-colecao', [\App\Controllers\AdminController::class, 'saveColecao'], $adminAuth);
-        $this->post('/admin/lancamentos/excluir-colecao', [\App\Controllers\AdminController::class, 'deleteColecao'], $adminAuth);
-        $this->post('/admin/lancamentos/reordenar-colecoes', [\App\Controllers\AdminController::class, 'reorderColecoes'], $adminAuth);
-        $this->post('/admin/lancamentos/toggle-visibilidade', [\App\Controllers\AdminController::class, 'toggleColecaoVisibility'], $adminAuth);
-        $this->post('/admin/lancamentos/toggle-produto', [\App\Controllers\AdminController::class, 'toggleColecaoProduto'], $adminAuth);
-        $this->post('/admin/lancamentos/salvar-categoria', [\App\Controllers\AdminController::class, 'saveLancamentoCategoria'], $adminAuth);
-        $this->get('/admin/landing-page', [\App\Controllers\AdminController::class, 'landingPage'], $adminAuth);
-        $this->post('/admin/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
-        $this->get('/admin/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
-        $this->post('/admin/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
-        $this->post('/admin/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);
-        $this->post('/admin/temas/upload-bg', [\App\Controllers\AdminController::class, 'uploadBackgroundImage'], $adminAuth);
-        $this->post('/admin/temas/remover-bg', [\App\Controllers\AdminController::class, 'removeBackgroundImage'], $adminAuth);
-        $this->post('/admin/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
-        $this->post('/admin/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);
-        $this->post('/admin/media/upload', [\App\Controllers\AdminController::class, 'uploadMedia'], $adminAuth);
+        foreach ($adminPrefixes as $pref) {
+            $p = '/' . $pref;
 
-        // Rotas de Integração Bling ERP (OAuth2 & Sincronização)
-        $this->get('/admin/bling/authorize', [\App\Controllers\AdminController::class, 'blingAuthorize'], $adminAuth);
-        $this->get('/admin/bling/callback', [\App\Controllers\AdminController::class, 'blingCallback']);
-        $this->post('/admin/bling/config', [\App\Controllers\AdminController::class, 'blingSaveConfig'], $adminAuth);
-        $this->post('/admin/bling/sync', [\App\Controllers\AdminController::class, 'blingSync'], $adminAuth);
+            // Autenticação
+            $this->post($p . '/login', [\App\Controllers\AuthController::class, 'login']);
+            $this->get($p . '/logout', [\App\Controllers\AuthController::class, 'logout']);
+            $this->post($p . '/logout', [\App\Controllers\AuthController::class, 'logout']);
+
+            // Painel e Módulos Protegidos
+            $this->get($p, [\App\Controllers\AdminController::class, 'dashboard'], $adminAuth);
+            $this->get($p . '/metricas', [\App\Controllers\AdminController::class, 'metrics'], $adminAuth);
+            $this->get($p . '/produtos', [\App\Controllers\AdminController::class, 'products'], $adminAuth);
+            $this->post($p . '/produtos/salvar', [\App\Controllers\AdminController::class, 'saveProduct'], $adminAuth);
+            $this->post($p . '/produtos/duplicar', [\App\Controllers\AdminController::class, 'duplicateProduct'], $adminAuth);
+            $this->post($p . '/produtos/toggle', [\App\Controllers\AdminController::class, 'toggleProduct'], $adminAuth);
+            $this->post($p . '/produtos/excluir', [\App\Controllers\AdminController::class, 'deleteProduct'], $adminAuth);
+            $this->get($p . '/categorias', [\App\Controllers\AdminController::class, 'categories'], $adminAuth);
+            $this->post($p . '/categorias/salvar', [\App\Controllers\AdminController::class, 'saveCategory'], $adminAuth);
+            $this->post($p . '/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);
+            $this->get($p . '/categorias/produtos', [\App\Controllers\AdminController::class, 'categoryProducts'], $adminAuth);
+            $this->post($p . '/categorias/associar-produto', [\App\Controllers\AdminController::class, 'associateCategoryProduct'], $adminAuth);
+            $this->post($p . '/categorias/desassociar-produto', [\App\Controllers\AdminController::class, 'disassociateCategoryProduct'], $adminAuth);
+            $this->post($p . '/categorias/salvar-variante', [\App\Controllers\AdminController::class, 'saveVariant'], $adminAuth);
+            $this->post($p . '/categorias/salvar-canais', [\App\Controllers\AdminController::class, 'saveProductChannels'], $adminAuth);
+            $this->get($p . '/boutique', [\App\Controllers\AdminController::class, 'boutique'], $adminAuth);
+            $this->post($p . '/boutique/salvar', [\App\Controllers\AdminController::class, 'saveBoutique'], $adminAuth);
+            $this->get($p . '/lancamentos', [\App\Controllers\AdminController::class, 'lancamentos'], $adminAuth);
+            $this->post($p . '/lancamentos/salvar-colecao', [\App\Controllers\AdminController::class, 'saveColecao'], $adminAuth);
+            $this->post($p . '/lancamentos/excluir-colecao', [\App\Controllers\AdminController::class, 'deleteColecao'], $adminAuth);
+            $this->post($p . '/lancamentos/reordenar-colecoes', [\App\Controllers\AdminController::class, 'reorderColecoes'], $adminAuth);
+            $this->post($p . '/lancamentos/toggle-visibilidade', [\App\Controllers\AdminController::class, 'toggleColecaoVisibility'], $adminAuth);
+            $this->post($p . '/lancamentos/toggle-produto', [\App\Controllers\AdminController::class, 'toggleColecaoProduto'], $adminAuth);
+            $this->post($p . '/lancamentos/salvar-categoria', [\App\Controllers\AdminController::class, 'saveLancamentoCategoria'], $adminAuth);
+            $this->get($p . '/landing-page', [\App\Controllers\AdminController::class, 'landingPage'], $adminAuth);
+            $this->post($p . '/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
+            $this->get($p . '/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
+            $this->post($p . '/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
+            $this->post($p . '/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);
+            $this->post($p . '/temas/upload-bg', [\App\Controllers\AdminController::class, 'uploadBackgroundImage'], $adminAuth);
+            $this->post($p . '/temas/remover-bg', [\App\Controllers\AdminController::class, 'removeBackgroundImage'], $adminAuth);
+            $this->post($p . '/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
+            $this->post($p . '/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);
+            $this->post($p . '/media/upload', [\App\Controllers\AdminController::class, 'uploadMedia'], $adminAuth);
+
+            // Integração Bling ERP
+            $this->get($p . '/bling/authorize', [\App\Controllers\AdminController::class, 'blingAuthorize'], $adminAuth);
+            $this->get($p . '/bling/callback', [\App\Controllers\AdminController::class, 'blingCallback']);
+            $this->post($p . '/bling/config', [\App\Controllers\AdminController::class, 'blingSaveConfig'], $adminAuth);
+            $this->post($p . '/bling/sync', [\App\Controllers\AdminController::class, 'blingSync'], $adminAuth);
+        }
     }
 }

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divinium Joalheria | Atualização Segura</title>
+    <title>Divinium Joalheria | Atualização dos Serviços</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,9 +14,9 @@
             box-sizing: border-box;
         }
         body {
-            background: #0d0c0b;
-            color: #d4ba88;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F8F8F7;
+            color: #202020;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -26,23 +26,22 @@
         }
         .container {
             max-width: 580px;
-            background: rgba(26, 24, 22, 0.7);
-            border: 1px solid rgba(212, 186, 136, 0.25);
+            background: #FFFFFF;
+            border: 1px solid #737B85;
             border-radius: 16px;
             padding: 48px 32px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
         .brand {
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 2.2rem;
             letter-spacing: 6px;
-            color: #d4ba88;
+            color: #202020;
             margin-bottom: 8px;
             font-weight: 600;
         }
         .sparkle {
-            color: #d4ba88;
+            color: #A7ADB4;
             font-size: 1.4rem;
             margin-bottom: 12px;
             display: block;
@@ -51,40 +50,41 @@
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 1.6rem;
             font-weight: 400;
-            color: #ffffff;
+            color: #202020;
             margin-bottom: 16px;
             letter-spacing: 1px;
         }
         p {
-            color: #a8a29e;
+            color: #686868;
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 28px;
-            font-weight: 300;
+            font-weight: 400;
         }
         .btn-reload {
             display: inline-block;
-            background: #d4ba88;
-            color: #0d0c0b;
-            font-weight: 600;
+            background: linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%);
+            color: #202020;
+            font-weight: 700;
             font-size: 0.9rem;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            padding: 12px 32px;
+            padding: 13px 32px;
             border-radius: 30px;
+            border: 1px solid #737B85;
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(212, 186, 136, 0.25);
+            box-shadow: 0 4px 14px rgba(115, 123, 133, 0.2);
         }
         .btn-reload:hover {
-            background: #e6ce9f;
+            filter: brightness(0.95);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 186, 136, 0.4);
+            box-shadow: 0 6px 18px rgba(115, 123, 133, 0.3);
         }
         .footer-note {
             margin-top: 32px;
             font-size: 0.8rem;
-            color: #78716c;
+            color: #686868;
         }
     </style>
 </head>
@@ -92,7 +92,7 @@
     <div class="container">
         <span class="sparkle">✦</span>
         <div class="brand">DIVINIUM</div>
-        <h1>Serviço Temporariamente em Atualização</h1>
+        <h1>Serviço em Atualização Segura</h1>
         <p>Estamos concluindo uma atualização segura dos serviços da boutique. Por favor, recarregue a página para continuar sua navegação.</p>
         <a href="/" class="btn-reload" onclick="window.location.reload(); return false;">Recarregar Página</a>
         <div class="footer-note">Alta Joalheria Autoral • Quiet Luxury</div>
