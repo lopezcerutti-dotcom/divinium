@@ -572,6 +572,7 @@ ob_start();
                 <a href="<?= \App\Core\View::e(Setting::get('heritage_cta_url', '#collections')) ?>" class="btn-outline-dark"><?= \App\Core\View::e(Setting::get('heritage_cta_text', 'Escolher Meu Bracelete')) ?></a>
             </div>
         </div>
+    </div>
 </section>
 <?php
 $renderSection['heritage'] = ob_get_clean();
@@ -581,7 +582,7 @@ ob_start();
 <!-- ======================================================================= -->
 <!-- SEÇÃO 6: PROVA SOCIAL & DEPOIMENTOS (LOVED BY THOSE WHO APPRECIATE) -->
 <!-- ======================================================================= -->
-<section class="testimonials-section">
+<section class="testimonials-section" id="testimonials">
     <div class="container">
         
         <div class="testimonials-header">
