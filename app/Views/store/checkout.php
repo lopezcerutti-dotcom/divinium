@@ -466,11 +466,9 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     width: 54px;
     height: 54px;
     border-radius: 8px;
-    object-fit: contain;
-    background: #ffffff;
+    object-fit: cover;
+    background: #f0f0ee;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    padding: 2px;
-    box-sizing: border-box;
 }
 .checkout-item-info {
     flex: 1;
