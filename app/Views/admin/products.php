@@ -1,21 +1,296 @@
 <?php
 /**
- * VIEW: GESTÃO DEDICADA DE PRODUTOS & ESTOQUE BLING ERP
- * QUIET LUXURY EXECUTIVE CATALOG MANAGEMENT
+ * VIEW: CATÁLOGO DE JOIAS, ESTOQUE & CANAIS DE VENDA
+ * DIVINIUM HIGH-JEWELRY CENTRALIZED MANAGEMENT HUB
+ * 
+ * Unificação definitiva das seções:
+ * 1. Catálogo de Joias & Modelos Autorais
+ * 2. Variações Minerais & Controle de Estoque Físico
+ * 3. Central de Informações e Exibição Pública dos Produtos
+ * 4. Canais de Venda & Integração Bling ERP (API v3)
  */
+
+$activeTab = $activeTab ?? (isset($_GET['tab']) ? trim($_GET['tab']) : 'catalogo');
+if (!in_array($activeTab, ['catalogo', 'exibicao', 'bling'], true)) {
+    $activeTab = 'catalogo';
+}
+
+$groups = $groups ?? [];
+$products = $products ?? [];
+$categories = $categories ?? [];
+$blingConfig = $blingConfig ?? [];
+$settings = $settings ?? [];
 ?>
+
+<!-- ============================================================== -->
+<!-- ESTILOS EXECUTIVOS DA CENTRAL UNIFICADA DIVINIUM               -->
+<!-- ============================================================== -->
+<style>
+/* Abas Principais da Central Unificada */
+.unified-hub-nav {
+    display: flex;
+    gap: 8px;
+    background: rgba(18, 18, 18, 0.7);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+}
+.unified-hub-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    background: transparent;
+    color: #9e978e;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+.unified-hub-tab-btn:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.04);
+}
+.unified-hub-tab-btn.active {
+    background: rgba(212, 186, 136, 0.12);
+    color: #FFFFFF;
+    border-color: rgba(212, 186, 136, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.unified-hub-tab-btn .tab-badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: #CBD0D6;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+.unified-hub-tab-btn.active .tab-badge {
+    background: rgba(212, 186, 136, 0.25);
+    color: #FFFFFF;
+}
+
+/* Painéis de Conteúdo das Abas */
+.unified-hub-pane {
+    display: none;
+    animation: fadeIn 0.25s ease forwards;
+}
+.unified-hub-pane.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Linha Principal de Modelo Autoral / Grupo */
+.group-row {
+    background: rgba(26, 26, 26, 0.75);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.2s ease;
+}
+.group-row:hover {
+    background: rgba(35, 35, 35, 0.95);
+}
+.group-row.is-expanded {
+    background: rgba(32, 32, 32, 0.98);
+    border-bottom-color: rgba(212, 186, 136, 0.25);
+}
+
+/* Botão de Expandir Gaveta de Variações */
+.btn-drawer-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #CBD0D6;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
+}
+.btn-drawer-toggle:hover {
+    background: rgba(212, 186, 136, 0.18);
+    border-color: rgba(212, 186, 136, 0.4);
+    color: #FFFFFF;
+}
+.group-row.is-expanded .btn-drawer-toggle {
+    transform: rotate(90deg);
+    background: rgba(212, 186, 136, 0.25);
+    border-color: rgba(212, 186, 136, 0.5);
+    color: #FFFFFF;
+}
+
+/* Gaveta de Variações */
+.variations-drawer-row {
+    display: none;
+    background: rgba(18, 18, 18, 0.95);
+    border-bottom: 2px solid rgba(212, 186, 136, 0.3);
+}
+.variations-drawer-row.active {
+    display: table-row;
+}
+.variations-drawer-container {
+    padding: 16px 20px 20px 60px;
+    background: linear-gradient(180deg, rgba(212, 186, 136, 0.04) 0%, rgba(0, 0, 0, 0.2) 100%);
+    border-left: 3px solid rgba(212, 186, 136, 0.5);
+}
+.drawer-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.drawer-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.drawer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: rgba(25, 25, 25, 0.85);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.drawer-table th {
+    background: rgba(0, 0, 0, 0.4);
+    color: #9e978e;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.drawer-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: #ded7cf;
+    vertical-align: middle;
+}
+.drawer-table tr:last-child td {
+    border-bottom: none;
+}
+.drawer-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Inputs de Edição Rápida da Variação */
+.inline-input {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+.inline-input:focus {
+    border-color: #CBD0D6;
+    outline: none;
+    background: rgba(0, 0, 0, 0.6);
+}
+.inline-input-stock {
+    width: 65px;
+    text-align: center;
+}
+.inline-input-price {
+    width: 90px;
+}
+.inline-input-text {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* Badges e Identificadores */
+.badge-group-shared {
+    background: rgba(212, 186, 136, 0.12);
+    color: #ded7cf;
+    border: 1px solid rgba(212, 186, 136, 0.25);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.badge-variant-specific {
+    background: rgba(167, 173, 180, 0.12);
+    color: #CBD0D6;
+    border: 1px solid rgba(167, 173, 180, 0.25);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.badge-stock-consolidated {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.78rem;
+}
+
+/* Notificação Toast */
+.quick-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #181818;
+    color: #FFFFFF;
+    border: 1px solid rgba(212, 186, 136, 0.4);
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
 <!-- CABEÇALHO DO CATÁLOGO & BOTÕES DE AÇÃO -->
 <div class="catalog-header-bar">
     <div class="catalog-header-text">
-        <h2>Catálogo de Joias & Estoque</h2>
-        <p>Gerencie peças autorais, gemas minerais, fotos, links da Shopee e sincronização em tempo real com Bling ERP.</p>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <span style="font-size: 1.6rem;">💎</span>
+            <h2 style="margin: 0;">Catálogo de Joias, Estoque & Canais de Venda</h2>
+            <span class="badge-group-shared">CENTRAL INTEGRADA</span>
+        </div>
+        <p>Gerenciamento centralizado de modelos autorais, variações minerais, controle de estoque físico, sincronização com Bling ERP e exibição pública.</p>
     </div>
     <div class="catalog-actions-bar">
-        <!-- BOTÃO INFORMAÇÕES & EXIBIÇÃO CENTRALIZADA -->
-        <a href="/admin/produtos-exibicao" class="btn-admin-secondary" style="border-color: rgba(202, 161, 92, 0.4); color: #ded7cf;" title="Personalizar informações públicas e visibilidade dos produtos">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            <span>Informações & Exibição</span>
+        <!-- BOTÃO VER VITRINE AO VIVO -->
+        <a href="/loja" target="_blank" class="btn-admin-secondary" title="Abrir a Boutique em nova aba">
+            <span>🛍️ Vitrine ao Vivo ↗</span>
         </a>
 
         <!-- BOTÃO SINCRONIZAR COM BLING -->
@@ -26,12 +301,6 @@
             <span class="sync-text">Sincronizar com Bling</span>
         </button>
 
-        <!-- BOTÃO CONFIGURAR CREDENCIAIS BLING -->
-        <button class="btn-admin-secondary" onclick="openBlingModal(event)" title="Configurações da API Bling v3">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0 2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            <span>Config Bling</span>
-        </button>
-
         <!-- BOTÃO ADICIONAR NOVA JOIA -->
         <button class="btn-admin-gold" onclick="openNewProductModal(event)">
             <span>+ Nova Joia</span>
@@ -39,338 +308,584 @@
     </div>
 </div>
 
-<!-- CARDS COMPACTOS DE RESUMO DO CATÁLOGO -->
-<div class="metrics-grid" style="margin-bottom: 22px;">
-    <div class="metric-card">
-        <div class="metric-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-        </div>
-        <div class="metric-data">
-            <span class="metric-value"><?= (int) ($totalProducts ?? count($products ?? [])) ?></span>
-            <span class="metric-label">Total no Catálogo</span>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-        <div class="metric-data">
-            <span class="metric-value"><?= (int) ($activeProducts ?? 0) ?></span>
-            <span class="metric-label">Joias Ativas na Loja</span>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(202, 161, 92, 0.12); color: #CBD0D6;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-        </div>
-        <div class="metric-data">
-            <span class="metric-value"><?= (int) ($totalStock ?? 0) ?> un.</span>
-            <span class="metric-label">Estoque Físico Total</span>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-        </div>
-        <div class="metric-data">
-            <span class="metric-value" style="font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-                <?php if (!empty($blingConfig['is_connected'])): ?>
-                    <span class="bling-status-badge bling-status-connected" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Ativo</span>
-                <?php elseif (!empty($blingConfig['client_id'])): ?>
-                    <span class="bling-status-badge bling-status-waiting" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Pendente</span>
-                <?php else: ?>
-                    <span class="bling-status-badge bling-status-disconnected" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Desconectado</span>
-                <?php endif; ?>
-            </span>
-            <span class="metric-label">
-                <?= !empty($blingConfig['last_sync_at']) ? 'Sync: ' . date('d/m H:i', strtotime($blingConfig['last_sync_at'])) : 'Pronto p/ sincronizar' ?>
-            </span>
-        </div>
-    </div>
+<!-- ============================================================== -->
+<!-- ABAS PRINCIPAIS DA CENTRAL UNIFICADA                          -->
+<!-- ============================================================== -->
+<div class="unified-hub-nav">
+    <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'catalogo' ? 'active' : '' ?>" id="mainTabBtnCatalogo" onclick="switchMainTab('catalogo')">
+        <span>💎 Catálogo & Grupos de Joias</span>
+        <span class="tab-badge"><?= count($groups) ?> Modelos</span>
+    </button>
+    <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'exibicao' ? 'active' : '' ?>" id="mainTabBtnExibicao" onclick="switchMainTab('exibicao')">
+        <span>📋 Informações Públicas, Ficha Técnica & Canais</span>
+        <span class="tab-badge" style="background: rgba(212, 186, 136, 0.25); color: #FFFFFF;">PÚBLICO</span>
+    </button>
+    <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'bling' ? 'active' : '' ?>" id="mainTabBtnBling" onclick="switchMainTab('bling')">
+        <span>📦 Estoque & Integração Bling ERP</span>
+        <?php if (!empty($blingConfig['is_connected'])): ?>
+            <span class="tab-badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">ATIVO</span>
+        <?php else: ?>
+            <span class="tab-badge" style="background: rgba(234, 179, 8, 0.2); color: #facc15;">API v3</span>
+        <?php endif; ?>
+    </button>
 </div>
 
-<!-- BARRA DE BUSCA EM TEMPO REAL & FILTROS -->
-<div class="admin-filter-bar">
-    <div class="search-box-wrap">
-        <svg class="search-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="catalogSearchInput" class="search-box-input" placeholder="Buscar por nome ou SKU da joia..." onkeyup="filterCatalog()" oninput="filterCatalog()">
-    </div>
+<!-- ============================================================== -->
+<!-- ABA 1: CATÁLOGO & GRUPOS DE JOIAS COM GAVETAS DE VARIAÇÕES    -->
+<!-- ============================================================== -->
+<div class="unified-hub-pane <?= $activeTab === 'catalogo' ? 'active' : '' ?>" id="mainTabCatalogo">
 
-    <!-- FILTRO DE CATEGORIA -->
-    <select id="catalogCategoryFilter" class="filter-select" onchange="filterCatalog()">
-        <option value="">Todas as Categorias</option>
-        <?php foreach ($categories ?? [] as $cat): ?>
-            <option value="<?= \App\Core\View::e($cat['name']) ?>"><?= \App\Core\View::e($cat['name']) ?></option>
-        <?php endforeach; ?>
-    </select>
-
-    <!-- FILTRO DE STATUS -->
-    <select id="catalogStatusFilter" class="filter-select" onchange="filterCatalog()">
-        <option value="">Todos os Status</option>
-        <option value="ativo">Exibidos na Loja</option>
-        <option value="oculto">Ocultos</option>
-    </select>
-
-    <!-- FILTRO DE ESTOQUE -->
-    <select id="catalogStockFilter" class="filter-select" onchange="filterCatalog()">
-        <option value="">Todos os Estoques</option>
-        <option value="in_stock">Em Estoque (>0)</option>
-        <option value="low_stock">Estoque Baixo (1 a 3)</option>
-        <option value="out_of_stock">Esgotado (0)</option>
-    </select>
-
-    <div class="filter-count-badge">
-        <span id="visibleItemsCount"><?= count($products ?? []) ?></span> de <?= count($products ?? []) ?> joias
-    </div>
-</div>
-
-<!-- TABELA DE GESTÃO DO CATÁLOGO COM ROLAGEM DUPLA, CABEÇALHO FIXO & PAGINAÇÃO -->
-<div class="admin-card" style="padding: 0; overflow: hidden;">
-    
-    <!-- CONTROLES DE PAGINAÇÃO SUPERIOR -->
-    <div class="pagination-bar pagination-bar-top" id="paginationBarTop">
-        <div class="pagination-info" id="paginationInfoTop">
-            Carregando catálogo...
-        </div>
-        <div class="pagination-controls-wrap">
-            <div class="pagination-per-page">
-                <label for="perPageSelectTop">Itens por página:</label>
-                <select id="perPageSelectTop" class="per-page-select" onchange="changeItemsPerPage(this.value)">
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
+    <!-- CARDS DE RESUMO DO CATÁLOGO UNIFICADO -->
+    <div class="metrics-grid" style="margin-bottom: 22px;">
+        <div class="metric-card">
+            <div class="metric-icon-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
             </div>
-            <div class="pagination-nav" id="paginationNavTop">
-                <!-- Botões gerados via JavaScript -->
+            <div class="metric-data">
+                <span class="metric-value"><?= count($groups) ?> modelos</span>
+                <span class="metric-label"><?= (int) ($totalProducts ?? count($products)) ?> variações cadastradas</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="metric-data">
+                <span class="metric-value"><?= (int) ($activeProducts ?? 0) ?> joias</span>
+                <span class="metric-label">Exibidas Atualmente na Loja</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap" style="background: rgba(202, 161, 92, 0.12); color: #CBD0D6;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="metric-data">
+                <span class="metric-value"><?= (int) ($totalStock ?? 0) ?> un.</span>
+                <span class="metric-label">Estoque Físico Consolidado</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+            </div>
+            <div class="metric-data">
+                <span class="metric-value" style="font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                    <?php if (!empty($blingConfig['is_connected'])): ?>
+                        <span class="bling-status-badge bling-status-connected" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Ativo</span>
+                    <?php elseif (!empty($blingConfig['client_id'])): ?>
+                        <span class="bling-status-badge bling-status-waiting" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Pendente</span>
+                    <?php else: ?>
+                        <span class="bling-status-badge bling-status-disconnected" style="font-size: 0.72rem;"><span class="bling-status-dot"></span> Bling Desconectado</span>
+                    <?php endif; ?>
+                </span>
+                <span class="metric-label">
+                    <?= !empty($blingConfig['last_sync_at']) ? 'Sync: ' . date('d/m H:i', strtotime($blingConfig['last_sync_at'])) : 'Pronto p/ sincronizar' ?>
+                </span>
             </div>
         </div>
     </div>
 
-    <!-- BARRA DE ROLAGEM HORIZONTAL SUPERIOR SINCRONIZADA -->
-    <div class="table-scroll-top-wrapper" id="catalogScrollTopWrapper">
-        <div class="table-scroll-top-track" id="catalogScrollTopTrack"></div>
+    <!-- BARRA DE BUSCA EM TEMPO REAL & FILTROS -->
+    <div class="admin-filter-bar">
+        <div class="search-box-wrap">
+            <svg class="search-box-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="catalogSearchInput" class="search-box-input" placeholder="Buscar por modelo, gema mineral ou SKU..." onkeyup="filterCatalog()" oninput="filterCatalog()">
+        </div>
+
+        <!-- FILTRO DE CATEGORIA -->
+        <select id="catalogCategoryFilter" class="filter-select" onchange="filterCatalog()">
+            <option value="">Todas as Categorias</option>
+            <?php foreach ($categories ?? [] as $cat): ?>
+                <option value="<?= \App\Core\View::e($cat['name']) ?>"><?= \App\Core\View::e($cat['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <!-- FILTRO DE STATUS -->
+        <select id="catalogStatusFilter" class="filter-select" onchange="filterCatalog()">
+            <option value="">Todos os Status</option>
+            <option value="ativo">Exibidos na Loja</option>
+            <option value="oculto">Ocultos</option>
+        </select>
+
+        <!-- FILTRO DE ESTOQUE -->
+        <select id="catalogStockFilter" class="filter-select" onchange="filterCatalog()">
+            <option value="">Todos os Estoques</option>
+            <option value="in_stock">Em Estoque (>0)</option>
+            <option value="low_stock">Estoque Baixo (1 a 3)</option>
+            <option value="out_of_stock">Esgotado (0)</option>
+        </select>
+
+        <div class="filter-count-badge">
+            <span id="visibleItemsCount"><?= count($groups) ?></span> de <?= count($groups) ?> modelos
+        </div>
     </div>
 
-    <!-- CONTAINER DA TABELA COM ROLAGEM VERTICAL E HORIZONTAL (CABEÇALHO FIXO) -->
-    <div class="table-scroll-container" id="catalogTableScrollContainer">
-        <table class="admin-table" id="productsTable">
-            <thead>
-                <tr>
-                    <th style="width: 58px; text-align: center;">Foto</th>
-                    <th>Joia & SKU</th>
-                    <th>Gema / Materiais</th>
-                    <th>Categoria</th>
-                    <th>Preço Base (R$)</th>
-                    <th>Canais de Venda & Links</th>
-                    <th>Estoque</th>
-                    <th style="text-align: center; width: 60px;">Ordem</th>
-                    <th>Status</th>
-                    <th style="text-align: right; padding-right: 20px;">Ações</th>
-                </tr>
-            </thead>
-            <tbody id="catalogTableBody">
-                <?php if (!empty($products)): ?>
-                    <?php foreach ($products as $p): ?>
-                        <?php 
-                            $stock = (int) ($p['stock_quantity'] ?? 0);
-                            $stockStatus = $p['stock_status'] ?? 'in_stock';
-                            if ($stockStatus === 'out_of_stock' || $stock <= 0) {
-                                $stockClass = 'stock-out';
-                                $stockText = 'Esgotado';
-                            } elseif ($stockStatus === 'made_to_order') {
-                                $stockClass = 'stock-low';
-                                $stockText = 'Sob Encomenda';
-                            } else {
-                                $stockClass = $stock > 3 ? 'stock-in' : 'stock-low';
-                                $stockText = $stock . ' un.';
-                            }
+    <!-- TABELA HIERÁRQUICA DE MODELOS AUTORAIS COM GAVETAS DE VARIAÇÕES -->
+    <div class="admin-card" style="padding: 0; overflow: hidden;">
+        
+        <!-- CONTROLES DE PAGINAÇÃO SUPERIOR -->
+        <div class="pagination-bar pagination-bar-top" id="paginationBarTop">
+            <div class="pagination-info" id="paginationInfoTop">
+                Carregando catálogo unificado...
+            </div>
+            <div class="pagination-controls-wrap">
+                <div class="pagination-per-page">
+                    <label for="perPageSelectTop">Itens por página:</label>
+                    <select id="perPageSelectTop" class="per-page-select" onchange="changeItemsPerPage(this.value)">
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="pagination-nav" id="paginationNavTop"></div>
+            </div>
+        </div>
 
-                            $categoryName = $p['category_name'] ?? 'Coleção Autoral';
-                            $status = $p['status'] ?? (!empty($p['is_active']) ? 'published' : 'hidden');
-                            $statusClass = 'status-' . $status;
-                            $statusLabel = $status === 'published' ? 'Publicado' : ($status === 'draft' ? 'Rascunho' : 'Oculto');
-                        ?>
-                        <tr id="product-row-<?= $p['id'] ?>" 
-                            data-name="<?= strtolower(\App\Core\View::e($p['name'] ?? '')) ?>" 
-                            data-sku="<?= strtolower(\App\Core\View::e($p['sku'] ?? '')) ?>" 
-                            data-stone="<?= strtolower(\App\Core\View::e($p['stone_mineral'] ?? '')) ?>" 
-                            data-category="<?= \App\Core\View::e($categoryName) ?>" 
-                            data-status="<?= $status === 'published' ? 'ativo' : 'oculto' ?>" 
-                            data-stock="<?= $stock ?>">
-                            
-                            <td style="text-align: center; padding-left: 18px;">
-                                <div class="table-thumb-wrap">
-                                    <img src="<?= \App\Core\View::e($p['image_url'] ?? '/assets/images/hero/featured-green-shell.jpg') ?>" 
-                                         alt="<?= \App\Core\View::e($p['name']) ?>" 
-                                         class="table-thumb"
-                                         loading="lazy"
-                                         onerror="this.src='/assets/images/hero/featured-green-shell.jpg';">
-                                </div>
-                            </td>
+        <!-- CONTAINER DA TABELA -->
+        <div class="table-scroll-container" id="catalogTableScrollContainer">
+            <table class="admin-table" id="productsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 44px; text-align: center;" title="Expandir variações vinculadas">Var.</th>
+                        <th style="width: 58px; text-align: center;">Foto</th>
+                        <th>Modelo Autoral & SKU Base</th>
+                        <th>Categoria</th>
+                        <th>Preço Base (R$)</th>
+                        <th>Canais de Venda</th>
+                        <th>Estoque Consolidado</th>
+                        <th style="text-align: center; width: 60px;">Ordem</th>
+                        <th>Status</th>
+                        <th style="text-align: right; padding-right: 20px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="catalogTableBody">
+                    <?php if (!empty($groups)): ?>
+                        <?php foreach ($groups as $grp): ?>
+                            <?php 
+                                $groupStock = (int) ($grp['total_stock'] ?? 0);
+                                $varCount = count($grp['variants'] ?? []);
+                                if ($groupStock <= 0) {
+                                    $stockBadgeClass = 'stock-out';
+                                    $stockBadgeText = 'Esgotado';
+                                } elseif ($groupStock <= 3) {
+                                    $stockBadgeClass = 'stock-low';
+                                    $stockBadgeText = $groupStock . ' un.';
+                                } else {
+                                    $stockBadgeClass = 'stock-in';
+                                    $stockBadgeText = $groupStock . ' un.';
+                                }
 
-                            <td>
-                                <strong style="color: #ffffff; font-size: 0.92rem; display: block; margin-bottom: 2px;">
-                                    <?= \App\Core\View::e($p['name']) ?>
-                                    <?php if (!empty($p['is_featured'])): ?>
-                                        <span style="color: #CBD0D6; font-size: 0.72rem; margin-left: 4px;" title="Destaque na vitrine">✦</span>
+                                $status = $grp['status'] ?? 'published';
+                                $statusClass = 'status-' . $status;
+                                $statusLabel = $status === 'published' ? 'Publicado' : ($status === 'draft' ? 'Rascunho' : 'Oculto');
+
+                                $minPrice = ($grp['min_price_cents'] ?? 0) / 100;
+                                $maxPrice = ($grp['max_price_cents'] ?? 0) / 100;
+                                $priceDisplay = ($minPrice > 0 && $maxPrice > $minPrice) 
+                                    ? ('R$ ' . number_format($minPrice, 2, ',', '.') . ' – ' . number_format($maxPrice, 2, ',', '.'))
+                                    : ('R$ ' . number_format($minPrice > 0 ? $minPrice : (($grp['parent_product']['price_cents'] ?? 0) / 100), 2, ',', '.'));
+
+                                $stonesSummary = implode(' • ', array_filter(array_unique(array_map(function($v) {
+                                    return $v['stone_mineral'] ?? '';
+                                }, $grp['variants']))));
+
+                                $groupJson = json_encode($grp, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE);
+                            ?>
+                            <!-- LINHA DO MODELO / GRUPO PRINCIPAL -->
+                            <tr id="group-row-<?= \App\Core\View::e($grp['base_sku']) ?>" 
+                                class="group-row"
+                                data-name="<?= strtolower(\App\Core\View::e($grp['name'] ?? '')) ?>" 
+                                data-sku="<?= strtolower(\App\Core\View::e($grp['base_sku'] ?? '')) ?>" 
+                                data-stone="<?= strtolower(\App\Core\View::e($stonesSummary)) ?>" 
+                                data-category="<?= \App\Core\View::e($grp['category_name'] ?? '') ?>" 
+                                data-status="<?= ($status === 'published' ? 'ativo' : 'oculto') ?>" 
+                                data-stock="<?= ($groupStock > 3 ? 'in_stock' : ($groupStock > 0 ? 'low_stock' : 'out_of_stock')) ?>">
+                                
+                                <!-- BOTÃO EXPANDIR GAVETA DE VARIAÇÕES -->
+                                <td style="text-align: center;">
+                                    <button type="button" class="btn-drawer-toggle" onclick="toggleVariationsDrawer('<?= \App\Core\View::e($grp['base_sku']) ?>')" title="Expandir/recolher variações minerais">
+                                        ▶
+                                    </button>
+                                </td>
+
+                                <!-- FOTO PRINCIPAL DO MODELO -->
+                                <td style="text-align: center;">
+                                    <img src="<?= \App\Core\View::e($grp['image_url'] ?: '/assets/images/hero/featured-green-shell.jpg') ?>" 
+                                         alt="<?= \App\Core\View::e($grp['name']) ?>" 
+                                         class="table-img-thumb"
+                                         onclick="toggleVariationsDrawer('<?= \App\Core\View::e($grp['base_sku']) ?>')"
+                                         style="cursor: pointer;"
+                                         onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
+                                </td>
+
+                                <!-- NOME DO MODELO & SKU BASE -->
+                                <td>
+                                    <div style="font-weight: 600; color: #ffffff; font-size: 0.9rem; cursor: pointer;" onclick="toggleVariationsDrawer('<?= \App\Core\View::e($grp['base_sku']) ?>')">
+                                        <?= \App\Core\View::e($grp['name']) ?>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                                        <span class="badge-group-shared">SKU BASE: <?= \App\Core\View::e($grp['base_sku']) ?></span>
+                                        <span style="font-size: 0.72rem; color: #8e8880;">
+                                            <?= $varCount ?> <?= $varCount === 1 ? 'variação' : 'variações' ?>
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- CATEGORIA -->
+                                <td>
+                                    <span class="category-pill">
+                                        <?= \App\Core\View::e($grp['category_name'] ?? 'Coleção Autoral') ?>
+                                    </span>
+                                </td>
+
+                                <!-- PREÇO BASE OU FAIXA -->
+                                <td>
+                                    <div style="font-weight: 600; color: #ede7df; font-size: 0.86rem;">
+                                        <?= $priceDisplay ?>
+                                    </div>
+                                </td>
+
+                                <!-- CANAIS DE VENDA DO GRUPO -->
+                                <td>
+                                    <?php if (!empty($grp['links'])): ?>
+                                        <div class="platform-links-list">
+                                            <?php foreach ($grp['links'] as $lnk): ?>
+                                                <?php 
+                                                    $platSlug = strtolower(preg_replace('/[^a-z0-9]/', '', $lnk['platform_name'] ?? 'shopee'));
+                                                    $linkPriceFormatted = number_format(($lnk['price_cents'] ?? 0) / 100, 2, ',', '.');
+                                                ?>
+                                                <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="_blank" rel="noopener noreferrer" 
+                                                   class="platform-mini-tag tag-<?= $platSlug ?>" 
+                                                   title="<?= \App\Core\View::e($lnk['button_text'] ?? $lnk['platform_name']) ?> — R$ <?= $linkPriceFormatted ?>">
+                                                    <span><?= \App\Core\View::e($lnk['platform_name']) ?></span>
+                                                    <span>↗</span>
+                                                </a>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <span style="color: #6b655c; font-size: 0.74rem;">—</span>
                                     <?php endif; ?>
-                                </strong>
-                                <span style="font-family: monospace; font-size: 0.72rem; color: #a8a096; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;">
-                                    <?= \App\Core\View::e($p['sku'] ?? 'DIV-AUT') ?>
-                                </span>
-                            </td>
+                                </td>
 
-                            <td>
-                                <span class="stone-pill" style="margin-bottom: 4px; display: inline-flex;">
-                                    <span class="stone-dot"></span>
-                                    <?= \App\Core\View::e($p['stone_mineral'] ?: 'Mineral Puro') ?>
-                                </span>
-                                <?php if (!empty($p['materials'])): ?>
-                                    <div style="font-size: 0.72rem; color: #8e8880; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        <?= \App\Core\View::e($p['materials']) ?>
+                                <!-- ESTOQUE CONSOLIDADO DO GRUPO -->
+                                <td>
+                                    <span class="stock-badge <?= $stockBadgeClass ?>">
+                                        <?= $stockBadgeText ?>
+                                    </span>
+                                    <div style="font-size: 0.7rem; color: #8e8880; margin-top: 2px;">
+                                        <?= $varCount ?> variações somadas
                                     </div>
-                                <?php endif; ?>
-                            </td>
+                                </td>
 
-                            <td>
-                                <span style="font-size: 0.78rem; color: #b5ada3;">
-                                    <?= \App\Core\View::e($categoryName) ?>
-                                </span>
-                            </td>
+                                <!-- ORDEM -->
+                                <td style="text-align: center; color: #a8a096; font-size: 0.82rem;">
+                                    <?= (int) ($grp['sort_order'] ?? 0) ?>
+                                </td>
 
-                            <td>
-                                <strong style="color: #ede7df;">
-                                    R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?>
-                                </strong>
-                                <?php if (!empty($p['promotional_price_cents'])): ?>
-                                    <div style="font-size: 0.72rem; color: #CBD0D6;">
-                                        De: R$ <?= number_format($p['promotional_price_cents'] / 100, 2, ',', '.') ?>
+                                <!-- STATUS -->
+                                <td>
+                                    <span class="badge-status <?= $statusClass ?>" id="status-badge-group-<?= $grp['id'] ?>">
+                                        <?= $statusLabel ?>
+                                    </span>
+                                </td>
+
+                                <!-- AÇÕES DO MODELO / GRUPO -->
+                                <td style="text-align: right; padding-right: 20px;">
+                                    <div class="action-buttons" style="justify-content: flex-end;">
+                                        <?php $pSlug = !empty($grp['slug']) ? $grp['slug'] : \App\Controllers\StoreController::slugify($grp['name'] ?? ('joia-' . $grp['id'])); ?>
+                                        <a href="/produto/<?= urlencode($pSlug) ?>" target="_blank" class="btn-table-action" title="Ver vitrine pública da joia" style="text-decoration: none; color: #CBD0D6; border-color: rgba(212,186,136,0.3);">
+                                            Ver ↗
+                                        </a>
+                                        <button class="btn-table-action" onclick="toggleProductStatus(<?= $grp['id'] ?>)" title="Alternar status na loja">
+                                            <?= $status === 'published' ? 'Ocultar' : 'Publicar' ?>
+                                        </button>
+                                        <button class="btn-table-action" onclick='editGroupProduct(<?= $groupJson ?>)' title="Editar modelo, dados do grupo e variações">
+                                            Editar Joia
+                                        </button>
+                                        <button class="btn-table-action btn-table-duplicate" onclick="duplicateProduct(<?= $grp['id'] ?>)" title="Duplicar joia e canais de venda">
+                                            Duplicar
+                                        </button>
+                                        <button class="btn-table-action btn-delete" onclick="deleteProduct(<?= $grp['id'] ?>)" title="Excluir produto e variações">
+                                            Excluir
+                                        </button>
                                     </div>
-                                <?php endif; ?>
-                            </td>
+                                </td>
+                            </tr>
 
-                            <td>
-                                <?php if (!empty($p['links'])): ?>
-                                    <div class="platform-links-list">
-                                        <?php foreach ($p['links'] as $lnk): ?>
-                                            <?php 
-                                                $platSlug = strtolower(preg_replace('/[^a-z0-9]/', '', $lnk['platform_name'] ?? 'shopee'));
-                                                $linkPriceFormatted = number_format(($lnk['price_cents'] ?? ($p['price_cents'] ?? 0)) / 100, 2, ',', '.');
-                                            ?>
-                                            <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="_blank" rel="noopener noreferrer" 
-                                               class="platform-mini-tag tag-<?= $platSlug ?>" 
-                                               title="<?= \App\Core\View::e($lnk['button_text'] ?? $lnk['platform_name']) ?> — R$ <?= $linkPriceFormatted ?>">
-                                                <span><?= \App\Core\View::e($lnk['platform_name']) ?>: R$ <?= $linkPriceFormatted ?></span>
-                                                <span>↗</span>
-                                            </a>
-                                        <?php endforeach; ?>
+                            <!-- GAVETA EXPANSÍVEL DE VARIAÇÕES MINERAIS VINCULADAS -->
+                            <tr id="drawer-group-<?= \App\Core\View::e($grp['base_sku']) ?>" class="variations-drawer-row">
+                                <td colspan="10" style="padding: 0;">
+                                    <div class="variations-drawer-container">
+                                        <div class="drawer-header-bar">
+                                            <div class="drawer-title">
+                                                <span>💎 Variações Minerais do Modelo:</span>
+                                                <strong style="color: #ffffff;"><?= \App\Core\View::e($grp['name']) ?></strong>
+                                                <span class="badge-group-shared">SKU BASE: <?= \App\Core\View::e($grp['base_sku']) ?></span>
+                                            </div>
+                                            <div style="display: flex; gap: 8px;">
+                                                <button type="button" class="btn-admin-gold" style="padding: 5px 12px; font-size: 0.78rem;" onclick='addNewVariantToGroup(<?= $groupJson ?>)'>
+                                                    <span>+ Nova Variação Mineral</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- TABELA COMPACTA DE VARIAÇÕES -->
+                                        <table class="drawer-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 44px; text-align: center;">Foto</th>
+                                                    <th>Gema / Mineral</th>
+                                                    <th>SKU da Variação</th>
+                                                    <th>Preço (R$)</th>
+                                                    <th>Estoque Físico</th>
+                                                    <th>Disponibilidade</th>
+                                                    <th>Link Específico (Shopee / Externo)</th>
+                                                    <th style="text-align: right; width: 140px;">Ações Rápidas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($grp['variants'] as $v): ?>
+                                                    <?php 
+                                                        $vStock = (int)($v['stock_quantity'] ?? 0);
+                                                        $vPriceFormatted = number_format(($v['price_cents'] ?? 0) / 100, 2, ',', '.');
+                                                    ?>
+                                                    <tr id="variant-row-<?= $v['id'] ?>">
+                                                        <!-- FOTO DA VARIAÇÃO -->
+                                                        <td style="text-align: center;">
+                                                            <img src="<?= \App\Core\View::e($v['image_url'] ?: $grp['image_url']) ?>" 
+                                                                 alt="<?= \App\Core\View::e($v['stone_mineral'] ?? '') ?>" 
+                                                                 style="width: 34px; height: 34px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);"
+                                                                 onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
+                                                        </td>
+
+                                                        <!-- GEMA / MINERAL -->
+                                                        <td>
+                                                            <input type="text" class="inline-input inline-input-text" id="v_stone_<?= $v['id'] ?>" value="<?= \App\Core\View::e($v['stone_mineral'] ?? '') ?>" placeholder="Ex: Concha Verde Esmeralda">
+                                                        </td>
+
+                                                        <!-- SKU INDIVIDUAL -->
+                                                        <td>
+                                                            <input type="text" class="inline-input" id="v_sku_<?= $v['id'] ?>" value="<?= \App\Core\View::e($v['sku'] ?? '') ?>" style="width: 120px; font-family: monospace; font-size: 0.78rem;">
+                                                        </td>
+
+                                                        <!-- PREÇO (R$) -->
+                                                        <td>
+                                                            <input type="text" class="inline-input inline-input-price" id="v_price_<?= $v['id'] ?>" value="<?= $vPriceFormatted ?>" onkeyup="formatCurrencyLive(this)">
+                                                        </td>
+
+                                                        <!-- ESTOQUE FÍSICO -->
+                                                        <td>
+                                                            <input type="number" min="0" class="inline-input inline-input-stock" id="v_stock_<?= $v['id'] ?>" value="<?= $vStock ?>">
+                                                        </td>
+
+                                                        <!-- STATUS DE ESTOQUE -->
+                                                        <td>
+                                                            <select class="inline-input" id="v_status_<?= $v['id'] ?>" style="font-size: 0.78rem;">
+                                                                <option value="in_stock" <?= ($v['stock_status'] ?? '') === 'in_stock' ? 'selected' : '' ?>>Pronta Entrega</option>
+                                                                <option value="made_to_order" <?= ($v['stock_status'] ?? '') === 'made_to_order' ? 'selected' : '' ?>>Sob Encomenda</option>
+                                                                <option value="out_of_stock" <?= ($v['stock_status'] ?? '') === 'out_of_stock' ? 'selected' : '' ?>>Esgotado</option>
+                                                            </select>
+                                                        </td>
+
+                                                        <!-- LINK ESPECÍFICO -->
+                                                        <td>
+                                                            <input type="url" class="inline-input inline-input-text" id="v_ext_<?= $v['id'] ?>" value="<?= \App\Core\View::e($v['external_url'] ?? '') ?>" placeholder="https://shopee.com.br/...">
+                                                            <input type="hidden" id="v_img_<?= $v['id'] ?>" value="<?= \App\Core\View::e($v['image_url'] ?? '') ?>">
+                                                        </td>
+
+                                                        <!-- AÇÕES DA VARIAÇÃO -->
+                                                        <td style="text-align: right; white-space: nowrap;">
+                                                            <button type="button" class="btn-table-action" onclick="saveQuickVariant(<?= $v['id'] ?>)" title="Salvar alterações desta variação instantaneamente" style="color: #FFFFFF; border-color: rgba(212, 186, 136, 0.4);">
+                                                                💾 Salvar
+                                                            </button>
+                                                            <?php if ($v['id'] !== $grp['id']): ?>
+                                                                <button type="button" class="btn-table-action btn-delete" onclick="deleteProduct(<?= $v['id'] ?>)" title="Excluir apenas esta variação">
+                                                                    ✕
+                                                                </button>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                <?php elseif (!empty($p['external_url'])): ?>
-                                    <a href="<?= \App\Core\View::e($p['external_url']) ?>" target="_blank" rel="noopener noreferrer" class="platform-mini-tag tag-shopee">
-                                        <span>Shopee: R$ <?= number_format(($p['price_cents'] ?? 0) / 100, 2, ',', '.') ?></span>
-                                        <span>↗</span>
-                                    </a>
-                                <?php else: ?>
-                                    <span style="color: #6b655c; font-size: 0.74rem;">—</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <td>
-                                <span class="stock-badge <?= $stockClass ?>">
-                                    <?= $stockText ?>
-                                </span>
-                            </td>
-
-                            <td style="text-align: center; color: #a8a096; font-size: 0.82rem;">
-                                <?= (int) ($p['sort_order'] ?? 0) ?>
-                            </td>
-
-                            <td>
-                                <span class="badge-status <?= $statusClass ?>" id="status-badge-<?= $p['id'] ?>">
-                                    <?= $statusLabel ?>
-                                </span>
-                            </td>
-
-                            <td style="text-align: right; padding-right: 20px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <?php $pSlug = !empty($p['slug']) ? $p['slug'] : \App\Controllers\StoreController::slugify($p['name'] ?? ('joia-' . $p['id'])); ?>
-                                    <a href="/produto/<?= urlencode($pSlug) ?>" target="_blank" class="btn-table-action" title="Ver página exclusiva da joia na Boutique" style="text-decoration: none; color: #CBD0D6; border-color: rgba(212,186,136,0.3);">
-                                        Ver ↗
-                                    </a>
-                                    <button class="btn-table-action" onclick="toggleProductStatus(<?= $p['id'] ?>)" title="Alternar status na loja">
-                                        <?= $status === 'published' ? 'Ocultar' : 'Publicar' ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr id="emptyCatalogRow">
+                            <td colspan="10" style="text-align: center; padding: 48px 20px; color: #8e8880;">
+                                <div style="font-size: 2.2rem; margin-bottom: 12px;">✦</div>
+                                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0 0 6px;">Nenhum produto cadastrado no catálogo</h3>
+                                <p style="font-size: 0.85rem; margin: 0 0 16px;">Sincronize o catálogo diretamente do Bling ERP ou cadastre seu primeiro modelo autoral.</p>
+                                <div style="display: flex; gap: 10px; justify-content: center;">
+                                    <button class="btn-admin-bling" onclick="triggerBlingSync(event)">
+                                        <span>Sincronizar com Bling</span>
                                     </button>
-                                    <button class="btn-table-action" onclick='editProduct(<?= json_encode($p, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>)' title="Editar detalhes e canais">
-                                        Editar
-                                    </button>
-                                    <button class="btn-table-action btn-table-duplicate" onclick="duplicateProduct(<?= $p['id'] ?>)" title="Duplicar joia e canais de venda">
-                                        Duplicar
-                                    </button>
-                                    <button class="btn-table-action btn-delete" onclick="deleteProduct(<?= $p['id'] ?>)" title="Excluir produto">
-                                        Excluir
+                                    <button class="btn-admin-gold" onclick="openNewProductModal(event)">
+                                        <span>+ Nova Joia</span>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr id="emptyCatalogRow">
-                        <td colspan="10" style="text-align: center; padding: 48px 20px; color: #8e8880;">
-                            <div style="font-size: 2.2rem; margin-bottom: 12px;">✦</div>
-                            <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: #ffffff; margin: 0 0 6px;">Nenhuma joia cadastrada ainda</h3>
-                            <p style="font-size: 0.85rem; margin: 0 0 16px;">Sincronize o estoque diretamente do Bling ERP ou adicione sua primeira joia manualmente.</p>
-                            <div style="display: flex; gap: 10px; justify-content: center;">
-                                <button class="btn-admin-bling" onclick="triggerBlingSync(event)">
-                                    <span>Sincronizar com Bling</span>
-                                </button>
-                                <button class="btn-admin-gold" onclick="openNewProductModal(event)">
-                                    <span>+ Nova Joia</span>
-                                </button>
-                            </div>
+                    <?php endif; ?>
+                    <tr id="noResultsFilterRow" style="display: none;">
+                        <td colspan="10" style="text-align: center; padding: 36px 20px; color: #8e8880;">
+                            Nenhuma joia corresponde aos filtros selecionados. Limpe os campos de busca para exibir todas.
                         </td>
                     </tr>
-                <?php endif; ?>
-                <tr id="noResultsFilterRow" style="display: none;">
-                    <td colspan="10" style="text-align: center; padding: 36px 20px; color: #8e8880;">
-                        Nenhuma joia corresponde aos filtros selecionados. Limpe a busca para ver todas.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- CONTROLES DE PAGINAÇÃO INFERIOR -->
-    <div class="pagination-bar pagination-bar-bottom" id="paginationBarBottom">
-        <div class="pagination-info" id="paginationInfoBottom">
-            Carregando catálogo...
+                </tbody>
+            </table>
         </div>
-        <div class="pagination-controls-wrap">
-            <div class="pagination-per-page">
-                <label for="perPageSelectBottom">Itens por página:</label>
-                <select id="perPageSelectBottom" class="per-page-select" onchange="changeItemsPerPage(this.value)">
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
-            <div class="pagination-nav" id="paginationNavBottom">
-                <!-- Botões gerados via JavaScript -->
+
+        <!-- CONTROLES DE PAGINAÇÃO INFERIOR -->
+        <div class="pagination-bar pagination-bar-bottom" id="paginationBarBottom">
+            <div class="pagination-info" id="paginationInfoBottom"></div>
+            <div class="pagination-controls-wrap">
+                <div class="pagination-per-page">
+                    <label for="perPageSelectBottom">Itens por página:</label>
+                    <select id="perPageSelectBottom" class="per-page-select" onchange="changeItemsPerPage(this.value)">
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="pagination-nav" id="paginationNavBottom"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- MODAL COMPLETO DE CADASTRO / EDIÇÃO DE PRODUTO & MULTI-CANAIS -->
+<!-- ============================================================== -->
+<!-- ABA 2: INFORMAÇÕES PÚBLICAS, FICHA TÉCNICA & CANAIS            -->
+<!-- ============================================================== -->
+<div class="unified-hub-pane <?= $activeTab === 'exibicao' ? 'active' : '' ?>" id="mainTabExibicao">
+    <?php include __DIR__ . '/product_display.php'; ?>
+</div>
+
+<!-- ============================================================== -->
+<!-- ABA 3: ESTOQUE & INTEGRAÇÃO BLING ERP (API v3)                 -->
+<!-- ============================================================== -->
+<div class="unified-hub-pane <?= $activeTab === 'bling' ? 'active' : '' ?>" id="mainTabBling">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+        <!-- CARD DE STATUS DA CONEXÃO BLING -->
+        <div class="admin-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.4rem;">📦</span>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.05rem;">Status da Conexão Bling ERP (API v3)</h3>
+                        <span style="font-size: 0.75rem; color: #8e8880;">OAuth 2.0 com renovação automática de Refresh Token</span>
+                    </div>
+                </div>
+                <?php if (!empty($blingConfig['is_connected'])): ?>
+                    <span class="bling-status-badge bling-status-connected"><span class="bling-status-dot"></span> Conectado</span>
+                <?php elseif (!empty($blingConfig['client_id'])): ?>
+                    <span class="bling-status-badge bling-status-waiting"><span class="bling-status-dot"></span> Pendente</span>
+                <?php else: ?>
+                    <span class="bling-status-badge bling-status-disconnected"><span class="bling-status-dot"></span> Desconectado</span>
+                <?php endif; ?>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; font-size: 0.82rem;">
+                <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <span style="color: #8e8880; display: block; font-size: 0.74rem;">ÚLTIMA SINCRONIZAÇÃO:</span>
+                    <strong style="color: #FFFFFF; font-size: 0.9rem; margin-top: 2px; display: block;">
+                        <?= !empty($blingConfig['last_sync_at']) ? date('d/m/Y H:i:s', strtotime($blingConfig['last_sync_at'])) : 'Nunca realizada' ?>
+                    </strong>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <span style="color: #8e8880; display: block; font-size: 0.74rem;">ITENS NO CATÁLOGO:</span>
+                    <strong style="color: #FFFFFF; font-size: 0.9rem; margin-top: 2px; display: block;">
+                        <?= (int) ($blingConfig['last_sync_count'] ?? count($products)) ?> itens ativos
+                    </strong>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-admin-bling" onclick="triggerBlingSync(event)" style="flex: 1; justify-content: center; padding: 12px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                    </svg>
+                    <span>Sincronizar Estoque Agora</span>
+                </button>
+                <button type="button" class="btn-admin-secondary" onclick="openBlingModal(event)">
+                    <span>⚙️ Configurar Credenciais</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD DE MONITOR DE ESTOQUE CRÍTICO -->
+        <div class="admin-card">
+            <h3 style="margin: 0 0 8px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                <span>⚠️</span>
+                <span>Alerta de Estoque Crítico & Reposição</span>
+            </h3>
+            <p style="font-size: 0.8rem; color: #8e8880; margin: 0 0 14px;">Peças com estoque zerado ou abaixo de 3 unidades no estoque físico:</p>
+
+            <div style="max-height: 220px; overflow-y: auto;">
+                <?php 
+                    $lowStockItems = array_filter($products, function($p) {
+                        return ((int)($p['stock_quantity'] ?? 0)) <= 3;
+                    });
+                ?>
+                <?php if (!empty($lowStockItems)): ?>
+                    <table style="width: 100%; font-size: 0.78rem; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); color: #8e8880; text-align: left;">
+                                <th style="padding: 6px 8px;">Joia</th>
+                                <th style="padding: 6px 8px;">SKU</th>
+                                <th style="padding: 6px 8px;">Gema</th>
+                                <th style="padding: 6px 8px; text-align: center;">Estoque</th>
+                                <th style="padding: 6px 8px; text-align: right;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach (array_slice($lowStockItems, 0, 8) as $lsp): ?>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 6px 8px; color: #ffffff;"><?= \App\Core\View::e($lsp['name']) ?></td>
+                                    <td style="padding: 6px 8px; font-family: monospace; color: #CBD0D6;"><?= \App\Core\View::e($lsp['sku']) ?></td>
+                                    <td style="padding: 6px 8px; color: #ded7cf;"><?= \App\Core\View::e($lsp['stone_mineral'] ?? '—') ?></td>
+                                    <td style="padding: 6px 8px; text-align: center;">
+                                        <span class="stock-badge <?= ((int)($lsp['stock_quantity'] ?? 0)) <= 0 ? 'stock-out' : 'stock-low' ?>" style="font-size: 0.7rem; padding: 2px 6px;">
+                                            <?= (int)($lsp['stock_quantity'] ?? 0) ?> un.
+                                        </span>
+                                    </td>
+                                    <td style="padding: 6px 8px; text-align: right;">
+                                        <button type="button" class="btn-table-action" onclick='editProduct(<?= json_encode($lsp, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>)' style="padding: 3px 8px; font-size: 0.72rem;">
+                                            Ajustar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div style="text-align: center; padding: 24px 10px; color: #4ade80; font-size: 0.85rem;">
+                        ✓ Todos os produtos estão com níveis saudáveis de estoque (> 3 unidades).
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- MODAL DE CADASTRO E EDIÇÃO COMPLETA DA JOIA                    -->
+<!-- Diferencia dados do grupo (compartilhados) de variações        -->
+<!-- ============================================================== -->
 <div class="modal-overlay" id="productModal">
-    <div class="modal-content" style="max-width: 820px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-content" style="max-width: 880px; max-height: 92vh; display: flex; flex-direction: column;">
         <div class="modal-header">
             <div>
-                <h3 class="modal-title" id="productModalTitle">Cadastrar Nova Joia</h3>
-                <p style="font-size: 0.78rem; color: #a8a096; margin: 2px 0 0;">Gestão autoral de características, estoque e canais de venda independentes</p>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <h3 class="modal-title" id="productModalTitle" style="margin: 0;">Cadastrar Nova Joia</h3>
+                    <span class="badge-group-shared" id="modalGroupBadge">GRUPO DO PRODUTO</span>
+                </div>
+                <p style="font-size: 0.78rem; color: #a8a096; margin: 3px 0 0;">Gestão autoral de características do modelo, variações minerais e canais de venda integrados</p>
             </div>
             <button class="close-modal-btn" onclick="closeProductModal()">&times;</button>
         </div>
@@ -378,30 +893,41 @@
         <!-- ABAS DO MODAL -->
         <div class="modal-tabs">
             <button type="button" class="modal-tab-btn active" id="tabBtnGeneral" onclick="switchProductTab('general')">
-                <span>✦ Informações da Joia</span>
+                <span>✦ Dados do Grupo</span>
             </button>
-            <button type="button" class="modal-tab-btn" id="tabBtnPricing" onclick="switchProductTab('pricing')">
-                <span>🏷️ Preço & Estoque</span>
+            <button type="button" class="modal-tab-btn" id="tabBtnSpecs" onclick="switchProductTab('specs')">
+                <span>📋 Ficha Técnica</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnVariants" onclick="switchProductTab('variants')">
+                <span>💎 Variações & Estoque</span>
+                <span id="modalVariantsCountBadge" class="tab-badge" style="background: rgba(212, 186, 136, 0.2); color: #FFFFFF; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">1</span>
             </button>
             <button type="button" class="modal-tab-btn" id="tabBtnLinks" onclick="switchProductTab('links')">
-                <span>🔗 Canais de Venda Externos</span>
+                <span>🔗 Canais de Venda</span>
                 <span id="linksCountBadge" style="background: rgba(212, 186, 136, 0.2); color: #CBD0D6; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">0</span>
             </button>
-            <button type="button" class="modal-tab-btn" id="tabBtnMedia" onclick="switchProductTab('media')">
-                <span>🖼️ Fotos & Detalhes</span>
+            <button type="button" class="modal-tab-btn" id="tabBtnDisplay" onclick="switchProductTab('display')">
+                <span>👁️ Exibição Pública</span>
             </button>
         </div>
 
         <form id="productForm" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding-right: 6px; flex: 1;">
             <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
             <input type="hidden" name="id" id="prodId" value="">
+            <input type="hidden" name="parent_sku" id="prodParentSku" value="">
             <input type="hidden" name="links" id="prodLinksJson" value="[]">
+            <input type="hidden" name="variants_data" id="prodVariantsJsonInput" value="[]">
+            <input type="hidden" name="deleted_variant_ids" id="prodDeletedVariantIds" value="">
 
-            <!-- ABA 1: INFORMAÇÕES DA JOIA -->
+            <!-- SUB-ABA 1: DADOS DO GRUPO (COMPARTILHADOS) -->
             <div id="productTabGeneral" class="modal-tab-pane active">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>✦ Informações Compartilhadas do Grupo:</strong> O nome do modelo, categoria, descrição e URLs são herdadas por todas as variações minerais desta joia.
+                </div>
+
                 <div class="form-group">
-                    <label for="prodName">Nome da Joia *</label>
-                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos — Concha Verde Esmeralda" oninput="handleNameInput(this)">
+                    <label for="prodName">Nome do Modelo da Joia *</label>
+                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos" oninput="handleNameInput(this)">
                 </div>
 
                 <div class="form-group">
@@ -410,15 +936,14 @@
                         <span style="color: #9e978e; font-size: 0.8rem; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap;">
                             divinium.com.br/produto/
                         </span>
-                        <input type="text" id="prodSlug" name="slug" class="form-input" placeholder="bracelete-caminhos-concha-verde" oninput="handleSlugInput(this)">
+                        <input type="text" id="prodSlug" name="slug" class="form-input" placeholder="bracelete-caminhos" oninput="handleSlugInput(this)">
                     </div>
-                    <span class="field-hint">Link permanente e exclusivo desta joia na Boutique para compartilhamento direto.</span>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="prodSku">SKU / Código Interno</label>
-                        <input type="text" id="prodSku" name="sku" class="form-input" placeholder="Ex: DIV-BRAC-ESM (auto gerado se vazio)">
+                        <label for="prodSku">SKU Base do Modelo *</label>
+                        <input type="text" id="prodSku" name="sku" class="form-input" placeholder="Ex: DIV-BRAC-CAM (auto gerado se vazio)">
                     </div>
 
                     <div class="form-group">
@@ -434,67 +959,127 @@
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="prodMineral">Gema Mineral / Pedra</label>
-                        <input type="text" id="prodMineral" name="stone_mineral" class="form-input" placeholder="Ex: Concha Verde Esmeralda, Ônix, Madrepérola...">
+                        <label for="prodSortOrder">Ordem de Exibição na Loja</label>
+                        <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0">
                     </div>
 
                     <div class="form-group">
-                        <label for="prodMaterials">Materiais Nobres</label>
-                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Banho de Prata, Resina Nobre condutora">
+                        <label>Status na Boutique</label>
+                        <div class="status-radio-group">
+                            <label class="status-radio-label">
+                                <input type="radio" name="status" id="statusPublished" value="published" checked>
+                                <span style="color: #FFFFFF;">● Publicado</span>
+                            </label>
+                            <label class="status-radio-label">
+                                <input type="radio" name="status" id="statusDraft" value="draft">
+                                <span style="color: #facc15;">● Rascunho</span>
+                            </label>
+                            <label class="status-radio-label">
+                                <input type="radio" name="status" id="statusHidden" value="hidden">
+                                <span style="color: #9ca3af;">● Oculto</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-checkbox-row" style="margin-bottom: 14px;">
+                    <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #737B85;">
+                    <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar este modelo no topo da Vitrine Principal</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodShortDesc">Breve Resumo (1 linha)</label>
+                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral contemporânea com acabamento artesanal e pedras minerais nobres.">
+                </div>
+
+                <div class="form-group">
+                    <label for="prodDesc">Descrição Completa da Peça</label>
+                    <textarea id="prodDesc" name="description" class="form-textarea" rows="4" placeholder="Descreva os detalhes da manufatura, inspiração autoral, autenticidade e cuidados..."></textarea>
+                </div>
+            </div>
+
+            <!-- SUB-ABA 2: FICHA TÉCNICA DO MODELO (COMPARTILHADA) -->
+            <div id="productTabSpecs" class="modal-tab-pane">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>📋 Especificações do Grupo:</strong> Estes dados alimentam a tabela "Especificações & Manufatura" na página do produto.
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodMaterials">Acabamento Nobre</label>
+                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Banho de Prata 950 com Verniz Protetor Antialérgico">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodColors">Nuances & Cores</label>
+                        <input type="text" id="prodColors" name="colors" class="form-input" placeholder="Ex: Prata Nobre Espelhada, Tons Minerais">
                     </div>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
                         <label for="prodDimensions">Medidas & Dimensões</label>
-                        <input type="text" id="prodDimensions" name="dimensions" class="form-input" placeholder="Ex: Diâmetro 2,5 cm • Aro ajustável 14 ao 22">
+                        <input type="text" id="prodDimensions" name="dimensions" class="form-input" placeholder="Ex: Diâmetro 6,5 cm • Aro anatômico ajustável">
                     </div>
 
                     <div class="form-group">
-                        <label for="prodColors">Cores & Acabamentos</label>
-                        <input type="text" id="prodColors" name="colors" class="form-input" placeholder="Ex: Prata Espelhada, Verde Esmeralda, Ônix Preto">
+                        <label for="prodVariants">Tamanhos / Variantes de Medida</label>
+                        <input type="text" id="prodVariants" name="variants_json" class="form-input" placeholder="Ex: Tamanho Único Regulável, 16 ao 22">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-ABA 3: GESTOR DE VARIAÇÕES MINERAIS & ESTOQUE [ESPECÍFICO DE CADA VARIAÇÃO] -->
+            <div id="productTabVariants" class="modal-tab-pane">
+                <div style="background: rgba(167, 173, 180, 0.08); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div>
+                        <strong style="color: #FFFFFF; font-size: 0.88rem;">💎 Variações Minerais & Estoques Individuais</strong>
+                        <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
+                            Cada variação possui sua gema mineral, foto exclusiva, SKU próprio, estoque físico e link de compra independente.
+                        </p>
+                    </div>
+                    <button type="button" class="btn-admin-gold" onclick="addModalVariantRow()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
+                        <span>+ Adicionar Variação</span>
+                    </button>
+                </div>
+
+                <!-- CONTAINER DINÂMICO DE VARIAÇÕES -->
+                <div id="modalVariantsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;"></div>
+
+                <button type="button" class="btn-admin-secondary" onclick="addModalVariantRow()" style="width: 100%; padding: 10px; justify-content: center; font-size: 0.82rem; border-style: dashed;">
+                    <span>+ Adicionar Outra Variação Mineral a este Modelo</span>
+                </button>
+            </div>
+
+            <!-- SUB-ABA 4: CANAIS DE VENDA DO GRUPO (COMPARTILHADOS) -->
+            <div id="productTabLinks" class="modal-tab-pane">
+                <div style="background: rgba(212, 186, 136, 0.05); border: 1px solid rgba(212, 186, 136, 0.2); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.9rem;">Canais de Venda Oficiais Compartilhados</strong>
+                            <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
+                                Estes canais de compra (Shopee, Mercado Livre, Amazon, WhatsApp...) aplicam-se a todas as variações do modelo. Links específicos por pedra podem ser definidos na aba Variações.
+                            </p>
+                        </div>
+                        <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
+                            <span>+ Adicionar Canal</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="form-row-2">
-                    <div class="form-group">
-                        <label for="prodVariants">Variantes / Tamanhos</label>
-                        <input type="text" id="prodVariants" name="variants_json" class="form-input" placeholder="Ex: Tamanho Único Regulável, ou 16, 18, 20">
-                    </div>
+                <div id="productLinksContainer"></div>
 
-                    <div class="form-group">
-                        <label for="prodSortOrder">Ordem de Exibição na Loja</label>
-                        <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0 (menor aparece primeiro)">
-                    </div>
-                </div>
+                <button type="button" class="btn-add-platform-link" onclick="addNewPlatformLink()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>+ Adicionar Canal de Venda (Shopee, Mercado Livre, Amazon, WhatsApp...)</span>
+                </button>
+            </div>
 
-                <div class="form-group">
-                    <label>Status de Exibição na Boutique</label>
-                    <div class="status-radio-group">
-                        <label class="status-radio-label">
-                            <input type="radio" name="status" id="statusPublished" value="published" checked>
-                            <span style="color: #FFFFFF;">● Publicado (Visível na Boutique)</span>
-                        </label>
-                        <label class="status-radio-label">
-                            <input type="radio" name="status" id="statusDraft" value="draft">
-                            <span style="color: #facc15;">● Rascunho</span>
-                        </label>
-                        <label class="status-radio-label">
-                            <input type="radio" name="status" id="statusHidden" value="hidden">
-                            <span style="color: #9ca3af;">● Oculto</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-checkbox-row">
-                    <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #737B85;">
-                    <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar esta joia no topo da Vitrine Principal</label>
-                </div>
-
-                <!-- Painel de Navegação, Card e Página de Detalhes -->
-                <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px; margin-top: 14px;">
+            <!-- SUB-ABA 5: EXIBIÇÃO & VISIBILIDADE PÚBLICA -->
+            <div id="productTabDisplay" class="modal-tab-pane">
+                <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px;">
                     <label style="color: #CBD0D6; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
-                        👁️ Navegação Individual do Card & Página de Detalhes
+                        👁️ Controles de Visibilidade Pública do Card & Detalhe
                     </label>
                     
                     <div class="form-row-2" style="margin-bottom: 12px;">
@@ -529,14 +1114,12 @@
                             <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir selos flutuantes na foto (Banho de Prata / Sob Encomenda / Canais)</span>
                         </label>
-                        <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Desmarque para ocultar selos que cubram detalhes ou ocupem espaço excessivo na fotografia desta peça.</span>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_sku" value="0">
                             <input type="checkbox" id="prodShowSku" name="show_sku" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
                             <span>Exibir código SKU / Referência publicamente no site</span>
                         </label>
-                        <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Ao desmarcar, o código SKU (#DIV-...) fica oculto para os clientes. O cadastro interno, estoque e Bling ERP permanecem 100% ativos e intactos.</span>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_specs" value="0">
@@ -559,104 +1142,18 @@
                 </div>
             </div>
 
-            <!-- ABA 2: PREÇO & ESTOQUE -->
-            <div id="productTabPricing" class="modal-tab-pane">
-                <div class="form-row-2">
-                    <div class="form-group">
-                        <label for="prodPrice">Preço de Referência Oficial (R$) *</label>
-                        <input type="text" id="prodPrice" name="price" class="form-input" required placeholder="380,00" onkeyup="formatCurrencyLive(this)">
-                        <span class="field-hint">Preço base da joia. Cada canal externo pode ter seu próprio valor.</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="prodPromotionalPrice">Preço Promocional / Comparativo (R$)</label>
-                        <input type="text" id="prodPromotionalPrice" name="promotional_price" class="form-input" placeholder="450,00" onkeyup="formatCurrencyLive(this)">
-                        <span class="field-hint">Valor riscado "De: R$ ..." para destacar promoção.</span>
-                    </div>
-                </div>
-
-                <div class="form-row-2">
-                    <div class="form-group">
-                        <label for="prodStock">Estoque Físico Total</label>
-                        <input type="number" id="prodStock" name="stock_quantity" class="form-input" value="10" min="0">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="prodStockStatus">Disponibilidade da Peça</label>
-                        <select id="prodStockStatus" name="stock_status" class="form-select">
-                            <option value="in_stock">Pronta Entrega (Envio Imediato)</option>
-                            <option value="made_to_order">Sob Encomenda Artesanal</option>
-                            <option value="out_of_stock">Esgotado no Momento</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ABA 3: CANAIS DE VENDA EXTERNOS (MULTI-LINKS) -->
-            <div id="productTabLinks" class="modal-tab-pane">
-                <div style="background: rgba(212, 186, 136, 0.05); border: 1px solid rgba(212, 186, 136, 0.2); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-                        <div>
-                            <strong style="color: #ffffff; font-size: 0.9rem;">Canais de Venda com Preços Independentes</strong>
-                            <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
-                                Adicione quantos canais quiser (Shopee, Mercado Livre, Amazon, TikTok Shop, WhatsApp...). Cada botão de compra no site exibirá seu preço específico e direcionará para o link configurado!
-                            </p>
-                        </div>
-                        <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
-                            <span>+ Adicionar Canal</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Container dinâmico dos cards de links -->
-                <div id="productLinksContainer">
-                    <!-- Renderizado dinamicamente via JS -->
-                </div>
-
-                <button type="button" class="btn-add-platform-link" onclick="addNewPlatformLink()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <span>+ Adicionar Outro Canal de Venda (Shopee, Mercado Livre, Amazon...)</span>
-                </button>
-            </div>
-
-            <!-- ABA 4: FOTOS & DETALHES -->
-            <div id="productTabMedia" class="modal-tab-pane">
-                <div class="form-group">
-                    <label for="prodImage">URL da Imagem Principal</label>
-                    <input type="text" id="prodImage" name="image_url" class="form-input" placeholder="/assets/images/hero/featured-green-shell.jpg" oninput="updateImagePreview(this.value)">
-                    <span class="field-hint">Use imagens em /assets/images/ ou URL externa HTTPS de alta resolução.</span>
-                </div>
-
-                <div class="form-row-2" style="align-items: center;">
-                    <div class="form-group">
-                        <label for="prodImageFile">Ou Enviar Nova Foto do Computador</label>
-                        <input type="file" id="prodImageFile" name="image_file" class="form-input" accept="image/*" onchange="previewUploadedImage(this)">
-                    </div>
-                    <div style="text-align: center;">
-                        <img id="imagePreviewBox" src="/assets/images/hero/featured-green-shell.jpg" alt="Preview" style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="prodShortDesc">Breve Resumo (1 linha)</label>
-                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral com banho de prata refinado, lapidação mineral e acabamento artesanal.">
-                </div>
-
-                <div class="form-group">
-                    <label for="prodDesc">Descrição Completa e Detalhes da Peça</label>
-                    <textarea id="prodDesc" name="description" class="form-textarea" rows="4" placeholder="Descreva os detalhes da lapidação, autenticidade, cuidados e a exclusividade artesanal da peça..."></textarea>
-                </div>
-            </div>
-
-            <div class="modal-footer">
+            <!-- BOTÕES DO RODAPÉ DO MODAL -->
+            <div class="modal-footer" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);">
                 <button type="button" class="btn-admin-secondary" onclick="closeProductModal()">Cancelar</button>
-                <button type="submit" class="btn-admin-gold" id="saveProdBtn">Salvar Joia & Canais</button>
+                <button type="submit" class="btn-admin-gold" id="saveProdBtn">Salvar Joia & Variações</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL DE INTEGRAÇÃO & CONFIGURAÇÃO BLING ERP -->
+<!-- ============================================================== -->
+<!-- MODAL DE CONFIGURAÇÃO BLING ERP (API v3)                       -->
+<!-- ============================================================== -->
 <div class="modal-overlay" id="blingModal">
     <div class="modal-content" style="max-width: 680px;">
         <div class="modal-header">
@@ -725,22 +1222,6 @@
                     </svg>
                     <span class="sync-text">Sincronizar Estoque e Produtos Agora</span>
                 </button>
-                <span style="font-size: 0.75rem; color: #8e8880; text-align: center;">
-                    Atualiza saldos de estoque, preços, SKUs e variações direto para o banco de dados da loja.
-                </span>
-
-                <?php if (!empty($blingConfig['is_connected'])): ?>
-                    <button class="btn-admin-secondary" onclick="executeBlingSync('api')" style="padding: 10px; font-size: 0.85rem; justify-content: center;">
-                        <span>Forçar Consulta Completa via API Bling v3</span>
-                    </button>
-                <?php else: ?>
-                    <div style="background: rgba(167, 173, 180, 0.1); border: 1px solid rgba(167, 173, 180, 0.3); border-radius: 8px; padding: 12px 16px; margin-top: 6px; font-size: 0.8rem; color: #CBD0D6; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                        <span>Conecte suas credenciais para sincronizar via API ao vivo.</span>
-                        <button type="button" class="btn-admin-gold" onclick="switchBlingTab('config')" style="padding: 6px 12px; font-size: 0.75rem; white-space: nowrap;">
-                            Conectar API ↗
-                        </button>
-                    </div>
-                <?php endif; ?>
             </div>
 
             <div id="blingSyncResult" style="display: none; margin-top: 16px; padding: 14px 18px; border-radius: 8px; font-size: 0.85rem;"></div>
@@ -750,924 +1231,423 @@
         <div id="blingTabConfig" class="bling-tab-content" style="display: none;">
             <form id="blingConfigForm" onsubmit="handleBlingConfigSubmit(event)">
                 <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+
                 <div class="form-group">
-                    <label for="blingClientId">Client ID do Aplicativo Bling *</label>
-                    <input type="text" id="blingClientId" name="client_id" class="form-input" required 
+                    <label for="blingClientId">Client ID do Bling (Aplicativo) *</label>
+                    <input type="text" id="blingClientId" name="client_id" class="form-input" 
                            value="<?= \App\Core\View::e($blingConfig['client_id'] ?? '') ?>" 
-                           placeholder="Ex: 7dbf42c119eea8b65d2c1a1a9ad92b1577594">
-                    <span style="font-size: 0.72rem; color: #8e8880;">Encontrado na aba "Informações do app" do seu aplicativo no Bling.</span>
+                           placeholder="Cole o Client ID gerado no Bling" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="blingClientSecret">Client Secret (Segredo do Cliente) *</label>
+                    <label for="blingClientSecret">Client Secret *</label>
                     <div style="position: relative;">
-                        <input type="password" id="blingClientSecret" name="client_secret" class="form-input" required 
+                        <input type="password" id="blingClientSecret" name="client_secret" class="form-input" 
                                value="<?= \App\Core\View::e($blingConfig['client_secret'] ?? '') ?>" 
-                               placeholder="Ex: 68eb85dcad967396d05fecdd00802117d7515264b520c362e7f46619aa09"
-                               style="padding-right: 44px;">
-                        <button type="button" onclick="toggleSecretVisibility()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #8e8880; cursor: pointer; font-size: 1rem;">
+                               placeholder="Cole o Client Secret gerado no Bling" required style="padding-right: 40px;">
+                        <button type="button" onclick="toggleSecretVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #8e8880; cursor: pointer;">
                             👁
                         </button>
                     </div>
-                    <span style="font-size: 0.72rem; color: #8e8880;">Clique no olho no Bling para copiar o segredo completo.</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="blingRedirectUri">Link de Redirecionamento (Callback)</label>
+                    <label>URL de Redirecionamento (Callback)</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="text" id="blingRedirectUri" name="redirect_uri" class="form-input" readonly
-                               value="<?= \App\Core\View::e($blingConfig['redirect_uri'] ?? 'https://divinium.com.br/admin/bling/callback') ?>">
-                        <button type="button" class="btn-admin-secondary" onclick="copyRedirectUri()" style="padding: 0 16px; white-space: nowrap;">
-                            Copiar
-                        </button>
+                        <input type="text" id="blingRedirectUri" class="form-input" 
+                               value="<?= \App\Core\View::e($blingConfig['redirect_uri'] ?? 'https://divinium.com.br/admin/bling/callback') ?>" readonly>
+                        <button type="button" class="btn-admin-secondary" onclick="copyRedirectUri()">Copiar</button>
                     </div>
-                    <span style="font-size: 0.72rem; color: #8e8880;">Cole este mesmo link no campo Link de redirecionamento do seu app no Bling.</span>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-                    <button type="submit" class="btn-admin-gold" id="saveBlingConfigBtn">
-                        Salvar Credenciais
-                    </button>
-
-                    <?php if (!empty($blingConfig['client_id'])): ?>
-                        <a href="/admin/bling/authorize" class="btn-admin-bling" style="text-decoration: none;">
-                            <span>🔗 Conectar com Bling (Autorizar App)</span>
-                        </a>
-                    <?php endif; ?>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-admin-secondary" onclick="closeBlingModal()">Cancelar</button>
+                    <button type="submit" class="btn-admin-gold" id="saveBlingConfigBtn">Salvar Credenciais</button>
                 </div>
             </form>
         </div>
 
         <!-- ABA 3: PASSO A PASSO -->
-        <div id="blingTabHelp" class="bling-tab-content" style="display: none; font-size: 0.85rem; color: #ded7cf; line-height: 1.6;">
-            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 18px; margin-bottom: 14px;">
-                <h4 style="color: #FFFFFF; margin: 0 0 10px; font-size: 0.95rem;">Como conectar com seu Bling:</h4>
-                <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
-                    <li>No Bling, vá em <strong>Preferências &gt; Central de Extensões</strong> ou <strong>Área do Integrador</strong>.</li>
-                    <li>Abra seu aplicativo (<strong>Gest Estoques PHP</strong>).</li>
-                    <li>Copie o <strong>Client Id</strong> e o <strong>Client Secret</strong> e salve na aba "Credenciais" acima.</li>
-                    <li>Garanta que o link de redirecionamento esteja registrado no Bling.</li>
-                    <li>Clique em <strong>"Conectar com Bling"</strong> para autorizar o acesso.</li>
-                </ol>
-            </div>
+        <div id="blingTabHelp" class="bling-tab-content" style="display: none;">
+            <ol style="color: #ded7cf; font-size: 0.85rem; padding-left: 20px; line-height: 1.7;">
+                <li>Acesse sua conta no Bling: <strong>Preferências › Sistema › Aplicativos</strong>.</li>
+                <li>Clique em <strong>Novo Aplicativo</strong>.</li>
+                <li>Em <em>URL de Redirecionamento</em>, cole exatamente o link de callback.</li>
+                <li>Habilite as permissões de <strong>Produtos</strong> e <strong>Estoque</strong>.</li>
+                <li>Copie o <strong>Client ID</strong> e <strong>Client Secret</strong> gerados e salve na aba Credenciais.</li>
+            </ol>
         </div>
     </div>
 </div>
 
+<!-- TOAST DE NOTIFICAÇÃO RÁPIDA -->
+<div class="quick-toast" id="quickToast">
+    <span id="quickToastIcon">✓</span>
+    <span id="quickToastMsg">Atualização realizada com sucesso!</span>
+</div>
+
+<!-- ============================================================== -->
+<!-- SCRIPTS DA CENTRAL UNIFICADA                                   -->
+<!-- ============================================================== -->
 <script>
-/* ==============================================================================
-   FILTROS, PESQUISA POR NOME/SKU & PAGINAÇÃO MULTI-ITENS
-   ============================================================================== */
+// Estado Global de Variações e Links do Modal
+let currentProductLinks = [];
+let currentProductVariants = [];
+let deletedVariantIds = [];
 let currentPage = 1;
 let itemsPerPage = 25;
-let filteredRows = [];
 
-function normalizeSearchText(str) {
-    return (str || '')
-        .toString()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .trim();
+function showToast(msg, isError = false) {
+    const toast = document.getElementById('quickToast');
+    const msgEl = document.getElementById('quickToastMsg');
+    const iconEl = document.getElementById('quickToastIcon');
+    if (!toast || !msgEl) return;
+
+    msgEl.innerText = msg;
+    iconEl.innerText = isError ? '⚠️' : '✓';
+    toast.style.borderColor = isError ? '#f87171' : 'rgba(212, 186, 136, 0.5)';
+    toast.style.display = 'flex';
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3500);
 }
 
-function filterCatalog(resetPage = true) {
-    if (resetPage) {
-        currentPage = 1;
-    }
+window.showAdminToast = function(msg, type = 'success') {
+    showToast(msg, type === 'error');
+};
 
-    const searchVal = normalizeSearchText(document.getElementById('catalogSearchInput')?.value || '');
-    const catVal = normalizeSearchText(document.getElementById('catalogCategoryFilter')?.value || '');
-    const statusVal = normalizeSearchText(document.getElementById('catalogStatusFilter')?.value || '');
-    const stockVal = (document.getElementById('catalogStockFilter')?.value || '').trim();
+function switchMainTab(tab) {
+    document.querySelectorAll('.unified-hub-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.unified-hub-pane').forEach(p => p.classList.remove('active'));
 
-    const allRows = Array.from(document.querySelectorAll('#catalogTableBody tr[data-name]'));
-    filteredRows = [];
+    const targetBtn = document.getElementById('mainTabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    const targetPane = document.getElementById('mainTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
 
-    allRows.forEach(row => {
-        const name = normalizeSearchText(row.getAttribute('data-name'));
-        const sku = normalizeSearchText(row.getAttribute('data-sku'));
-        const stone = normalizeSearchText(row.getAttribute('data-stone'));
-        const category = normalizeSearchText(row.getAttribute('data-category'));
-        const status = normalizeSearchText(row.getAttribute('data-status'));
-        const stock = parseInt(row.getAttribute('data-stock') || '0', 10);
+    if (targetBtn) targetBtn.classList.add('active');
+    if (targetPane) targetPane.classList.add('active');
 
-        // Pesquisa abrangente por Nome ou SKU (e gema mineral como bônus)
-        const matchesSearch = !searchVal || name.includes(searchVal) || sku.includes(searchVal) || stone.includes(searchVal);
-        const matchesCategory = !catVal || category === catVal;
-        const matchesStatus = !statusVal || status === statusVal;
-
-        let matchesStock = true;
-        if (stockVal === 'in_stock') matchesStock = stock > 0;
-        else if (stockVal === 'low_stock') matchesStock = stock >= 1 && stock <= 3;
-        else if (stockVal === 'out_of_stock') matchesStock = stock === 0;
-
-        if (matchesSearch && matchesCategory && matchesStatus && matchesStock) {
-            filteredRows.push(row);
-        }
-    });
-
-    renderPagination();
+    // Atualiza a URL sem recarregar
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    window.history.replaceState({}, '', url.toString());
 }
 
-function changeItemsPerPage(newVal) {
-    itemsPerPage = parseInt(newVal, 10) || 25;
-    currentPage = 1;
+function toggleVariationsDrawer(groupSku) {
+    const row = document.getElementById('group-row-' + groupSku);
+    const drawer = document.getElementById('drawer-group-' + groupSku);
+    if (!row || !drawer) return;
 
-    // Sincronizar os controles de página (topo e rodapé)
-    const topSelect = document.getElementById('perPageSelectTop');
-    const bottomSelect = document.getElementById('perPageSelectBottom');
-    if (topSelect) topSelect.value = itemsPerPage;
-    if (bottomSelect) bottomSelect.value = itemsPerPage;
-
-    renderPagination();
-}
-
-function goToPage(page) {
-    const totalPages = Math.ceil(filteredRows.length / itemsPerPage) || 1;
-    if (page < 1) page = 1;
-    if (page > totalPages) page = totalPages;
-    currentPage = page;
-
-    renderPagination();
-
-    // Rola suavemente o container para o início da lista de produtos
-    const tableContainer = document.getElementById('catalogTableScrollContainer');
-    if (tableContainer) {
-        tableContainer.scrollTop = 0;
-    }
-}
-
-function renderPagination() {
-    const totalItems = filteredRows.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-
-    // 1. Ocultar todas as linhas e exibir somente a página ativa
-    const allRows = document.querySelectorAll('#catalogTableBody tr[data-name]');
-    allRows.forEach(r => r.style.display = 'none');
-
-    for (let i = startIndex; i < endIndex; i++) {
-        if (filteredRows[i]) {
-            filteredRows[i].style.display = '';
-        }
-    }
-
-    // 2. Alerta de busca sem resultados
-    const noResultsRow = document.getElementById('noResultsFilterRow');
-    if (noResultsRow) {
-        noResultsRow.style.display = (totalItems === 0 && allRows.length > 0) ? '' : 'none';
-    }
-
-    // 3. Atualizar resumo textual (Topo e Rodapé)
-    const displayStart = totalItems === 0 ? 0 : startIndex + 1;
-    const displayEnd = endIndex;
-    const infoHtml = totalItems === 0 
-        ? `Nenhuma joia encontrada` 
-        : `Mostrando <strong>${displayStart}–${displayEnd}</strong> de <strong>${totalItems}</strong> joias`;
-
-    const topInfo = document.getElementById('paginationInfoTop');
-    const bottomInfo = document.getElementById('paginationInfoBottom');
-    if (topInfo) topInfo.innerHTML = infoHtml;
-    if (bottomInfo) bottomInfo.innerHTML = infoHtml;
-
-    const countElem = document.getElementById('visibleItemsCount');
-    if (countElem) countElem.innerText = totalItems;
-
-    // 4. Renderizar botões de navegação sincronizados
-    renderPaginationNavButtons('paginationNavTop', totalPages);
-    renderPaginationNavButtons('paginationNavBottom', totalPages);
-
-    // 5. Atualizar largura do scroll horizontal superior
-    updateScrollbarSync();
-}
-
-function renderPaginationNavButtons(containerId, totalPages) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    if (totalPages <= 1) {
-        container.innerHTML = `
-            <button type="button" class="pagination-btn" disabled title="Página anterior">‹</button>
-            <button type="button" class="pagination-btn active">1</button>
-            <button type="button" class="pagination-btn" disabled title="Próxima página">›</button>
-        `;
-        return;
-    }
-
-    let html = '';
-
-    // Primeira página
-    html += `<button type="button" class="pagination-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''} title="Primeira página">«</button>`;
-    // Página anterior
-    html += `<button type="button" class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Página anterior">‹</button>`;
-
-    // Janela de páginas (até 5 visíveis)
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
-
-    if (currentPage <= 3) {
-        endPage = Math.min(5, totalPages);
-    }
-    if (currentPage >= totalPages - 2) {
-        startPage = Math.max(1, totalPages - 4);
-    }
-
-    if (startPage > 1) {
-        html += `<button type="button" class="pagination-btn" onclick="goToPage(1)">1</button>`;
-        if (startPage > 2) {
-            html += `<span style="color: #6b655c; padding: 0 4px;">...</span>`;
-        }
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
-        const isActive = p === currentPage;
-        html += `<button type="button" class="pagination-btn ${isActive ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
-    }
-
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            html += `<span style="color: #6b655c; padding: 0 4px;">...</span>`;
-        }
-        html += `<button type="button" class="pagination-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
-    }
-
-    // Próxima página
-    html += `<button type="button" class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Próxima página">›</button>`;
-    // Última página
-    html += `<button type="button" class="pagination-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''} title="Última página">»</button>`;
-
-    container.innerHTML = html;
-}
-
-/* ==============================================================================
-   SINCRONIZAÇÃO DE ROLAGEM HORIZONTAL SUPERIOR & INFERIOR
-   ============================================================================== */
-function updateScrollbarSync() {
-    const topTrack = document.getElementById('catalogScrollTopTrack');
-    const table = document.getElementById('productsTable');
-    if (topTrack && table) {
-        topTrack.style.width = table.scrollWidth + 'px';
-    }
-}
-
-function initTableScrollSync() {
-    const topWrapper = document.getElementById('catalogScrollTopWrapper');
-    const bottomWrapper = document.getElementById('catalogTableScrollContainer');
-    const table = document.getElementById('productsTable');
-    if (!topWrapper || !bottomWrapper || !table) return;
-
-    updateScrollbarSync();
-
-    let isSyncingTop = false;
-    let isSyncingBottom = false;
-
-    topWrapper.addEventListener('scroll', () => {
-        if (!isSyncingTop) {
-            isSyncingBottom = true;
-            bottomWrapper.scrollLeft = topWrapper.scrollLeft;
-        }
-        isSyncingTop = false;
-    });
-
-    bottomWrapper.addEventListener('scroll', () => {
-        if (!isSyncingBottom) {
-            isSyncingTop = true;
-            topWrapper.scrollLeft = bottomWrapper.scrollLeft;
-        }
-        isSyncingBottom = false;
-    });
-
-    window.addEventListener('resize', updateScrollbarSync);
-}
-
-/* ==============================================================================
-   CONTROLE DO MODAL DE PRODUTOS & MULTI-CANAIS
-   ============================================================================== */
-let currentProductLinks = [];
-
-function switchProductTab(tabId) {
-    document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.modal-tab-pane').forEach(pane => pane.classList.remove('active'));
-
-    const tabBtn = document.getElementById('tabBtn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-    const tabPane = document.getElementById('productTab' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-
-    if (tabBtn) tabBtn.classList.add('active');
-    if (tabPane) tabPane.classList.add('active');
-}
-
-function updateLinksBadge() {
-    const badge = document.getElementById('linksCountBadge');
-    if (badge) {
-        badge.innerText = currentProductLinks.length;
-    }
-}
-
-function renderPlatformLinks() {
-    const container = document.getElementById('productLinksContainer');
-    if (!container) return;
-
-    if (currentProductLinks.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 24px 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; color: #8e8880; font-size: 0.82rem;">
-                Nenhum canal de venda cadastrado ainda. Clique em "<strong>+ Adicionar Canal</strong>" para vincular à Shopee, Mercado Livre, Amazon, etc.
-            </div>
-        `;
-        updateLinksBadge();
-        return;
-    }
-
-    let html = '';
-    currentProductLinks.forEach((link, idx) => {
-        const plat = link.platform_name || 'Shopee';
-        const url = link.url || '';
-        const price = link.price !== undefined ? link.price : (link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : '');
-        const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + plat));
-        const target = link.target || '_blank';
-        const isActive = link.is_active != 0;
-        const sortOrder = link.sort_order !== undefined ? link.sort_order : idx;
-
-        const isCustomPlat = !['Shopee', 'Mercado Livre', 'Amazon', 'TikTok Shop', 'WhatsApp', 'Loja Oficial'].includes(plat);
-
-        const btnColor = link.button_color || 'default';
-        const btnSize = link.button_size || 'md';
-        const isCustomColor = (btnColor && btnColor.startsWith('#'));
-        const customColorHex = isCustomColor ? btnColor : '#CBD0D6';
-
-        html += `
-            <div class="platform-link-card ${isActive ? '' : 'is-inactive'}" id="linkCard_${idx}">
-                <div class="platform-link-header">
-                    <div class="platform-link-title">
-                        <span style="font-size: 1.1rem;">${getPlatformIcon(plat)}</span>
-                        <span>Canal #${idx + 1}: <strong>${escapeHtml(plat)}</strong></span>
-                        ${!isActive ? '<span style="font-size: 0.7rem; color: #9ca3af; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px;">Inativo</span>' : ''}
-                    </div>
-                    <div class="platform-link-actions">
-                        ${url ? `<a href="${escapeHtml(url)}" target="${escapeHtml(target)}" rel="noopener noreferrer" class="btn-test-link" title="Testar link no navegador">↗ Testar</a>` : ''}
-                        <button type="button" class="btn-remove-link" onclick="removePlatformLink(${idx})" title="Remover este canal">✕ Remover</button>
-                    </div>
-                </div>
-
-                <div class="form-row-2" style="margin-bottom: 12px;">
-                    <div class="form-group">
-                        <label>Plataforma / Canal *</label>
-                        <select class="form-select link-platform-select" onchange="handlePlatformChange(${idx}, this.value)">
-                            <option value="Shopee" ${plat === 'Shopee' ? 'selected' : ''}>Shopee</option>
-                            <option value="Mercado Livre" ${plat === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
-                            <option value="Amazon" ${plat === 'Amazon' ? 'selected' : ''}>Amazon</option>
-                            <option value="TikTok Shop" ${plat === 'TikTok Shop' ? 'selected' : ''}>TikTok Shop</option>
-                            <option value="WhatsApp" ${plat === 'WhatsApp' ? 'selected' : ''}>WhatsApp / Atendimento VIP</option>
-                            <option value="Loja Oficial" ${plat === 'Loja Oficial' ? 'selected' : ''}>Loja Oficial</option>
-                            <option value="Outro" ${isCustomPlat ? 'selected' : ''}>Outra Plataforma...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="customPlatGroup_${idx}" style="${isCustomPlat ? '' : 'display: none;'}">
-                        <label>Nome da Plataforma Personalizada</label>
-                        <input type="text" class="form-input link-custom-plat" value="${escapeHtml(plat)}" placeholder="Ex: Elo7, Enjoei, Instagram..." oninput="updateLinkData(${idx}, 'platform_name', this.value); updateLiveButtonPreview(${idx});">
-                    </div>
-
-                    <div class="form-group" style="${isCustomPlat ? 'grid-column: 1 / -1;' : ''}">
-                        <label>URL de Destino do Produto *</label>
-                        <input type="url" class="form-input link-url" value="${escapeHtml(url)}" placeholder="https://shopee.com.br/produto-exemplo..." required oninput="updateLinkData(${idx}, 'url', this.value)">
-                    </div>
-                </div>
-
-                <div class="form-row-2">
-                    <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <label style="margin: 0;">Preço Específico neste Canal (R$)</label>
-                            <button type="button" onclick="copyBasePriceToLink(${idx})" style="background: none; border: none; color: #CBD0D6; font-size: 0.72rem; cursor: pointer; text-decoration: underline;">
-                                Usar Preço Base
-                            </button>
-                        </div>
-                        <input type="text" class="form-input link-price" value="${escapeHtml(price)}" placeholder="380,00" onkeyup="formatCurrencyLive(this)" oninput="updateLinkData(${idx}, 'price', this.value); updateLiveButtonPreview(${idx});">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Texto do Botão de Compra</label>
-                        <input type="text" class="form-input link-btn-text" value="${escapeHtml(btnText)}" placeholder="Ex: Comprar na Shopee Oficial" oninput="updateLinkData(${idx}, 'button_text', this.value); updateLiveButtonPreview(${idx});">
-                    </div>
-                </div>
-
-                <!-- Customização Visual: Cor, Tamanho e Destino do Botão de Compra -->
-                <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-top: 10px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #CBD0D6; display: flex; align-items: center; justify-content: space-between;">
-                            <span>🎨 Cor do Botão</span>
-                            ${isCustomColor ? `<span style="font-size: 0.68rem; color: #a8a096;">Hex: ${escapeHtml(btnColor)}</span>` : ''}
-                        </label>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <select class="form-select link-btn-color" style="font-size: 0.78rem; flex: 1;" onchange="handleButtonColorChange(${idx}, this.value)">
-                                <option value="default" ${btnColor === 'default' ? 'selected' : ''}>✦ Padrão do Canal / Tema</option>
-                                <option value="gold" ${btnColor === 'gold' ? 'selected' : ''}>🪙 Prata Nobre Divinium (#A7ADB4)</option>
-                                <option value="dark" ${btnColor === 'dark' ? 'selected' : ''}>🖤 Ônix & Grafite (#252525)</option>
-                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Banho de Prata (#CBD0D6)</option>
-                                <option value="shopee" ${btnColor === 'shopee' ? 'selected' : ''}>🟠 Laranja Shopee (#EE4D2D)</option>
-                                <option value="mercadolivre" ${btnColor === 'mercadolivre' ? 'selected' : ''}>🟡 Amarelo Mercado Livre (#FFE600)</option>
-                                <option value="amazon" ${btnColor === 'amazon' ? 'selected' : ''}>📦 Âmbar Amazon (#FF9900)</option>
-                                <option value="whatsapp" ${btnColor === 'whatsapp' ? 'selected' : ''}>🟢 Verde WhatsApp (#25D366)</option>
-                                <option value="platinum" ${btnColor === 'platinum' ? 'selected' : ''}>⚪ Platina Pura (#F0F0EF)</option>
-                                <option value="titanium" ${btnColor === 'titanium' ? 'selected' : ''}>🔘 Titânio Grafite (#737B85)</option>
-                                <option value="custom" ${isCustomColor ? 'selected' : ''}>🎨 Cor Personalizada (Hex)...</option>
-                            </select>
-                            <div id="customColorPickerWrap_${idx}" style="display: ${isCustomColor ? 'flex' : 'none'}; align-items: center; gap: 6px;">
-                                <input type="color" value="${customColorHex}" style="width: 32px; height: 32px; padding: 0; border: none; border-radius: 6px; cursor: pointer; background: none;" onchange="handleCustomColorPicker(${idx}, this.value)" title="Escolher cor visualmente">
-                                <input type="text" class="form-input" style="width: 82px; font-size: 0.78rem; padding: 6px 8px; text-transform: uppercase;" value="${isCustomColor ? btnColor : ''}" placeholder="#CBD0D6" oninput="handleCustomColorText(${idx}, this.value)">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #CBD0D6;">📐 Tamanho</label>
-                        <select class="form-select link-btn-size" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'button_size', this.value); updateLiveButtonPreview(${idx});">
-                            <option value="sm" ${btnSize === 'sm' ? 'selected' : ''}>▫️ Compacto / Pequeno</option>
-                            <option value="md" ${btnSize === 'md' ? 'selected' : ''}>◻️ Padrão / Médio (Recomendado)</option>
-                            <option value="lg" ${btnSize === 'lg' ? 'selected' : ''}>◼️ Grande / Destaque</option>
-                            <option value="full" ${btnSize === 'full' ? 'selected' : ''}>↔️ Largura Total (100%)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 0.76rem; color: #CBD0D6;">↗️ Abertura do Link</label>
-                        <select class="form-select link-target" style="font-size: 0.78rem;" onchange="updateLinkData(${idx}, 'target', this.value)">
-                            <option value="_blank" ${target === '_blank' ? 'selected' : ''}>↗ Nova Aba (_blank)</option>
-                            <option value="_self" ${target === '_self' ? 'selected' : ''}>↳ Mesma Aba (_self)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Pré-visualização ao Vivo do Botão no Painel -->
-                <div style="margin-top: 10px; padding: 10px 14px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                    <span style="font-size: 0.72rem; color: #8e8880; text-transform: uppercase; letter-spacing: 0.05em;">Pré-visualização do Botão:</span>
-                    <div id="btnPreviewBox_${idx}" style="min-width: 200px;"></div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
-                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ded7cf; cursor: pointer; margin: 0;">
-                        <input type="checkbox" class="link-is-active" ${isActive ? 'checked' : ''} onchange="updateLinkData(${idx}, 'is_active', this.checked ? 1 : 0); renderPlatformLinks();" style="accent-color: #737B85;">
-                        <span>Canal ativo e visível na Boutique pública</span>
-                    </label>
-
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size: 0.74rem; color: #8e8880;">Ordem:</span>
-                        <input type="number" class="form-input" style="width: 60px; padding: 4px 8px; font-size: 0.8rem;" value="${sortOrder}" oninput="updateLinkData(${idx}, 'sort_order', parseInt(this.value, 10) || 0)">
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-    updateLinksBadge();
-    currentProductLinks.forEach((_, i) => updateLiveButtonPreview(i));
-}
-
-function getPlatformIcon(plat) {
-    plat = (plat || '').toLowerCase();
-    if (plat.includes('shopee')) return '🟠';
-    if (plat.includes('mercado')) return '🟡';
-    if (plat.includes('amazon')) return '⚪';
-    if (plat.includes('tiktok')) return '🎵';
-    if (plat.includes('whatsapp') || plat.includes('wa.me')) return '🟢';
-    return '✦';
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-}
-
-function updateLinkData(idx, field, value) {
-    if (currentProductLinks[idx]) {
-        currentProductLinks[idx][field] = value;
-    }
-}
-
-function handlePlatformChange(idx, newPlat) {
-    if (!currentProductLinks[idx]) return;
-
-    if (newPlat === 'Outro') {
-        currentProductLinks[idx].platform_name = '';
-        currentProductLinks[idx].button_text = 'Comprar Joia';
+    const isExpanded = row.classList.contains('is-expanded');
+    if (isExpanded) {
+        row.classList.remove('is-expanded');
+        drawer.classList.remove('active');
     } else {
-        currentProductLinks[idx].platform_name = newPlat;
-        currentProductLinks[idx].button_text = newPlat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + newPlat);
+        row.classList.add('is-expanded');
+        drawer.classList.add('active');
     }
-    renderPlatformLinks();
 }
 
-function handleButtonColorChange(idx, val) {
-    if (!currentProductLinks[idx]) return;
-    if (val === 'custom') {
-        currentProductLinks[idx].button_color = '#CBD0D6';
-    } else {
-        currentProductLinks[idx].button_color = val;
-    }
-    renderPlatformLinks();
-}
+async function saveQuickVariant(variantId) {
+    const sku = document.getElementById('v_sku_' + variantId)?.value || '';
+    const stone = document.getElementById('v_stone_' + variantId)?.value || '';
+    const price = document.getElementById('v_price_' + variantId)?.value || '0';
+    const stock = document.getElementById('v_stock_' + variantId)?.value || '0';
+    const status = document.getElementById('v_status_' + variantId)?.value || 'in_stock';
+    const ext = document.getElementById('v_ext_' + variantId)?.value || '';
+    const img = document.getElementById('v_img_' + variantId)?.value || '';
 
-function handleCustomColorPicker(idx, hex) {
-    if (!currentProductLinks[idx]) return;
-    currentProductLinks[idx].button_color = hex;
-    const txt = document.querySelector(`#customColorPickerWrap_${idx} input[type="text"]`);
-    if (txt) txt.value = hex.toUpperCase();
-    updateLiveButtonPreview(idx);
-}
+    const formData = new FormData();
+    formData.append('id', variantId);
+    formData.append('sku', sku);
+    formData.append('stone_mineral', stone);
+    formData.append('price', price);
+    formData.append('stock_quantity', stock);
+    formData.append('stock_status', status);
+    formData.append('external_url', ext);
+    formData.append('image_url', img);
 
-function handleCustomColorText(idx, hex) {
-    if (!currentProductLinks[idx]) return;
-    if (!hex.startsWith('#')) hex = '#' + hex;
-    currentProductLinks[idx].button_color = hex;
-    if (hex.length === 7) {
-        const picker = document.querySelector(`#customColorPickerWrap_${idx} input[type="color"]`);
-        if (picker) picker.value = hex;
-    }
-    updateLiveButtonPreview(idx);
-}
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
 
-function updateLiveButtonPreview(idx) {
-    const box = document.getElementById('btnPreviewBox_' + idx);
-    if (!box || !currentProductLinks[idx]) return;
-
-    const link = currentProductLinks[idx];
-    const plat = link.platform_name || 'Shopee';
-    const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + plat));
-    const price = link.price || '380,00';
-    const color = link.button_color || 'default';
-    const size = link.button_size || 'md';
-
-    let bgStyle = '';
-    let textColor = '#ffffff';
-    let borderColor = 'transparent';
-    let padding = '8px 14px';
-    let fontSize = '0.82rem';
-
-    if (size === 'sm') {
-        padding = '6px 10px';
-        fontSize = '0.74rem';
-    } else if (size === 'lg') {
-        padding = '12px 18px';
-        fontSize = '0.92rem';
-    } else if (size === 'full') {
-        padding = '10px 16px';
-        fontSize = '0.86rem';
-    }
-
-    if (color === 'gold') {
-        bgStyle = 'linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%)';
-        textColor = '#202020';
-        borderColor = '#737B85';
-        borderColor = '#737B85';
-    } else if (color === 'dark') {
-        bgStyle = 'linear-gradient(135deg, #252525 0%, #1e1e1e 100%)';
-        textColor = '#ffffff';
-        borderColor = 'rgba(167, 173, 180, 0.4)';
-    } else if (color === 'silver') {
-        bgStyle = 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)';
-        textColor = '#0f172a';
-        borderColor = '#cbd5e1';
-    } else if (color === 'shopee') {
-        bgStyle = 'linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%)';
-        textColor = '#ffffff';
-    } else if (color === 'mercadolivre') {
-        bgStyle = 'linear-gradient(135deg, #ffe600 0%, #ffd000 100%)';
-        textColor = '#18181b';
-    } else if (color === 'amazon') {
-        bgStyle = 'linear-gradient(135deg, #232f3e 0%, #131921 100%)';
-        textColor = '#ffffff';
-        borderColor = '#ff9900';
-    } else if (color === 'whatsapp') {
-        bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
-        textColor = '#ffffff';
-    } else if (color === 'platinum') {
-        bgStyle = 'linear-gradient(135deg, #FFFFFF 0%, #F0F0EF 100%)';
-        textColor = '#202020';
-        borderColor = '#CBD0D6';
-    } else if (color === 'titanium') {
-        bgStyle = 'linear-gradient(135deg, #737B85 0%, #505660 100%)';
-        textColor = '#ffffff';
-        borderColor = '#737B85';
-    } else if (color.startsWith('#')) {
-        bgStyle = color;
-        borderColor = color;
-        const hex = color.replace('#', '');
-        if (hex.length >= 6) {
-            const r = parseInt(hex.substr(0, 2), 16) || 0;
-            const g = parseInt(hex.substr(2, 2), 16) || 0;
-            const b = parseInt(hex.substr(4, 2), 16) || 0;
-            const lum = r * 0.299 + g * 0.587 + b * 0.114;
-            textColor = lum > 140 ? '#202020' : '#ffffff';
-        }
-    } else {
-        // default / canal
-        const p = plat.toLowerCase();
-        if (p.includes('shopee')) {
-            bgStyle = 'linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%)';
-        } else if (p.includes('mercado')) {
-            bgStyle = 'linear-gradient(135deg, #ffe600 0%, #ffd000 100%)';
-            textColor = '#18181b';
-        } else if (p.includes('amazon')) {
-            bgStyle = 'linear-gradient(135deg, #232f3e 0%, #131921 100%)';
-            borderColor = '#ff9900';
-        } else if (p.includes('whatsapp')) {
-            bgStyle = 'linear-gradient(135deg, #128c7e 0%, #25d366 100%)';
+    try {
+        const res = await fetch('/admin/produtos/salvar-variante', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message || 'Variação ' + sku + ' atualizada!');
         } else {
-            bgStyle = 'linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%)';
-            textColor = '#202020';
-            borderColor = '#737B85';
+            alert(data.error || 'Erro ao salvar variação.');
         }
-    }
-
-    box.innerHTML = `
-        <div style="background: ${bgStyle}; color: ${textColor}; border: 1px solid ${borderColor}; padding: ${padding}; border-radius: 8px; font-size: ${fontSize}; font-weight: 600; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; width: ${size === 'full' ? '100%' : 'auto'}; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-            <div style="display: flex; align-items: center; gap: 6px;">
-                <span>${getPlatformIcon(plat)}</span>
-                <span>${escapeHtml(btnText)}</span>
-            </div>
-            <div style="border-left: 1px solid rgba(255,255,255,0.25); padding-left: 8px; font-family:'Cormorant Garamond',serif; font-size: 1.05em; font-weight: 700;">
-                R$ ${escapeHtml(price)}
-            </div>
-        </div>
-    `;
-}
-
-function copyBasePriceToLink(idx) {
-    const basePrice = document.getElementById('prodPrice')?.value || '380,00';
-    if (currentProductLinks[idx]) {
-        currentProductLinks[idx].price = basePrice;
-        renderPlatformLinks();
+    } catch (e) {
+        alert('Erro ao conectar ao servidor: ' + e.message);
     }
 }
 
-function generateSlug(text) {
-    return (text || '')
-        .toString()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 100);
-}
+function switchProductTab(tab) {
+    document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.modal-tab-pane').forEach(p => p.classList.remove('active'));
 
-function handleNameInput(input) {
-    const id = document.getElementById('prodId').value;
-    const slugInput = document.getElementById('prodSlug');
-    if (!id || !slugInput.dataset.manual) {
-        slugInput.value = generateSlug(input.value);
-    }
-}
+    const btn = document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    const pane = document.getElementById('productTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
 
-function handleSlugInput(input) {
-    input.dataset.manual = 'true';
-    input.value = generateSlug(input.value);
-}
-
-function toggleCustomUrlGroup(val) {
-    const grp = document.getElementById('customTargetUrlGroup');
-    if (grp) {
-        grp.style.display = (val === 'custom') ? 'block' : 'none';
-    }
-}
-
-function addNewPlatformLink(data = null) {
-    const basePrice = document.getElementById('prodPrice')?.value || '380,00';
-    const newLink = data || {
-        platform_name: currentProductLinks.length === 0 ? 'Shopee' : (currentProductLinks.length === 1 ? 'Mercado Livre' : 'Amazon'),
-        url: '',
-        price: basePrice,
-        button_text: '',
-        button_color: 'default',
-        button_size: 'md',
-        target: '_blank',
-        is_active: 1,
-        sort_order: currentProductLinks.length
-    };
-    if (!newLink.button_text) {
-        newLink.button_text = newLink.platform_name === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' + newLink.platform_name);
-    }
-    if (!newLink.target) {
-        newLink.target = '_blank';
-    }
-    currentProductLinks.push(newLink);
-    renderPlatformLinks();
-}
-
-function removePlatformLink(idx) {
-    currentProductLinks.splice(idx, 1);
-    renderPlatformLinks();
-}
-
-function formatCurrencyLive(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value === '') {
-        input.value = '';
-        return;
-    }
-    value = (parseInt(value, 10) / 100).toFixed(2) + '';
-    value = value.replace('.', ',');
-    value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-    input.value = value;
-}
-
-function updateImagePreview(url) {
-    const preview = document.getElementById('imagePreviewBox');
-    if (preview && url) {
-        preview.src = url;
-    }
-}
-
-function previewUploadedImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('imagePreviewBox');
-            if (preview) preview.src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
+    if (btn) btn.classList.add('active');
+    if (pane) pane.classList.add('active');
 }
 
 function openNewProductModal(e) {
     if (e) e.preventDefault();
     document.getElementById('productForm').reset();
     document.getElementById('prodId').value = '';
-    
-    const slugInput = document.getElementById('prodSlug');
-    if (slugInput) {
-        slugInput.value = '';
-        delete slugInput.dataset.manual;
-    }
-    const cardBeh = document.getElementById('prodCardBehavior');
-    if (cardBeh) cardBeh.value = 'default';
-    const customUrl = document.getElementById('prodCustomTargetUrl');
-    if (customUrl) customUrl.value = '';
-    toggleCustomUrlGroup('default');
-    const detLayout = document.getElementById('prodDetailLayout');
-    if (detLayout) detLayout.value = 'default';
-    const showCh = document.getElementById('prodShowChannels');
-    if (showCh) showCh.checked = true;
+    document.getElementById('prodParentSku').value = '';
+    document.getElementById('prodDeletedVariantIds').value = '';
+    deletedVariantIds = [];
 
-    document.getElementById('prodPrice').value = '380,00';
-    document.getElementById('prodStock').value = '10';
     document.getElementById('statusPublished').checked = true;
+    document.getElementById('prodFeatured').checked = false;
     document.getElementById('prodShowBadge').checked = true;
-    const showSkuNew = document.getElementById('prodShowSku');
-    if (showSkuNew) showSkuNew.checked = true;
+    document.getElementById('prodShowSku').checked = true;
     document.getElementById('prodShowSpecs').checked = true;
     document.getElementById('prodShowDescription').checked = true;
-    document.getElementById('imagePreviewBox').src = '/assets/images/hero/featured-green-shell.jpg';
-    document.getElementById('productModalTitle').innerText = 'Cadastrar Nova Joia';
+    document.getElementById('prodShowChannels').checked = true;
 
-    currentProductLinks = [
-        {
-            platform_name: 'Shopee',
-            url: '',
-            price: '380,00',
-            button_text: 'Comprar na Shopee Oficial',
-            button_color: 'default',
-            button_size: 'md',
-            target: '_blank',
-            is_active: 1,
-            sort_order: 0
-        }
-    ];
+    currentProductLinks = [];
+    currentProductVariants = [{
+        id: 0,
+        sku: '',
+        stone_mineral: 'Gema Mineral Autoral',
+        price: '380,00',
+        promotional_price: '',
+        stock_quantity: 10,
+        stock_status: 'in_stock',
+        image_url: '/assets/images/hero/featured-green-shell.jpg',
+        external_url: ''
+    }];
 
-    switchProductTab('general');
     renderPlatformLinks();
+    renderModalVariants();
+    switchProductTab('general');
+    document.getElementById('productModalTitle').innerText = 'Cadastrar Novo Modelo de Joia';
     document.getElementById('productModal').classList.add('active');
+}
+
+function editGroupProduct(group) {
+    document.getElementById('productForm').reset();
+    document.getElementById('prodId').value = group.id || '';
+    document.getElementById('prodParentSku').value = group.base_sku || '';
+    deletedVariantIds = [];
+    document.getElementById('prodDeletedVariantIds').value = '';
+
+    document.getElementById('prodName').value = group.name || '';
+    document.getElementById('prodSlug').value = group.slug || '';
+    document.getElementById('prodSku').value = group.base_sku || '';
+    document.getElementById('prodCategory').value = group.category_id || '';
+    document.getElementById('prodMaterials').value = group.materials || '';
+    document.getElementById('prodDimensions').value = group.dimensions || '';
+    document.getElementById('prodColors').value = group.colors || '';
+    document.getElementById('prodVariants').value = group.variants_json || '';
+    document.getElementById('prodSortOrder').value = group.sort_order || 0;
+    document.getElementById('prodShortDesc').value = group.short_description || '';
+    document.getElementById('prodDesc').value = group.description || '';
+
+    const status = group.status || 'published';
+    if (status === 'draft') document.getElementById('statusDraft').checked = true;
+    else if (status === 'hidden') document.getElementById('statusHidden').checked = true;
+    else document.getElementById('statusPublished').checked = true;
+
+    document.getElementById('prodFeatured').checked = group.is_featured == 1;
+    document.getElementById('prodShowBadge').checked = group.show_badge != 0;
+    document.getElementById('prodShowSku').checked = group.show_sku != 0;
+    document.getElementById('prodShowSpecs').checked = group.show_specs != 0;
+    document.getElementById('prodShowDescription').checked = group.show_description != 0;
+    document.getElementById('prodShowChannels').checked = group.show_channels != 0;
+
+    // Canais do Grupo
+    currentProductLinks = (group.links || []).map(l => ({
+        platform_name: l.platform_name || 'Shopee',
+        url: l.url || '',
+        price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        button_text: l.button_text || '',
+        button_color: l.button_color || 'default',
+        button_size: l.button_size || 'md',
+        target: l.target || '_blank',
+        is_active: l.is_active !== undefined ? l.is_active : 1,
+        sort_order: l.sort_order || 0
+    }));
+
+    // Variações do Grupo
+    currentProductVariants = (group.variants || []).map(v => ({
+        id: v.id || 0,
+        sku: v.sku || '',
+        stone_mineral: v.stone_mineral || '',
+        price: v.price_cents ? ((v.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        promotional_price: v.promotional_price_cents ? ((v.promotional_price_cents) / 100).toFixed(2).replace('.', ',') : '',
+        stock_quantity: v.stock_quantity !== undefined ? v.stock_quantity : 10,
+        stock_status: v.stock_status || 'in_stock',
+        image_url: v.image_url || group.image_url || '/assets/images/hero/featured-green-shell.jpg',
+        external_url: v.external_url || ''
+    }));
+
+    if (currentProductVariants.length === 0) {
+        currentProductVariants = [{
+            id: group.id || 0,
+            sku: group.base_sku || '',
+            stone_mineral: 'Gema Mineral Base',
+            price: '380,00',
+            promotional_price: '',
+            stock_quantity: group.total_stock || 10,
+            stock_status: 'in_stock',
+            image_url: group.image_url || '/assets/images/hero/featured-green-shell.jpg',
+            external_url: ''
+        }];
+    }
+
+    renderPlatformLinks();
+    renderModalVariants();
+    switchProductTab('general');
+    document.getElementById('productModalTitle').innerText = 'Editar: ' + group.name;
+    document.getElementById('productModal').classList.add('active');
+}
+
+function addNewVariantToGroup(group) {
+    editGroupProduct(group);
+    switchProductTab('variants');
+    addModalVariantRow();
 }
 
 function closeProductModal() {
     document.getElementById('productModal').classList.remove('active');
 }
 
-function editProduct(product) {
-    document.getElementById('productForm').reset();
-    document.getElementById('prodId').value = product.id;
-    document.getElementById('prodName').value = product.name || '';
-    
-    const slugInput = document.getElementById('prodSlug');
-    if (slugInput) {
-        slugInput.value = product.slug || generateSlug(product.name || '');
-        slugInput.dataset.manual = 'true';
-    }
+/* ============================================================== */
+/* GESTÃO DINÂMICA DE VARIAÇÕES NO MODAL                         */
+/* ============================================================== */
+function renderModalVariants() {
+    const container = document.getElementById('modalVariantsContainer');
+    const badge = document.getElementById('modalVariantsCountBadge');
+    if (!container) return;
 
-    const cardBeh = document.getElementById('prodCardBehavior');
-    if (cardBeh) cardBeh.value = product.card_click_behavior || 'default';
-    const customUrl = document.getElementById('prodCustomTargetUrl');
-    if (customUrl) customUrl.value = product.custom_target_url || '';
-    toggleCustomUrlGroup(product.card_click_behavior || 'default');
-    const detLayout = document.getElementById('prodDetailLayout');
-    if (detLayout) detLayout.value = product.detail_layout || 'default';
-    const showCh = document.getElementById('prodShowChannels');
-    if (showCh) showCh.checked = (product.show_channels === undefined || product.show_channels === null || product.show_channels == 1);
+    if (badge) badge.innerText = currentProductVariants.length;
+    container.innerHTML = '';
 
-    document.getElementById('prodSku').value = product.sku || '';
-    document.getElementById('prodCategory').value = product.category_id || '';
-    document.getElementById('prodMineral').value = product.stone_mineral || '';
-    document.getElementById('prodMaterials').value = product.materials || '';
-    document.getElementById('prodDimensions').value = product.dimensions || '';
-    document.getElementById('prodColors').value = product.colors || '';
-    document.getElementById('prodVariants').value = product.variants_json || '';
-    document.getElementById('prodSortOrder').value = product.sort_order || 0;
+    currentProductVariants.forEach((v, idx) => {
+        const row = document.createElement('div');
+        row.style.background = 'rgba(255,255,255,0.03)';
+        row.style.border = '1px solid rgba(255,255,255,0.08)';
+        row.style.borderRadius = '8px';
+        row.style.padding = '12px 14px';
 
-    const priceVal = ((product.price_cents || 38000) / 100).toFixed(2).replace('.', ',');
-    document.getElementById('prodPrice').value = priceVal;
-
-    if (product.promotional_price_cents) {
-        document.getElementById('prodPromotionalPrice').value = ((product.promotional_price_cents) / 100).toFixed(2).replace('.', ',');
-    } else {
-        document.getElementById('prodPromotionalPrice').value = '';
-    }
-
-    document.getElementById('prodStock').value = product.stock_quantity !== undefined ? product.stock_quantity : 10;
-    document.getElementById('prodStockStatus').value = product.stock_status || 'in_stock';
-
-    // Status Radio
-    const prodStatus = product.status || (product.is_active == 1 ? 'published' : 'hidden');
-    if (prodStatus === 'draft') {
-        document.getElementById('statusDraft').checked = true;
-    } else if (prodStatus === 'hidden') {
-        document.getElementById('statusHidden').checked = true;
-    } else {
-        document.getElementById('statusPublished').checked = true;
-    }
-
-    document.getElementById('prodFeatured').checked = product.is_featured == 1;
-
-    document.getElementById('prodShowBadge').checked = (product.show_badge === undefined || product.show_badge === null || product.show_badge == 1);
-    const showSkuEdit = document.getElementById('prodShowSku');
-    if (showSkuEdit) showSkuEdit.checked = (product.show_sku === undefined || product.show_sku === null || product.show_sku == 1);
-    document.getElementById('prodShowSpecs').checked = (product.show_specs === undefined || product.show_specs === null || product.show_specs == 1);
-    document.getElementById('prodShowDescription').checked = (product.show_description === undefined || product.show_description === null || product.show_description == 1);
-
-    document.getElementById('prodImage').value = product.image_url || '';
-    updateImagePreview(product.image_url || '/assets/images/hero/featured-green-shell.jpg');
-
-    document.getElementById('prodShortDesc').value = product.short_description || '';
-    document.getElementById('prodDesc').value = product.description || '';
-
-    // Links de Plataformas
-    if (Array.isArray(product.links) && product.links.length > 0) {
-        currentProductLinks = product.links.map(l => ({
-            platform_name: l.platform_name || 'Shopee',
-            url: l.url || '',
-            price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : priceVal,
-            button_text: l.button_text || '',
-            button_color: l.button_color || 'default',
-            button_size: l.button_size || 'md',
-            target: l.target || '_blank',
-            is_active: l.is_active !== undefined ? l.is_active : 1,
-            sort_order: l.sort_order || 0
-        }));
-    } else if (product.external_url) {
-        currentProductLinks = [{
-            platform_name: 'Shopee',
-            url: product.external_url,
-            price: priceVal,
-            button_text: 'Comprar na Shopee Oficial',
-            button_color: 'default',
-            button_size: 'md',
-            target: '_blank',
-            is_active: 1,
-            sort_order: 0
-        }];
-    } else {
-        currentProductLinks = [];
-    }
-
-    switchProductTab('general');
-    renderPlatformLinks();
-    document.getElementById('productModalTitle').innerText = 'Editar: ' + product.name;
-    document.getElementById('productModal').classList.add('active');
+        row.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+                <span style="font-size: 0.8rem; font-weight: 600; color: #FFFFFF;">
+                    💎 Variação #${idx + 1} ${v.sku ? '— ' + v.sku : ''}
+                </span>
+                ${currentProductVariants.length > 1 ? `
+                    <button type="button" onclick="removeModalVariantRow(${idx})" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; cursor: pointer;">
+                        Remover
+                    </button>
+                ` : ''}
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Gema / Mineral *</label>
+                    <input type="text" class="form-input" value="${v.stone_mineral || ''}" placeholder="Ex: Concha Verde Esmeralda" oninput="updateModalVariantField(${idx}, 'stone_mineral', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">SKU da Variação</label>
+                    <input type="text" class="form-input" value="${v.sku || ''}" placeholder="Ex: AN-RD-25-ESM" oninput="updateModalVariantField(${idx}, 'sku', this.value)" style="padding: 6px 10px; font-size: 0.8rem; font-family: monospace;">
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Preço (R$)</label>
+                    <input type="text" class="form-input" value="${v.price || '380,00'}" onkeyup="formatCurrencyLive(this)" oninput="updateModalVariantField(${idx}, 'price', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Preço Promocional</label>
+                    <input type="text" class="form-input" value="${v.promotional_price || ''}" onkeyup="formatCurrencyLive(this)" oninput="updateModalVariantField(${idx}, 'promotional_price', this.value)" placeholder="Opcional" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Estoque Físico</label>
+                    <input type="number" min="0" class="form-input" value="${v.stock_quantity !== undefined ? v.stock_quantity : 10}" oninput="updateModalVariantField(${idx}, 'stock_quantity', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Status</label>
+                    <select class="form-select" onchange="updateModalVariantField(${idx}, 'stock_status', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                        <option value="in_stock" ${v.stock_status === 'in_stock' ? 'selected' : ''}>Pronta Entrega</option>
+                        <option value="made_to_order" ${v.stock_status === 'made_to_order' ? 'selected' : ''}>Sob Encomenda</option>
+                        <option value="out_of_stock" ${v.stock_status === 'out_of_stock' ? 'selected' : ''}>Esgotado</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">URL da Foto Específica</label>
+                    <input type="text" class="form-input" value="${v.image_url || ''}" placeholder="/assets/images/..." oninput="updateModalVariantField(${idx}, 'image_url', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #9e978e; display: block; margin-bottom: 2px;">Link Shopee Específico</label>
+                    <input type="url" class="form-input" value="${v.external_url || ''}" placeholder="https://shopee.com.br/..." oninput="updateModalVariantField(${idx}, 'external_url', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+    });
 }
 
-function getCsrfToken() {
-    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
-        || document.querySelector('input[name="_csrf_token"]')?.value 
-        || '';
+function addModalVariantRow() {
+    const baseSku = document.getElementById('prodSku')?.value || 'DIV-NOVA';
+    const nextNum = currentProductVariants.length + 1;
+    currentProductVariants.push({
+        id: 0,
+        sku: baseSku + '-VAR' + nextNum,
+        stone_mineral: '',
+        price: '380,00',
+        promotional_price: '',
+        stock_quantity: 10,
+        stock_status: 'in_stock',
+        image_url: '/assets/images/hero/featured-green-shell.jpg',
+        external_url: ''
+    });
+    renderModalVariants();
 }
 
+function removeModalVariantRow(idx) {
+    if (currentProductVariants.length <= 1) return;
+    const item = currentProductVariants[idx];
+    if (item && item.id && item.id > 0) {
+        deletedVariantIds.push(item.id);
+        document.getElementById('prodDeletedVariantIds').value = deletedVariantIds.join(',');
+    }
+    currentProductVariants.splice(idx, 1);
+    renderModalVariants();
+}
+
+function updateModalVariantField(idx, field, val) {
+    if (currentProductVariants[idx]) {
+        currentProductVariants[idx][field] = val;
+    }
+}
+
+/* ============================================================== */
+/* SUBMISSÃO ATÔMICA DO PRODUTO & VARIAÇÕES                      */
+/* ============================================================== */
 async function handleProductSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('saveProdBtn');
     btn.disabled = true;
-    btn.innerText = 'Salvando Joia & Canais...';
+    btn.innerText = 'Salvando Joia & Variações...';
 
-    // Serializar links para o input oculto
+    // Serializar canais e variações
     document.getElementById('prodLinksJson').value = JSON.stringify(currentProductLinks);
+    document.getElementById('prodVariantsJsonInput').value = JSON.stringify(currentProductVariants);
+    document.getElementById('prodDeletedVariantIds').value = deletedVariantIds.join(',');
 
     const formData = new FormData(document.getElementById('productForm'));
     const csrfToken = getCsrfToken();
@@ -1685,177 +1665,329 @@ async function handleProductSubmit(e) {
                 'Accept': 'application/json'
             }
         });
-        const rawText = await response.text();
-        let data;
-        try {
-            data = JSON.parse(rawText);
-        } catch (jsonErr) {
-            console.error('Resposta não-JSON do servidor:', rawText);
-            throw new Error('O servidor respondeu com formato inesperado. Se sua sessão expirou, recarregue a página.');
-        }
-
-        if (data.auth_required) {
-            alert('Sua sessão administrativa expirou. Por favor, faça login novamente.');
-            window.location.reload();
-            return;
-        }
-
+        const data = await response.json();
         if (data.success) {
             window.location.reload();
         } else {
             alert(data.error || 'Erro ao gravar produto.');
             btn.disabled = false;
-            btn.innerText = 'Salvar Joia & Canais';
+            btn.innerText = 'Salvar Joia & Variações';
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);
         btn.disabled = false;
-        btn.innerText = 'Salvar Joia & Canais';
+        btn.innerText = 'Salvar Joia & Variações';
     }
 }
 
-async function duplicateProduct(id) {
-    if (!confirm('Deseja criar uma cópia desta joia com todos os seus canais de venda externos configurados?')) {
-        return;
-    }
+/* ============================================================== */
+/* CANAIS DE VENDA DINÂMICOS                                      */
+/* ============================================================== */
+function renderPlatformLinks() {
+    const container = document.getElementById('productLinksContainer');
+    const badge = document.getElementById('linksCountBadge');
+    if (!container) return;
 
+    if (badge) badge.innerText = currentProductLinks.length;
+    container.innerHTML = '';
+
+    currentProductLinks.forEach((link, idx) => {
+        const item = document.createElement('div');
+        item.style.background = 'rgba(255,255,255,0.02)';
+        item.style.border = '1px solid rgba(255,255,255,0.06)';
+        item.style.borderRadius = '8px';
+        item.style.padding = '12px 14px';
+        item.style.marginBottom = '10px';
+
+        item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #FFFFFF; font-size: 0.82rem;">🔗 Canal #${idx + 1}</strong>
+                <button type="button" onclick="removePlatformLink(${idx})" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; cursor: pointer;">
+                    Remover
+                </button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 10px;">
+                <div>
+                    <label style="font-size: 0.72rem; color: #8e8880; display: block;">Plataforma</label>
+                    <select class="form-select" onchange="currentProductLinks[${idx}].platform_name = this.value; currentProductLinks[${idx}].button_text = 'Comprar no ' + this.value;" style="padding: 5px 8px; font-size: 0.78rem;">
+                        <option value="Shopee" ${link.platform_name === 'Shopee' ? 'selected' : ''}>Shopee</option>
+                        <option value="Mercado Livre" ${link.platform_name === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
+                        <option value="Amazon" ${link.platform_name === 'Amazon' ? 'selected' : ''}>Amazon</option>
+                        <option value="WhatsApp" ${link.platform_name === 'WhatsApp' ? 'selected' : ''}>WhatsApp Concierge</option>
+                        <option value="Outro" ${link.platform_name === 'Outro' ? 'selected' : ''}>Outro Canal</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.72rem; color: #8e8880; display: block;">Link Oficial (URL)</label>
+                    <input type="url" class="form-input" value="${link.url || ''}" placeholder="https://..." oninput="currentProductLinks[${idx}].url = this.value" style="padding: 5px 8px; font-size: 0.78rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.72rem; color: #8e8880; display: block;">Preço no Canal (R$)</label>
+                    <input type="text" class="form-input" value="${link.price || '380,00'}" onkeyup="formatCurrencyLive(this)" oninput="currentProductLinks[${idx}].price = this.value" style="padding: 5px 8px; font-size: 0.78rem;">
+                </div>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function addNewPlatformLink() {
+    currentProductLinks.push({
+        platform_name: 'Shopee',
+        url: '',
+        price: '380,00',
+        button_text: 'Comprar na Shopee Oficial',
+        button_color: 'default',
+        button_size: 'md',
+        target: '_blank',
+        is_active: 1,
+        sort_order: currentProductLinks.length
+    });
+    renderPlatformLinks();
+}
+
+function removePlatformLink(idx) {
+    currentProductLinks.splice(idx, 1);
+    renderPlatformLinks();
+}
+
+/* ============================================================== */
+/* UTILITÁRIOS, BLING & FILTRAGEM                                 */
+/* ============================================================== */
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+}
+
+function formatCurrencyLive(input) {
+    let v = input.value.replace(/\D/g, '');
+    if (!v) { input.value = ''; return; }
+    v = (parseInt(v, 10) / 100).toFixed(2) + '';
+    v = v.replace('.', ',');
+    v = v.replace(/(\d)(\d{3})(\d{3}),/g, '$1.$2.$3,');
+    v = v.replace(/(\d)(\d{3}),/g, '$1.$2,');
+    input.value = v;
+}
+
+function handleNameInput(el) {
+    const slugInput = document.getElementById('prodSlug');
+    const skuInput = document.getElementById('prodSku');
+    if (slugInput && !slugInput.dataset.manual) {
+        slugInput.value = el.value.toLowerCase().trim()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+    if (skuInput && !skuInput.dataset.manual && !skuInput.value) {
+        const clean = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        skuInput.value = 'DIV-' + (clean.slice(0, 8) || 'JOIA');
+    }
+}
+
+function handleSlugInput(el) {
+    el.dataset.manual = '1';
+}
+
+function toggleCustomUrlGroup(val) {
+    const group = document.getElementById('customTargetUrlGroup');
+    if (group) group.style.display = (val === 'custom') ? 'block' : 'none';
+}
+
+function filterCatalog(resetPage = true) {
+    if (resetPage) currentPage = 1;
+    const term = (document.getElementById('catalogSearchInput')?.value || '').toLowerCase().trim();
+    const cat = (document.getElementById('catalogCategoryFilter')?.value || '').trim();
+    const status = (document.getElementById('catalogStatusFilter')?.value || '').trim();
+    const stock = (document.getElementById('catalogStockFilter')?.value || '').trim();
+
+    const rows = Array.from(document.querySelectorAll('#catalogTableBody tr.group-row'));
+    let matched = 0;
+
+    rows.forEach(r => {
+        const rName = r.getAttribute('data-name') || '';
+        const rSku = r.getAttribute('data-sku') || '';
+        const rStone = r.getAttribute('data-stone') || '';
+        const rCat = r.getAttribute('data-category') || '';
+        const rStatus = r.getAttribute('data-status') || '';
+        const rStock = r.getAttribute('data-stock') || '';
+
+        const matchTerm = !term || rName.includes(term) || rSku.includes(term) || rStone.includes(term);
+        const matchCat = !cat || rCat === cat;
+        const matchStatus = !status || rStatus === status;
+        const matchStock = !stock || (stock === 'in_stock' ? (rStock === 'in_stock' || rStock === 'low_stock') : rStock === stock);
+
+        if (matchTerm && matchCat && matchStatus && matchStock) {
+            r.dataset.matched = '1';
+            matched++;
+        } else {
+            r.dataset.matched = '0';
+        }
+    });
+
+    const countEl = document.getElementById('visibleItemsCount');
+    if (countEl) countEl.innerText = matched;
+
+    renderPagination(matched);
+}
+
+function renderPagination(totalMatched) {
+    const matchedRows = Array.from(document.querySelectorAll('#catalogTableBody tr.group-row')).filter(r => r.dataset.matched === '1');
+    const totalPages = Math.ceil(totalMatched / itemsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const startIdx = (currentPage - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+
+    Array.from(document.querySelectorAll('#catalogTableBody tr.group-row')).forEach(r => {
+        r.style.display = 'none';
+        const sku = r.getAttribute('data-sku');
+        const drawer = document.getElementById('drawer-group-' + sku);
+        if (drawer) drawer.classList.remove('active');
+        r.classList.remove('is-expanded');
+    });
+
+    matchedRows.slice(startIdx, endIdx).forEach(r => {
+        r.style.display = '';
+    });
+
+    const infoText = totalMatched > 0 
+        ? `Exibindo ${startIdx + 1} a ${Math.min(endIdx, totalMatched)} de ${totalMatched} modelos`
+        : 'Nenhum modelo encontrado';
+
+    document.querySelectorAll('.pagination-info').forEach(el => el.innerText = infoText);
+}
+
+function changeItemsPerPage(val) {
+    itemsPerPage = parseInt(val, 10) || 25;
+    filterCatalog();
+}
+
+async function duplicateProduct(id) {
+    if (!confirm('Deseja criar uma cópia desta joia com todas as suas variações e canais configurados?')) return;
     const formData = new FormData();
     formData.append('id', id);
-    const csrfToken = getCsrfToken();
-    if (csrfToken) {
-        formData.append('_csrf_token', csrfToken);
-    }
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
 
     try {
-        const response = await fetch('/admin/produtos/duplicar', {
+        const res = await fetch('/admin/produtos/duplicar', {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
         });
-        const data = await response.json();
+        const data = await res.json();
         if (data.success) {
-            alert(data.message || 'Produto duplicado com sucesso!');
             window.location.reload();
         } else {
-            alert(data.error || 'Erro ao duplicar produto.');
+            alert(data.error || 'Erro ao duplicar.');
         }
-    } catch (err) {
-        alert('Erro ao comunicar com o servidor: ' + err.message);
+    } catch (e) {
+        alert('Erro ao comunicar com o servidor: ' + e.message);
     }
 }
 
 async function toggleProductStatus(id) {
     const formData = new FormData();
     formData.append('id', id);
-    const csrfToken = getCsrfToken();
-    if (csrfToken) {
-        formData.append('_csrf_token', csrfToken);
-    }
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
 
     try {
-        const response = await fetch('/admin/produtos/toggle', {
+        const res = await fetch('/admin/produtos/toggle', {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
         });
-        const data = await response.json();
+        const data = await res.json();
         if (data.success) {
-            const row = document.getElementById('product-row-' + id);
-            const badge = document.getElementById('status-badge-' + id);
-            const btn = row?.querySelector('.btn-table-action');
-            if (row && badge) {
-                const isPublished = (data.status === 'published' || data.is_active == 1);
-                row.setAttribute('data-status', isPublished ? 'ativo' : 'oculto');
-                badge.className = 'badge-status ' + (isPublished ? 'status-published' : 'status-hidden');
-                badge.innerText = isPublished ? 'Publicado' : 'Oculto';
-                if (btn) btn.innerText = isPublished ? 'Ocultar' : 'Publicar';
-                filterCatalog(false);
-            } else {
-                window.location.reload();
-            }
+            window.location.reload();
         } else {
             alert(data.error || 'Erro ao alterar status.');
         }
-    } catch (err) {
-        alert('Erro ao alterar status: ' + err.message);
+    } catch (e) {
+        alert('Erro ao alterar status: ' + e.message);
     }
 }
 
 async function deleteProduct(id) {
-    if (!confirm('Tem certeza de que deseja excluir esta joia e todos os seus canais de venda vinculados?')) {
-        return;
-    }
-
+    if (!confirm('Tem certeza de que deseja excluir esta joia e todas as suas variações e canais vinculados?')) return;
     const formData = new FormData();
     formData.append('id', id);
-    const csrfToken = getCsrfToken();
-    if (csrfToken) {
-        formData.append('_csrf_token', csrfToken);
-    }
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
 
     try {
-        const response = await fetch('/admin/produtos/excluir', {
+        const res = await fetch('/admin/produtos/excluir', {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
         });
-        const data = await response.json();
+        const data = await res.json();
         if (data.success) {
-            const row = document.getElementById('product-row-' + id);
-            if (row) row.remove();
-            filterCatalog();
+            window.location.reload();
         } else {
             alert(data.error || 'Erro ao excluir.');
         }
-    } catch (err) {
-        alert('Erro ao excluir produto: ' + err.message);
+    } catch (e) {
+        alert('Erro ao excluir: ' + e.message);
     }
 }
 
-/* ==============================================================================
-   CONTROLE DO MODAL E SINCRONIZAÇÃO BLING ERP
-   ============================================================================== */
 function openBlingModal(e) {
     if (e) e.preventDefault();
     document.getElementById('blingModal').classList.add('active');
 }
-
 function closeBlingModal() {
     document.getElementById('blingModal').classList.remove('active');
 }
-
 function switchBlingTab(tab) {
     document.getElementById('blingTabSync').style.display = tab === 'sync' ? 'block' : 'none';
     document.getElementById('blingTabConfig').style.display = tab === 'config' ? 'block' : 'none';
     document.getElementById('blingTabHelp').style.display = tab === 'help' ? 'block' : 'none';
-
     document.getElementById('tabBtnSync').classList.toggle('active', tab === 'sync');
     document.getElementById('tabBtnConfig').classList.toggle('active', tab === 'config');
     document.getElementById('tabBtnHelp').classList.toggle('active', tab === 'help');
 }
-
 function toggleSecretVisibility() {
     const input = document.getElementById('blingClientSecret');
     input.type = input.type === 'password' ? 'text' : 'password';
 }
-
 function copyRedirectUri() {
     const input = document.getElementById('blingRedirectUri');
     navigator.clipboard.writeText(input.value).then(() => {
-        alert('Link de redirecionamento copiado!');
+        showToast('Link de redirecionamento copiado!');
     });
+}
+
+async function triggerBlingSync(e, mode = 'auto') {
+    if (e) e.preventDefault();
+    const btn = document.getElementById('syncBlingBtnTable');
+    if (btn) btn.classList.add('is-syncing');
+
+    try {
+        const formData = new FormData();
+        formData.append('mode', mode);
+        const csrf = getCsrfToken();
+        if (csrf) formData.append('_csrf_token', csrf);
+
+        const res = await fetch('/admin/bling/sync', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message || 'Catálogo e estoque sincronizados!');
+            setTimeout(() => window.location.reload(), 900);
+        } else {
+            alert(data.error || 'Erro ao sincronizar com Bling.');
+            if (btn) btn.classList.remove('is-syncing');
+        }
+    } catch (err) {
+        alert('Erro de conexão: ' + err.message);
+        if (btn) btn.classList.remove('is-syncing');
+    }
 }
 
 async function handleBlingConfigSubmit(e) {
@@ -1864,126 +1996,46 @@ async function handleBlingConfigSubmit(e) {
     btn.disabled = true;
     btn.innerText = 'Salvando...';
 
-    const form = document.getElementById('blingConfigForm');
-    const formData = new FormData(form);
-    const csrfToken = getCsrfToken();
-    if (csrfToken && !formData.has('_csrf_token')) {
-        formData.append('_csrf_token', csrfToken);
-    }
+    const formData = new FormData(document.getElementById('blingConfigForm'));
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
 
     try {
         const res = await fetch('/admin/bling/config', {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
         });
         const data = await res.json();
         if (data.success) {
-            alert(data.message || 'Configurações salvas!');
-            window.location.reload();
+            showToast('Credenciais Bling salvas com sucesso!');
+            setTimeout(() => window.location.reload(), 900);
         } else {
             alert(data.error || 'Erro ao salvar credenciais.');
             btn.disabled = false;
             btn.innerText = 'Salvar Credenciais';
         }
     } catch (err) {
-        alert('Erro ao conectar ao servidor: ' + err.message);
+        alert('Erro ao conectar: ' + err.message);
         btn.disabled = false;
         btn.innerText = 'Salvar Credenciais';
     }
 }
 
-async function triggerBlingSync(e, mode = 'auto') {
-    if (e) e.preventDefault();
-
-    const buttons = [
-        document.getElementById('syncBlingBtnTable'),
-        document.getElementById('modalSyncNowBtn')
-    ];
-
-    buttons.forEach(btn => {
-        if (btn) {
-            btn.classList.add('is-syncing');
-            const txt = btn.querySelector('.sync-text');
-            if (txt) txt.innerText = 'Sincronizando...';
-        }
-    });
-
-    try {
-        const formData = new FormData();
-        formData.append('mode', mode);
-        const csrfToken = getCsrfToken();
-        if (csrfToken) {
-            formData.append('_csrf_token', csrfToken);
-        }
-
-        const res = await fetch('/admin/bling/sync', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-            const count = data.data && data.data.total ? data.data.total : 0;
-            const msg = data.message || (count + ' produtos e estoque sincronizados!');
-            
-            const resDiv = document.getElementById('blingSyncResult');
-            if (resDiv) {
-                resDiv.style.display = 'block';
-                resDiv.style.background = 'rgba(167, 173, 180, 0.15)';
-                resDiv.style.border = '1px solid rgba(167, 173, 180, 0.4)';
-                resDiv.style.color = '#FFFFFF';
-                resDiv.innerHTML = '<strong>✓ ' + msg + '</strong><br><small style="color:#ded7cf;">Atualizando catálogo...</small>';
-            }
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 800);
-        } else {
-            alert(data.error || 'Erro ao sincronizar com o Bling.');
-            buttons.forEach(btn => {
-                if (btn) {
-                    btn.classList.remove('is-syncing');
-                    const txt = btn.querySelector('.sync-text');
-                    if (txt) txt.innerText = 'Sincronizar com Bling';
-                }
-            });
-        }
-    } catch (err) {
-        alert('Erro de conexão durante a sincronização: ' + err.message);
-        buttons.forEach(btn => {
-            if (btn) {
-                btn.classList.remove('is-syncing');
-                const txt = btn.querySelector('.sync-text');
-                if (txt) txt.innerText = 'Sincronizar com Bling';
-            }
-        });
-    }
-}
-
-function executeBlingSync(mode) {
-    triggerBlingSync(null, mode);
-}
-
-// Inicialização de Scroll Sincronizado, Paginação e Abertura por Hash
+// Inicialização com suporte a tabs e hash
 document.addEventListener('DOMContentLoaded', () => {
-    initTableScrollSync();
     filterCatalog();
 
-    if (window.location.hash === '#novo') {
-        openNewProductModal();
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam && ['catalogo', 'exibicao', 'bling'].includes(tabParam)) {
+        switchMainTab(tabParam);
     } else if (window.location.hash === '#bling') {
-        openBlingModal();
+        switchMainTab('bling');
+    } else if (window.location.hash === '#exibicao') {
+        switchMainTab('exibicao');
+    } else if (window.location.hash === '#novo') {
+        openNewProductModal();
     }
 });
 </script>

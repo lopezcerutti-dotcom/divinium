@@ -54,14 +54,9 @@
                     <span>Visão Geral</span>
                 </a>
 
-                <a href="/admin/produtos" class="admin-nav-item <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos') && !str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos-exibicao')) ? 'active' : '' ?>">
+                <a href="/admin/produtos" class="admin-nav-item <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos') || str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos-exibicao')) ? 'active' : '' ?>" title="Gestão Centralizada: Catálogo de Joias, Estoque & Canais de Venda">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                    <span>Produtos & Joias</span>
-                </a>
-
-                <a href="/admin/produtos-exibicao" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos-exibicao') ? 'active' : '' ?>">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    <span>Informações & Exibição</span>
+                    <span>Catálogo, Estoque & Canais</span>
                 </a>
 
                 <a href="/admin/categorias" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/categorias') ? 'active' : '' ?>">
@@ -77,11 +72,6 @@
                 <a href="/admin/boutique" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/boutique') ? 'active' : '' ?>">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                     <span>Personalizar Boutique</span>
-                </a>
-
-                <a href="/admin/produtos" onclick="if(typeof openBlingModal==='function'){openBlingModal(event);}" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '#bling') ? 'active' : '' ?>">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    <span>Estoque & Bling ERP</span>
                 </a>
 
                 <div class="nav-section-label">MÉTRICAS & CONVERSÃO</div>

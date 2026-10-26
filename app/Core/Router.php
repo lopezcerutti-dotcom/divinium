@@ -295,6 +295,7 @@ class Router
             $this->get($p . '/metricas', [\App\Controllers\AdminController::class, 'metrics'], $adminAuth);
             $this->get($p . '/produtos', [\App\Controllers\AdminController::class, 'products'], $adminAuth);
             $this->post($p . '/produtos/salvar', [\App\Controllers\AdminController::class, 'saveProduct'], $adminAuth);
+            $this->post($p . '/produtos/salvar-variante', [\App\Controllers\AdminController::class, 'saveProductVariant'], $adminAuth);
             $this->post($p . '/produtos/duplicar', [\App\Controllers\AdminController::class, 'duplicateProduct'], $adminAuth);
             $this->post($p . '/produtos/toggle', [\App\Controllers\AdminController::class, 'toggleProduct'], $adminAuth);
             $this->post($p . '/produtos/excluir', [\App\Controllers\AdminController::class, 'deleteProduct'], $adminAuth);

@@ -6,25 +6,25 @@
 
 <!-- CARDS DE MÉTRICAS -->
 <div class="metrics-grid">
-    <div class="metric-card">
+    <a href="/admin/produtos" class="metric-card" style="text-decoration: none;">
         <div class="metric-icon-wrap">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
         </div>
         <div class="metric-data">
             <span class="metric-value"><?= (int) ($totalProducts ?? 0) ?></span>
-            <span class="metric-label">Total de Produtos</span>
+            <span class="metric-label">Total no Catálogo & Canais ↗</span>
         </div>
-    </div>
+    </a>
 
-    <div class="metric-card">
+    <a href="/admin/produtos" class="metric-card" style="text-decoration: none;">
         <div class="metric-icon-wrap" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
         <div class="metric-data">
             <span class="metric-value"><?= (int) ($activeProducts ?? 0) ?></span>
-            <span class="metric-label">Produtos Exibidos na Loja</span>
+            <span class="metric-label">Joias Exibidas na Boutique ↗</span>
         </div>
-    </div>
+    </a>
 
     <div class="metric-card">
         <div class="metric-icon-wrap">
@@ -147,9 +147,9 @@
                     </svg>
                     <span class="sync-text">Sincronizar</span>
                 </button>
-                <button class="btn-admin-secondary" onclick="openBlingModal(event)" style="padding: 8px 14px; font-size: 0.82rem;">
-                    <span>Config Bling</span>
-                </button>
+                <a href="/admin/produtos?tab=bling" class="btn-admin-secondary" style="padding: 8px 14px; font-size: 0.82rem; text-decoration: none;">
+                    <span>Estoque & Bling ↗</span>
+                </a>
             </div>
         </div>
     </div>

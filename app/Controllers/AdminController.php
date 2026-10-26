@@ -59,12 +59,18 @@ class AdminController
      * Gestão de Produtos
      */
     /**
-     * Gestão de Produtos & Links de Venda Externa
+     * Gestão Centralizada: Catálogo de Joias, Estoque & Canais de Venda
+     * Unifica catálogo por modelos autorais, variações minerais, estoque Bling ERP e exibição pública
      */
     public function products(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
+
+        $activeTab = trim((string)($_GET['tab'] ?? 'catalogo'));
+        if (!in_array($activeTab, ['catalogo', 'exibicao', 'bling'], true)) {
+            $activeTab = 'catalogo';
         }
 
         $totalProducts = (int) $this->pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
@@ -107,21 +113,99 @@ class AdminController
         }
         unset($p);
 
+        // Agrupar produtos por Modelo Autoral / SKU Base para visualização unificada executiva
+        $groups = [];
+        foreach ($products as $p) {
+            $sku = trim((string)($p['sku'] ?? ''));
+            $parent = trim((string)($p['parent_sku'] ?? ''));
+            if ($parent !== '' && $parent !== $sku) {
+                $baseSku = $parent;
+            } else {
+                $parts = explode('-', $sku);
+                $baseSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $sku;
+            }
+
+            $isParent = ($sku === $baseSku || $parent === '' || $parent === $sku);
+
+            if (!isset($groups[$baseSku])) {
+                $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$p['name']);
+                $groups[$baseSku] = [
+                    'id' => $p['id'],
+                    'base_sku' => $baseSku,
+                    'name' => !empty($cleanName) ? $cleanName : $p['name'],
+                    'raw_name' => $p['name'],
+                    'slug' => $p['slug'] ?? '',
+                    'category_id' => $p['category_id'] ?? null,
+                    'category_name' => $p['category_name'] ?? 'Coleção Autoral',
+                    'materials' => $p['materials'] ?? '',
+                    'dimensions' => $p['dimensions'] ?? '',
+                    'colors' => $p['colors'] ?? '',
+                    'variants_json' => $p['variants_json'] ?? '',
+                    'short_description' => $p['short_description'] ?? '',
+                    'description' => $p['description'] ?? '',
+                    'image_url' => $p['image_url'] ?? '',
+                    'status' => $p['status'] ?? (!empty($p['is_active']) ? 'published' : 'hidden'),
+                    'sort_order' => $p['sort_order'] ?? 0,
+                    'is_featured' => $p['is_featured'] ?? 0,
+                    'show_badge' => $p['show_badge'] ?? 1,
+                    'show_sku' => $p['show_sku'] ?? 1,
+                    'show_specs' => $p['show_specs'] ?? 1,
+                    'show_description' => $p['show_description'] ?? 1,
+                    'show_channels' => $p['show_channels'] ?? 1,
+                    'card_click_behavior' => $p['card_click_behavior'] ?? 'default',
+                    'custom_target_url' => $p['custom_target_url'] ?? '',
+                    'detail_layout' => $p['detail_layout'] ?? 'default',
+                    'links' => $p['links'] ?? [],
+                    'total_stock' => (int)($p['stock_quantity'] ?? 0),
+                    'min_price_cents' => (int)($p['price_cents'] ?? 0),
+                    'max_price_cents' => (int)($p['price_cents'] ?? 0),
+                    'variants' => [],
+                    'parent_product' => $p,
+                ];
+            } else {
+                $groups[$baseSku]['total_stock'] += (int)($p['stock_quantity'] ?? 0);
+                $pPrice = (int)($p['price_cents'] ?? 0);
+                if ($pPrice > 0) {
+                    if ($groups[$baseSku]['min_price_cents'] == 0 || $pPrice < $groups[$baseSku]['min_price_cents']) {
+                        $groups[$baseSku]['min_price_cents'] = $pPrice;
+                    }
+                    if ($pPrice > $groups[$baseSku]['max_price_cents']) {
+                        $groups[$baseSku]['max_price_cents'] = $pPrice;
+                    }
+                }
+                if ($isParent) {
+                    $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$p['name']);
+                    $groups[$baseSku]['id'] = $p['id'];
+                    $groups[$baseSku]['name'] = !empty($cleanName) ? $cleanName : $p['name'];
+                    $groups[$baseSku]['parent_product'] = $p;
+                    if (!empty($p['image_url'])) {
+                        $groups[$baseSku]['image_url'] = $p['image_url'];
+                    }
+                }
+            }
+
+            $groups[$baseSku]['variants'][] = $p;
+        }
+
         $categories = $this->pdo->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC')->fetchAll(\PDO::FETCH_ASSOC);
 
         $blingService = new BlingService($this->pdo);
         $blingConfig = $blingService->getConfig();
+        $settings = \App\Models\Setting::getAll();
 
         View::render('admin/products', [
-            'pageTitle' => 'Catálogo de Joias & Canais de Venda',
+            'pageTitle' => 'Catálogo de Joias, Estoque & Canais de Venda',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador'],
             'totalProducts' => $totalProducts,
             'activeProducts' => $activeProducts,
             'totalCategories' => $totalCategories,
             'totalStock' => $totalStock,
             'products' => $products,
+            'groups' => array_values($groups),
             'categories' => $categories,
             'blingConfig' => $blingConfig,
+            'settings' => $settings,
+            'activeTab' => $activeTab,
         ], 'admin');
     }
 
@@ -434,13 +518,146 @@ class AdminController
                 }
             }
 
+            // Processar lista de variações enviadas com o produto principal (cadastro unificado)
+            if (!empty($_POST['variants_data'])) {
+                $rawVariants = is_string($_POST['variants_data']) ? json_decode($_POST['variants_data'], true) : $_POST['variants_data'];
+                if (is_array($rawVariants)) {
+                    foreach ($rawVariants as $vItem) {
+                        if (!is_array($vItem)) continue;
+                        $vId = !empty($vItem['id']) ? (int)$vItem['id'] : null;
+                        $vSku = trim((string)($vItem['sku'] ?? ''));
+                        $vStone = trim((string)($vItem['stone_mineral'] ?? ''));
+                        $vImg = trim((string)($vItem['image_url'] ?? ''));
+                        $vExtUrl = trim((string)($vItem['external_url'] ?? ''));
+
+                        $vPrice = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string)($vItem['price'] ?? '0'));
+                        $vPriceCents = $vPrice > 0 ? (int)round($vPrice * 100) : $priceCents;
+
+                        $vPromo = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string)($vItem['promotional_price'] ?? '0'));
+                        $vPromoCents = $vPromo > 0 ? (int)round($vPromo * 100) : $promotionalPriceCents;
+
+                        $vStock = isset($vItem['stock_quantity']) ? (int)$vItem['stock_quantity'] : $stock;
+                        $vStockStatus = trim((string)($vItem['stock_status'] ?? $stockStatus));
+                        if (!in_array($vStockStatus, ['in_stock', 'made_to_order', 'out_of_stock'], true)) {
+                            $vStockStatus = $vStock > 0 ? 'in_stock' : 'out_of_stock';
+                        }
+
+                        if ($vSku === '') {
+                            $vSuffix = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $vStone), 0, 3));
+                            $vSku = $sku . ($vSuffix !== '' ? '-' . $vSuffix : '-' . rand(10, 99));
+                        }
+                        if ($vImg === '') {
+                            $vImg = $imageUrl;
+                        }
+
+                        if ($vId !== null && $vId > 0 && $vId !== $productId) {
+                            $uStmt = $this->pdo->prepare('
+                                UPDATE products SET 
+                                    parent_sku = ?, sku = ?, stone_mineral = ?, price_cents = ?, promotional_price_cents = ?,
+                                    stock_quantity = ?, stock_status = ?, image_url = ?, external_url = ?,
+                                    materials = ?, dimensions = ?, colors = ?, category_id = ?, status = ?, is_active = ?
+                                WHERE id = ?
+                            ');
+                            $uStmt->execute([
+                                $sku, $vSku, $vStone, $vPriceCents, $vPromoCents,
+                                $vStock, $vStockStatus, $vImg, $vExtUrl,
+                                $materials, $dimensions, $colors, $categoryId, $status, $isActive,
+                                $vId
+                            ]);
+                        } elseif ($vId === 0 || empty($vId)) {
+                            $vUuid = 'prod-var-' . uniqid();
+                            $vName = $name . ($vStone !== '' ? ' — ' . $vStone : '');
+                            $vSlug = $slug . '-' . strtolower(preg_replace('/[^A-Za-z0-9]+/', '-', $vStone ?: rand(10, 99)));
+
+                            $iStmt = $this->pdo->prepare('
+                                INSERT INTO products (
+                                    uuid, parent_sku, category_id, name, slug, sku, stone_mineral, materials, dimensions,
+                                    colors, price_cents, promotional_price_cents, stock_quantity, stock_status, status,
+                                    short_description, description, image_url, external_url, is_active, is_featured
+                                ) VALUES (
+                                    ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                                    ?, ?, ?, ?, ?, ?,
+                                    ?, ?, ?, ?, ?, ?
+                                )
+                            ');
+                            $iStmt->execute([
+                                $vUuid, $sku, $categoryId, $vName, $vSlug, $vSku, $vStone, $materials, $dimensions,
+                                $colors, $vPriceCents, $vPromoCents, $vStock, $vStockStatus, $status,
+                                $shortDescription, $description, $vImg, $vExtUrl, $isActive, 0
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            // Excluir variações marcadas para exclusão
+            if (!empty($_POST['deleted_variant_ids'])) {
+                $delRaw = is_string($_POST['deleted_variant_ids']) ? explode(',', $_POST['deleted_variant_ids']) : (array)$_POST['deleted_variant_ids'];
+                foreach ($delRaw as $delId) {
+                    $delId = (int)$delId;
+                    if ($delId > 0 && $delId !== $productId) {
+                        $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$delId]);
+                        $this->pdo->prepare('DELETE FROM products WHERE id = ?')->execute([$delId]);
+                    }
+                }
+            }
+
             $this->respond([
                 'success' => true, 
-                'message' => 'Joia e canais de venda salvos com sucesso!',
+                'message' => 'Joia, variações e canais de venda salvos com sucesso!',
                 'product_id' => $productId
             ]);
         } catch (\Throwable $e) {
             $this->respond(['success' => false, 'error' => 'Erro ao salvar produto: ' . $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Salvar Variação Individual com Agilidade (Edição Rápida de Estoque / Gema / Preço / Link)
+     */
+    public function saveProductVariant(): void
+    {
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            $this->respond(['success' => false, 'error' => 'ID da variação inválido.'], 200);
+            return;
+        }
+
+        $stoneMineral = trim((string)($_POST['stone_mineral'] ?? ''));
+        $sku = trim((string)($_POST['sku'] ?? ''));
+        $stock = isset($_POST['stock_quantity']) ? (int)$_POST['stock_quantity'] : 0;
+        $stockStatus = trim((string)($_POST['stock_status'] ?? 'in_stock'));
+        if (!in_array($stockStatus, ['in_stock', 'made_to_order', 'out_of_stock'], true)) {
+            $stockStatus = $stock > 0 ? 'in_stock' : 'out_of_stock';
+        }
+
+        $price = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string)($_POST['price'] ?? '0'));
+        $priceCents = (int)round($price * 100);
+        if ($priceCents <= 0 && !empty($_POST['price_cents'])) {
+            $priceCents = (int)$_POST['price_cents'];
+        }
+
+        $imageUrl = trim((string)($_POST['image_url'] ?? ''));
+        $externalUrl = trim((string)($_POST['external_url'] ?? ''));
+
+        try {
+            $stmt = $this->pdo->prepare('
+                UPDATE products SET 
+                    stone_mineral = ?, sku = ?, stock_quantity = ?, stock_status = ?, 
+                    price_cents = ?, image_url = ?, external_url = ?
+                WHERE id = ?
+            ');
+            $stmt->execute([
+                $stoneMineral, $sku, $stock, $stockStatus, 
+                $priceCents, $imageUrl, $externalUrl, $id
+            ]);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Variação ' . $sku . ' atualizada com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            $this->respond(['success' => false, 'error' => 'Erro ao salvar variação: ' . $e->getMessage()], 200);
         }
     }
 
@@ -1241,23 +1458,13 @@ class AdminController
     }
 
     /**
-     * Seção Centralizada: Informações e Exibição dos Produtos
-     * Reúne todas as informações públicas dos produtos, SKU, selos, botões,
-     * especificações, preços e enquadramento de imagens.
+     * Redirecionamento da Seção de Exibição para a Central Unificada
+     * Mantém compatibilidade total com rotas anteriores redirecionando para a aba unificada
      */
     public function productDisplay(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $settings = \App\Models\Setting::getAll();
-
-        View::render('admin/product_display', [
-            'pageTitle' => 'Informações e Exibição dos Produtos | DIVINIUM',
-            'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
-            'settings' => $settings,
-        ], 'admin');
+        header('Location: /admin/produtos?tab=exibicao');
+        exit;
     }
 
     /**

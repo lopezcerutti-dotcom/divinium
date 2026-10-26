@@ -60,7 +60,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-detail', this)">
             <span>💎 Detalhes da Joia & Canais</span>
         </button>
-        <a href="/admin/produtos-exibicao" class="tab-btn" style="background: rgba(202, 161, 92, 0.15); border-color: rgba(202, 161, 92, 0.4); text-decoration: none;" title="Abrir Central Unificada de Informações e Exibição dos Produtos">
+        <a href="/admin/produtos?tab=exibicao" class="tab-btn" style="background: rgba(202, 161, 92, 0.15); border-color: rgba(202, 161, 92, 0.4); text-decoration: none;" title="Abrir Central Unificada de Informações e Exibição dos Produtos">
             <span>💎 Informações & Exibição dos Produtos ↗</span>
         </a>
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-reasons', this)">
@@ -432,7 +432,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <strong style="color: #ffffff; font-size: 0.9rem; display: block; margin-bottom: 2px;">💎 Central Unificada de Informações e Exibição dos Produtos</strong>
                         <p style="margin: 0; font-size: 0.82rem; color: #ded7cf;">Para gerenciar SKU, selos de metal ("Banho de Prata"), gemas minerais, imagens sem cortes e especificações técnicas completas em um único lugar centralizado, utilize a seção dedicada.</p>
                     </div>
-                    <a href="/admin/produtos-exibicao" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.8rem; padding: 8px 16px; text-decoration: none;">
+                    <a href="/admin/produtos?tab=exibicao" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.8rem; padding: 8px 16px; text-decoration: none;">
                         Abrir Informações & Exibição ↗
                     </a>
                 </div>
