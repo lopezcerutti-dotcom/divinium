@@ -222,7 +222,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <button type="button" class="btn-admin-cancel" style="background: #1e1e1d; border: 1px solid rgba(255,255,255,0.2); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                             <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #CBD0D6;"></span>
-                            <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Prata de Lei</strong>
+                            <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Banho de Prata</strong>
                         </div>
                         <span style="font-size: 0.72rem; color: #8e8880;">Fundo #FBF9F5 • Prata #FFFFFF</span>
                     </button>
@@ -701,7 +701,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <h4 id="lpPreviewTitle" style="font-family: var(--font-serif); font-size: 1.25rem; color: #fff; margin: 0 0 4px;">Joias que Revelam</h4>
                             <span id="lpPreviewHighlight" style="font-family: var(--font-serif); font-size: 1.1rem; color: #CBD0D6; font-weight: 700; display: block; margin-bottom: 10px;">o Luxo Silencioso</span>
                             <div id="lpPreviewCardBox" style="display: inline-block; background: #141312; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 16px; transition: all 0.3s ease;">
-                                <span id="lpPreviewCardText" style="font-size: 0.72rem; color: #ded7cf;">✦ Alta Joalheria em Prata de Lei</span>
+                                <span id="lpPreviewCardText" style="font-size: 0.72rem; color: #ded7cf;">✦ Joalheria Autoral com Banho de Prata</span>
                             </div>
                         </div>
                         <div style="position: relative; z-index: 2; text-align: center;">
@@ -1631,8 +1631,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('mobile_nav_perk_visible') ?>
                     </div>
                     <input type="text" id="mobile_nav_perk_text" name="mobile_nav_perk_text" class="form-input" 
-                           value="<?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?>"
-                           placeholder="✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras"
+                           value="<?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Banho de Prata & Gemas Raras')) ?>"
+                           placeholder="✨ Joalheria Autoral Brasileira • Banho de Prata & Gemas Raras"
                            oninput="updateMobileMenuLivePreview()">
                     <span class="field-hint">Frase final de prestígio e assinatura da marca no pé do menu.</span>
                 </div>
@@ -1724,7 +1724,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                     </div>
 
                                     <div id="previewPerkWrap" style="text-align: center; color: #8e8880; font-size: 0.62rem; margin-top: 2px;">
-                                        <span id="previewTextPerk"><?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?></span>
+                                        <span id="previewTextPerk"><?= View::e(Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Banho de Prata & Gemas Raras')) ?></span>
                                     </div>
                                 </div>
 
@@ -1766,7 +1766,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width">
                     <label for="hero_subtitle">Subtítulo / Descrição Storytelling</label>
                     <textarea id="hero_subtitle" name="hero_subtitle" class="form-textarea" rows="3"
-                              placeholder="A nobreza da prata de lei 925 entrelaçada à vibração autêntica de gemas minerais raras..."><?= \App\Core\View::e(Setting::get('hero_subtitle', 'A nobreza da prata de lei 925 entrelaçada à vibração autêntica de gemas minerais raras. Braceletes CAMINHOS: um mesmo design, diferentes formas de expressar a sua presença.')) ?></textarea>
+                              placeholder="A nobreza do banho de prata entrelaçada à vibração autêntica de gemas minerais raras..."><?= \App\Core\View::e(Setting::get('hero_subtitle', 'A nobreza do banho de prata entrelaçada à vibração autêntica de gemas minerais raras. Braceletes CAMINHOS: um mesmo design, diferentes formas de expressar a sua presença.')) ?></textarea>
                 </div>
 
                 <div class="form-group">
@@ -1800,8 +1800,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group">
                     <label for="hero_trust_badge_1">Selo de Confiança 1</label>
                     <input type="text" id="hero_trust_badge_1" name="hero_trust_badge_1" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Prata de Lei 925')) ?>"
-                           placeholder="Prata de Lei 925">
+                           value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Banho de Prata')) ?>"
+                           placeholder="Banho de Prata">
                 </div>
 
                 <div class="form-group">
@@ -2262,7 +2262,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group">
                     <label for="about_pillar2_desc">Pilar 2 - Descrição</label>
                     <input type="text" id="about_pillar2_desc" name="about_pillar2_desc" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('about_pillar2_desc', 'Prata de Lei 925 legítima aliada a pedras naturais selecionadas uma a uma.')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('about_pillar2_desc', 'Nobre Banho de Prata aliado a pedras naturais selecionadas uma a uma.')) ?>">
                 </div>
 
                 <div class="form-group">
@@ -2749,7 +2749,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                 <ul class="servicesPreviewList" style="list-style: none; padding: 0; margin: 0; font-size: 0.76rem; line-height: 1.5; color: <?= View::e(Setting::get('services_text_color') ?: '#a3a8b0') ?>;">
                                     <li style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
                                         <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
-                                        <span>Orientações de conservação natural da prata de lei</span>
+                                        <span>Orientações de conservação natural do banho de prata</span>
                                     </li>
                                     <li style="display: flex; align-items: flex-start; gap: 6px;">
                                         <span class="servicesPreviewBullet" style="color: <?= View::e(Setting::get('services_icon_color') ?: '#CBD0D6') ?>; font-size: 0.65rem; line-height: 1.5;">✦</span>
@@ -2846,7 +2846,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group">
                     <label for="service_2_item_1">Serviço 02 - Item 1</label>
                     <input type="text" id="service_2_item_1" name="service_2_item_1" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('service_2_item_1', 'Orientações de limpeza e conservação natural da prata de lei')) ?>">
+                           value="<?= \App\Core\View::e(Setting::get('service_2_item_1', 'Orientações de limpeza e conservação natural do banho de prata')) ?>">
                 </div>
                 <div class="form-group">
                     <label for="service_2_item_2">Serviço 02 - Item 2</label>
@@ -3166,7 +3166,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </div>
                     <div style="margin-bottom: 12px;">
                         <label for="testimonial_2_quote">Citação / Depoimento Completo</label>
-                        <textarea id="testimonial_2_quote" name="testimonial_2_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_2_quote', 'O peso da prata 925 maciça e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.')) ?></textarea>
+                        <textarea id="testimonial_2_quote" name="testimonial_2_quote" class="form-textarea" rows="3" oninput="updateTestimonialsLivePreview()"><?= \App\Core\View::e(Setting::get('testimonial_2_quote', 'O acabamento refinado em banho de prata e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.')) ?></textarea>
                     </div>
                     <div>
                         <label for="testimonial_2_backdrop_img">Imagem de Fundo (Foto Editorial)</label>
@@ -3600,7 +3600,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         </div>
                         <input type="text" name="page_garantia_title" class="form-input" style="margin-bottom: 8px;"
                                value="<?= View::e(Setting::get('page_garantia_title', 'Certificado de Garantia & Cuidados')) ?>" placeholder="Título da Página">
-                        <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia Vitalícia quanto ao teor da Prata de Lei 925 e autenticidade das pedras e cristais nobres.')) ?></textarea>
+                        <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia quanto ao acabamento em Banho de Prata e autenticidade das pedras e cristais nobres.')) ?></textarea>
                     </div>
 
                     <!-- Página 3: LGPD & Privacidade -->
@@ -3658,8 +3658,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width">
                     <label for="seo_meta_keywords">Palavras-chave (Keywords)</label>
                     <input type="text" id="seo_meta_keywords" name="seo_meta_keywords" class="form-input"
-                           value="<?= View::e(Setting::get('seo_meta_keywords', 'joias autorais, prata 925, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre')) ?>"
-                           placeholder="joias autorais, prata 925, ...">
+                           value="<?= View::e(Setting::get('seo_meta_keywords', 'joias autorais, banho de prata, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre')) ?>"
+                           placeholder="joias autorais, banho de prata, ...">
                     <span class="field-hint">Termos separados por vírgula que descrevem o catálogo da marca.</span>
                 </div>
 
@@ -3906,7 +3906,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <label for="store_hero_subtitle_lp">Subtítulo / Descrição Conceitual da Boutique</label>
                         <?= $renderToggle('store_hero_subtitle_visible') ?>
                     </div>
-                    <textarea id="store_hero_subtitle_lp" name="store_hero_subtitle" class="form-textarea" rows="2"><?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
+                    <textarea id="store_hero_subtitle_lp" name="store_hero_subtitle" class="form-textarea" rows="2"><?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a nobreza e o brilho do banho de prata à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
                 </div>
 
                 <div class="form-group <?= Setting::get('store_filter_all_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
@@ -3924,7 +3924,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_card_badge_metal_visible') ?>
                     </div>
                     <input type="text" id="store_card_badge_metal_lp" name="store_card_badge_metal" class="form-input" 
-                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>">
+                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Banho de Prata')) ?>">
                 </div>
 
                 <div class="form-group <?= Setting::get('store_pix_discount_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
@@ -4364,7 +4364,7 @@ function initCarouselSlidesManager() {
             {
                 id: 1,
                 image_url: '/assets/images/hero/featured-green-shell.jpg',
-                alt_text: 'Bracelete Caminhos em Prata 925 com Concha Verde Esmeralda',
+                alt_text: 'Bracelete Caminhos com Banho de Prata e Concha Verde Esmeralda',
                 link_url: '/loja',
                 sort_order: 1,
                 is_active: 1
@@ -4466,7 +4466,7 @@ function renderCarouselSlides() {
 
                         <div class="form-group" style="margin: 0;">
                             <label style="font-size: 0.76rem;">Texto Alternativo (Alt / Acessibilidade / SEO)</label>
-                            <input type="text" class="form-input" style="font-size: 0.8rem;" value="${escapeHtml(alt)}" placeholder="Ex: Bracelete Caminhos em Prata 925" oninput="updateCarouselSlide(${idx}, 'alt_text', this.value)">
+                            <input type="text" class="form-input" style="font-size: 0.8rem;" value="${escapeHtml(alt)}" placeholder="Ex: Bracelete Caminhos com Banho de Prata" oninput="updateCarouselSlide(${idx}, 'alt_text', this.value)">
                         </div>
                     </div>
 
@@ -4639,7 +4639,7 @@ function updateMobileMenuLivePreview() {
     setPreview('previewTextWishlist', 'mobile_nav_wishlist_text', 'Lista de Desejos');
     setPreview('previewTextWhatsapp', 'mobile_nav_whatsapp_text', 'Concierge VIP via WhatsApp');
     setPreview('previewTextLogin', 'mobile_nav_login_text', 'Entrar no Painel Administrativo');
-    setPreview('previewTextPerk', 'mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras');
+    setPreview('previewTextPerk', 'mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Banho de Prata & Gemas Raras');
 
     const previewLinkHome = document.getElementById('previewLinkHome');
     if (previewLinkHome) {

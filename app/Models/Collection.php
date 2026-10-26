@@ -319,9 +319,9 @@ class Collection
 
         // Garante a existência das 3 categorias essenciais requeridas
         $required = [
-            ['name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Aros duplos esculturais e joias de pulso em prata 925.'],
+            ['name' => 'Braceletes', 'slug' => 'braceletes', 'description' => 'Aros duplos esculturais e joias de pulso com banho de prata.'],
             ['name' => 'Colares', 'slug' => 'colares', 'description' => 'Correntes e pingentes elegantes com gemas minerais raras.'],
-            ['name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Joias esculturais de design envolvente em prata de lei.']
+            ['name' => 'Anéis', 'slug' => 'aneis', 'description' => 'Joias esculturais de design envolvente com banho de prata.']
         ];
 
         $existingSlugs = array_map(function ($c) {
@@ -529,7 +529,7 @@ class Collection
                 'name' => 'Coleção Caminhos',
                 'slug' => 'colecao-caminhos',
                 'title' => 'Braceletes CAMINHOS • Harmonia Mineral',
-                'subtitle' => 'Seis caminhos, seis vibrações. Esculpidos em aro duplo de prata de lei 925 com gemas minerais nobres.',
+                'subtitle' => 'Seis caminhos, seis vibrações. Esculpidos em aro duplo com banho de prata e gemas minerais nobres.',
                 'description' => 'A Coleção Caminhos expressa a harmonia entre as formas geométricas contemporâneas e a pulsação viva da natureza. Peças assinadas com aro anatômico duplo e lapidação manual.',
                 'promo_text' => 'Edição Autoral Limitada • Frete Cortesia para todo o Brasil',
                 'badge' => 'LANÇAMENTO EXCLUSIVO',
@@ -594,9 +594,9 @@ class Collection
                 'name' => 'Coleção Fios de Luz',
                 'slug' => 'colecao-fios-de-luz',
                 'title' => 'Colares FIOS DE LUZ • Fluidez & Brilho Mineral',
-                'subtitle' => 'Correntes delicadas em prata de lei 925 com pingentes facetados em pedras preciosas brasileiras.',
+                'subtitle' => 'Correntes delicadas com banho de prata e pingentes facetados em pedras preciosas brasileiras.',
                 'description' => 'A leveza das correntes dialoga com a intensidade dos pingentes minerais em uma composição minimalista que valoriza o colo com sofisticação atemporal.',
-                'promo_text' => 'Alta Joalheria Autoral • Certificado de Garantia Vitalícia da Prata',
+                'promo_text' => 'Alta Joalheria Autoral • Certificado de Garantia do Banho de Prata',
                 'badge' => 'NOVA COLEÇÃO',
                 'image_url' => '/assets/images/products/bracelete-madreperola.jpeg',
                 'image_alt' => 'Colares Coleção Fios de Luz Divinium',

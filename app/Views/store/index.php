@@ -100,7 +100,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
 
         <?php if (Setting::get('store_hero_subtitle_visible', '1') === '1'): ?>
         <p class="store-hero-subtitle">
-            <?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?>
+            <?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a nobreza e o brilho do banho de prata à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?>
         </p>
         <?php endif; ?>
 
@@ -117,7 +117,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
             <?php if (Setting::get('store_badge_2_visible', '1') === '1'): ?>
             <div class="trust-badge-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <span><?= View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?></span>
+                <span><?= View::e(Setting::get('store_badge_2', 'Certificado de Banho de Prata')) ?></span>
             </div>
             <?php endif; ?>
 
@@ -294,7 +294,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                             $showVarBadge = Setting::get('store_card_variations_badge_visible', '1') === '1';
                             $varSuffix = Setting::get('store_card_variations_badge_suffix', 'Pedras Minerais');
                             $showCardMetalBadge = Setting::get('store_card_badge_metal_visible', '1') === '1';
-                            $cardMetalText = Setting::get('store_card_badge_metal', 'Prata 925');
+                            $cardMetalText = Setting::get('store_card_badge_metal', 'Banho de Prata');
                             $cardBtnText = Setting::get('store_card_btn_text', 'Conhecer a Peça');
                             ?>
                             <?php if ($showProdBadge && ($showVarBadge || $showCardMetalBadge)): ?>
@@ -425,7 +425,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
             <?php if (Setting::get('store_reason_3_visible', '1') === '1'): ?>
             <div class="reason-card">
                 <div class="reason-icon"><?= View::e(Setting::get('store_reason_3_icon', '💎')) ?></div>
-                <h3><?= View::e(Setting::get('store_reason_3_title', 'Autenticidade & Prata 925')) ?></h3>
+                <h3><?= View::e(Setting::get('store_reason_3_title', 'Qualidade & Banho de Prata')) ?></h3>
                 <p><?= View::e(Setting::get('store_reason_3_desc', 'Todas as peças enviadas acompanham o certificado oficial de autenticidade da Divinium e estojo nobre aveludado.')) ?></p>
             </div>
             <?php endif; ?>

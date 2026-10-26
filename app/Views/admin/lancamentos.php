@@ -309,7 +309,7 @@ $activeCategorySlug = $_GET['cat'] ?? (!empty($categories[0]['slug']) ? $categor
 
                 <div class="form-group">
                     <label for="fieldColSubtitle">Subtítulo / Frase de Impacto</label>
-                    <input type="text" id="fieldColSubtitle" name="subtitle" class="form-input" placeholder="Ex: Seis caminhos, seis vibrações esculpidas em prata de lei 925">
+                    <input type="text" id="fieldColSubtitle" name="subtitle" class="form-input" placeholder="Ex: Seis caminhos, seis vibrações esculpidas com banho de prata">
                 </div>
 
                 <div class="form-group">

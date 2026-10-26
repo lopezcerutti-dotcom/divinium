@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: GESTÃO DE TEMAS & IDENTIDADE VISUAL - ADMIN DIVINIUM
  */
@@ -476,7 +476,7 @@
                         </span>
                     </div>
                     <span id="previewSubtitleText" style="font-size: 0.82rem; color: #686868; display: block; margin-bottom: 6px; font-weight: 600;">
-                        Alta Joalheria Autoral em Prata 925 & Luxo Silencioso
+                        Joalheria Autoral com Banho de Prata & Luxo Silencioso
                     </span>
                     <span id="previewSampleText" style="font-size: 0.85rem; color: #202020; display: block; line-height: 1.45;">
                         Cada peça é desenhada para harmonizar proporção anatômica, pureza mineral e acabamento acetinado de precisão.
@@ -524,7 +524,7 @@ $bgAreas = [
         'has_cards' => false,
         'preview_badge' => 'VISÃO GLOBAL',
         'preview_title' => 'DIVINIUM HAUTE JOAILLERIE',
-        'preview_sub' => 'Prata de Lei 925 & Gemas Minerais Raras'
+        'preview_sub' => 'Banho de Prata & Gemas Minerais Raras'
     ],
     'home' => [
         'name' => '🏠 Página Inicial / Home (/)',
@@ -566,7 +566,7 @@ $bgAreas = [
         'card_label' => 'Painel da Galeria & Compra',
         'preview_badge' => 'DETALHE DA JOIA',
         'preview_title' => 'Colar Sinfonia Mineral',
-        'preview_sub' => 'Prata 925 • R$ 490,00'
+        'preview_sub' => 'Banho de Prata • R$ 490,00'
     ],
     'checkout' => [
         'name' => '🔒 Checkout Seguro & Pix (/checkout)',

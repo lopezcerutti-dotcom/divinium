@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * VIEW: GESTÃO COMPLETA DE CATEGORIAS, PRODUTOS & VARIANTES BLING
  * DIVINIUM ADMIN SUITE - QUIET LUXURY EXECUTION
@@ -136,7 +136,7 @@
 
                 <div class="form-group">
                     <label for="catDesc">Descrição da Coleção</label>
-                    <textarea id="catDesc" name="description" class="form-textarea" rows="3" placeholder="Peças esculpidas em prata de lei 925 com acabamento acetinado..."></textarea>
+                    <textarea id="catDesc" name="description" class="form-textarea" rows="3" placeholder="Peças esculpidas com banho de prata e acabamento acetinado..."></textarea>
                 </div>
 
                 <div class="form-row-2">

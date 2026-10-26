@@ -33,7 +33,7 @@ ob_start();
             </h1>
             
             <p class="hero-subtitle">
-                <?= \App\Core\View::e(Setting::get('hero_subtitle', 'A nobreza da prata de lei 925 entrelaçada à vibração autêntica de gemas minerais raras. Braceletes CAMINHOS: um mesmo design, diferentes formas de expressar a sua presença.')) ?>
+                <?= \App\Core\View::e(Setting::get('hero_subtitle', 'A nobreza do banho de prata entrelaçada à vibração autêntica de gemas minerais raras. Braceletes CAMINHOS: um mesmo design, diferentes formas de expressar a sua presença.')) ?>
             </p>
 
             <!-- Grupo de Ações Principais (Botões de Alta Conversão) -->
@@ -63,7 +63,7 @@ ob_start();
             <div class="hero-trust-strip">
                 <div class="trust-badge">
                     <span class="trust-dot">✦</span>
-                    <span><?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Prata de Lei 925')) ?></span>
+                    <span><?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Banho de Prata')) ?></span>
                 </div>
                 <div class="trust-badge">
                     <span class="trust-dot">✦</span>
@@ -98,7 +98,7 @@ ob_start();
                     [
                         'id' => 1,
                         'image_url' => $mainImg,
-                        'alt_text' => 'Bracelete Caminhos em Prata 925 com Concha Verde Esmeralda',
+                        'alt_text' => 'Bracelete Caminhos com Banho de Prata e Concha Verde Esmeralda',
                         'link_url' => '/loja',
                         'sort_order' => 1,
                         'is_active' => 1
@@ -395,7 +395,7 @@ foreach ($activeCollections as $c) {
                                     </div>
                                     <div class="product-info">
                                         <h3 class="product-name"><?= View::e($prod['name'] ?? 'Joia Divinium') ?></h3>
-                                        <p class="product-variant"><?= View::e($col['name']) ?> • Acabamento em Prata de Lei 925</p>
+                                        <p class="product-variant"><?= View::e($col['name']) ?> • Acabamento em Banho de Prata</p>
                                         <div class="product-price-box">
                                             <span class="price">R$ <?= $pPriceFormatted ?></span>
                                             <span class="installment">6x de R$ <?= $pInstallment ?> sem juros | R$ <?= $pPix ?> no Pix</span>
@@ -500,7 +500,7 @@ ob_start();
                 <div class="service-name"><?= \App\Core\View::e(Setting::get('service_2_title', 'Cuidado Artesanal & Manutenção da Prata')) ?></div>
                 <div class="service-details">
                     <ul>
-                        <li><?= \App\Core\View::e(Setting::get('service_2_item_1', 'Orientações de limpeza e conservação natural da prata de lei')) ?></li>
+                        <li><?= \App\Core\View::e(Setting::get('service_2_item_1', 'Orientações de limpeza e conservação natural do banho de prata')) ?></li>
                         <li><?= \App\Core\View::e(Setting::get('service_2_item_2', 'Polimento artesanal para renovação periódica do brilho original')) ?></li>
                         <li><?= \App\Core\View::e(Setting::get('service_2_item_3', 'Proteção e impermeabilização da resina mineral')) ?></li>
                     </ul>
@@ -602,7 +602,7 @@ ob_start();
                 [
                     'id' => 2,
                     'stars' => Setting::get('testimonial_2_stars', '★★★★★'),
-                    'quote' => Setting::get('testimonial_2_quote', 'O peso da prata 925 maciça e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.'),
+                    'quote' => Setting::get('testimonial_2_quote', 'O acabamento refinado em banho de prata e o encaixe anatômico do aro duplo são impecáveis. Uso diariamente há meses e a gema preserva o mesmo magnetismo mineral do primeiro dia. É uma verdadeira joia autoral.'),
                     'author' => Setting::get('testimonial_2_author', '[ Helena Castro • Rio de Janeiro/RJ • Colecionadora Divinium ]'),
                     'backdrop' => Setting::get('testimonial_2_backdrop_img', '/assets/images/about/banner-unica.jpg'),
                     'is_active' => 1

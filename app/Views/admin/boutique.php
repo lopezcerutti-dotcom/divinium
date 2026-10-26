@@ -128,7 +128,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <label for="store_hero_subtitle">Subtítulo / Descrição Conceitual</label>
                         <?= $renderToggle('store_hero_subtitle_visible') ?>
                     </div>
-                    <textarea id="store_hero_subtitle" name="store_hero_subtitle" class="form-textarea" rows="3"><?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a precisão da prata de lei 925 à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
+                    <textarea id="store_hero_subtitle" name="store_hero_subtitle" class="form-textarea" rows="3"><?= View::e(Setting::get('store_hero_subtitle', 'Cada joia Divinium une a nobreza e o brilho do banho de prata à energia de gemas minerais raras e conchas naturais. Escolha sua peça e finalize sua compra com toda a segurança, cupons e rastreamento nos nossos canais oficiais homologados.')) ?></textarea>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_badge_2_visible') ?>
                     </div>
                     <input type="text" id="store_badge_2" name="store_badge_2" class="form-input" 
-                           value="<?= View::e(Setting::get('store_badge_2', 'Certificado de Prata de Lei 925')) ?>">
+                           value="<?= View::e(Setting::get('store_badge_2', 'Certificado de Banho de Prata')) ?>">
                 </div>
 
                 <div class="form-group full-width <?= Setting::get('store_badge_3_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
@@ -287,7 +287,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_card_badge_metal_visible') ?>
                     </div>
                     <input type="text" id="store_card_badge_metal" name="store_card_badge_metal" class="form-input" 
-                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>">
+                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Banho de Prata')) ?>">
                     <span class="field-hint">Selo sobreposto à foto do produto.</span>
                 </div>
 
@@ -364,7 +364,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <option value="default" <?= Setting::get('store_btn_default_color', 'default') === 'default' ? 'selected' : '' ?>>Automático por Plataforma (Shopee Laranja, ML Amarelo...)</option>
                         <option value="gold" <?= Setting::get('store_btn_default_color') === 'gold' ? 'selected' : '' ?>>🪙 Prata Nobre Divinium (#A7ADB4)</option>
                         <option value="dark" <?= Setting::get('store_btn_default_color') === 'dark' ? 'selected' : '' ?>>🖤 Ônix & Grafite (#252525)</option>
-                        <option value="silver" <?= Setting::get('store_btn_default_color') === 'silver' ? 'selected' : '' ?>>🪙 Prata de Lei 925 (#CBD0D6)</option>
+                        <option value="silver" <?= Setting::get('store_btn_default_color') === 'silver' ? 'selected' : '' ?>>🪙 Banho de Prata (#CBD0D6)</option>
                         <option value="platinum" <?= Setting::get('store_btn_default_color') === 'platinum' ? 'selected' : '' ?>>⚪ Platina Pura (#F0F0EF)</option>
                         <option value="titanium" <?= Setting::get('store_btn_default_color') === 'titanium' ? 'selected' : '' ?>>🔘 Titânio Grafite (#737B85)</option>
                         <option value="shopee" <?= Setting::get('store_btn_default_color') === 'shopee' ? 'selected' : '' ?>>🟠 Shopee Oficial (#EE4D2D)</option>
@@ -430,7 +430,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group full-width" style="background: rgba(202, 161, 92, 0.08); border: 1px solid rgba(202, 161, 92, 0.3); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
                     <div>
                         <strong style="color: #ffffff; font-size: 0.9rem; display: block; margin-bottom: 2px;">💎 Central Unificada de Informações e Exibição dos Produtos</strong>
-                        <p style="margin: 0; font-size: 0.82rem; color: #ded7cf;">Para gerenciar SKU, selos de metal ("Prata de Lei 925"), gemas minerais, imagens sem cortes e especificações técnicas completas em um único lugar centralizado, utilize a seção dedicada.</p>
+                        <p style="margin: 0; font-size: 0.82rem; color: #ded7cf;">Para gerenciar SKU, selos de metal ("Banho de Prata"), gemas minerais, imagens sem cortes e especificações técnicas completas em um único lugar centralizado, utilize a seção dedicada.</p>
                     </div>
                     <a href="/admin/produtos-exibicao" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.8rem; padding: 8px 16px; text-decoration: none;">
                         Abrir Informações & Exibição ↗
@@ -504,7 +504,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <label>Card de Garantia & Autenticidade DIVINIUM</label>
                         <?= $renderToggle('store_detail_show_guarantee', '1') ?>
                     </div>
-                    <span class="field-hint">Exibe o selo de Prata de Lei 925 com garantia vitalícia e estojo de presente.</span>
+                    <span class="field-hint">Exibe o selo de Banho de Prata com garantia e estojo de presente.</span>
                 </div>
 
                 <div class="form-group <?= Setting::get('store_detail_guarantee_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
@@ -519,7 +519,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
                     <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de prata de lei 925, estojo de presente aveludado e garantia vitalícia contra defeitos no metal.')) ?>">
+                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?>">
                 </div>
 
                 <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
@@ -638,12 +638,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
                 <div class="form-group <?= Setting::get('store_reason_3_visible', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
                     <div class="field-label-row">
-                        <label>Card 3: Autenticidade & Prata 925</label>
+                        <label>Card 3: Qualidade & Banho de Prata</label>
                         <?= $renderToggle('store_reason_3_visible') ?>
                     </div>
                     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                         <input type="text" name="store_reason_3_icon" class="form-input" style="width: 60px;" value="<?= View::e(Setting::get('store_reason_3_icon', '💎')) ?>">
-                        <input type="text" name="store_reason_3_title" class="form-input" value="<?= View::e(Setting::get('store_reason_3_title', 'Autenticidade & Prata 925')) ?>">
+                        <input type="text" name="store_reason_3_title" class="form-input" value="<?= View::e(Setting::get('store_reason_3_title', 'Qualidade & Banho de Prata')) ?>">
                     </div>
                     <textarea name="store_reason_3_desc" class="form-textarea" rows="2"><?= View::e(Setting::get('store_reason_3_desc', 'Todas as peças enviadas acompanham o certificado oficial de autenticidade da Divinium e estojo nobre.')) ?></textarea>
                 </div>

@@ -180,7 +180,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                     <div class="checkout-perks-list">
                         <div class="perk-item">
                             <span class="perk-dot">✦</span>
-                            <span>Prata de Lei 925 com Certificado Vitalício</span>
+                            <span>Banho de Prata com Certificado de Qualidade</span>
                         </div>
                         <div class="perk-item">
                             <span class="perk-dot">✦</span>

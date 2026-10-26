@@ -447,7 +447,7 @@
 
             <div class="form-group">
                 <label for="prodDesc">Descrição Curta</label>
-                <textarea id="prodDesc" name="description" class="form-textarea" rows="2" placeholder="Prata nobre 925 e gema mineral pura com concha natural."></textarea>
+                <textarea id="prodDesc" name="description" class="form-textarea" rows="2" placeholder="Banho de prata refinado e gema mineral pura com concha natural."></textarea>
             </div>
 
             <div class="form-checkbox-row">

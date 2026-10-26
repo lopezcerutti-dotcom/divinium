@@ -73,7 +73,8 @@ $prodName = (string) ($product['name'] ?? 'Joia Autoral DIVINIUM');
 $prodSlug = (string) ($product['slug'] ?? 'joia');
 $prodCategory = !empty($product['category_name']) ? $product['category_name'] : 'Coleção Autoral';
 $prodMineral = trim((string) ($product['stone_mineral'] ?? ''));
-$prodMaterials = trim((string) ($product['materials'] ?? 'Prata de Lei 925'));
+$rawMaterials = trim((string) ($product['materials'] ?? 'Banho de Prata'));
+$prodMaterials = str_ireplace(['Prata de Lei 925', 'prata de lei 925', 'Prata de Lei', 'prata de lei'], 'Banho de Prata', $rawMaterials);
 $prodDimensions = trim((string) ($product['dimensions'] ?? ''));
 $prodColors = trim((string) ($product['colors'] ?? ''));
 $prodSku = trim((string) ($product['sku'] ?? 'DIV-' . str_pad((string)$prodId, 4, '0', STR_PAD_LEFT)));
@@ -131,7 +132,7 @@ $canShowSku = $showGlobalSku && $showProductSku;
 
 // Selos e Badges Globais editáveis e ocultáveis
 $showMetalBadge = Setting::get('store_badge_metal_visible', Setting::get('store_card_badge_metal_visible', '1')) === '1';
-$metalBadgeText = Setting::get('store_badge_metal_text', Setting::get('store_card_badge_metal', 'Prata de Lei 925'));
+$metalBadgeText = Setting::get('store_badge_metal_text', Setting::get('store_card_badge_metal', 'Banho de Prata'));
 $showMineralBadge = Setting::get('store_badge_mineral_visible', Setting::get('store_card_mineral_visible', '1')) === '1';
 $showStatusBadge = Setting::get('store_badge_status_visible', '1') === '1';
 $preorderBadgeText = Setting::get('store_badge_preorder_text', 'Sob Encomenda');
@@ -476,7 +477,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <?php elseif (!empty($product['short_description'])): ?>
                                 <?= nl2br(View::e($product['short_description'])) ?>
                             <?php else: ?>
-                                <p>Joia autoral manufaturada em prata de lei 925 com lapidação mineral precisa e acabamento artesanal espelhado. Uma expressão sublime do luxo silencioso, criada para transcender tendências e permanecer na sua história.</p>
+                                <p>Joia autoral manufaturada com banho de prata com lapidação mineral precisa e acabamento artesanal espelhado. Uma expressão sublime do luxo silencioso, criada para transcender tendências e permanecer na sua história.</p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -519,7 +520,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <?php if (Setting::get('store_spec_authenticity_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Autenticidade</dt>
-                                <dd class="spec-value"><?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Prata de Lei 925 com Garantia Vitalícia')) ?></dd>
+                                <dd class="spec-value"><?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia')) ?></dd>
                             </div>
                             <?php endif; ?>
 
@@ -555,13 +556,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <span class="guarantee-icon">🛡️</span>
                             <div>
                                 <h4 class="guarantee-title"><?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?></h4>
-                                <p class="guarantee-desc"><?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de prata de lei 925, estojo de presente aveludado e garantia vitalícia contra defeitos no metal.')) ?></p>
+                                <p class="guarantee-desc"><?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?></p>
                             </div>
                         </div>
 
                         <div class="guarantee-perks-grid">
                             <div class="perk-item">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                 <span>Envio Assegurado p/ todo Brasil</span>
                             </div>
                             <div class="perk-item">
@@ -570,7 +571,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
                             <div class="perk-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                <span>Garantia Vitalícia do Metal 925</span>
+                                <span>Garantia de Qualidade Banho de Prata</span>
                             </div>
                         </div>
                     </div>
@@ -725,7 +726,7 @@ function selectProductVariation(btn) {
             badgeStock.textContent = 'Sob Encomenda';
         } else {
             badgeStock.className = 'media-badge badge-metal';
-            badgeStock.textContent = 'Prata de Lei 925';
+            badgeStock.textContent = '<?= View::e($metalBadgeText) ?>';
         }
     }
     

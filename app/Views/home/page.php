@@ -39,7 +39,7 @@ use App\Core\View;
                 <div class="institutional-footer-strip">
                     <div class="strip-left">
                         <span class="seal-sparkle">✦</span>
-                        <span>DIVINIUM JOIAS • Prata de Lei 925 & Gemas Naturais Raras</span>
+                        <span>DIVINIUM JOIAS • Banho de Prata & Gemas Naturais Raras</span>
                     </div>
                     <div class="strip-right">
                         <a href="/loja" class="btn-back-store">

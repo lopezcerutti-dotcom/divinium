@@ -110,6 +110,21 @@ class Setting
             }
         }
 
+        // Normalização das informações públicas dos produtos: Substituir "Prata de Lei 925", "Prata de Lei" e "Prata 925" por "Banho de Prata"
+        if ($val !== null && (
+            stripos($val, 'prata de lei 925') !== false || 
+            stripos($val, 'prata de lei') !== false || 
+            stripos($val, 'prata 925') !== false ||
+            stripos($val, 'prata legítima 925') !== false ||
+            stripos($val, 'prata nobre 925') !== false
+        )) {
+            $val = str_ireplace(
+                ['Prata de Lei 925', 'prata de lei 925', 'Prata de Lei', 'prata de lei', 'Prata legítima 925', 'prata legítima 925', 'Prata nobre 925', 'prata nobre 925', 'Prata 925', 'prata 925'],
+                ['Banho de Prata', 'banho de prata', 'Banho de Prata', 'banho de prata', 'Banho de Prata', 'banho de prata', 'Banho de Prata', 'banho de prata', 'Banho de Prata', 'banho de prata'],
+                $val
+            );
+        }
+
         return $val;
     }
 

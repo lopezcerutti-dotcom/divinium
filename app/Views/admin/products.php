@@ -440,7 +440,7 @@
 
                     <div class="form-group">
                         <label for="prodMaterials">Materiais Nobres</label>
-                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Prata de Lei 925, Resina Nobre condutora">
+                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Banho de Prata, Resina Nobre condutora">
                     </div>
                 </div>
 
@@ -527,7 +527,7 @@
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_badge" value="0">
                             <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir selos flutuantes na foto (Prata 925 / Sob Encomenda / Canais)</span>
+                            <span>Exibir selos flutuantes na foto (Banho de Prata / Sob Encomenda / Canais)</span>
                         </label>
                         <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Desmarque para ocultar selos que cubram detalhes ou ocupem espaço excessivo na fotografia desta peça.</span>
 
@@ -639,7 +639,7 @@
 
                 <div class="form-group">
                     <label for="prodShortDesc">Breve Resumo (1 linha)</label>
-                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral em prata legítima 925 com lapidação mineral e acabamento artesanal.">
+                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral com banho de prata refinado, lapidação mineral e acabamento artesanal.">
                 </div>
 
                 <div class="form-group">
@@ -1167,7 +1167,7 @@ function renderPlatformLinks() {
                                 <option value="default" ${btnColor === 'default' ? 'selected' : ''}>✦ Padrão do Canal / Tema</option>
                                 <option value="gold" ${btnColor === 'gold' ? 'selected' : ''}>🪙 Prata Nobre Divinium (#A7ADB4)</option>
                                 <option value="dark" ${btnColor === 'dark' ? 'selected' : ''}>🖤 Ônix & Grafite (#252525)</option>
-                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Prata de Lei 925 (#CBD0D6)</option>
+                                <option value="silver" ${btnColor === 'silver' ? 'selected' : ''}>🪙 Banho de Prata (#CBD0D6)</option>
                                 <option value="shopee" ${btnColor === 'shopee' ? 'selected' : ''}>🟠 Laranja Shopee (#EE4D2D)</option>
                                 <option value="mercadolivre" ${btnColor === 'mercadolivre' ? 'selected' : ''}>🟡 Amarelo Mercado Livre (#FFE600)</option>
                                 <option value="amazon" ${btnColor === 'amazon' ? 'selected' : ''}>📦 Âmbar Amazon (#FF9900)</option>

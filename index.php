@@ -103,7 +103,7 @@ try {
         try {
             \App\Core\View::render('home/index', [
                 'pageTitle' => 'Joias que Revelam o Luxo Silencioso',
-                'pageDescription' => 'Divinium — Joias exclusivas em prata de lei 925 e gemas minerais raras com a essência do quiet luxury.'
+                'pageDescription' => 'Divinium — Joias exclusivas com banho de prata e gemas minerais raras com a essência do quiet luxury.'
             ]);
             exit(0);
         } catch (Throwable $renderErr) {

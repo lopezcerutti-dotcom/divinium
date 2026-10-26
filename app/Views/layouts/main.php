@@ -12,7 +12,7 @@
             $renderedTitle = $currentTitle . ' | ' . $siteBrand;
         }
         $metaDesc = isset($pageDescription) ? $pageDescription : \App\Models\Setting::get('seo_meta_description', 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.');
-        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, prata 925, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre');
+        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, banho de prata, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre');
         $ogImage = \App\Models\Setting::get('seo_og_image', '/assets/images/hero/hero-main.webp');
         $faviconUrl = \App\Models\Setting::get('site_favicon_url', '/assets/images/favicon.ico');
     ?>
@@ -1169,7 +1169,7 @@
 
                 <?php if (\App\Models\Setting::get('mobile_nav_perk_visible', '1') === '1'): ?>
                     <div class="mobile-nav-perk">
-                        <small><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Prata 925 & Gemas Raras')) ?></small>
+                        <small><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_perk_text', '✨ Joalheria Autoral Brasileira • Banho de Prata & Gemas Raras')) ?></small>
                     </div>
                 <?php endif; ?>
             </div>

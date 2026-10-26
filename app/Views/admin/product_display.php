@@ -151,7 +151,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             📍 Sobrepostos à Foto (Vitrine /loja e Detalhe /produto)
                         </span>
                     </div>
-                    <p>Personalize os textos dos selos e etiquetas ("Prata de Lei 925", "Sob Encomenda", gemas minerais) ou oculte-os individualmente.</p>
+                    <p>Personalize os textos dos selos e etiquetas ("Banho de Prata", "Sob Encomenda", gemas minerais) ou oculte-os individualmente.</p>
                 </div>
             </div>
 
@@ -163,7 +163,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_badge_metal_visible', '1') ?>
                     </div>
                     <input type="text" id="store_badge_metal_text" name="store_badge_metal_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_badge_metal_text', Setting::get('store_card_badge_metal', 'Prata de Lei 925'))) ?>" placeholder="Ex: Prata de Lei 925">
+                           value="<?= View::e(Setting::get('store_badge_metal_text', Setting::get('store_card_badge_metal', 'Banho de Prata'))) ?>" placeholder="Ex: Banho de Prata">
                     <span class="field-hint">Selo sobreposto no canto superior da foto na página de detalhes (/produto/{slug}).</span>
                 </div>
 
@@ -174,7 +174,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_card_badge_metal_visible', '1') ?>
                     </div>
                     <input type="text" id="store_card_badge_metal" name="store_card_badge_metal" class="form-input" 
-                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Prata 925')) ?>" placeholder="Ex: Prata 925">
+                           value="<?= View::e(Setting::get('store_card_badge_metal', 'Banho de Prata')) ?>" placeholder="Ex: Banho de Prata">
                     <span class="field-hint">Selo compacto exibido sobre a foto dos produtos na listagem da vitrine (/loja).</span>
                 </div>
 
@@ -376,7 +376,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <label>Linha: Metal Nobre / Matéria-prima</label>
                         <?= $renderToggle('store_spec_materials_visible', '1') ?>
                     </div>
-                    <span class="field-hint">Exibe o material nobre cadastrado no produto (ex: "Prata de Lei 925").</span>
+                    <span class="field-hint">Exibe o material nobre cadastrado no produto (ex: "Banho de Prata").</span>
                 </div>
 
                 <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
@@ -409,7 +409,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <?= $renderToggle('store_spec_authenticity_visible', '1') ?>
                     </div>
                     <input type="text" id="store_spec_authenticity_text" name="store_spec_authenticity_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Prata de Lei 925 com Garantia Vitalícia')) ?>">
+                           value="<?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia')) ?>">
                     <span class="field-hint">Texto exibido na linha de garantia e autenticidade da ficha técnica.</span>
                 </div>
 
@@ -493,7 +493,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
                     <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de prata de lei 925, estojo de presente aveludado e garantia vitalícia contra defeitos no metal.')) ?>">
+                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?>">
                 </div>
             </div>
         </div>
