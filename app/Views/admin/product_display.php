@@ -80,7 +80,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
             <span>📋 Ficha Técnica & Materiais</span>
         </button>
         <button type="button" class="tab-btn" onclick="scrollToSection('sec-buttons', this)">
-            <span>🔘 Botões & Canais de Compra</span>
+            <span>🔘 Escolha Onde Adquirir & Canais</span>
         </button>
     </div>
 
@@ -523,78 +523,420 @@ $renderToggle = function(string $key, string $default = '1'): string {
         </div>
 
         <!-- ============================================================== -->
-        <!-- SEÇÃO 6: BOTÕES, AÇÕES & CANAIS DE COMPRA -->
+        <!-- SEÇÃO 6: ESCOLHA ONDE ADQUIRIR SUA JOIA & CANAIS DE COMPRA -->
         <!-- ============================================================== -->
         <div class="editor-section-card active" id="sec-buttons" style="margin-bottom: 24px;">
             <div class="section-card-header">
                 <div class="section-icon">🔘</div>
                 <div style="flex: 1;">
                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                        <h3 style="margin: 0;">6. Botões, Ações & Canais de Compra</h3>
-                        <span style="background: rgba(255,255,255,0.06); color: #CBD0D6; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
-                            📍 Botões de CTA nos Cards e Página do Produto
-                        </span>
+                        <h3 style="margin: 0;">6. Escolha Onde Deseja Adquirir & Canais Oficiais</h3>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <span style="background: rgba(212,186,136,0.15); color: #ded7cf; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(212,186,136,0.3); font-weight: 600;">
+                                ✦ GRUPO DO PRODUTO (COMPARTILHADO)
+                            </span>
+                        </div>
                     </div>
-                    <p>Controle os textos dos botões de compra, links para WhatsApp e botões de compartilhamento.</p>
+                    <p>Centralize e edite todas as informações do bloco “Escolha onde deseja adquirir sua joia”. As configurações aqui definidas pertencem ao grupo do produto e são compartilhadas automaticamente por todas as suas variações, preservando valores individuais quando houver.</p>
                 </div>
             </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="store_card_btn_text">Texto do Botão no Card da Vitrine</label>
-                    <input type="text" id="store_card_btn_text" name="store_card_btn_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_card_btn_text', 'Conhecer a Peça')) ?>" placeholder="Conhecer a Peça">
-                    <span class="field-hint">Texto do botão elegante exibido no card de cada joia na boutique.</span>
-                </div>
+            <!-- AVISO DE COMPARTILHAMENTO INTELIGENTE POR GRUPO -->
+            <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 12px 16px; margin: 0 0 20px 0; display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.2rem;">✨</span>
+                <span style="font-size: 0.8rem; color: #ded7cf; line-height: 1.45;">
+                    <strong>Herança Automática:</strong> Título, introdução, benefícios, selos, informações de confiança e a ordem dos canais aplicam-se a todas as variações da joia. Quando preço, estoque ou link de marketplace dependerem de uma variação específica, o site utiliza com total precisão o dado da variação selecionada.
+                </span>
+            </div>
 
-                <div class="form-group <?= Setting::get('store_detail_show_share', '1') !== '1' ? 'is-dimmed' : '' ?>">
-                    <div class="field-label-row">
-                        <label for="store_detail_share_btn_text">Botão de Compartilhamento da Joia</label>
-                        <?= $renderToggle('store_detail_show_share', '1') ?>
+            <!-- ========================================================== -->
+            <!-- CATEGORIA 1: TÍTULO PRINCIPAL & TEXTO INTRODUTÓRIO -->
+            <!-- ========================================================== -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">💎</span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #ffffff;">Categoria 1: Título Principal & Texto Introdutório</h4>
+                            <span style="font-size: 0.73rem; color: #8e8880;">Chamada e mensagem de proteção exibidas no topo do bloco de compra (/produto/{slug})</span>
+                        </div>
                     </div>
-                    <input type="text" id="store_detail_share_btn_text" name="store_detail_share_btn_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_share_btn_text', 'Compartilhar Joia')) ?>" placeholder="Compartilhar Joia">
-                    <span class="field-hint">Texto do botão que copia o link próprio da joia para a área de transferência.</span>
+                    <?= $renderToggle('store_detail_show_channels', '1') ?>
                 </div>
 
-                <div class="form-group full-width <?= Setting::get('store_detail_channels_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
-                    <div class="field-label-row">
-                        <label for="store_detail_channels_title">Título da Seção de Compra (/produto/{slug})</label>
-                        <?= $renderToggle('store_detail_channels_title_visible', '1') ?>
+                <div class="form-grid">
+                    <div class="form-group full-width <?= Setting::get('store_detail_channels_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <div class="field-label-row">
+                            <label for="store_detail_channels_title">Título Principal do Bloco</label>
+                            <?= $renderToggle('store_detail_channels_title_visible', '1') ?>
+                        </div>
+                        <input type="text" id="store_detail_channels_title" name="store_detail_channels_title" class="form-input" 
+                               value="<?= View::e(Setting::get('store_detail_channels_title', 'Escolha onde deseja adquirir sua joia:')) ?>" 
+                               placeholder="Escolha onde deseja adquirir sua joia:">
+                        <span class="field-hint">Título principal com estética Quiet Luxury exibido no topo do bloco de canais.</span>
                     </div>
-                    <input type="text" id="store_detail_channels_title" name="store_detail_channels_title" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_channels_title', 'Escolha onde deseja adquirir sua joia:')) ?>">
-                    <span class="field-hint">Chamada principal exibida antes dos botões de compra dos canais oficiais.</span>
-                </div>
 
-                <div class="form-group full-width <?= Setting::get('store_detail_channels_subtitle_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
-                    <div class="field-label-row">
-                        <label for="store_detail_channels_subtitle">Subtítulo Informativo de Confiança</label>
-                        <?= $renderToggle('store_detail_channels_subtitle_visible', '1') ?>
+                    <div class="form-group full-width <?= Setting::get('store_detail_channels_subtitle_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <div class="field-label-row">
+                            <label for="store_detail_channels_subtitle">Texto Introdutório de Proteção & Segurança</label>
+                            <?= $renderToggle('store_detail_channels_subtitle_visible', '1') ?>
+                        </div>
+                        <textarea id="store_detail_channels_subtitle" name="store_detail_channels_subtitle" class="form-textarea" rows="2"
+                                  placeholder="Selecione seu canal oficial de preferência. Compra 100% protegida."><?= View::e(Setting::get('store_detail_channels_subtitle', 'Selecione seu canal oficial de preferência. Compra 100% protegida com garantia de autenticidade e embalagem exclusiva.')) ?></textarea>
+                        <span class="field-hint">Texto informativo e elegante que assegura a procedência e proteção ao cliente.</span>
                     </div>
-                    <textarea id="store_detail_channels_subtitle" name="store_detail_channels_subtitle" class="form-textarea" rows="2"><?= View::e(Setting::get('store_detail_channels_subtitle', 'Selecione seu canal oficial de preferência. Todos contam com garantia de autenticidade, embalagem exclusiva e compra 100% protegida.')) ?></textarea>
-                </div>
-
-                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
-                    <div class="field-label-row">
-                        <label style="color: #CBD0D6; font-size: 0.9rem; font-weight: 600;">Selo Inferior de Garantia & Excelência DIVINIUM</label>
-                        <?= $renderToggle('store_detail_show_guarantee', '1') ?>
-                    </div>
-                    <span class="field-hint">Card de rodapé com escudo de autenticidade e estojo de veludo.</span>
-                </div>
-
-                <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
-                    <label for="store_detail_guarantee_title">Título da Garantia</label>
-                    <input type="text" id="store_detail_guarantee_title" name="store_detail_guarantee_title" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?>">
-                </div>
-
-                <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
-                    <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
-                    <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?>">
                 </div>
             </div>
+
+            <!-- ========================================================== -->
+            <!-- CATEGORIA 2: CANAL DE COMPRA DIRETA DIVINIUM -->
+            <!-- ========================================================== -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">🏛️</span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #ffffff;">Categoria 2: Canal de Compra Direta DIVINIUM</h4>
+                            <span style="font-size: 0.73rem; color: #8e8880;">Opção prioritária com benefício exclusivo no Pix e envio direto da boutique</span>
+                        </div>
+                    </div>
+                    <?= $renderToggle('store_direct_channel_visible', '1') ?>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="store_direct_channel_title">Nome do Botão / Título de Ação</label>
+                        <input type="text" id="store_direct_channel_title" name="store_direct_channel_title" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_channel_title', 'Comprar Direto na DIVINIUM')) ?>" placeholder="Comprar Direto na DIVINIUM">
+                        <span class="field-hint">Texto de destaque no botão oficial próprio da joalheria.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_channel_subtitle">Descrição / Subtítulo Promocional</label>
+                        <input type="text" id="store_direct_channel_subtitle" name="store_direct_channel_subtitle" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_channel_subtitle', '5% OFF no Pix • Envio com Seguro Blindado')) ?>" placeholder="5% OFF no Pix • Envio com Seguro Blindado">
+                        <span class="field-hint">Frase de benefício exibida logo abaixo do título do botão.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_pix_discount_pct">Desconto no Pix (%)</label>
+                        <input type="number" step="0.5" min="0" max="50" id="store_direct_pix_discount_pct" name="store_direct_pix_discount_pct" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_pix_discount_pct', '5')) ?>" placeholder="5">
+                        <span class="field-hint">Percentual deduzido dinamicamente sobre o valor da variação selecionada.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_pix_label">Rótulo da Condição no Pix</label>
+                        <input type="text" id="store_direct_pix_label" name="store_direct_pix_label" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_pix_label', 'Pix (-5%)')) ?>" placeholder="Pix (-5%)">
+                        <span class="field-hint">Texto da etiqueta que acompanha o valor com desconto.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_shipping_info">Informações de Envio & Segurança</label>
+                        <input type="text" id="store_direct_shipping_info" name="store_direct_shipping_info" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_shipping_info', 'Envio com Seguro Blindado')) ?>" placeholder="Envio com Seguro Blindado">
+                        <span class="field-hint">Garantia logística informada na finalização do pedido.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_price_override">Preço Fixo Exclusivo (Opcional R$)</label>
+                        <input type="text" id="store_direct_price_override" name="store_direct_price_override" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_price_override', '')) ?>" placeholder="Deixe vazio para usar preço dinâmico">
+                        <span class="field-hint">Se preenchido, fixa o valor. Se vazio, calcula automaticamente pela variação.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_url">Link de Compra / Checkout</label>
+                        <input type="text" id="store_direct_url" name="store_direct_url" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_url', '/checkout')) ?>" placeholder="/checkout">
+                        <span class="field-hint">Destino da ação de compra direta (/checkout ou link personalizado).</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_badge">Etiqueta / Badge Visual</label>
+                        <input type="text" id="store_direct_badge" name="store_direct_badge" class="form-input" 
+                               value="<?= View::e(Setting::get('store_direct_badge', 'Exclusivo')) ?>" placeholder="Ex: Exclusivo, ✦ Oficial">
+                        <span class="field-hint">Selo decorativo ao lado do nome do botão.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_direct_icon">Ícone do Botão Direto</label>
+                        <?php $curDirectIcon = Setting::get('store_direct_icon', 'diamond'); ?>
+                        <select id="store_direct_icon" name="store_direct_icon" class="form-select">
+                            <option value="diamond" <?= ($curDirectIcon === 'diamond' || $curDirectIcon === '') ? 'selected' : '' ?>>💎 Diamante / Joia Preciosa</option>
+                            <option value="oficial" <?= $curDirectIcon === 'oficial' ? 'selected' : '' ?>>✦ Selo Oficial DIVINIUM</option>
+                            <option value="sacola" <?= $curDirectIcon === 'sacola' ? 'selected' : '' ?>>🛍️ Sacola de Joias</option>
+                            <option value="coroa" <?= $curDirectIcon === 'coroa' ? 'selected' : '' ?>>👑 Coroa Real</option>
+                            <option value="escudo" <?= $curDirectIcon === 'escudo' ? 'selected' : '' ?>>🛡️ Escudo de Segurança</option>
+                        </select>
+                        <span class="field-hint">Símbolo gráfico exibido na pílula do botão.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================== -->
+            <!-- CATEGORIA 3: CANAIS EXTERNOS (MARKETPLACES & ATENDIMENTO) -->
+            <!-- ========================================================== -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">🌐</span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #ffffff;">Categoria 3: Canais Externos, Marketplaces & Consultor VIP</h4>
+                            <span style="font-size: 0.73rem; color: #8e8880;">Shopee, Mercado Livre, WhatsApp VIP e outros canais homologados. Adicione, reordene (↑/↓), oculte ou exclua livremente.</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-admin-secondary" onclick="addCustomChannelRow()" style="font-size: 0.78rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(212, 186, 136, 0.4); color: #ded7cf;">
+                        <span>➕ Adicionar Novo Canal de Venda</span>
+                    </button>
+                </div>
+
+                <!-- Container dinâmico e reordenável de canais -->
+                <div id="channelsRowsContainer">
+                    <?php 
+                    $channelsList = Setting::getProductChannelsList();
+                    foreach ($channelsList as $cIdx => $cItem):
+                        $cId = (string)($cItem['id'] ?? 'channel_' . $cIdx);
+                        $cPlat = (string)($cItem['platform'] ?? 'Loja Oficial');
+                        $cTitle = (string)($cItem['title'] ?? '');
+                        $cOfficial = (string)($cItem['official_label'] ?? 'Canal Homologado DIVINIUM');
+                        $cDesc = (string)($cItem['desc'] ?? '');
+                        $cPrice = (string)($cItem['price_override'] ?? '');
+                        $cBadge = (string)($cItem['badge'] ?? '');
+                        $cIcon = (string)($cItem['icon'] ?? 'oficial');
+                        $cUrl = (string)($cItem['url'] ?? '');
+                        $cTarget = (string)($cItem['target'] ?? '_blank');
+                        $cVis = !empty($cItem['visible']);
+                        $cIsCustom = !empty($cItem['is_custom']);
+                        $cIsDeletable = !isset($cItem['is_deletable']) || !empty($cItem['is_deletable']);
+                    ?>
+                    <div class="channel-row-item <?= !$cVis ? 'is-dimmed' : '' ?>"
+                         data-id="<?= View::e($cId) ?>"
+                         data-type="<?= View::e((string)($cItem['type'] ?? 'external')) ?>"
+                         data-custom="<?= $cIsCustom ? '1' : '0' ?>"
+                         style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; transition: all 0.25s ease;">
+                        
+                        <!-- Barra Superior do Card do Canal -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="channel-order-badge" style="background: rgba(212,186,136,0.15); color: #ded7cf; border: 1px solid rgba(212,186,136,0.3); font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                                    Canal #<?= $cIdx + 1 ?>
+                                </span>
+                                <span class="channel-platform-preview" style="font-size: 0.75rem; color: #ffffff; font-weight: 600;">
+                                    <?= View::e($cPlat) ?>
+                                </span>
+                                <?php if (!empty($cBadge)): ?>
+                                    <span style="background: rgba(255,255,255,0.06); color: #CBD0D6; font-size: 0.68rem; padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+                                        <?= View::e($cBadge) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <!-- Botões Reordenar -->
+                                <button type="button" class="btn-order-move btn-channel-move-up" onclick="moveChannelRow(this, -1)" title="Mover Canal para Cima" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #CBD0D6; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                                    ↑
+                                </button>
+                                <button type="button" class="btn-order-move btn-channel-move-down" onclick="moveChannelRow(this, 1)" title="Mover Canal para Baixo" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #CBD0D6; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                                    ↓
+                                </button>
+
+                                <!-- Switch Visibilidade -->
+                                <label class="element-toggle-switch <?= $cVis ? 'is-visible' : 'is-hidden' ?>" style="margin: 0; padding: 3px 8px; font-size: 0.72rem;">
+                                    <input type="checkbox" class="channel-vis-checkbox" <?= $cVis ? 'checked' : '' ?> onchange="toggleChannelRowVis(this)">
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text"><?= $cVis ? 'Visível' : 'Oculto' ?></span>
+                                </label>
+
+                                <!-- Botão Excluir -->
+                                <?php if ($cIsDeletable): ?>
+                                <button type="button" onclick="deleteChannelRow(this)" title="Excluir este Canal de Venda" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; margin-left: 2px;">
+                                    ✕
+                                </button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Linha 1 de Campos: Plataforma, Botão de Ação, Identificação Homologada -->
+                        <div style="display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 12px; margin-bottom: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Plataforma / Marketplace</label>
+                                <input type="text" class="form-input channel-row-platform-input" value="<?= View::e($cPlat) ?>" placeholder="Ex: Shopee, Mercado Livre, Amazon..." oninput="updatePlatformPreview(this)">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Nome do Botão / Ação</label>
+                                <input type="text" class="form-input channel-row-title-input" value="<?= View::e($cTitle) ?>" placeholder="Ex: Comprar na Shopee Oficial">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Identificação Oficial</label>
+                                <input type="text" class="form-input channel-row-official-input" value="<?= View::e($cOfficial) ?>" placeholder="Ex: Canal Homologado DIVINIUM">
+                            </div>
+                        </div>
+
+                        <!-- Linha 2 de Campos: Descrição, Preço Específico, Etiqueta, Ícone -->
+                        <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Descrição / Vantagem</label>
+                                <input type="text" class="form-input channel-row-desc-input" value="<?= View::e($cDesc) ?>" placeholder="Ex: Parcelamento sem juros e cupons do app">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Preço Específico (R$)</label>
+                                <input type="text" class="form-input channel-row-price-input" value="<?= View::e($cPrice) ?>" placeholder="Dinâmico da variação">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Etiqueta / Badge</label>
+                                <input type="text" class="form-input channel-row-badge-input" value="<?= View::e($cBadge) ?>" placeholder="Ex: Oficial, Envio Full">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Ícone Visual</label>
+                                <select class="form-select channel-row-icon-select" style="font-size: 0.8rem; height: 38px;">
+                                    <option value="shopee" <?= str_contains(strtolower($cIcon), 'shopee') ? 'selected' : '' ?>>Shopee</option>
+                                    <option value="mercadolivre" <?= str_contains(strtolower($cIcon), 'mercado') ? 'selected' : '' ?>>Mercado Livre</option>
+                                    <option value="whatsapp" <?= str_contains(strtolower($cIcon), 'whatsapp') ? 'selected' : '' ?>>WhatsApp VIP</option>
+                                    <option value="amazon" <?= str_contains(strtolower($cIcon), 'amazon') ? 'selected' : '' ?>>Amazon</option>
+                                    <option value="tiktok" <?= str_contains(strtolower($cIcon), 'tiktok') ? 'selected' : '' ?>>TikTok Shop</option>
+                                    <option value="oficial" <?= ($cIcon === 'oficial' || $cIcon === 'divinium') ? 'selected' : '' ?>>✦ Oficial DIVINIUM</option>
+                                    <option value="sacola" <?= $cIcon === 'sacola' ? 'selected' : '' ?>>Sacola de Compras</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Linha 3 de Campos: URL e Destino -->
+                        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">
+                                    Link de Compra / URL Base do Canal
+                                </label>
+                                <input type="url" class="form-input channel-row-url-input" value="<?= View::e($cUrl) ?>" placeholder="https://...">
+                                <span class="field-hint" style="font-size: 0.68rem; color: #8e8880; margin-top: 2px; display: block;">
+                                    URL padrão do canal. Se uma variação tiver link externo próprio cadastrado, este será aplicado dinamicamente.
+                                </span>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Destino</label>
+                                <select class="form-select channel-row-target-select" style="font-size: 0.8rem; height: 38px;">
+                                    <option value="_blank" <?= $cTarget === '_blank' ? 'selected' : '' ?>>Nova Aba (_blank)</option>
+                                    <option value="_self" <?= $cTarget === '_self' ? 'selected' : '' ?>>Mesma Aba (_self)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Hidden com JSON serializado dos canais -->
+                <input type="hidden" id="store_channels_items_json" name="store_channels_items_json" value="<?= View::e(json_encode($channelsList, JSON_UNESCAPED_UNICODE)) ?>">
+
+                <!-- Contador e Rodapé dos Canais -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06);">
+                    <span id="channelsRowsCounter" style="font-size: 0.75rem; color: #8e8880;"></span>
+                    <button type="button" class="btn-admin-secondary" onclick="addCustomChannelRow()" style="font-size: 0.78rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(212, 186, 136, 0.4); color: #ded7cf;">
+                        <span>➕ Adicionar Novo Canal de Venda</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ========================================================== -->
+            <!-- CATEGORIA 4: INFORMAÇÕES DE CONFIANÇA & SEGURANÇA DA COMPRA -->
+            <!-- ========================================================== -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">🛡️</span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #ffffff;">Categoria 4: Informações de Confiança, Nota Fiscal & Garantia</h4>
+                            <span style="font-size: 0.73rem; color: #8e8880;">Certificados de autenticidade, nota fiscal eletrônica, estojo exclusivo e garantia de fábrica</span>
+                        </div>
+                    </div>
+                    <?= $renderToggle('store_detail_trust_visible', '1') ?>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width <?= Setting::get('store_detail_trust_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <label for="store_detail_trust_text">Texto de Autenticidade & Nota Fiscal (Rodapé dos Canais)</label>
+                        <input type="text" id="store_detail_trust_text" name="store_detail_trust_text" class="form-input" 
+                               value="<?= View::e(Setting::get('store_detail_trust_text', 'Todos os canais listados possuem certificação de autenticidade, nota fiscal e garantia de fábrica DIVINIUM.')) ?>"
+                               placeholder="Todos os canais listados possuem certificação de autenticidade, nota fiscal e garantia de fábrica DIVINIUM.">
+                        <span class="field-hint">Exibido acompanhado do ícone de escudo de segurança logo abaixo da lista de canais de compra.</span>
+                    </div>
+
+                    <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; margin-top: 8px;">
+                        <div class="field-label-row">
+                            <label style="color: #CBD0D6; font-size: 0.88rem; font-weight: 600;">Selo Inferior de Garantia & Excelência DIVINIUM</label>
+                            <?= $renderToggle('store_detail_show_guarantee', '1') ?>
+                        </div>
+                        <span class="field-hint">Card de rodapé com estojo de veludo, certificado numerado de banho de prata e garantia.</span>
+                    </div>
+
+                    <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <label for="store_detail_guarantee_title">Título da Garantia</label>
+                        <input type="text" id="store_detail_guarantee_title" name="store_detail_guarantee_title" class="form-input" 
+                               value="<?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?>">
+                    </div>
+
+                    <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
+                        <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
+                               value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?>">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================== -->
+            <!-- CATEGORIA 5: ELEMENTOS VISUAIS & DISPOSIÇÃO DOS BOTÕES -->
+            <!-- ========================================================== -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">🎨</span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #ffffff;">Categoria 5: Elementos Visuais, Disposição & Botões Complementares</h4>
+                            <span style="font-size: 0.73rem; color: #8e8880;">Formato visual dos botões, imparcialidade e botões de compartilhamento</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="store_detail_button_layout">Disposição Visual dos Canais de Compra</label>
+                        <?php $curLayout = Setting::get('store_detail_button_layout', 'list'); ?>
+                        <select id="store_detail_button_layout" name="store_detail_button_layout" class="form-select">
+                            <option value="list" <?= $curLayout === 'list' ? 'selected' : '' ?>>Lista Vertical Elegante (Recomendado)</option>
+                            <option value="grid" <?= $curLayout === 'grid' ? 'selected' : '' ?>>Grade em 2 Colunas</option>
+                        </select>
+                        <span class="field-hint">Alterne entre layout vertical linear ou grade lado a lado para telas largas.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-label-row">
+                            <label for="store_detail_impartial_buttons">Imparcialidade dos Canais</label>
+                            <?= $renderToggle('store_detail_impartial_buttons', '1') ?>
+                        </div>
+                        <input type="text" class="form-input" value="Padronização Quiet Luxury ativa" readonly style="opacity: 0.7; cursor: default;">
+                        <span class="field-hint">Todos os canais recebem tratamento estético nobre, tipografia refinada e mesmo peso visual.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="store_card_btn_text">Texto do Botão no Card da Vitrine</label>
+                        <input type="text" id="store_card_btn_text" name="store_card_btn_text" class="form-input" 
+                               value="<?= View::e(Setting::get('store_card_btn_text', 'Conhecer a Peça')) ?>" placeholder="Conhecer a Peça">
+                        <span class="field-hint">Texto do botão elegante exibido no card de cada joia na boutique.</span>
+                    </div>
+
+                    <div class="form-group <?= Setting::get('store_detail_show_share', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                        <div class="field-label-row">
+                            <label for="store_detail_share_btn_text">Botão de Compartilhamento da Joia</label>
+                            <?= $renderToggle('store_detail_show_share', '1') ?>
+                        </div>
+                        <input type="text" id="store_detail_share_btn_text" name="store_detail_share_btn_text" class="form-input" 
+                               value="<?= View::e(Setting::get('store_detail_share_btn_text', 'Compartilhar Joia')) ?>" placeholder="Compartilhar Joia">
+                        <span class="field-hint">Texto do botão que copia o link próprio da joia com feedback visual.</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- BARRA FIXA / FLUTUANTE DE SALVAMENTO -->
@@ -618,15 +960,18 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
 <!-- ESTILOS E SCRIPT DE MANIPULAÇÃO DINÂMICA DA CENTRAL DE EXIBIÇÃO -->
 <style>
-.spec-row-item.is-dimmed {
+.spec-row-item.is-dimmed,
+.channel-row-item.is-dimmed {
     opacity: 0.55;
     background: rgba(0, 0, 0, 0.25) !important;
     border-color: rgba(255, 255, 255, 0.04) !important;
 }
-.spec-row-item.is-dimmed:hover {
+.spec-row-item.is-dimmed:hover,
+.channel-row-item.is-dimmed:hover {
     opacity: 0.85;
 }
-.spec-row-item:hover {
+.spec-row-item:hover,
+.channel-row-item:hover {
     border-color: rgba(212, 186, 136, 0.35) !important;
 }
 .btn-order-move:hover:not(:disabled) {
@@ -640,6 +985,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
 }
 @media (max-width: 640px) {
     .spec-row-item > div:last-child {
+        grid-template-columns: 1fr !important;
+    }
+    .channel-row-item > div:nth-child(2),
+    .channel-row-item > div:nth-child(3),
+    .channel-row-item > div:nth-child(4) {
         grid-template-columns: 1fr !important;
     }
 }
@@ -903,23 +1253,316 @@ function serializeSpecsRows() {
     hiddenInput.value = JSON.stringify(items);
 }
 
+/* ==============================================================
+   GERENCIADOR DINÂMICO DE CANAIS DE COMPRA & MARKETPLACES
+   ============================================================== */
+function toggleChannelRowVis(checkbox) {
+    const row = checkbox.closest('.channel-row-item');
+    const label = checkbox.closest('.element-toggle-switch');
+    const textSpan = label ? label.querySelector('.toggle-text') : null;
+
+    if (checkbox.checked) {
+        if (label) {
+            label.classList.remove('is-hidden');
+            label.classList.add('is-visible');
+        }
+        if (textSpan) textSpan.innerText = 'Visível';
+        if (row) row.classList.remove('is-dimmed');
+    } else {
+        if (label) {
+            label.classList.remove('is-visible');
+            label.classList.add('is-hidden');
+        }
+        if (textSpan) textSpan.innerText = 'Oculto';
+        if (row) row.classList.add('is-dimmed');
+    }
+
+    serializeChannelsRows();
+    updateChannelsOrderBadges();
+}
+
+function moveChannelRow(btn, dir) {
+    const row = btn.closest('.channel-row-item');
+    if (!row) return;
+
+    if (dir === -1) {
+        const prev = row.previousElementSibling;
+        if (prev && prev.classList.contains('channel-row-item')) {
+            row.parentNode.insertBefore(row, prev);
+            highlightRow(row);
+        }
+    } else if (dir === 1) {
+        const next = row.nextElementSibling;
+        if (next && next.classList.contains('channel-row-item')) {
+            row.parentNode.insertBefore(next, row);
+            highlightRow(row);
+        }
+    }
+
+    updateChannelsOrderBadges();
+    serializeChannelsRows();
+}
+
+function deleteChannelRow(btn) {
+    const row = btn.closest('.channel-row-item');
+    if (!row) return;
+
+    const plat = row.querySelector('.channel-row-platform-input')?.value.trim() || 'este canal';
+    if (confirm(`Tem certeza que deseja remover o canal "${plat}" da lista?`)) {
+        row.style.opacity = '0';
+        row.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            row.remove();
+            updateChannelsOrderBadges();
+            serializeChannelsRows();
+            if (typeof showAdminToast === 'function') {
+                showAdminToast('Canal removido da lista.', 'info');
+            }
+        }, 200);
+    }
+}
+
+function addCustomChannelRow() {
+    const container = document.getElementById('channelsRowsContainer');
+    if (!container) return;
+
+    const rowId = 'channel_' + Date.now();
+    const newRow = document.createElement('div');
+    newRow.className = 'channel-row-item';
+    newRow.setAttribute('data-id', rowId);
+    newRow.setAttribute('data-type', 'external');
+    newRow.setAttribute('data-custom', '1');
+    newRow.style.cssText = 'background: rgba(255,255,255,0.02); border: 1px solid rgba(212,186,136,0.3); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; transition: all 0.25s ease; animation: fadeInRow 0.3s ease;';
+
+    newRow.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="channel-order-badge" style="background: rgba(212,186,136,0.15); color: #ded7cf; border: 1px solid rgba(212,186,136,0.3); font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                    Canal #
+                </span>
+                <span class="channel-platform-preview" style="font-size: 0.75rem; color: #ffffff; font-weight: 600;">
+                    ✦ Novo Canal de Venda
+                </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="button" class="btn-order-move btn-channel-move-up" onclick="moveChannelRow(this, -1)" title="Mover Canal para Cima" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #CBD0D6; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                    ↑
+                </button>
+                <button type="button" class="btn-order-move btn-channel-move-down" onclick="moveChannelRow(this, 1)" title="Mover Canal para Baixo" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #CBD0D6; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                    ↓
+                </button>
+
+                <label class="element-toggle-switch is-visible" style="margin: 0; padding: 3px 8px; font-size: 0.72rem;">
+                    <input type="checkbox" class="channel-vis-checkbox" checked onchange="toggleChannelRowVis(this)">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text">Visível</span>
+                </label>
+
+                <button type="button" onclick="deleteChannelRow(this)" title="Excluir este Canal" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; margin-left: 2px;">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 12px; margin-bottom: 10px;">
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Plataforma / Marketplace</label>
+                <input type="text" class="form-input channel-row-platform-input" value="" placeholder="Ex: Amazon, TikTok, Elo7..." oninput="updatePlatformPreview(this)">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Nome do Botão / Ação</label>
+                <input type="text" class="form-input channel-row-title-input" value="" placeholder="Ex: Comprar na Amazon Oficial">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Identificação Oficial</label>
+                <input type="text" class="form-input channel-row-official-input" value="Canal Homologado DIVINIUM" placeholder="Ex: Canal Homologado DIVINIUM">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Descrição / Vantagem</label>
+                <input type="text" class="form-input channel-row-desc-input" value="" placeholder="Ex: Entrega Prime e parcelamento">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Preço Específico (R$)</label>
+                <input type="text" class="form-input channel-row-price-input" value="" placeholder="Dinâmico da variação">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Etiqueta / Badge</label>
+                <input type="text" class="form-input channel-row-badge-input" value="" placeholder="Ex: Prime, Oficial">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Ícone Visual</label>
+                <select class="form-select channel-row-icon-select" style="font-size: 0.8rem; height: 38px;">
+                    <option value="oficial">✦ Oficial DIVINIUM</option>
+                    <option value="shopee">Shopee</option>
+                    <option value="mercadolivre">Mercado Livre</option>
+                    <option value="whatsapp">WhatsApp VIP</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="tiktok">TikTok Shop</option>
+                    <option value="sacola">Sacola de Compras</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 12px;">
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Link de Compra / URL do Canal</label>
+                <input type="url" class="form-input channel-row-url-input" value="" placeholder="https://...">
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Destino</label>
+                <select class="form-select channel-row-target-select" style="font-size: 0.8rem; height: 38px;">
+                    <option value="_blank">Nova Aba (_blank)</option>
+                    <option value="_self">Mesma Aba (_self)</option>
+                </select>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(newRow);
+
+    updateChannelsOrderBadges();
+    serializeChannelsRows();
+
+    const platInput = newRow.querySelector('.channel-row-platform-input');
+    if (platInput) platInput.focus();
+}
+
+function updatePlatformPreview(input) {
+    const row = input.closest('.channel-row-item');
+    if (!row) return;
+    const preview = row.querySelector('.channel-platform-preview');
+    if (preview) {
+        preview.innerText = input.value.trim() ? input.value.trim() : '✦ Novo Canal';
+    }
+    serializeChannelsRows();
+}
+
+function updateChannelsOrderBadges() {
+    const container = document.getElementById('channelsRowsContainer');
+    if (!container) return;
+
+    const rows = container.querySelectorAll('.channel-row-item');
+    let visibleCount = 0;
+    let hiddenCount = 0;
+
+    rows.forEach((row, idx) => {
+        const badge = row.querySelector('.channel-order-badge');
+        if (badge) {
+            badge.innerText = `Canal #${idx + 1}`;
+        }
+
+        const btnUp = row.querySelector('.btn-channel-move-up');
+        const btnDown = row.querySelector('.btn-channel-move-down');
+        if (btnUp) {
+            btnUp.disabled = (idx === 0);
+            btnUp.style.opacity = (idx === 0) ? '0.3' : '1';
+            btnUp.style.cursor = (idx === 0) ? 'not-allowed' : 'pointer';
+        }
+        if (btnDown) {
+            btnDown.disabled = (idx === rows.length - 1);
+            btnDown.style.opacity = (idx === rows.length - 1) ? '0.3' : '1';
+            btnDown.style.cursor = (idx === rows.length - 1) ? 'not-allowed' : 'pointer';
+        }
+
+        const chk = row.querySelector('.channel-vis-checkbox');
+        if (chk && chk.checked) {
+            visibleCount++;
+            row.classList.remove('is-dimmed');
+        } else {
+            hiddenCount++;
+            row.classList.add('is-dimmed');
+        }
+    });
+
+    const counter = document.getElementById('channelsRowsCounter');
+    if (counter) {
+        counter.innerHTML = `<strong>${rows.length}</strong> canais de venda configurados (<span style="color: #4ADE80;">${visibleCount} visíveis</span>, <span style="color: #f87171;">${hiddenCount} ocultos</span>)`;
+    }
+}
+
+function serializeChannelsRows() {
+    const container = document.getElementById('channelsRowsContainer');
+    const hiddenInput = document.getElementById('store_channels_items_json');
+    if (!container || !hiddenInput) return;
+
+    const rows = container.querySelectorAll('.channel-row-item');
+    const items = [];
+
+    rows.forEach(row => {
+        const id = row.getAttribute('data-id') || '';
+        const type = row.getAttribute('data-type') || 'external';
+        const isCustom = row.getAttribute('data-custom') === '1';
+        
+        const platformInput = row.querySelector('.channel-row-platform-input');
+        const titleInput = row.querySelector('.channel-row-title-input');
+        const officialInput = row.querySelector('.channel-row-official-input');
+        const descInput = row.querySelector('.channel-row-desc-input');
+        const priceInput = row.querySelector('.channel-row-price-input');
+        const badgeInput = row.querySelector('.channel-row-badge-input');
+        const iconSelect = row.querySelector('.channel-row-icon-select');
+        const urlInput = row.querySelector('.channel-row-url-input');
+        const targetSelect = row.querySelector('.channel-row-target-select');
+        const visCheckbox = row.querySelector('.channel-vis-checkbox');
+
+        const plat = platformInput ? platformInput.value.trim() : 'Loja Oficial';
+        const title = titleInput ? titleInput.value.trim() : ('Comprar na ' + plat);
+
+        items.push({
+            id: id,
+            type: type,
+            platform: plat,
+            title: title,
+            official_label: officialInput ? officialInput.value.trim() : 'Canal Homologado DIVINIUM',
+            desc: descInput ? descInput.value.trim() : '',
+            price_override: priceInput ? priceInput.value.trim() : '',
+            badge: badgeInput ? badgeInput.value.trim() : '',
+            icon: iconSelect ? iconSelect.value : 'oficial',
+            url: urlInput ? urlInput.value.trim() : '',
+            target: targetSelect ? targetSelect.value : '_blank',
+            visible: (visCheckbox && visCheckbox.checked) ? 1 : 0,
+            is_custom: isCustom ? 1 : 0,
+            is_deletable: 1
+        });
+    });
+
+    hiddenInput.value = JSON.stringify(items);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     updateSpecsOrderBadges();
     serializeSpecsRows();
 
-    const container = document.getElementById('specsRowsContainer');
-    if (container) {
-        container.addEventListener('input', function(e) {
+    updateChannelsOrderBadges();
+    serializeChannelsRows();
+
+    const specsContainer = document.getElementById('specsRowsContainer');
+    if (specsContainer) {
+        specsContainer.addEventListener('input', function(e) {
             if (e.target.classList.contains('spec-row-title-input') || e.target.classList.contains('spec-row-desc-input')) {
                 serializeSpecsRows();
             }
+        });
+    }
+
+    const channelsContainer = document.getElementById('channelsRowsContainer');
+    if (channelsContainer) {
+        channelsContainer.addEventListener('input', function(e) {
+            serializeChannelsRows();
+        });
+        channelsContainer.addEventListener('change', function(e) {
+            serializeChannelsRows();
         });
     }
 });
 
 async function handleDisplaySubmit(e) {
     e.preventDefault();
-    serializeSpecsRows(); // Garante a serialização mais atualizada da lista de especificações
+    serializeSpecsRows();    // Garante a serialização mais atualizada da lista de especificações
+    serializeChannelsRows(); // Garante a serialização mais atualizada da lista de canais de compra
 
     const form = e.target;
     const btn = document.getElementById('btnSaveBottom');
@@ -944,9 +1587,9 @@ async function handleDisplaySubmit(e) {
 
         if (data && data.success) {
             if (typeof showAdminToast === 'function') {
-                showAdminToast(data.message || 'Informações e exibição dos produtos salvas com sucesso!', 'success');
+                showAdminToast(data.message || 'Informações e canais de compra salvos com sucesso!', 'success');
             } else {
-                alert(data.message || 'Informações e exibição dos produtos salvas com sucesso!');
+                alert(data.message || 'Informações e canais de compra salvos com sucesso!');
             }
         } else {
             const err = (data && data.error) ? data.error : 'Erro ao salvar alterações.';

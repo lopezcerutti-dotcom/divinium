@@ -214,7 +214,12 @@ class StoreController
                     $product['slug'] = self::slugify((string)$product['name']);
                 }
 
-                // Buscar canais de venda ativos e ordenados
+                // Identificar o SKU base do modelo autoral (grupo do produto)
+                $rawModelSku = !empty($product['parent_sku']) ? $product['parent_sku'] : $product['sku'];
+                $parts = explode('-', (string)$rawModelSku);
+                $baseModelSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $rawModelSku;
+
+                // Buscar canais de venda ativos e ordenados para o produto atual
                 $linksStmt = $pdo->prepare('
                     SELECT * FROM product_links 
                     WHERE product_id = ? AND is_active = 1 
@@ -223,40 +228,92 @@ class StoreController
                 $linksStmt->execute([(int)$product['id']]);
                 $links = $linksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
 
-                // Se não houver canais em product_links mas houver external_url cadastrada
-                if (empty($links) && !empty($product['external_url'])) {
-                    $platName = 'Shopee';
-                    $u = (string)$product['external_url'];
-                    if (stripos($u, 'mercadolivre') !== false || stripos($u, 'mercado_livre') !== false) {
-                        $platName = 'Mercado Livre';
-                    } elseif (stripos($u, 'amazon') !== false) {
-                        $platName = 'Amazon';
-                    } elseif (stripos($u, 'tiktok') !== false) {
-                        $platName = 'TikTok Shop';
-                    } elseif (stripos($u, 'wa.me') !== false || stripos($u, 'whatsapp') !== false) {
-                        $platName = 'WhatsApp';
-                    }
-                    $links = [
-                        [
-                            'id' => 0,
+                // Se a variação atual não tiver links próprios, herdar os canais do produto pai / modelo do grupo
+                if (empty($links) && !empty($baseModelSku)) {
+                    try {
+                        $parentStmt = $pdo->prepare('
+                            SELECT id FROM products 
+                            WHERE (sku = :base_sku OR (parent_sku IS NULL OR parent_sku = "" OR parent_sku = sku)) 
+                              AND (sku = :base_sku2 OR sku LIKE :prefix) 
+                            ORDER BY id ASC LIMIT 1
+                        ');
+                        $parentStmt->execute([
+                            ':base_sku' => $baseModelSku,
+                            ':base_sku2' => $baseModelSku,
+                            ':prefix' => $baseModelSku . '%'
+                        ]);
+                        $parentId = $parentStmt->fetchColumn();
+                        if ($parentId && (int)$parentId !== (int)$product['id']) {
+                            $parentLinksStmt = $pdo->prepare('
+                                SELECT * FROM product_links 
+                                WHERE product_id = ? AND is_active = 1 
+                                ORDER BY sort_order ASC, id ASC
+                            ');
+                            $parentLinksStmt->execute([(int)$parentId]);
+                            $links = $parentLinksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                        }
+                    } catch (\Throwable $pLinksEx) {}
+                }
+
+                // Se ainda não houver canais específicos, usar os canais centralizados da loja
+                if (empty($links)) {
+                    $configuredChannels = \App\Models\Setting::getProductChannelsList();
+                    foreach ($configuredChannels as $idx => $cc) {
+                        if (empty($cc['visible'])) continue;
+                        $cUrl = trim($cc['url'] ?? '');
+                        if (!empty($product['external_url']) && stripos($cc['platform'], 'shopee') !== false) {
+                            $cUrl = $product['external_url'];
+                        }
+                        $links[] = [
+                            'id' => $cc['id'] ?? $idx,
                             'product_id' => $product['id'],
-                            'platform_name' => $platName,
-                            'url' => $product['external_url'],
-                            'price_cents' => $product['price_cents'] ?? 38000,
-                            'button_text' => 'Comprar na ' . $platName,
+                            'platform_name' => $cc['platform'],
+                            'official_label' => $cc['official_label'] ?? 'Canal Homologado DIVINIUM',
+                            'url' => $cUrl,
+                            'price_cents' => !empty($cc['price_override']) ? (int)(str_replace([',', '.'], '', $cc['price_override'])) : ($product['price_cents'] ?? 38000),
+                            'button_text' => !empty($cc['title']) ? $cc['title'] : ('Comprar na ' . $cc['platform']),
                             'button_color' => 'default',
                             'button_size' => 'md',
+                            'badge' => $cc['badge'] ?? '',
+                            'icon' => $cc['icon'] ?? 'oficial',
+                            'desc' => $cc['desc'] ?? '',
+                            'target' => $cc['target'] ?? '_blank',
+                            'is_active' => 1,
+                            'sort_order' => $idx
+                        ];
+                    }
+                }
+
+                // Se houver external_url cadastrada na joia mas nenhum canal Shopee nos links, garantir Shopee
+                if (!empty($product['external_url'])) {
+                    $hasShopee = false;
+                    foreach ($links as &$lk) {
+                        if (stripos($lk['platform_name'] ?? '', 'shopee') !== false) {
+                            $hasShopee = true;
+                            $lk['url'] = $product['external_url'];
+                            break;
+                        }
+                    }
+                    unset($lk);
+                    if (!$hasShopee) {
+                        $links[] = [
+                            'id' => 0,
+                            'product_id' => $product['id'],
+                            'platform_name' => 'Shopee',
+                            'official_label' => 'Canal Homologado DIVINIUM',
+                            'url' => $product['external_url'],
+                            'price_cents' => $product['price_cents'] ?? 38000,
+                            'button_text' => 'Comprar na Shopee Oficial',
+                            'button_color' => 'default',
+                            'button_size' => 'md',
+                            'badge' => 'Oficial',
+                            'icon' => 'shopee',
                             'target' => '_blank',
                             'is_active' => 1,
                             'sort_order' => 0
-                        ]
-                    ];
+                        ];
+                    }
                 }
-
-                // Identificar o SKU base do modelo autoral
-                $rawModelSku = !empty($product['parent_sku']) ? $product['parent_sku'] : $product['sku'];
-                $parts = explode('-', (string)$rawModelSku);
-                $baseModelSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $rawModelSku;
 
                 // 1. Carregar variações do banco de dados
                 $dbVariations = [];

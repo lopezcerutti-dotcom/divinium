@@ -389,6 +389,51 @@ class AdminController
                 $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $productId]);
             }
 
+            // Compartilhar canais configurados com todas as variações do mesmo grupo autoral
+            $curSku = trim((string)($_POST['sku'] ?? ''));
+            $curParentSku = trim((string)($_POST['parent_sku'] ?? ''));
+            $groupSku = ($curParentSku !== '' && $curParentSku !== $curSku) ? $curParentSku : $curSku;
+            $parts = explode('-', $groupSku);
+            $baseGroupSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $groupSku;
+
+            if ($baseGroupSku !== '') {
+                try {
+                    $varStmt = $this->pdo->prepare("
+                        SELECT id, external_url FROM products 
+                        WHERE id != ? AND (sku = ? OR parent_sku = ? OR sku LIKE ?)
+                    ");
+                    $varStmt->execute([$productId, $baseGroupSku, $baseGroupSku, $baseGroupSku . '-%']);
+                    $siblingVars = $varStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
+                    foreach ($siblingVars as $sib) {
+                        $sibId = (int)$sib['id'];
+                        $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$sibId]);
+                        if (!empty($validLinks)) {
+                            foreach ($validLinks as $vl) {
+                                $vlUrl = $vl['url'];
+                                if (!empty($sib['external_url']) && stripos($vl['platform_name'], 'shopee') !== false) {
+                                    $vlUrl = $sib['external_url'];
+                                }
+                                $insLink->execute([
+                                    $sibId,
+                                    $vl['platform_name'],
+                                    $vlUrl,
+                                    $vl['price_cents'],
+                                    $vl['button_text'],
+                                    $vl['button_color'],
+                                    $vl['button_size'],
+                                    $vl['target'],
+                                    $vl['is_active'],
+                                    $vl['sort_order']
+                                ]);
+                            }
+                        }
+                    }
+                } catch (\Throwable $groupEx) {
+                    error_log('Erro ao propagar canais para grupo do produto: ' . $groupEx->getMessage());
+                }
+            }
+
             $this->respond([
                 'success' => true, 
                 'message' => 'Joia e canais de venda salvos com sucesso!',
@@ -1266,6 +1311,53 @@ class AdminController
                             $_POST['store_spec_availability_visible'] = $vis;
                             $_POST['store_spec_availability_label'] = $title;
                             $_POST['store_spec_availability_override'] = $desc;
+                        }
+                    }
+                }
+            }
+
+            // Sincroniza JSON de canais de venda externos com as chaves individuais correspondentes
+            if (!empty($_POST['store_channels_items_json'])) {
+                $rawChannels = is_string($_POST['store_channels_items_json']) 
+                    ? json_decode($_POST['store_channels_items_json'], true) 
+                    : $_POST['store_channels_items_json'];
+
+                if (is_array($rawChannels)) {
+                    foreach ($rawChannels as $ch) {
+                        if (!is_array($ch)) continue;
+                        $id = $ch['id'] ?? '';
+                        $vis = !empty($ch['visible']) ? '1' : '0';
+                        $title = trim((string)($ch['title'] ?? ''));
+                        $desc = trim((string)($ch['desc'] ?? ''));
+                        $url = trim((string)($ch['url'] ?? ''));
+                        $price = trim((string)($ch['price_override'] ?? ''));
+                        $badge = trim((string)($ch['badge'] ?? ''));
+                        $official = trim((string)($ch['official_label'] ?? ''));
+
+                        if ($id === 'shopee') {
+                            $_POST['store_channel_shopee_visible'] = $vis;
+                            $_POST['store_channel_shopee_title'] = $title;
+                            $_POST['store_channel_shopee_official'] = $official;
+                            $_POST['store_channel_shopee_desc'] = $desc;
+                            $_POST['store_channel_shopee_url'] = $url;
+                            $_POST['store_channel_shopee_price'] = $price;
+                            $_POST['store_channel_shopee_badge'] = $badge;
+                        } elseif ($id === 'mercadolivre') {
+                            $_POST['store_channel_ml_visible'] = $vis;
+                            $_POST['store_channel_ml_title'] = $title;
+                            $_POST['store_channel_ml_official'] = $official;
+                            $_POST['store_channel_ml_desc'] = $desc;
+                            $_POST['store_channel_ml_url'] = $url;
+                            $_POST['store_channel_ml_price'] = $price;
+                            $_POST['store_channel_ml_badge'] = $badge;
+                        } elseif ($id === 'whatsapp') {
+                            $_POST['store_channel_wa_visible'] = $vis;
+                            $_POST['store_channel_wa_title'] = $title;
+                            $_POST['store_channel_wa_official'] = $official;
+                            $_POST['store_channel_wa_desc'] = $desc;
+                            $_POST['store_channel_wa_url'] = $url;
+                            $_POST['store_channel_wa_price'] = $price;
+                            $_POST['store_channel_wa_badge'] = $badge;
                         }
                     }
                 }

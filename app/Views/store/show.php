@@ -320,25 +320,132 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <?php endif; ?>
 
                     <!-- ============================================================== -->
-                    <!-- PAINEL DE COMPRA PADRONIZADO E IMPARCIAL (TODOS OS CANAIS EQUIVALENTES) -->
+                    <!-- PAINEL CENTRALIZADO DE COMPRA (COMPARTILHADO PELO GRUPO DO PRODUTO) -->
                     <!-- ============================================================== -->
-                    <?php if ($showProdChannels): ?>
+                    <?php 
+                    $showChannelsBlock = $showProdChannels && (Setting::get('store_detail_show_channels', '1') === '1');
+                    if ($showChannelsBlock): 
+                        $channelsTitleVisible = Setting::get('store_detail_channels_title_visible', '1') === '1';
+                        $channelsTitle = Setting::get('store_detail_channels_title', 'Escolha onde deseja adquirir sua joia:');
+                        $channelsSubtitleVisible = Setting::get('store_detail_channels_subtitle_visible', '1') === '1';
+                        $channelsSubtitle = Setting::get('store_detail_channels_subtitle', 'Selecione seu canal oficial de preferência. Todos contam com garantia de autenticidade, embalagem exclusiva e compra 100% protegida.');
+
+                        // Configurações do Canal Direto DIVINIUM
+                        $showDirectChannel = Setting::get('store_direct_channel_visible', '1') === '1';
+                        $directTitle = Setting::get('store_direct_channel_title', 'Comprar Direto na DIVINIUM');
+                        $directSubtitle = Setting::get('store_direct_channel_subtitle', '5% OFF no Pix • Envio com Seguro Blindado');
+                        $directPixDiscountPct = (float) Setting::get('store_direct_pix_discount_pct', '5');
+                        $directPixLabel = Setting::get('store_direct_pix_label', 'Pix (-5%)');
+                        $directPriceOverride = trim((string) Setting::get('store_direct_price_override', ''));
+                        $directShippingInfo = Setting::get('store_direct_shipping_info', 'Envio com Seguro Blindado');
+                        $directUrl = Setting::get('store_direct_url', '/checkout');
+                        $directBadge = Setting::get('store_direct_badge', 'Exclusivo');
+                        $directIcon = Setting::get('store_direct_icon', 'diamond');
+                        $directPixCents = $basePriceCents * (1 - ($directPixDiscountPct / 100));
+                        $directPixFormatted = $directPriceOverride !== '' ? $directPriceOverride : number_format($directPixCents / 100, 2, ',', '.');
+
+                        // Configurações de Canais Externos
+                        $centralChannels = Setting::getProductChannelsList();
+                        
+                        // Mapear links específicos do produto/grupo por plataforma
+                        $prodLinksByPlat = [];
+                        if (!empty($validLinks)) {
+                            foreach ($validLinks as $vl) {
+                                $pKey = strtolower(trim((string)($vl['platform_name'] ?? '')));
+                                if ($pKey !== '') {
+                                    $prodLinksByPlat[$pKey] = $vl;
+                                }
+                            }
+                        }
+
+                        // Montar lista de exibição unificada
+                        $displayChannels = [];
+                        if (!empty($centralChannels)) {
+                            foreach ($centralChannels as $cCh) {
+                                if (empty($cCh['visible'])) continue;
+                                $platKey = strtolower(trim((string)($cCh['platform'] ?? '')));
+                                
+                                // Se o produto tiver link específico para este canal, aproveitar url e preço
+                                $itemUrl = trim((string)($cCh['url'] ?? ''));
+                                $itemPrice = trim((string)($cCh['price_override'] ?? ''));
+                                $hasOverride = !empty($itemPrice);
+
+                                if (isset($prodLinksByPlat[$platKey])) {
+                                    $spLink = $prodLinksByPlat[$platKey];
+                                    if (!empty($spLink['url'])) $itemUrl = $spLink['url'];
+                                    if (!empty($spLink['price_cents']) && empty($itemPrice)) {
+                                        $itemPrice = number_format(((int)$spLink['price_cents']) / 100, 2, ',', '.');
+                                    }
+                                } elseif (stripos($platKey, 'shopee') !== false && !empty($product['external_url'])) {
+                                    $itemUrl = $product['external_url'];
+                                }
+
+                                if (empty($itemPrice)) {
+                                    $itemPrice = $basePriceFormatted;
+                                }
+
+                                $displayChannels[] = [
+                                    'id' => $cCh['id'] ?? $platKey,
+                                    'platform' => $cCh['platform'] ?? 'Loja Oficial',
+                                    'title' => !empty($cCh['title']) ? $cCh['title'] : ('Comprar na ' . ($cCh['platform'] ?? 'Loja Oficial')),
+                                    'official_label' => !empty($cCh['official_label']) ? $cCh['official_label'] : 'Canal Homologado DIVINIUM',
+                                    'desc' => $cCh['desc'] ?? '',
+                                    'price_formatted' => $itemPrice,
+                                    'has_override' => $hasOverride,
+                                    'badge' => $cCh['badge'] ?? '',
+                                    'icon' => $cCh['icon'] ?? $platKey,
+                                    'url' => $itemUrl,
+                                    'target' => $cCh['target'] ?? '_blank'
+                                ];
+                            }
+                        } elseif (!empty($validLinks)) {
+                            foreach ($validLinks as $vl) {
+                                $plat = trim((string)($vl['platform_name'] ?? 'Loja Oficial'));
+                                $linkPriceCents = !empty($vl['price_cents']) ? (int)$vl['price_cents'] : $basePriceCents;
+                                $displayChannels[] = [
+                                    'id' => $vl['id'] ?? 0,
+                                    'platform' => $plat,
+                                    'title' => !empty($vl['button_text']) ? $vl['button_text'] : ('Comprar na ' . $plat),
+                                    'official_label' => 'Canal Homologado DIVINIUM',
+                                    'desc' => '',
+                                    'price_formatted' => number_format($linkPriceCents / 100, 2, ',', '.'),
+                                    'has_override' => !empty($vl['price_cents']),
+                                    'badge' => 'Oficial',
+                                    'icon' => $plat,
+                                    'url' => trim($vl['url']),
+                                    'target' => $vl['target'] ?? '_blank'
+                                ];
+                            }
+                        }
+
+                        // Informações de Confiança & Segurança
+                        $showTrustFootnote = Setting::get('store_detail_trust_visible', '1') === '1';
+                        $trustText = Setting::get('store_detail_trust_text', 'Todos os canais listados possuem certificação de autenticidade, nota fiscal e garantia de fábrica DIVINIUM.');
+                    ?>
                     <div class="product-purchase-channels-box" id="canais-de-compra">
                         
+                        <?php if ($channelsTitleVisible || $channelsSubtitleVisible): ?>
                         <div class="channels-box-header">
                             <div class="channels-header-text">
+                                <?php if ($channelsTitleVisible && !empty($channelsTitle)): ?>
                                 <h3 class="channels-box-title">
-                                    <?= View::e(Setting::get('store_detail_channels_title', 'Escolha onde deseja adquirir sua joia:')) ?>
+                                    <?= View::e($channelsTitle) ?>
                                 </h3>
+                                <?php endif; ?>
+                                
+                                <?php if ($channelsSubtitleVisible && !empty($channelsSubtitle)): ?>
                                 <p class="channels-box-subtitle">
-                                    <?= View::e(Setting::get('store_detail_channels_subtitle', 'Selecione seu canal oficial de preferência. Todos contam com garantia de autenticidade, embalagem exclusiva e compra 100% protegida.')) ?>
+                                    <?= View::e($channelsSubtitle) ?>
                                 </p>
+                                <?php endif; ?>
                             </div>
                         </div>
+                        <?php endif; ?>
 
-                        <!-- Opção Direta de Compra na Boutique Divinium (com Pix 5% OFF) -->
+                        <!-- 1. Opção Direta de Compra na Boutique DIVINIUM -->
+                        <?php if ($showDirectChannel): ?>
                         <div class="channel-option-wrapper" style="margin-bottom: 14px;">
-                            <a href="/checkout" 
+                            <a href="<?= View::e($directUrl) ?>" 
                                id="btnDirectCheckoutVip"
                                onclick="buySelectedVariation(event, true);" 
                                class="btn-channel-impartial platform-direct-vip"
@@ -346,18 +453,30 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 
                                 <div class="channel-btn-left">
                                     <span class="channel-icon-pill" style="background: rgba(167,173,180,0.15); color: var(--gold-accent); border: 1px solid var(--border-light);">
-                                        💎
+                                        <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '') ? '💎' : getPlatformIconSvgShow($directIcon) ?>
                                     </span>
                                     <div class="channel-meta-text">
-                                        <span class="channel-action-name" style="color: var(--text-primary); font-weight: 700;">Comprar Direto na DIVINIUM</span>
-                                        <span class="channel-protection-sub" style="color: var(--gold-accent);">5% OFF no Pix • Envio com Seguro Blindado</span>
+                                        <span class="channel-action-name" style="color: var(--text-primary); font-weight: 700;">
+                                            <?= View::e($directTitle) ?>
+                                            <?php if (!empty($directBadge)): ?>
+                                                <span class="channel-mini-badge" style="background: rgba(212,186,136,0.25); color: #ded7cf; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; font-weight: 700; border: 1px solid rgba(212,186,136,0.4); vertical-align: middle;">
+                                                    <?= View::e($directBadge) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </span>
+                                        <span class="channel-protection-sub" style="color: var(--gold-accent);"><?= View::e($directSubtitle) ?></span>
                                     </div>
                                 </div>
 
                                 <div class="channel-btn-right">
                                     <div class="channel-price-wrap">
-                                        <span class="channel-price-label" style="color: var(--text-secondary);">Pix (-5%)</span>
-                                        <span class="channel-price-val vip-pix-val" style="color: var(--gold-accent); font-size: 1.05rem;">R$ <?= $pixPriceFormatted ?></span>
+                                        <span class="channel-price-label" style="color: var(--text-secondary);"><?= View::e($directPixLabel) ?></span>
+                                        <span class="channel-price-val vip-pix-val" 
+                                              style="color: var(--gold-accent); font-size: 1.05rem;"
+                                              data-discount-pct="<?= $directPixDiscountPct ?>"
+                                              data-override="<?= View::e($directPriceOverride) ?>">
+                                            R$ <?= $directPixFormatted ?>
+                                        </span>
                                     </div>
                                     <span class="channel-arrow-circle" style="background: var(--gold-accent); color: var(--bg-dark, #202020);">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -365,46 +484,42 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 </div>
                             </a>
                         </div>
+                        <?php endif; ?>
 
-                        <!-- Lista ou Grade Imparcial de Opções de Compra -->
-                        <?php if (!empty($validLinks)): ?>
+                        <!-- 2. Lista ou Grade de Canais de Venda Externos (Marketplaces & Consultor) -->
+                        <?php if (!empty($displayChannels)): ?>
                             <div class="channels-action-list <?= $buttonLayout === 'grid' ? 'channels-layout-grid' : 'channels-layout-list' ?>">
-                                <?php foreach ($validLinks as $index => $link): 
-                                    $platform = !empty($link['platform_name']) ? trim($link['platform_name']) : 'Loja Oficial';
-                                    $platSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $platform));
-                                    $linkUrl = trim($link['url']);
-                                    $linkPriceCents = !empty($link['price_cents']) ? (int)$link['price_cents'] : $basePriceCents;
-                                    $linkPriceFormatted = number_format($linkPriceCents / 100, 2, ',', '.');
-                                    
-                                    // Texto do botão: Se não configurado especificamente, usa o padrão imparcial: "Comprar na {Plataforma}"
-                                    $btnText = !empty($link['button_text']) 
-                                        ? $link['button_text'] 
-                                        : (stripos($platform, 'whatsapp') !== false ? 'Consultar via WhatsApp VIP' : ('Comprar na ' . $platform));
-                                    
-                                    $targetAttr = !empty($link['target']) && $link['target'] === '_self' ? '_self' : '_blank';
-                                    
-                                    // Customização visual de cor/tamanho (se imparcialidade não for forçada ou se for estilo nobre)
-                                    $btnColor = $link['button_color'] ?? 'default';
-                                    $btnSize = $link['button_size'] ?? 'md';
+                                <?php foreach ($displayChannels as $channel): 
+                                    $platSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $channel['platform']));
+                                    $targetAttr = !empty($channel['target']) && $channel['target'] === '_self' ? '_self' : '_blank';
                                 ?>
                                     <div class="channel-option-wrapper">
-                                        <a href="<?= View::e($linkUrl) ?>" 
+                                        <a href="<?= View::e($channel['url']) ?>" 
                                            target="<?= $targetAttr ?>" 
                                            rel="noopener noreferrer"
                                            class="btn-channel-impartial btn-channel-external platform-<?= $platSlug ?>"
+                                           data-platform="<?= View::e(strtolower($channel['platform'])) ?>"
                                            data-track-product-id="<?= $prodId ?>"
                                            data-track-product-name="<?= View::e($prodName) ?>"
                                            data-track-source="detail_<?= $platSlug ?>"
-                                           title="<?= View::e($btnText) ?> - R$ <?= $linkPriceFormatted ?>">
+                                           data-has-override="<?= $channel['has_override'] ? '1' : '0' ?>"
+                                           title="<?= View::e($channel['title']) ?> - R$ <?= $channel['price_formatted'] ?>">
                                             
                                             <!-- Lado Esquerdo: Ícone da Plataforma + Nome de Ação -->
                                             <div class="channel-btn-left">
                                                 <span class="channel-icon-pill">
-                                                    <?= getPlatformIconSvgShow($platform) ?>
+                                                    <?= getPlatformIconSvgShow($channel['icon']) ?>
                                                 </span>
                                                 <div class="channel-meta-text">
-                                                    <span class="channel-action-name"><?= View::e($btnText) ?></span>
-                                                    <span class="channel-protection-sub">Canal Homologado DIVINIUM</span>
+                                                    <span class="channel-action-name">
+                                                        <?= View::e($channel['title']) ?>
+                                                        <?php if (!empty($channel['badge'])): ?>
+                                                            <span class="channel-mini-badge" style="background: rgba(212,186,136,0.18); color: #ded7cf; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; margin-left: 5px; font-weight: 600; border: 1px solid rgba(212,186,136,0.3); vertical-align: middle;">
+                                                                <?= View::e($channel['badge']) ?>
+                                                            </span>
+                                                        <?php endif; ?>
+                                                    </span>
+                                                    <span class="channel-protection-sub"><?= View::e($channel['official_label']) ?></span>
                                                 </div>
                                             </div>
 
@@ -412,7 +527,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                             <div class="channel-btn-right">
                                                 <div class="channel-price-wrap">
                                                     <span class="channel-price-label">Preço</span>
-                                                    <span class="channel-price-val">R$ <?= $linkPriceFormatted ?></span>
+                                                    <span class="channel-price-val">R$ <?= $channel['price_formatted'] ?></span>
                                                 </div>
                                                 <span class="channel-arrow-circle" aria-hidden="true">
                                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -424,12 +539,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 <?php endforeach; ?>
                             </div>
                         <?php else: ?>
-                            <!-- Fallback Caso Nenhum Link Esteja Cadastrado: Atendimento Direto WhatsApp -->
+                            <!-- Fallback: Atendimento Direto WhatsApp -->
                             <div class="channel-option-wrapper">
                                 <a href="<?= View::e(Setting::get('store_whatsapp_url', 'https://wa.me/5511999999999')) ?>" 
                                    target="_blank" 
                                    rel="noopener noreferrer"
                                    class="btn-channel-impartial btn-channel-external platform-whatsapp"
+                                   data-platform="whatsapp"
                                    data-track-product-id="<?= $prodId ?>"
                                    data-track-product-name="<?= View::e($prodName) ?>"
                                    data-track-source="detail_whatsapp_fallback">
@@ -458,11 +574,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
                         <?php endif; ?>
 
-                        <!-- Nota de Segurança e Imparcialidade -->
+                        <!-- 3. Informações de Confiança, Nota Fiscal & Garantia de Fábrica -->
+                        <?php if ($showTrustFootnote && !empty($trustText)): ?>
                         <div class="channels-security-footnote">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                            <span>Todos os canais listados possuem certificação de autenticidade, nota fiscal e garantia de fábrica DIVINIUM.</span>
+                            <span><?= View::e($trustText) ?></span>
                         </div>
+                        <?php endif; ?>
 
                     </div>
                     <?php endif; ?>
@@ -727,8 +845,12 @@ function selectProductVariation(btn) {
     }
     const vipPixVal = document.querySelector('.vip-pix-val');
     if (vipPixVal && priceCents > 0) {
-        const pixVal = (priceCents * 0.95) / 100;
-        vipPixVal.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const hasOverride = vipPixVal.getAttribute('data-override');
+        if (!hasOverride || hasOverride.trim() === '') {
+            const discountPct = parseFloat(vipPixVal.getAttribute('data-discount-pct') || '5');
+            const pixVal = (priceCents * (1 - (discountPct / 100))) / 100;
+            vipPixVal.textContent = 'R$ ' + pixVal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
     }
     const installmentsEl = document.querySelector('.price-installments-row span');
     if (installmentsEl && priceCents > 0) {
@@ -779,15 +901,17 @@ function selectProductVariation(btn) {
     }
     
     // 9. Atualizar botões de canais externos (Shopee e outros) sem alterar o botão de checkout VIP interno
-    if (extUrl) {
-        document.querySelectorAll('.btn-channel-external').forEach(cBtn => {
+    document.querySelectorAll('.btn-channel-external').forEach(cBtn => {
+        const hasOverride = cBtn.getAttribute('data-has-override') === '1';
+        const pVal = cBtn.querySelector('.channel-price-val');
+        if (pVal && priceFormatted && !hasOverride) {
+            pVal.textContent = priceFormatted;
+        }
+        const plat = (cBtn.getAttribute('data-platform') || '').toLowerCase();
+        if (extUrl && (plat === 'shopee' || plat.indexOf('shopee') !== -1 || plat === 'loja oficial')) {
             cBtn.href = extUrl;
-            const pVal = cBtn.querySelector('.channel-price-val');
-            if (pVal && priceFormatted) {
-                pVal.textContent = priceFormatted;
-            }
-        });
-    }
+        }
+    });
 
     // 10. Atualizar URL com o parâmetro da variante selecionada sem recarregar a página
     if (sku && window.history && window.history.replaceState) {

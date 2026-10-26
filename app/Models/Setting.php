@@ -391,4 +391,100 @@ class Setting
             ],
         ];
     }
+
+    /**
+     * Retorna a lista completa e ordenada de Canais de Venda e Marketplaces dos produtos.
+     * Suporta reordenação, personalização de títulos, descrições, preços, badges, links, ícones,
+     * ocultação e adição de novos canais de venda.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function getProductChannelsList(): array
+    {
+        $json = self::get('store_channels_items_json');
+        if (!empty($json)) {
+            $decoded = json_decode($json, true);
+            if (is_array($decoded) && !empty($decoded)) {
+                $sanitized = [];
+                foreach ($decoded as $item) {
+                    if (!is_array($item)) continue;
+                    $id = trim((string)($item['id'] ?? ''));
+                    if ($id === '') continue;
+
+                    $sanitized[] = [
+                        'id' => $id,
+                        'type' => (string)($item['type'] ?? 'external'),
+                        'platform' => trim((string)($item['platform'] ?? 'Loja Oficial')),
+                        'title' => trim((string)($item['title'] ?? '')),
+                        'official_label' => trim((string)($item['official_label'] ?? 'Canal Homologado DIVINIUM')),
+                        'desc' => trim((string)($item['desc'] ?? '')),
+                        'price_override' => trim((string)($item['price_override'] ?? '')),
+                        'badge' => trim((string)($item['badge'] ?? '')),
+                        'icon' => trim((string)($item['icon'] ?? 'oficial')),
+                        'url' => trim((string)($item['url'] ?? '')),
+                        'target' => trim((string)($item['target'] ?? '_blank')),
+                        'visible' => !empty($item['visible']) ? 1 : 0,
+                        'is_custom' => !empty($item['is_custom']),
+                        'is_deletable' => !isset($item['is_deletable']) || !empty($item['is_deletable']),
+                    ];
+                }
+                if (!empty($sanitized)) {
+                    return $sanitized;
+                }
+            }
+        }
+
+        // Padrão estrutural oficial DIVINIUM
+        return [
+            [
+                'id' => 'shopee',
+                'type' => 'external',
+                'platform' => 'Shopee',
+                'title' => self::get('store_channel_shopee_title', 'Comprar na Shopee Oficial'),
+                'official_label' => self::get('store_channel_shopee_official', 'Canal Homologado DIVINIUM'),
+                'desc' => self::get('store_channel_shopee_desc', 'Loja Oficial DIVINIUM na Shopee Brasil'),
+                'price_override' => self::get('store_channel_shopee_price', ''),
+                'badge' => self::get('store_channel_shopee_badge', 'Oficial'),
+                'icon' => 'shopee',
+                'url' => self::get('store_channel_shopee_url', 'https://shopee.com.br/search?keyword=Divinium'),
+                'target' => '_blank',
+                'visible' => (int) self::get('store_channel_shopee_visible', '1'),
+                'is_custom' => false,
+                'is_deletable' => true,
+            ],
+            [
+                'id' => 'mercadolivre',
+                'type' => 'external',
+                'platform' => 'Mercado Livre',
+                'title' => self::get('store_channel_ml_title', 'Comprar no Mercado Livre'),
+                'official_label' => self::get('store_channel_ml_official', 'Canal Homologado DIVINIUM'),
+                'desc' => self::get('store_channel_ml_desc', 'Loja Oficial Mercado Líder Platinum'),
+                'price_override' => self::get('store_channel_ml_price', ''),
+                'badge' => self::get('store_channel_ml_badge', 'Envio Full'),
+                'icon' => 'mercadolivre',
+                'url' => self::get('store_channel_ml_url', 'https://lista.mercadolivre.com.br/divinium'),
+                'target' => '_blank',
+                'visible' => (int) self::get('store_channel_ml_visible', '1'),
+                'is_custom' => false,
+                'is_deletable' => true,
+            ],
+            [
+                'id' => 'whatsapp',
+                'type' => 'external',
+                'platform' => 'WhatsApp VIP',
+                'title' => self::get('store_channel_wa_title', 'Consultar Consultor VIP no WhatsApp'),
+                'official_label' => self::get('store_channel_wa_official', 'Atendimento Direto DIVINIUM'),
+                'desc' => self::get('store_channel_wa_desc', 'Atendimento personalizado com especialista em alta joalheria'),
+                'price_override' => self::get('store_channel_wa_price', ''),
+                'badge' => self::get('store_channel_wa_badge', 'Atendimento VIP'),
+                'icon' => 'whatsapp',
+                'url' => self::get('store_channel_wa_url', self::get('store_whatsapp_url', 'https://wa.me/5511999999999')),
+                'target' => '_blank',
+                'visible' => (int) self::get('store_channel_wa_visible', '1'),
+                'is_custom' => false,
+                'is_deletable' => true,
+            ],
+        ];
+    }
 }
+
