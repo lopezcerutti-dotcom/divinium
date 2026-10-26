@@ -483,68 +483,116 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     </div>
                     <?php endif; ?>
 
-                    <!-- FICHA TÉCNICA / CARACTERÍSTICAS NOBRES -->
+                    <!-- FICHA TÉCNICA / ESPECIFICAÇÕES & MANUFATURA -->
                     <?php if ($showProdSpecs && $globalShowSpecs): ?>
                     <div class="product-specs-card">
-                        <h3 class="section-subheading">Especificações & Manufatura</h3>
+                        <h3 class="section-subheading"><?= View::e(Setting::get('store_specs_card_title', 'Especificações & Manufatura')) ?></h3>
                         
                         <dl class="specs-grid-table">
-                            <?php if ($prodMineral && Setting::get('store_spec_mineral_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Gema / Mineral</dt>
-                                <dd class="spec-value highlight-gold" id="specMineralValue">✦ <?= View::e($prodMineral) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($prodMaterials && Setting::get('store_spec_materials_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Metal Nobre</dt>
-                                <dd class="spec-value"><?= View::e($prodMaterials) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($prodDimensions && Setting::get('store_spec_dimensions_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Dimensões & Ajuste</dt>
-                                <dd class="spec-value"><?= View::e($prodDimensions) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($prodColors && Setting::get('store_spec_colors_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Acabamento</dt>
-                                <dd class="spec-value"><?= View::e($prodColors) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if (Setting::get('store_spec_authenticity_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Autenticidade</dt>
-                                <dd class="spec-value"><?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia')) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if ($canShowSku && Setting::get('store_spec_sku_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term"><?= View::e(Setting::get('store_spec_sku_label', 'Referência / SKU')) ?></dt>
-                                <dd class="spec-value" id="specSkuValue">#<?= View::e($prodSku) ?></dd>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if (Setting::get('store_spec_availability_visible', '1') === '1'): ?>
-                            <div class="spec-row">
-                                <dt class="spec-term">Disponibilidade</dt>
-                                <dd class="spec-value" id="specStockValue">
-                                    <?php if ($prodStockStatus === 'preorder'): ?>
-                                        <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● <?= View::e(Setting::get('store_availability_preorder_text', 'Manufatura Sob Encomenda (Envio prioritário)')) ?></span>
-                                    <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
-                                        <span style="color: #f87171;">● <?= View::e(Setting::get('store_availability_outofstock_text', 'Temporariamente Esgotado')) ?></span>
-                                    <?php else: ?>
-                                        <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e(Setting::get('store_availability_instock_text', 'Pronta Entrega para Envio Imediato')) ?></span>
+                            <?php 
+                            $specsList = Setting::getProductSpecsList();
+                            foreach ($specsList as $item):
+                                if (empty($item['visible'])) continue;
+                                $itemId = $item['id'] ?? '';
+                                $type = $item['type'] ?? 'custom';
+                                $itemTitle = trim((string)($item['title'] ?? ''));
+                                $itemDesc = trim((string)($item['desc'] ?? ''));
+                            ?>
+                                <?php if ($itemId === 'material' || $type === 'mineral'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : $prodMineral;
+                                    if (!empty($val)):
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Material') ?></dt>
+                                        <dd class="spec-value highlight-gold" id="specMineralValue">✦ <?= View::e($val) ?></dd>
+                                    </div>
                                     <?php endif; ?>
-                                </dd>
-                            </div>
-                            <?php endif; ?>
+
+                                <?php elseif ($itemId === 'acabamento' || $type === 'materials'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : $prodMaterials;
+                                    if (!empty($val)):
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Acabamento') ?></dt>
+                                        <dd class="spec-value"><?= View::e($val) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+
+                                <?php elseif ($itemId === 'design'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : 'Design Autoral Exclusivo DIVINIUM • Linhas Anatômicas Contemporâneas';
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Design') ?></dt>
+                                        <dd class="spec-value highlight-gold">✦ <?= View::e($val) ?></dd>
+                                    </div>
+
+                                <?php elseif ($itemId === 'dimensoes' || $type === 'dimensions'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : $prodDimensions;
+                                    if (!empty($val)):
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Dimensões & Ajuste') ?></dt>
+                                        <dd class="spec-value"><?= View::e($val) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+
+                                <?php elseif ($itemId === 'cores' || $type === 'colors'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : $prodColors;
+                                    if (!empty($val)):
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Lapidação & Tonalidade') ?></dt>
+                                        <dd class="spec-value"><?= View::e($val) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+
+                                <?php elseif ($itemId === 'autenticidade'): ?>
+                                    <?php 
+                                    $val = $itemDesc !== '' ? $itemDesc : Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia');
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Autenticidade') ?></dt>
+                                        <dd class="spec-value"><?= View::e($val) ?></dd>
+                                    </div>
+
+                                <?php elseif ($itemId === 'sku' || $type === 'sku'): ?>
+                                    <?php if ($canShowSku && Setting::get('store_spec_sku_visible', '1') === '1'): ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Referência / SKU') ?></dt>
+                                        <dd class="spec-value" id="specSkuValue">#<?= View::e($prodSku) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+
+                                <?php elseif ($itemId === 'disponibilidade' || $type === 'availability'): ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle ?: 'Disponibilidade') ?></dt>
+                                        <dd class="spec-value" id="specStockValue">
+                                            <?php if ($itemDesc !== ''): ?>
+                                                <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e($itemDesc) ?></span>
+                                            <?php elseif ($prodStockStatus === 'preorder'): ?>
+                                                <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● <?= View::e(Setting::get('store_availability_preorder_text', 'Manufatura Sob Encomenda (Envio prioritário)')) ?></span>
+                                            <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
+                                                <span style="color: #f87171;">● <?= View::e(Setting::get('store_availability_outofstock_text', 'Temporariamente Esgotado')) ?></span>
+                                            <?php else: ?>
+                                                <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e(Setting::get('store_availability_instock_text', 'Pronta Entrega para Envio Imediato')) ?></span>
+                                            <?php endif; ?>
+                                        </dd>
+                                    </div>
+
+                                <?php else: ?>
+                                    <?php if ($itemTitle !== '' || $itemDesc !== ''): ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($itemTitle) ?></dt>
+                                        <dd class="spec-value"><?= View::e($itemDesc) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         </dl>
                     </div>
                     <?php endif; ?>

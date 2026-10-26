@@ -1221,6 +1221,56 @@ class AdminController
     public function saveProductDisplay(): void
     {
         try {
+            // Sincroniza JSON de linhas da ficha técnica com as chaves individuais correspondentes
+            if (!empty($_POST['store_specs_items_json'])) {
+                $rawSpecs = is_string($_POST['store_specs_items_json']) 
+                    ? json_decode($_POST['store_specs_items_json'], true) 
+                    : $_POST['store_specs_items_json'];
+
+                if (is_array($rawSpecs)) {
+                    foreach ($rawSpecs as $sp) {
+                        if (!is_array($sp)) continue;
+                        $id = $sp['id'] ?? '';
+                        $vis = !empty($sp['visible']) ? '1' : '0';
+                        $title = trim((string)($sp['title'] ?? ''));
+                        $desc = trim((string)($sp['desc'] ?? ''));
+
+                        if ($id === 'material') {
+                            $_POST['store_spec_mineral_visible'] = $vis;
+                            $_POST['store_spec_mineral_label'] = $title;
+                            $_POST['store_spec_mineral_override'] = $desc;
+                        } elseif ($id === 'acabamento') {
+                            $_POST['store_spec_materials_visible'] = $vis;
+                            $_POST['store_spec_materials_label'] = $title;
+                            $_POST['store_spec_materials_override'] = $desc;
+                        } elseif ($id === 'design') {
+                            $_POST['store_spec_design_visible'] = $vis;
+                            $_POST['store_spec_design_label'] = $title;
+                            $_POST['store_spec_design_text'] = $desc;
+                        } elseif ($id === 'dimensoes') {
+                            $_POST['store_spec_dimensions_visible'] = $vis;
+                            $_POST['store_spec_dimensions_label'] = $title;
+                            $_POST['store_spec_dimensions_override'] = $desc;
+                        } elseif ($id === 'cores') {
+                            $_POST['store_spec_colors_visible'] = $vis;
+                            $_POST['store_spec_colors_label'] = $title;
+                            $_POST['store_spec_colors_override'] = $desc;
+                        } elseif ($id === 'autenticidade') {
+                            $_POST['store_spec_authenticity_visible'] = $vis;
+                            $_POST['store_spec_authenticity_label'] = $title;
+                            $_POST['store_spec_authenticity_text'] = $desc;
+                        } elseif ($id === 'sku') {
+                            $_POST['store_spec_sku_visible'] = $vis;
+                            $_POST['store_spec_sku_label'] = $title;
+                        } elseif ($id === 'disponibilidade') {
+                            $_POST['store_spec_availability_visible'] = $vis;
+                            $_POST['store_spec_availability_label'] = $title;
+                            $_POST['store_spec_availability_override'] = $desc;
+                        }
+                    }
+                }
+            }
+
             \App\Models\Setting::setMany($_POST);
 
             $this->respond([

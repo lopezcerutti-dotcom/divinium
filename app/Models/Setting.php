@@ -261,4 +261,134 @@ class Setting
         }
         return $sanitized;
     }
+
+    /**
+     * Retorna a lista completa e ordenada de linhas da Ficha Técnica dos produtos.
+     * Suporta reordenação, renomeação de títulos, descrições customizadas, ocultação e novas linhas livres.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function getProductSpecsList(): array
+    {
+        $json = self::get('store_specs_items_json');
+        if (!empty($json)) {
+            $decoded = json_decode($json, true);
+            if (is_array($decoded) && !empty($decoded)) {
+                $sanitized = [];
+                $hasDesign = false;
+                foreach ($decoded as $item) {
+                    if (!is_array($item)) continue;
+                    $id = trim((string)($item['id'] ?? ''));
+                    if ($id === '') continue;
+
+                    $title = trim((string)($item['title'] ?? ''));
+                    // Renomeações automáticas requeridas se o item ainda tiver títulos legados
+                    if ($id === 'material' && ($title === 'Gema / Mineral' || $title === '')) {
+                        $title = 'Material';
+                    } elseif ($id === 'acabamento' && ($title === 'Metal Nobre' || $title === '')) {
+                        $title = 'Acabamento';
+                    }
+
+                    if ($id === 'design') {
+                        $hasDesign = true;
+                    }
+
+                    $sanitized[] = [
+                        'id' => $id,
+                        'type' => (string)($item['type'] ?? 'custom'),
+                        'title' => $title,
+                        'desc' => trim((string)($item['desc'] ?? '')),
+                        'visible' => !empty($item['visible']) ? 1 : 0,
+                        'is_custom' => !empty($item['is_custom'])
+                    ];
+                }
+
+                // Garante que o campo autoral Design exista mesmo em JSONs anteriores
+                if (!$hasDesign) {
+                    $insertIdx = 2; // logo após acabamento
+                    $designRow = [
+                        'id' => 'design',
+                        'type' => 'fixed',
+                        'title' => 'Design',
+                        'desc' => self::get('store_spec_design_text', 'Design Autoral Exclusivo DIVINIUM • Linhas Anatômicas Contemporâneas'),
+                        'visible' => (int) self::get('store_spec_design_visible', '1'),
+                        'is_custom' => false
+                    ];
+                    array_splice($sanitized, $insertIdx, 0, [$designRow]);
+                }
+
+                if (!empty($sanitized)) {
+                    return $sanitized;
+                }
+            }
+        }
+
+        // Padrão estrutural conforme solicitação
+        return [
+            [
+                'id' => 'material',
+                'type' => 'mineral',
+                'title' => self::get('store_spec_mineral_label', 'Material'),
+                'desc' => self::get('store_spec_mineral_override', ''),
+                'visible' => (int) self::get('store_spec_mineral_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'acabamento',
+                'type' => 'materials',
+                'title' => self::get('store_spec_materials_label', 'Acabamento'),
+                'desc' => self::get('store_spec_materials_override', ''),
+                'visible' => (int) self::get('store_spec_materials_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'design',
+                'type' => 'fixed',
+                'title' => self::get('store_spec_design_label', 'Design'),
+                'desc' => self::get('store_spec_design_text', 'Design Autoral Exclusivo DIVINIUM • Linhas Anatômicas Contemporâneas'),
+                'visible' => (int) self::get('store_spec_design_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'dimensoes',
+                'type' => 'dimensions',
+                'title' => self::get('store_spec_dimensions_label', 'Dimensões & Ajuste'),
+                'desc' => self::get('store_spec_dimensions_override', ''),
+                'visible' => (int) self::get('store_spec_dimensions_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'cores',
+                'type' => 'colors',
+                'title' => self::get('store_spec_colors_label', 'Lapidação & Tonalidade'),
+                'desc' => self::get('store_spec_colors_override', ''),
+                'visible' => (int) self::get('store_spec_colors_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'autenticidade',
+                'type' => 'fixed',
+                'title' => self::get('store_spec_authenticity_label', 'Autenticidade'),
+                'desc' => self::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia'),
+                'visible' => (int) self::get('store_spec_authenticity_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'sku',
+                'type' => 'sku',
+                'title' => self::get('store_spec_sku_label', 'Referência / SKU'),
+                'desc' => '',
+                'visible' => (int) self::get('store_spec_sku_visible', '1'),
+                'is_custom' => false
+            ],
+            [
+                'id' => 'disponibilidade',
+                'type' => 'availability',
+                'title' => self::get('store_spec_availability_label', 'Disponibilidade'),
+                'desc' => self::get('store_spec_availability_override', ''),
+                'visible' => (int) self::get('store_spec_availability_visible', '1'),
+                'is_custom' => false
+            ],
+        ];
+    }
 }
