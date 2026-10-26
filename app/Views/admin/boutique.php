@@ -60,6 +60,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-detail', this)">
             <span>💎 Detalhes da Joia & Canais</span>
         </button>
+        <a href="/admin/produtos-exibicao" class="tab-btn" style="background: rgba(202, 161, 92, 0.15); border-color: rgba(202, 161, 92, 0.4); text-decoration: none;" title="Abrir Central Unificada de Informações e Exibição dos Produtos">
+            <span>💎 Informações & Exibição dos Produtos ↗</span>
+        </a>
         <button type="button" class="tab-btn" onclick="switchBoutiqueSection('bsec-reasons', this)">
             <span>💎 Seção Editorial</span>
         </button>
@@ -423,6 +426,17 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <div class="form-grid">
                 
+                <!-- Card de Acesso à Central Unificada -->
+                <div class="form-group full-width" style="background: rgba(202, 161, 92, 0.08); border: 1px solid rgba(202, 161, 92, 0.3); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+                    <div>
+                        <strong style="color: #ffffff; font-size: 0.9rem; display: block; margin-bottom: 2px;">💎 Central Unificada de Informações e Exibição dos Produtos</strong>
+                        <p style="margin: 0; font-size: 0.82rem; color: #ded7cf;">Para gerenciar SKU, selos de metal ("Prata de Lei 925"), gemas minerais, imagens sem cortes e especificações técnicas completas em um único lugar centralizado, utilize a seção dedicada.</p>
+                    </div>
+                    <a href="/admin/produtos-exibicao" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.8rem; padding: 8px 16px; text-decoration: none;">
+                        Abrir Informações & Exibição ↗
+                    </a>
+                </div>
+
                 <!-- Layout e Imparcialidade dos Botões -->
                 <div class="form-group full-width" style="background: rgba(167, 173, 180, 0.06); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.25);">
                     <h4 style="color: #CBD0D6; margin: 0 0 6px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">

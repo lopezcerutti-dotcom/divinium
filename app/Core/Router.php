@@ -298,6 +298,8 @@ class Router
             $this->post($p . '/produtos/duplicar', [\App\Controllers\AdminController::class, 'duplicateProduct'], $adminAuth);
             $this->post($p . '/produtos/toggle', [\App\Controllers\AdminController::class, 'toggleProduct'], $adminAuth);
             $this->post($p . '/produtos/excluir', [\App\Controllers\AdminController::class, 'deleteProduct'], $adminAuth);
+            $this->get($p . '/produtos-exibicao', [\App\Controllers\AdminController::class, 'productDisplay'], $adminAuth);
+            $this->post($p . '/produtos-exibicao/salvar', [\App\Controllers\AdminController::class, 'saveProductDisplay'], $adminAuth);
             $this->get($p . '/categorias', [\App\Controllers\AdminController::class, 'categories'], $adminAuth);
             $this->post($p . '/categorias/salvar', [\App\Controllers\AdminController::class, 'saveCategory'], $adminAuth);
             $this->post($p . '/categorias/excluir', [\App\Controllers\AdminController::class, 'deleteCategory'], $adminAuth);

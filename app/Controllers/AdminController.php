@@ -202,6 +202,7 @@ class AdminController
         }
 
         $showBadge = isset($_POST['show_badge']) ? ((int) $_POST['show_badge'] ? 1 : 0) : 1;
+        $showSku = isset($_POST['show_sku']) ? ((int) $_POST['show_sku'] ? 1 : 0) : 1;
         $showSpecs = isset($_POST['show_specs']) ? ((int) $_POST['show_specs'] ? 1 : 0) : 1;
         $showDescription = isset($_POST['show_description']) ? ((int) $_POST['show_description'] ? 1 : 0) : 1;
 
@@ -216,6 +217,28 @@ class AdminController
         }
         $showChannels = isset($_POST['show_channels']) ? ((int) $_POST['show_channels'] ? 1 : 0) : 1;
 
+        // Auto-verificação da coluna show_sku na tabela products
+        try {
+            $driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            if ($driver === 'sqlite') {
+                $cols = $this->pdo->query("PRAGMA table_info(products)")->fetchAll(\PDO::FETCH_ASSOC);
+                $hasShowSku = false;
+                foreach ($cols as $c) {
+                    if (($c['name'] ?? '') === 'show_sku') { $hasShowSku = true; break; }
+                }
+                if (!$hasShowSku) {
+                    $this->pdo->exec("ALTER TABLE products ADD COLUMN show_sku INTEGER NOT NULL DEFAULT 1");
+                }
+            } else {
+                $colCheck = $this->pdo->query("SHOW COLUMNS FROM products LIKE 'show_sku'");
+                if ($colCheck && $colCheck->rowCount() === 0) {
+                    $this->pdo->exec("ALTER TABLE products ADD COLUMN show_sku TINYINT(1) NOT NULL DEFAULT 1");
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignorar
+        }
+
         try {
             if ($id !== null && $id > 0) {
                 $stmt = $this->pdo->prepare('
@@ -224,7 +247,7 @@ class AdminController
                         colors = ?, variants_json = ?, price_cents = ?, promotional_price_cents = ?, 
                         stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
                         short_description = ?, description = ?, image_url = ?, show_badge = ?, 
-                        show_specs = ?, show_description = ?, card_click_behavior = ?, custom_target_url = ?,
+                        show_sku = ?, show_specs = ?, show_description = ?, card_click_behavior = ?, custom_target_url = ?,
                         detail_layout = ?, show_channels = ?, is_active = ?, is_featured = ?
                     WHERE id = ?
                 ');
@@ -233,7 +256,7 @@ class AdminController
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, 
                     $stock, $stockStatus, $status, $sortOrder, 
                     $shortDescription, $description, $imageUrl, $showBadge, 
-                    $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
+                    $showSku, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
                     $detailLayout, $showChannels, $isActive, $isFeatured, $id
                 ]);
                 $productId = $id;
@@ -244,13 +267,13 @@ class AdminController
                         uuid, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
                         colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
                         stock_status, status, sort_order, short_description, description, image_url, 
-                        show_badge, show_specs, show_description, card_click_behavior, custom_target_url,
+                        show_badge, show_sku, show_specs, show_description, card_click_behavior, custom_target_url,
                         detail_layout, show_channels, is_active, is_featured
                     ) VALUES (
                         ?, ?, ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?, 
-                        ?, ?, ?, ?, ?,
+                        ?, ?, ?, ?, ?, ?,
                         ?, ?, ?, ?
                     )
                 ');
@@ -258,7 +281,7 @@ class AdminController
                     $uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
                     $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
-                    $showBadge, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
+                    $showBadge, $showSku, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
                     $detailLayout, $showChannels, $isActive, $isFeatured
                 ]);
                 $productId = (int) $this->pdo->lastInsertId();
@@ -1168,6 +1191,47 @@ class AdminController
             $this->respond([
                 'success' => false,
                 'error' => 'Erro ao salvar elementos da Boutique: ' . $e->getMessage()
+            ], 200);
+        }
+    }
+
+    /**
+     * Seção Centralizada: Informações e Exibição dos Produtos
+     * Reúne todas as informações públicas dos produtos, SKU, selos, botões,
+     * especificações, preços e enquadramento de imagens.
+     */
+    public function productDisplay(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $settings = \App\Models\Setting::getAll();
+
+        View::render('admin/product_display', [
+            'pageTitle' => 'Informações e Exibição dos Produtos | DIVINIUM',
+            'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
+            'settings' => $settings,
+        ], 'admin');
+    }
+
+    /**
+     * Salvar configurações da Central de Informações e Exibição dos Produtos
+     */
+    public function saveProductDisplay(): void
+    {
+        try {
+            \App\Models\Setting::setMany($_POST);
+
+            $this->respond([
+                'success' => true,
+                'message' => 'Informações e exibição dos produtos atualizadas com sucesso!'
+            ]);
+        } catch (\Throwable $e) {
+            error_log('Erro ao salvar exibição de produtos: ' . $e->getMessage());
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar alterações: ' . $e->getMessage()
             ], 200);
         }
     }

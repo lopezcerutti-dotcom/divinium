@@ -124,7 +124,20 @@ $showProdSpecs = isset($product['show_specs']) ? ((int) $product['show_specs'] =
 $showProdDesc = isset($product['show_description']) ? ((int) $product['show_description'] === 1) : true;
 $showProdChannels = isset($product['show_channels']) ? ((int) $product['show_channels'] === 1) : true;
 
-// Configurações globais do painel (/admin/boutique)
+// SKU: Visibilidade Global + Override por Produto (sem afetar estoque, Bling ou banco de dados)
+$showGlobalSku = Setting::get('store_sku_visible', '1') === '1';
+$showProductSku = !isset($product['show_sku']) || ((int)$product['show_sku'] === 1);
+$canShowSku = $showGlobalSku && $showProductSku;
+
+// Selos e Badges Globais editáveis e ocultáveis
+$showMetalBadge = Setting::get('store_badge_metal_visible', Setting::get('store_card_badge_metal_visible', '1')) === '1';
+$metalBadgeText = Setting::get('store_badge_metal_text', Setting::get('store_card_badge_metal', 'Prata de Lei 925'));
+$showMineralBadge = Setting::get('store_badge_mineral_visible', Setting::get('store_card_mineral_visible', '1')) === '1';
+$showStatusBadge = Setting::get('store_badge_status_visible', '1') === '1';
+$preorderBadgeText = Setting::get('store_badge_preorder_text', 'Sob Encomenda');
+$outOfStockBadgeText = Setting::get('store_badge_outofstock_text', 'Indisponível');
+
+// Configurações globais do painel (/admin/boutique e /admin/produtos-exibicao)
 $globalShowSpecs = Setting::get('store_detail_show_specs', '1') === '1';
 $globalShowGuarantee = Setting::get('store_detail_show_guarantee', '1') === '1';
 $globalShowRelated = Setting::get('store_detail_show_related', '1') === '1';
@@ -166,21 +179,21 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <!-- Badges Flutuantes na Foto -->
                         <?php if ($showProdBadge): ?>
                         <div class="product-media-badges">
-                            <?php if ($prodStockStatus === 'preorder'): ?>
-                                <span class="media-badge badge-preorder">Sob Encomenda</span>
-                            <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
-                                <span class="media-badge badge-out">Indisponível</span>
-                            <?php else: ?>
-                                <span class="media-badge badge-metal">Prata de Lei 925</span>
+                            <?php if ($showStatusBadge && $prodStockStatus === 'preorder'): ?>
+                                <span class="media-badge badge-preorder"><?= View::e($preorderBadgeText) ?></span>
+                            <?php elseif ($showStatusBadge && $prodStockStatus === 'out_of_stock'): ?>
+                                <span class="media-badge badge-out"><?= View::e($outOfStockBadgeText) ?></span>
+                            <?php elseif ($showMetalBadge): ?>
+                                <span class="media-badge badge-metal"><?= View::e($metalBadgeText) ?></span>
                             <?php endif; ?>
 
-                            <?php if ($prodMineral): ?>
+                            <?php if ($showMineralBadge && $prodMineral): ?>
                                 <span class="media-badge badge-mineral">✦ <?= View::e($prodMineral) ?></span>
                             <?php endif; ?>
                         </div>
                         <?php endif; ?>
 
-                        <!-- Imagem Principal com Zoom Suave -->
+                        <!-- Imagem Principal com Zoom Suave (Sem cortes na joia) -->
                         <div class="product-main-image-wrap" id="mainImageWrapper">
                             <img src="<?= View::e($prodImageUrl) ?>" 
                                  alt="<?= View::e($prodName) ?>" 
@@ -191,14 +204,19 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         </div>
 
                         <!-- Barra de Ações & Compartilhamento -->
-                        <?php if ($globalShowShare): ?>
+                        <?php if ($globalShowShare || $canShowSku): ?>
                         <div class="product-media-footer">
-                            <span class="media-sku-text">Código da Joia: <strong>#<?= View::e($prodSku) ?></strong></span>
+                            <?php if ($canShowSku): ?>
+                            <span class="media-sku-text"><?= View::e(Setting::get('store_sku_label', 'Código da Joia:')) ?> <strong>#<?= View::e($prodSku) ?></strong></span>
+                            <?php else: ?>
+                            <span></span>
+                            <?php endif; ?>
                             
+                            <?php if ($globalShowShare): ?>
                             <div class="media-share-actions">
                                 <button type="button" class="btn-share-icon" onclick="copyProductLink('<?= View::e($currentUrl) ?>')" title="Copiar link próprio desta joia" id="btnCopyLink">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                    <span id="copyLinkText">Compartilhar Joia</span>
+                                    <span id="copyLinkText"><?= View::e(Setting::get('store_detail_share_btn_text', 'Compartilhar Joia')) ?></span>
                                 </button>
                                 
                                 <a href="https://api.whatsapp.com/send?text=<?= urlencode('Conheça esta joia da DIVINIUM: ' . $prodName . ' — ' . $currentUrl) ?>" 
@@ -210,6 +228,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     <span>WhatsApp</span>
                                 </a>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <?php endif; ?>
 
@@ -469,56 +488,62 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <h3 class="section-subheading">Especificações & Manufatura</h3>
                         
                         <dl class="specs-grid-table">
-                            <?php if ($prodMineral): ?>
+                            <?php if ($prodMineral && Setting::get('store_spec_mineral_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Gema / Mineral</dt>
                                 <dd class="spec-value highlight-gold" id="specMineralValue">✦ <?= View::e($prodMineral) ?></dd>
                             </div>
                             <?php endif; ?>
 
-                            <?php if ($prodMaterials): ?>
+                            <?php if ($prodMaterials && Setting::get('store_spec_materials_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Metal Nobre</dt>
                                 <dd class="spec-value"><?= View::e($prodMaterials) ?></dd>
                             </div>
                             <?php endif; ?>
 
-                            <?php if ($prodDimensions): ?>
+                            <?php if ($prodDimensions && Setting::get('store_spec_dimensions_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Dimensões & Ajuste</dt>
                                 <dd class="spec-value"><?= View::e($prodDimensions) ?></dd>
                             </div>
                             <?php endif; ?>
 
-                            <?php if ($prodColors): ?>
+                            <?php if ($prodColors && Setting::get('store_spec_colors_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Acabamento</dt>
                                 <dd class="spec-value"><?= View::e($prodColors) ?></dd>
                             </div>
                             <?php endif; ?>
 
+                            <?php if (Setting::get('store_spec_authenticity_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Autenticidade</dt>
-                                <dd class="spec-value">Certificado de Prata de Lei 925 com Garantia Vitalícia</dd>
+                                <dd class="spec-value"><?= View::e(Setting::get('store_spec_authenticity_text', 'Certificado de Prata de Lei 925 com Garantia Vitalícia')) ?></dd>
                             </div>
+                            <?php endif; ?>
 
+                            <?php if ($canShowSku && Setting::get('store_spec_sku_visible', '1') === '1'): ?>
                             <div class="spec-row">
-                                <dt class="spec-term">Referência / SKU</dt>
+                                <dt class="spec-term"><?= View::e(Setting::get('store_spec_sku_label', 'Referência / SKU')) ?></dt>
                                 <dd class="spec-value" id="specSkuValue">#<?= View::e($prodSku) ?></dd>
                             </div>
+                            <?php endif; ?>
 
+                            <?php if (Setting::get('store_spec_availability_visible', '1') === '1'): ?>
                             <div class="spec-row">
                                 <dt class="spec-term">Disponibilidade</dt>
                                 <dd class="spec-value" id="specStockValue">
                                     <?php if ($prodStockStatus === 'preorder'): ?>
-                                        <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● Manufatura Sob Encomenda (Envio prioritário)</span>
+                                        <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● <?= View::e(Setting::get('store_availability_preorder_text', 'Manufatura Sob Encomenda (Envio prioritário)')) ?></span>
                                     <?php elseif ($prodStockStatus === 'out_of_stock'): ?>
-                                        <span style="color: #f87171;">● Temporariamente Esgotado</span>
+                                        <span style="color: #f87171;">● <?= View::e(Setting::get('store_availability_outofstock_text', 'Temporariamente Esgotado')) ?></span>
                                     <?php else: ?>
-                                        <span style="color: var(--text-primary); font-weight: 600;">● Pronta Entrega para Envio Imediato</span>
+                                        <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e(Setting::get('store_availability_instock_text', 'Pronta Entrega para Envio Imediato')) ?></span>
                                     <?php endif; ?>
                                 </dd>
                             </div>
+                            <?php endif; ?>
                         </dl>
                     </div>
                     <?php endif; ?>

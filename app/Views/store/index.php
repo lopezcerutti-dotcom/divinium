@@ -290,15 +290,26 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                  class="store-card-img"
                                  onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
                             
-                            <?php if (!empty($prod['variations_count']) && (int)$prod['variations_count'] > 1): ?>
+                            <?php 
+                            $showVarBadge = Setting::get('store_card_variations_badge_visible', '1') === '1';
+                            $varSuffix = Setting::get('store_card_variations_badge_suffix', 'Pedras Minerais');
+                            $showCardMetalBadge = Setting::get('store_card_badge_metal_visible', '1') === '1';
+                            $cardMetalText = Setting::get('store_card_badge_metal', 'Prata 925');
+                            $cardBtnText = Setting::get('store_card_btn_text', 'Conhecer a Peça');
+                            ?>
+                            <?php if ($showProdBadge && ($showVarBadge || $showCardMetalBadge)): ?>
                             <div class="card-badges-top">
-                                <span class="badge-metal">✦ <?= (int)$prod['variations_count'] ?> Pedras Minerais</span>
+                                <?php if (!empty($prod['variations_count']) && (int)$prod['variations_count'] > 1 && $showVarBadge): ?>
+                                    <span class="badge-metal">✦ <?= (int)$prod['variations_count'] ?> <?= View::e($varSuffix) ?></span>
+                                <?php elseif ($showCardMetalBadge): ?>
+                                    <span class="badge-metal"><?= View::e($cardMetalText) ?></span>
+                                <?php endif; ?>
                             </div>
                             <?php endif; ?>
 
                             <div class="card-hover-overlay">
                                 <span class="overlay-cta-text">
-                                    <span>Conhecer a Peça</span>
+                                    <span><?= View::e($cardBtnText) ?></span>
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </span>
                             </div>
@@ -306,6 +317,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
 
                         <!-- Informações do Card: Somente Imagem, Nome do Modelo, Preço e Botão Discreto -->
                         <div class="store-card-body-clean">
+                            <?php if (Setting::get('store_product_title_visible', '1') === '1'): ?>
                             <h3 class="store-card-title-clean">
                                 <a href="<?= View::e($detailUrl) ?>" 
                                    data-track-product-id="<?= $prod['id'] ?>"
@@ -315,14 +327,17 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                     <?= View::e($prod['name']) ?>
                                 </a>
                             </h3>
+                            <?php endif; ?>
 
                             <!-- Preço Correspondente -->
+                            <?php if (Setting::get('store_price_visible', '1') === '1'): ?>
                             <div class="store-card-price-clean">
                                 <?php if (!empty($prod['variations_count']) && (int)$prod['variations_count'] > 1): ?>
                                     <span class="price-prefix">A partir de</span>
                                 <?php endif; ?>
                                 <span>R$ <?= $basePriceFormatted ?></span>
                             </div>
+                            <?php endif; ?>
 
                             <!-- Botão Discreto para Conhecer a Peça -->
                             <a href="<?= View::e($detailUrl) ?>" 
@@ -331,7 +346,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                data-track-product-name="<?= View::e($prod['name']) ?>"
                                data-track-source="store_btn_explore"
                                title="Conhecer <?= View::e($prod['name']) ?> na DIVINIUM">
-                                <span>Conhecer a Peça</span>
+                                <span><?= View::e($cardBtnText) ?></span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                             </a>
                         </div>

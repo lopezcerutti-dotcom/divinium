@@ -54,9 +54,14 @@
                     <span>Visão Geral</span>
                 </a>
 
-                <a href="/admin/produtos" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos') ? 'active' : '' ?>">
+                <a href="/admin/produtos" class="admin-nav-item <?= (str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos') && !str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos-exibicao')) ? 'active' : '' ?>">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Produtos & Joias</span>
+                </a>
+
+                <a href="/admin/produtos-exibicao" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/produtos-exibicao') ? 'active' : '' ?>">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span>Informações & Exibição</span>
                 </a>
 
                 <a href="/admin/categorias" class="admin-nav-item <?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/admin/categorias') ? 'active' : '' ?>">

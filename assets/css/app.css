@@ -3164,12 +3164,14 @@ body.luxury-theme .testimonials-section {
 .store-card-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
+    padding: 8px;
     transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .store-product-card:hover .store-card-img {
-    transform: scale(1.08);
+    transform: scale(1.05);
 }
 
 .card-badges-top {
@@ -5233,15 +5235,19 @@ body.theme-rose .btn-store-back {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: var(--product-card-bg, var(--card-bg));
+    background: var(--product-card-bg, #000000);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-gallery-main img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
+    padding: 12px;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -5506,15 +5512,19 @@ body.theme-rose .btn-store-back {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: var(--product-card-bg, var(--card-bg));
+    background: var(--product-card-bg, #000000);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-main-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
+    padding: 12px;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -6134,13 +6144,18 @@ body.theme-rose .btn-store-back {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
 }
 
 .related-card-media img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
+    padding: 8px;
     transition: transform 0.5s ease;
 }
 

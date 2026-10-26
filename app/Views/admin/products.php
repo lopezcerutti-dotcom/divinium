@@ -12,6 +12,12 @@
         <p>Gerencie peças autorais, gemas minerais, fotos, links da Shopee e sincronização em tempo real com Bling ERP.</p>
     </div>
     <div class="catalog-actions-bar">
+        <!-- BOTÃO INFORMAÇÕES & EXIBIÇÃO CENTRALIZADA -->
+        <a href="/admin/produtos-exibicao" class="btn-admin-secondary" style="border-color: rgba(202, 161, 92, 0.4); color: #ded7cf;" title="Personalizar informações públicas e visibilidade dos produtos">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <span>Informações & Exibição</span>
+        </a>
+
         <!-- BOTÃO SINCRONIZAR COM BLING -->
         <button class="btn-admin-bling" id="syncBlingBtnTable" onclick="triggerBlingSync(event)" title="Sincronizar estoque e produtos com Bling ERP">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="sync-icon">
@@ -526,9 +532,16 @@
                         <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Desmarque para ocultar selos que cubram detalhes ou ocupem espaço excessivo na fotografia desta peça.</span>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
+                            <input type="hidden" name="show_sku" value="0">
+                            <input type="checkbox" id="prodShowSku" name="show_sku" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
+                            <span>Exibir código SKU / Referência publicamente no site</span>
+                        </label>
+                        <span class="field-hint" style="margin: -6px 0 0 24px; font-size: 0.72rem;">Ao desmarcar, o código SKU (#DIV-...) fica oculto para os clientes. O cadastro interno, estoque e Bling ERP permanecem 100% ativos e intactos.</span>
+
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
                             <input type="hidden" name="show_specs" value="0">
                             <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir especificações técnicas (Materiais, Medidas e SKU)</span>
+                            <span>Exibir especificações técnicas (Materiais, Medidas e Acabamento)</span>
                         </label>
 
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
@@ -1510,6 +1523,8 @@ function openNewProductModal(e) {
     document.getElementById('prodStock').value = '10';
     document.getElementById('statusPublished').checked = true;
     document.getElementById('prodShowBadge').checked = true;
+    const showSkuNew = document.getElementById('prodShowSku');
+    if (showSkuNew) showSkuNew.checked = true;
     document.getElementById('prodShowSpecs').checked = true;
     document.getElementById('prodShowDescription').checked = true;
     document.getElementById('imagePreviewBox').src = '/assets/images/hero/featured-green-shell.jpg';
@@ -1593,6 +1608,8 @@ function editProduct(product) {
     document.getElementById('prodFeatured').checked = product.is_featured == 1;
 
     document.getElementById('prodShowBadge').checked = (product.show_badge === undefined || product.show_badge === null || product.show_badge == 1);
+    const showSkuEdit = document.getElementById('prodShowSku');
+    if (showSkuEdit) showSkuEdit.checked = (product.show_sku === undefined || product.show_sku === null || product.show_sku == 1);
     document.getElementById('prodShowSpecs').checked = (product.show_specs === undefined || product.show_specs === null || product.show_specs == 1);
     document.getElementById('prodShowDescription').checked = (product.show_description === undefined || product.show_description === null || product.show_description == 1);
 
