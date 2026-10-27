@@ -102,6 +102,25 @@ $settings = $settings ?? [];
     border-bottom-color: rgba(212, 186, 136, 0.25);
 }
 
+/* Miniatura da Foto Principal na Tabela de Joias */
+.table-img-thumb {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #141414;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+.table-img-thumb:hover {
+    transform: scale(1.1);
+    border-color: rgba(212, 186, 136, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 /* Botão de Expandir Gaveta de Variações */
 .btn-drawer-toggle {
     background: rgba(255, 255, 255, 0.05);
@@ -450,7 +469,7 @@ $settings = $settings ?? [];
                 <thead>
                     <tr>
                         <th style="width: 44px; text-align: center;" title="Expandir variações vinculadas">Var.</th>
-                        <th style="width: 58px; text-align: center;">Foto</th>
+                        <th style="width: 54px; text-align: center;">Foto</th>
                         <th>Modelo Autoral & SKU Base</th>
                         <th>Categoria</th>
                         <th>Preço Base (R$)</th>
@@ -512,12 +531,12 @@ $settings = $settings ?? [];
                                 </td>
 
                                 <!-- FOTO PRINCIPAL DO MODELO -->
-                                <td style="text-align: center;">
+                                <td style="text-align: center; width: 54px;">
                                     <img src="<?= \App\Core\View::e($grp['image_url'] ?: '/assets/images/hero/featured-green-shell.jpg') ?>" 
                                          alt="<?= \App\Core\View::e($grp['name']) ?>" 
                                          class="table-img-thumb"
                                          onclick="toggleVariationsDrawer('<?= \App\Core\View::e($grp['base_sku']) ?>')"
-                                         style="cursor: pointer;"
+                                         style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer;"
                                          onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
                                 </td>
 
@@ -654,10 +673,10 @@ $settings = $settings ?? [];
                                                     ?>
                                                     <tr id="variant-row-<?= $v['id'] ?>">
                                                         <!-- FOTO DA VARIAÇÃO -->
-                                                        <td style="text-align: center;">
+                                                        <td style="text-align: center; width: 44px;">
                                                             <img src="<?= \App\Core\View::e($v['image_url'] ?: $grp['image_url']) ?>" 
                                                                  alt="<?= \App\Core\View::e($v['stone_mineral'] ?? '') ?>" 
-                                                                 style="width: 34px; height: 34px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);"
+                                                                 style="width: 28px; height: 28px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12); display: inline-block; vertical-align: middle;"
                                                                  onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
                                                         </td>
 
@@ -1005,7 +1024,7 @@ $settings = $settings ?? [];
                     </label>
                     <div style="display: flex; gap: 14px; align-items: flex-start;">
                         <img id="imagePreviewBox" src="/assets/images/hero/featured-green-shell.jpg" alt="Preview" 
-                             style="width: 74px; height: 74px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(212,186,136,0.3); background: #121212; flex-shrink: 0;"
+                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(212,186,136,0.3); background: #121212; flex-shrink: 0;"
                              onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
                         <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
                             <input type="text" id="prodImageUrl" name="image_url" class="form-input" placeholder="/assets/images/products/... ou URL externa" oninput="updateImagePreview(this.value)">

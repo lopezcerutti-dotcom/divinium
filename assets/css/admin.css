@@ -410,6 +410,25 @@ body.admin-theme {
     transform: scale(1.15);
 }
 
+.table-img-thumb {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #141414;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.table-img-thumb:hover {
+    transform: scale(1.1);
+    border-color: rgba(212, 186, 136, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 .badge-status {
     display: inline-block;
     padding: 4px 10px;
