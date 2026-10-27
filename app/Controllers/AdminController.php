@@ -159,6 +159,15 @@ class AdminController
                     'total_stock' => (int)($p['stock_quantity'] ?? 0),
                     'min_price_cents' => (int)($p['price_cents'] ?? 0),
                     'max_price_cents' => (int)($p['price_cents'] ?? 0),
+                    'price_cents' => (int)($p['price_cents'] ?? 0),
+                    'promotional_price_cents' => (int)($p['promotional_price_cents'] ?? 0),
+                    'pix_discount_pct' => isset($p['pix_discount_pct']) && $p['pix_discount_pct'] !== null ? (int)$p['pix_discount_pct'] : 5,
+                    'installments_text' => $p['installments_text'] ?? '',
+                    'specs_json' => $p['specs_json'] ?? '',
+                    'gallery_json' => $p['gallery_json'] ?? '',
+                    'stock_quantity' => (int)($p['stock_quantity'] ?? 0),
+                    'stock_status' => $p['stock_status'] ?? 'in_stock',
+                    'stone_mineral' => $p['stone_mineral'] ?? '',
                     'variants' => [],
                     'parent_product' => $p,
                 ];
@@ -178,6 +187,15 @@ class AdminController
                     $groups[$baseSku]['id'] = $p['id'];
                     $groups[$baseSku]['name'] = !empty($cleanName) ? $cleanName : $p['name'];
                     $groups[$baseSku]['parent_product'] = $p;
+                    $groups[$baseSku]['price_cents'] = (int)($p['price_cents'] ?? 0);
+                    $groups[$baseSku]['promotional_price_cents'] = (int)($p['promotional_price_cents'] ?? 0);
+                    $groups[$baseSku]['pix_discount_pct'] = isset($p['pix_discount_pct']) && $p['pix_discount_pct'] !== null ? (int)$p['pix_discount_pct'] : 5;
+                    $groups[$baseSku]['installments_text'] = $p['installments_text'] ?? '';
+                    $groups[$baseSku]['specs_json'] = $p['specs_json'] ?? '';
+                    $groups[$baseSku]['gallery_json'] = $p['gallery_json'] ?? '';
+                    $groups[$baseSku]['stock_quantity'] = (int)($p['stock_quantity'] ?? 0);
+                    $groups[$baseSku]['stock_status'] = $p['stock_status'] ?? 'in_stock';
+                    $groups[$baseSku]['stone_mineral'] = $p['stone_mineral'] ?? '';
                     if (!empty($p['image_url'])) {
                         $groups[$baseSku]['image_url'] = $p['image_url'];
                     }
@@ -218,6 +236,12 @@ class AdminController
         $name = trim((string) ($_POST['name'] ?? ''));
         $categoryId = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
         $stoneMineral = trim((string) ($_POST['stone_mineral'] ?? ''));
+        if ($stoneMineral === '' && !empty($_POST['variants_data'])) {
+            $rawVarsForStone = is_string($_POST['variants_data']) ? json_decode($_POST['variants_data'], true) : $_POST['variants_data'];
+            if (is_array($rawVarsForStone) && !empty($rawVarsForStone[0]['stone_mineral'])) {
+                $stoneMineral = trim((string)$rawVarsForStone[0]['stone_mineral']);
+            }
+        }
         $materials = trim((string) ($_POST['materials'] ?? ''));
         $dimensions = trim((string) ($_POST['dimensions'] ?? ''));
         $colors = trim((string) ($_POST['colors'] ?? ''));
@@ -232,7 +256,7 @@ class AdminController
         $promotionalPrice = !empty($_POST['promotional_price']) 
             ? (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) $_POST['promotional_price']) 
             : 0;
-        $promotionalPriceCents = $promotionalPrice > 0 ? (int) round($promotionalPrice * 100) : (int) round($priceCents * 0.95);
+        $promotionalPriceCents = $promotionalPrice > 0 ? (int) round($promotionalPrice * 100) : null;
 
         $stock = isset($_POST['stock_quantity']) ? (int) $_POST['stock_quantity'] : 10;
         $stockStatus = trim((string) ($_POST['stock_status'] ?? 'in_stock'));
@@ -301,22 +325,73 @@ class AdminController
         }
         $showChannels = isset($_POST['show_channels']) ? ((int) $_POST['show_channels'] ? 1 : 0) : 1;
 
-        // Auto-verificação da coluna show_sku na tabela products
+        // Preço e Condições
+        $pixDiscountPct = isset($_POST['pix_discount_pct']) && $_POST['pix_discount_pct'] !== '' ? (int)$_POST['pix_discount_pct'] : 5;
+        $installmentsText = trim((string)($_POST['installments_text'] ?? ''));
+
+        // Galeria de Fotos Adicionais
+        $rawGallery = $_POST['gallery_json'] ?? [];
+        if (is_string($rawGallery)) {
+            $decodedGallery = json_decode($rawGallery, true);
+            $rawGallery = is_array($decodedGallery) ? $decodedGallery : (trim($rawGallery) !== '' ? explode(',', $rawGallery) : []);
+        }
+        $cleanGallery = [];
+        if (is_array($rawGallery)) {
+            foreach ($rawGallery as $gUrl) {
+                $gUrl = trim((string)$gUrl);
+                if ($gUrl !== '') {
+                    $cleanGallery[] = $gUrl;
+                }
+            }
+        }
+        $galleryJson = !empty($cleanGallery) ? json_encode(array_values(array_unique($cleanGallery)), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null;
+
+        // Ficha Técnica Completa
+        $rawSpecs = $_POST['specs_json'] ?? null;
+        if (is_string($rawSpecs) && trim($rawSpecs) !== '') {
+            $specsJson = trim($rawSpecs);
+        } elseif (is_array($rawSpecs)) {
+            $specsJson = json_encode($rawSpecs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $specsObj = [
+                'material' => $materials ?: 'Banho de Prata com Verniz Protetor Antialérgico',
+                'acabamento' => trim((string)($_POST['spec_acabamento'] ?? 'Polimento espelhado de alta joalheria')),
+                'design' => trim((string)($_POST['spec_design'] ?? 'Autoral & Exclusivo DIVINIUM — Linha Atemporal')),
+                'autenticidade' => trim((string)($_POST['spec_autenticidade'] ?? 'Certificado de Garantia e Nota Fiscal Inclusos')),
+                'disponibilidade' => trim((string)($_POST['spec_disponibilidade'] ?? 'Pronta Entrega com Envio Imediato')),
+                'dimensoes' => $dimensions ?: 'Padronizado conforme joalheria fina',
+            ];
+            if (!empty($_POST['custom_specs']) && is_array($_POST['custom_specs'])) {
+                $specsObj['custom'] = $_POST['custom_specs'];
+            }
+            $specsJson = json_encode($specsObj, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        // Auto-verificação de colunas em products para compatibilidade retroativa
         try {
             $driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            $checkCols = [
+                'specs_json' => 'TEXT NULL',
+                'gallery_json' => 'TEXT NULL',
+                'installments_text' => 'VARCHAR(255) NULL',
+                'pix_discount_pct' => 'INTEGER NULL DEFAULT 5',
+                'show_sku' => 'INTEGER NOT NULL DEFAULT 1'
+            ];
             if ($driver === 'sqlite') {
                 $cols = $this->pdo->query("PRAGMA table_info(products)")->fetchAll(\PDO::FETCH_ASSOC);
-                $hasShowSku = false;
-                foreach ($cols as $c) {
-                    if (($c['name'] ?? '') === 'show_sku') { $hasShowSku = true; break; }
-                }
-                if (!$hasShowSku) {
-                    $this->pdo->exec("ALTER TABLE products ADD COLUMN show_sku INTEGER NOT NULL DEFAULT 1");
+                $existing = array_map(fn($c) => strtolower($c['name'] ?? ''), $cols);
+                foreach ($checkCols as $colName => $colDef) {
+                    if (!in_array(strtolower($colName), $existing, true)) {
+                        $this->pdo->exec("ALTER TABLE products ADD COLUMN {$colName} {$colDef}");
+                    }
                 }
             } else {
-                $colCheck = $this->pdo->query("SHOW COLUMNS FROM products LIKE 'show_sku'");
-                if ($colCheck && $colCheck->rowCount() === 0) {
-                    $this->pdo->exec("ALTER TABLE products ADD COLUMN show_sku TINYINT(1) NOT NULL DEFAULT 1");
+                $cols = $this->pdo->query("SHOW COLUMNS FROM products")->fetchAll(\PDO::FETCH_ASSOC);
+                $existing = array_map(fn($c) => strtolower($c['Field'] ?? ''), $cols);
+                foreach ($checkCols as $colName => $colDef) {
+                    if (!in_array(strtolower($colName), $existing, true)) {
+                        $this->pdo->exec("ALTER TABLE products ADD COLUMN `{$colName}` {$colDef}");
+                    }
                 }
             }
         } catch (\Throwable $e) {
@@ -332,7 +407,8 @@ class AdminController
                         stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
                         short_description = ?, description = ?, image_url = ?, show_badge = ?, 
                         show_sku = ?, show_specs = ?, show_description = ?, card_click_behavior = ?, custom_target_url = ?,
-                        detail_layout = ?, show_channels = ?, is_active = ?, is_featured = ?
+                        detail_layout = ?, show_channels = ?, is_active = ?, is_featured = ?,
+                        specs_json = ?, gallery_json = ?, installments_text = ?, pix_discount_pct = ?
                     WHERE id = ?
                 ');
                 $stmt->execute([
@@ -341,7 +417,8 @@ class AdminController
                     $stock, $stockStatus, $status, $sortOrder, 
                     $shortDescription, $description, $imageUrl, $showBadge, 
                     $showSku, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
-                    $detailLayout, $showChannels, $isActive, $isFeatured, $id
+                    $detailLayout, $showChannels, $isActive, $isFeatured,
+                    $specsJson, $galleryJson, $installmentsText, $pixDiscountPct, $id
                 ]);
                 $productId = $id;
             } else {
@@ -352,12 +429,14 @@ class AdminController
                         colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
                         stock_status, status, sort_order, short_description, description, image_url, 
                         show_badge, show_sku, show_specs, show_description, card_click_behavior, custom_target_url,
-                        detail_layout, show_channels, is_active, is_featured
+                        detail_layout, show_channels, is_active, is_featured,
+                        specs_json, gallery_json, installments_text, pix_discount_pct
                     ) VALUES (
                         ?, ?, ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?,
+                        ?, ?, ?, ?,
                         ?, ?, ?, ?
                     )
                 ');
@@ -366,7 +445,8 @@ class AdminController
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
                     $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
                     $showBadge, $showSku, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
-                    $detailLayout, $showChannels, $isActive, $isFeatured
+                    $detailLayout, $showChannels, $isActive, $isFeatured,
+                    $specsJson, $galleryJson, $installmentsText, $pixDiscountPct
                 ]);
                 $productId = (int) $this->pdo->lastInsertId();
             }

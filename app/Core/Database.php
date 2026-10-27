@@ -196,7 +196,7 @@ class Database
         $ensured = true;
 
         // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
-        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v8_ensured.flag';
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v10_ensured.flag';
         if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
             return;
         }
@@ -336,6 +336,10 @@ class Database
                 'detail_layout' => "VARCHAR(50) NOT NULL DEFAULT 'default'",
                 'show_channels' => 'INTEGER NOT NULL DEFAULT 1',
                 'parent_sku' => 'VARCHAR(60) NULL',
+                'specs_json' => 'TEXT NULL',
+                'gallery_json' => 'TEXT NULL',
+                'installments_text' => 'VARCHAR(255) NULL',
+                'pix_discount_pct' => 'INTEGER NULL',
             ];
 
             $existingCols = [];

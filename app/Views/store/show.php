@@ -86,8 +86,14 @@ $basePriceCents = (int) ($product['price_cents'] ?? 38000);
 $basePriceFormatted = number_format($basePriceCents / 100, 2, ',', '.');
 $promotionalPriceCents = !empty($product['promotional_price_cents']) ? (int) $product['promotional_price_cents'] : null;
 $promotionalPriceFormatted = $promotionalPriceCents ? number_format($promotionalPriceCents / 100, 2, ',', '.') : null;
-$pixPriceFormatted = number_format(($basePriceCents * 0.95) / 100, 2, ',', '.');
+
+// Desconto Pix e Parcelamento Específicos do Produto
+$pixDiscountPct = isset($product['pix_discount_pct']) && $product['pix_discount_pct'] !== null && $product['pix_discount_pct'] !== '' 
+    ? (float) $product['pix_discount_pct'] 
+    : (float) Setting::get('store_direct_pix_discount_pct', '5');
+$pixPriceFormatted = number_format(($basePriceCents * (1 - ($pixDiscountPct / 100))) / 100, 2, ',', '.');
 $installmentVal = number_format(($basePriceCents / 6) / 100, 2, ',', '.');
+$customInstallmentsText = trim((string)($product['installments_text'] ?? ''));
 
 // Identificar variação inicial se houver variações para este modelo
 $initialVariation = null;
@@ -111,7 +117,7 @@ if ($initialVariation) {
     if (!empty($initialVariation['price_cents'])) {
         $basePriceCents = (int)$initialVariation['price_cents'];
         $basePriceFormatted = number_format($basePriceCents / 100, 2, ',', '.');
-        $pixPriceFormatted = number_format(($basePriceCents * 0.95) / 100, 2, ',', '.');
+        $pixPriceFormatted = number_format(($basePriceCents * (1 - ($pixDiscountPct / 100))) / 100, 2, ',', '.');
         $installmentVal = number_format(($basePriceCents / 6) / 100, 2, ',', '.');
     }
     if (isset($initialVariation['has_stock'])) {
@@ -204,6 +210,34 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                  onerror="this.onerror=null; this.src='/assets/images/hero/featured-green-shell.jpg';">
                         </div>
 
+                        <!-- Galeria de Imagens Adicionais -->
+                        <?php
+                        $galleryPhotos = [];
+                        if (!empty($product['gallery_json'])) {
+                            $rawGal = is_string($product['gallery_json']) ? json_decode($product['gallery_json'], true) : $product['gallery_json'];
+                            if (is_array($rawGal)) {
+                                foreach ($rawGal as $g) {
+                                    $g = trim((string)$g);
+                                    if ($g !== '' && !in_array($g, $galleryPhotos, true)) {
+                                        $galleryPhotos[] = $g;
+                                    }
+                                }
+                            }
+                        }
+                        if (!empty($prodImageUrl) && !in_array($prodImageUrl, $galleryPhotos, true)) {
+                            array_unshift($galleryPhotos, $prodImageUrl);
+                        }
+                        ?>
+                        <?php if (count($galleryPhotos) > 1): ?>
+                        <div class="product-gallery-thumbnails" style="display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding: 4px 2px;">
+                            <?php foreach ($galleryPhotos as $gIdx => $gImg): ?>
+                                <button type="button" class="gallery-thumb-btn <?= $gIdx === 0 ? 'active' : '' ?>" onclick="document.getElementById('productMainImage').src = '<?= View::e($gImg) ?>'; document.querySelectorAll('.gallery-thumb-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.12)'); this.style.borderColor = '#d4ba88';" style="border: 2px solid <?= $gIdx === 0 ? '#d4ba88' : 'rgba(255,255,255,0.12)' ?>; background: rgba(0,0,0,0.3); padding: 2px; border-radius: 6px; cursor: pointer; flex-shrink: 0; width: 60px; height: 60px; overflow: hidden; transition: all 0.2s ease;">
+                                    <img src="<?= View::e($gImg) ?>" alt="Foto <?= $gIdx + 1 ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+
                         <!-- Barra de Ações & Compartilhamento -->
                         <?php if ($globalShowShare || $canShowSku): ?>
                         <div class="product-media-footer">
@@ -258,7 +292,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <?php if ($globalShowPix): ?>
                                 <span class="price-pix-badge">
                                     <span class="pix-icon">⚡</span>
-                                    <span>R$ <?= $pixPriceFormatted ?> <?= View::e(Setting::get('store_pix_discount_label', 'no Pix (-5%)')) ?></span>
+                                    <span>R$ <?= $pixPriceFormatted ?> <?= View::e(Setting::get('store_pix_discount_label', 'no Pix (-' . (int)$pixDiscountPct . '%)')) ?></span>
                                 </span>
                             <?php endif; ?>
                         </div>
@@ -266,7 +300,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <?php if ($globalShowInstallments): ?>
                         <div class="price-installments-row">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                            <span><?= View::e(Setting::get('store_detail_installments_text', 'Em até 6x de R$ ' . $installmentVal . ' sem juros nos canais oficiais homologados')) ?></span>
+                            <span><?= View::e($customInstallmentsText !== '' ? $customInstallmentsText : Setting::get('store_detail_installments_text', 'Em até 6x de R$ ' . $installmentVal . ' sem juros nos canais oficiais homologados')) ?></span>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -609,6 +643,11 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <dl class="specs-grid-table">
                             <?php 
                             $specsList = Setting::getProductSpecsList();
+                            $customProductSpecs = null;
+                            if (!empty($product['specs_json'])) {
+                                $customProductSpecs = is_string($product['specs_json']) ? json_decode($product['specs_json'], true) : $product['specs_json'];
+                            }
+
                             foreach ($specsList as $item):
                                 if (empty($item['visible'])) continue;
                                 $itemId = $item['id'] ?? '';
@@ -618,7 +657,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             ?>
                                 <?php if ($itemId === 'material' || $type === 'mineral'): ?>
                                     <?php 
-                                    $val = $itemDesc !== '' ? $itemDesc : $prodMineral;
+                                    $val = !empty($customProductSpecs['material']) ? $customProductSpecs['material'] : ($itemDesc !== '' ? $itemDesc : $prodMineral);
                                     if (!empty($val)):
                                     ?>
                                     <div class="spec-row">
@@ -629,7 +668,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                                 <?php elseif ($itemId === 'acabamento' || $type === 'materials'): ?>
                                     <?php 
-                                    $val = $itemDesc !== '' ? $itemDesc : $prodMaterials;
+                                    $val = !empty($customProductSpecs['acabamento']) ? $customProductSpecs['acabamento'] : ($itemDesc !== '' ? $itemDesc : $prodMaterials);
                                     if (!empty($val)):
                                     ?>
                                     <div class="spec-row">
@@ -640,7 +679,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                                 <?php elseif ($itemId === 'design'): ?>
                                     <?php 
-                                    $val = $itemDesc !== '' ? $itemDesc : 'Design Autoral Exclusivo DIVINIUM • Linhas Anatômicas Contemporâneas';
+                                    $val = !empty($customProductSpecs['design']) ? $customProductSpecs['design'] : ($itemDesc !== '' ? $itemDesc : 'Design Autoral Exclusivo DIVINIUM — Linha Atemporal');
                                     ?>
                                     <div class="spec-row">
                                         <dt class="spec-term"><?= View::e($itemTitle ?: 'Design') ?></dt>
@@ -649,7 +688,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                                 <?php elseif ($itemId === 'dimensoes' || $type === 'dimensions'): ?>
                                     <?php 
-                                    $val = $itemDesc !== '' ? $itemDesc : $prodDimensions;
+                                    $val = !empty($customProductSpecs['dimensoes']) ? $customProductSpecs['dimensoes'] : ($itemDesc !== '' ? $itemDesc : $prodDimensions);
                                     if (!empty($val)):
                                     ?>
                                     <div class="spec-row">
@@ -671,7 +710,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                                 <?php elseif ($itemId === 'autenticidade'): ?>
                                     <?php 
-                                    $val = $itemDesc !== '' ? $itemDesc : Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia');
+                                    $val = !empty($customProductSpecs['autenticidade']) ? $customProductSpecs['autenticidade'] : ($itemDesc !== '' ? $itemDesc : Setting::get('store_spec_authenticity_text', 'Certificado de Banho de Prata com Garantia Vitalícia'));
                                     ?>
                                     <div class="spec-row">
                                         <dt class="spec-term"><?= View::e($itemTitle ?: 'Autenticidade') ?></dt>
@@ -690,7 +729,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     <div class="spec-row">
                                         <dt class="spec-term"><?= View::e($itemTitle ?: 'Disponibilidade') ?></dt>
                                         <dd class="spec-value" id="specStockValue">
-                                            <?php if ($itemDesc !== ''): ?>
+                                            <?php if (!empty($customProductSpecs['disponibilidade'])): ?>
+                                                <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e($customProductSpecs['disponibilidade']) ?></span>
+                                            <?php elseif ($itemDesc !== ''): ?>
                                                 <span style="color: var(--text-primary); font-weight: 600;">● <?= View::e($itemDesc) ?></span>
                                             <?php elseif ($prodStockStatus === 'preorder'): ?>
                                                 <span style="color: var(--gold-accent, #737B85); font-weight: 600;">● <?= View::e(Setting::get('store_availability_preorder_text', 'Manufatura Sob Encomenda (Envio prioritário)')) ?></span>
@@ -711,6 +752,21 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
+
+                            <?php if (!empty($customProductSpecs['custom_specs']) && is_array($customProductSpecs['custom_specs'])): ?>
+                                <?php foreach ($customProductSpecs['custom_specs'] as $extraSpec): ?>
+                                    <?php 
+                                    $extraLabel = trim((string)($extraSpec['label'] ?? ''));
+                                    $extraVal = trim((string)($extraSpec['value'] ?? ''));
+                                    if ($extraLabel !== '' || $extraVal !== ''):
+                                    ?>
+                                    <div class="spec-row">
+                                        <dt class="spec-term"><?= View::e($extraLabel) ?></dt>
+                                        <dd class="spec-value"><?= View::e($extraVal) ?></dd>
+                                    </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </dl>
                     </div>
                     <?php endif; ?>

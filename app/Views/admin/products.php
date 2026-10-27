@@ -313,15 +313,11 @@ $settings = $settings ?? [];
 <!-- ============================================================== -->
 <div class="unified-hub-nav">
     <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'catalogo' ? 'active' : '' ?>" id="mainTabBtnCatalogo" onclick="switchMainTab('catalogo')">
-        <span>💎 Catálogo & Grupos de Joias</span>
+        <span>💎 Catálogo de Joias, Estoque & Canais de Venda</span>
         <span class="tab-badge"><?= count($groups) ?> Modelos</span>
     </button>
-    <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'exibicao' ? 'active' : '' ?>" id="mainTabBtnExibicao" onclick="switchMainTab('exibicao')">
-        <span>📋 Informações Públicas, Ficha Técnica & Canais</span>
-        <span class="tab-badge" style="background: rgba(212, 186, 136, 0.25); color: #FFFFFF;">PÚBLICO</span>
-    </button>
     <button type="button" class="unified-hub-tab-btn <?= $activeTab === 'bling' ? 'active' : '' ?>" id="mainTabBtnBling" onclick="switchMainTab('bling')">
-        <span>📦 Estoque & Integração Bling ERP</span>
+        <span>📦 Estoque & Integração Bling ERP (API v3)</span>
         <?php if (!empty($blingConfig['is_connected'])): ?>
             <span class="tab-badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">ATIVO</span>
         <?php else: ?>
@@ -602,8 +598,8 @@ $settings = $settings ?? [];
                                         <button class="btn-table-action" onclick="toggleProductStatus(<?= $grp['id'] ?>)" title="Alternar status na loja">
                                             <?= $status === 'published' ? 'Ocultar' : 'Publicar' ?>
                                         </button>
-                                        <button class="btn-table-action" onclick='editGroupProduct(<?= $groupJson ?>)' title="Editar modelo, dados do grupo e variações">
-                                            Editar Joia
+                                        <button class="btn-table-action" onclick='editGroupProduct(<?= $groupJson ?>)' title="Abrir edição completa desta joia (informações, preços, fotos, variações, estoque, ficha técnica e canais)" style="font-weight: 600; color: #FFFFFF; background: rgba(212,186,136,0.18); border-color: rgba(212,186,136,0.45);">
+                                            ✏️ Editar Joia Completa
                                         </button>
                                         <button class="btn-table-action btn-table-duplicate" onclick="duplicateProduct(<?= $grp['id'] ?>)" title="Duplicar joia e canais de venda">
                                             Duplicar
@@ -760,14 +756,7 @@ $settings = $settings ?? [];
 </div>
 
 <!-- ============================================================== -->
-<!-- ABA 2: INFORMAÇÕES PÚBLICAS, FICHA TÉCNICA & CANAIS            -->
-<!-- ============================================================== -->
-<div class="unified-hub-pane <?= $activeTab === 'exibicao' ? 'active' : '' ?>" id="mainTabExibicao">
-    <?php include __DIR__ . '/product_display.php'; ?>
-</div>
-
-<!-- ============================================================== -->
-<!-- ABA 3: ESTOQUE & INTEGRAÇÃO BLING ERP (API v3)                 -->
+<!-- ABA 2: ESTOQUE & INTEGRAÇÃO BLING ERP (API v3)                 -->
 <!-- ============================================================== -->
 <div class="unified-hub-pane <?= $activeTab === 'bling' ? 'active' : '' ?>" id="mainTabBling">
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
@@ -877,78 +866,93 @@ $settings = $settings ?? [];
 <!-- MODAL DE CADASTRO E EDIÇÃO COMPLETA DA JOIA                    -->
 <!-- Diferencia dados do grupo (compartilhados) de variações        -->
 <!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- CENTRAL DE EDIÇÃO COMPLETA DA JOIA (TELA ÚNICA DE EDIÇÃO)       -->
+<!-- Reúne todas as 8 áreas do produto num só local sem duplicações -->
+<!-- ============================================================== -->
 <div class="modal-overlay" id="productModal">
-    <div class="modal-content" style="max-width: 880px; max-height: 92vh; display: flex; flex-direction: column;">
-        <div class="modal-header">
-            <div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <h3 class="modal-title" id="productModalTitle" style="margin: 0;">Cadastrar Nova Joia</h3>
-                    <span class="badge-group-shared" id="modalGroupBadge">GRUPO DO PRODUTO</span>
+    <div class="modal-content" style="max-width: 1060px; width: 95vw; max-height: 94vh; display: flex; flex-direction: column;">
+        
+        <!-- CABEÇALHO DA CENTRAL DE EDIÇÃO -->
+        <div class="modal-header" style="background: rgba(14, 14, 14, 0.95); padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-size: 1.25rem;">💎</span>
+                    <h3 class="modal-title" id="productModalTitle" style="margin: 0; font-size: 1.15rem; font-weight: 700;">Editar Joia Completa</h3>
+                    <span class="badge-group-shared" id="modalGroupBadge">MODELO AUTORAL</span>
+                    <span class="badge-variant-specific" id="modalSkuBadge" style="font-family: monospace;">SKU: —</span>
+                    <span class="badge-status badge-status-published" id="modalStatusBadge">● Publicado</span>
                 </div>
-                <p style="font-size: 0.78rem; color: #a8a096; margin: 3px 0 0;">Gestão autoral de características do modelo, variações minerais e canais de venda integrados</p>
+                <p style="font-size: 0.76rem; color: #a8a096; margin: 3px 0 0;">
+                    Central Única DIVINIUM: altere informações gerais, preços, imagens, variações, estoque, ficha técnica, visibilidade e canais.
+                </p>
             </div>
-            <button class="close-modal-btn" onclick="closeProductModal()">&times;</button>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="btn-admin-gold" onclick="document.getElementById('productForm').requestSubmit()" style="padding: 8px 16px; font-size: 0.84rem; white-space: nowrap;">
+                    <span>💾 Salvar Joia Completa</span>
+                </button>
+                <button class="close-modal-btn" onclick="closeProductModal()" style="font-size: 1.5rem; line-height: 1; padding: 0 4px;">&times;</button>
+            </div>
         </div>
 
-        <!-- ABAS DO MODAL -->
-        <div class="modal-tabs">
+        <!-- AS 8 ABAS ORGANIZADAS DA CENTRAL DE EDIÇÃO -->
+        <div class="modal-tabs" style="background: rgba(20, 20, 20, 0.95); overflow-x: auto; padding: 6px 14px; gap: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
             <button type="button" class="modal-tab-btn active" id="tabBtnGeneral" onclick="switchProductTab('general')">
-                <span>✦ Dados do Grupo</span>
+                <span>✦ Informações Gerais</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnPrices" onclick="switchProductTab('prices')">
+                <span>💰 Preços & Pagamentos</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnImages" onclick="switchProductTab('images')">
+                <span>🖼️ Imagens & Galeria</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnVariants" onclick="switchProductTab('variants')">
+                <span>💎 Variações & Pedras</span>
+                <span id="modalVariantsCountBadge" class="tab-badge" style="background: rgba(212, 186, 136, 0.2); color: #FFFFFF; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">1</span>
+            </button>
+            <button type="button" class="modal-tab-btn" id="tabBtnStock" onclick="switchProductTab('stock')">
+                <span>📦 Estoque & Identificação</span>
             </button>
             <button type="button" class="modal-tab-btn" id="tabBtnSpecs" onclick="switchProductTab('specs')">
                 <span>📋 Ficha Técnica</span>
             </button>
-            <button type="button" class="modal-tab-btn" id="tabBtnVariants" onclick="switchProductTab('variants')">
-                <span>💎 Variações & Estoque</span>
-                <span id="modalVariantsCountBadge" class="tab-badge" style="background: rgba(212, 186, 136, 0.2); color: #FFFFFF; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">1</span>
+            <button type="button" class="modal-tab-btn" id="tabBtnDisplay" onclick="switchProductTab('display')">
+                <span>👁️ Exibição Pública</span>
             </button>
             <button type="button" class="modal-tab-btn" id="tabBtnLinks" onclick="switchProductTab('links')">
                 <span>🔗 Canais de Venda</span>
                 <span id="linksCountBadge" style="background: rgba(212, 186, 136, 0.2); color: #CBD0D6; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 4px;">0</span>
             </button>
-            <button type="button" class="modal-tab-btn" id="tabBtnDisplay" onclick="switchProductTab('display')">
-                <span>👁️ Exibição Pública</span>
-            </button>
         </div>
 
-        <form id="productForm" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding-right: 6px; flex: 1;">
+        <form id="productForm" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding: 18px 20px; flex: 1;" enctype="multipart/form-data">
             <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
             <input type="hidden" name="id" id="prodId" value="">
             <input type="hidden" name="parent_sku" id="prodParentSku" value="">
             <input type="hidden" name="links" id="prodLinksJson" value="[]">
             <input type="hidden" name="variants_data" id="prodVariantsJsonInput" value="[]">
             <input type="hidden" name="deleted_variant_ids" id="prodDeletedVariantIds" value="">
+            <input type="hidden" name="gallery_json" id="prodGalleryJsonInput" value="[]">
+            <input type="hidden" name="specs_json" id="prodSpecsJsonInput" value="{}">
 
-            <!-- SUB-ABA 1: DADOS DO GRUPO (COMPARTILHADOS) -->
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 1: INFORMAÇÕES GERAIS                                    -->
+            <!-- ============================================================== -->
             <div id="productTabGeneral" class="modal-tab-pane active">
-                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: #ded7cf;">
-                    <strong>✦ Informações Compartilhadas do Grupo:</strong> O nome do modelo, categoria, descrição e URLs são herdadas por todas as variações minerais desta joia.
-                </div>
-
-                <div class="form-group">
-                    <label for="prodName">Nome do Modelo da Joia *</label>
-                    <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos" oninput="handleNameInput(this)">
-                </div>
-
-                <div class="form-group">
-                    <label for="prodSlug">URL Própria da Joia (Slug / Link Amigável) *</label>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="color: #9e978e; font-size: 0.8rem; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap;">
-                            divinium.com.br/produto/
-                        </span>
-                        <input type="text" id="prodSlug" name="slug" class="form-input" placeholder="bracelete-caminhos" oninput="handleSlugInput(this)">
-                    </div>
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>✦ Informações Gerais do Modelo:</strong> O nome do modelo, categoria, link próprio e storytelling são herdados por todas as variações minerais desta joia.
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="prodSku">SKU Base do Modelo *</label>
-                        <input type="text" id="prodSku" name="sku" class="form-input" placeholder="Ex: DIV-BRAC-CAM (auto gerado se vazio)">
+                        <label for="prodName">Nome do Modelo da Joia *</label>
+                        <input type="text" id="prodName" name="name" class="form-input" required placeholder="Ex: Bracelete Caminhos" oninput="handleNameInput(this)">
                     </div>
 
                     <div class="form-group">
-                        <label for="prodCategory">Categoria / Coleção</label>
-                        <select id="prodCategory" name="category_id" class="form-select">
+                        <label for="prodCategory">Categoria / Coleção *</label>
+                        <select id="prodCategory" name="category_id" class="form-select" required>
                             <option value="">Selecione uma categoria...</option>
                             <?php foreach ($categories ?? [] as $cat): ?>
                                 <option value="<?= $cat['id'] ?>"><?= \App\Core\View::e($cat['name']) ?></option>
@@ -959,67 +963,293 @@ $settings = $settings ?? [];
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="prodSortOrder">Ordem de Exibição na Loja</label>
-                        <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0">
+                        <label for="prodSlug">URL Própria da Joia (Slug / Link Amigável) *</label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #9e978e; font-size: 0.8rem; background: rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap;">
+                                divinium.com.br/produto/
+                            </span>
+                            <input type="text" id="prodSlug" name="slug" class="form-input" placeholder="bracelete-caminhos" oninput="handleSlugInput(this)">
+                        </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="prodSku">SKU Base do Modelo *</label>
+                        <input type="text" id="prodSku" name="sku" class="form-input" placeholder="Ex: DIV-BRAC-CAM (gerado automaticamente se vazio)">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
                     <div class="form-group">
                         <label>Status na Boutique</label>
                         <div class="status-radio-group">
                             <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusPublished" value="published" checked>
-                                <span style="color: #FFFFFF;">● Publicado</span>
+                                <input type="radio" name="status" id="statusPublished" value="published" checked onchange="updateModalStatusBadge('published')">
+                                <span style="color: #4ade80;">● Publicado</span>
                             </label>
                             <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusDraft" value="draft">
+                                <input type="radio" name="status" id="statusDraft" value="draft" onchange="updateModalStatusBadge('draft')">
                                 <span style="color: #facc15;">● Rascunho</span>
                             </label>
                             <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusHidden" value="hidden">
+                                <input type="radio" name="status" id="statusHidden" value="hidden" onchange="updateModalStatusBadge('hidden')">
                                 <span style="color: #9ca3af;">● Oculto</span>
                             </label>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="prodSortOrder">Ordem de Exibição na Loja</label>
+                        <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0">
+                    </div>
                 </div>
 
-                <div class="form-checkbox-row" style="margin-bottom: 14px;">
+                <div class="form-checkbox-row" style="margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
                     <input type="checkbox" id="prodFeatured" name="is_featured" value="1" style="width: 18px; height: 18px; accent-color: #737B85;">
-                    <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ded7cf;">Destacar este modelo no topo da Vitrine Principal</label>
+                    <label for="prodFeatured" style="margin: 0; cursor: pointer; color: #ede7df;">✦ Destacar este modelo autoral no topo da Vitrine Principal (Destaque VIP)</label>
                 </div>
 
                 <div class="form-group">
-                    <label for="prodShortDesc">Breve Resumo (1 linha)</label>
-                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral contemporânea com acabamento artesanal e pedras minerais nobres.">
+                    <label for="prodShortDesc">Breve Resumo (1 linha para cards e SEO)</label>
+                    <input type="text" id="prodShortDesc" name="short_description" class="form-input" placeholder="Ex: Joia autoral contemporânea com banho nobre e pedras minerais autênticas lapidadas à mão.">
                 </div>
 
                 <div class="form-group">
-                    <label for="prodDesc">Descrição Completa da Peça</label>
-                    <textarea id="prodDesc" name="description" class="form-textarea" rows="4" placeholder="Descreva os detalhes da manufatura, inspiração autoral, autenticidade e cuidados..."></textarea>
+                    <label for="prodDesc">Descrição Completa & Storytelling da Peça</label>
+                    <textarea id="prodDesc" name="description" class="form-textarea" rows="4" placeholder="Descreva a manufatura, essência do design, simbolismo das pedras, autenticidade e cuidados..."></textarea>
                 </div>
             </div>
 
-            <!-- SUB-ABA 2: FICHA TÉCNICA DO MODELO (COMPARTILHADA) -->
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 2: PREÇOS & PAGAMENTOS                                   -->
+            <!-- ============================================================== -->
+            <div id="productTabPrices" class="modal-tab-pane">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>💰 Gestão de Preços e Condições Comerciais:</strong> Configure o valor oficial de venda, preço promocional, porcentagem de desconto no Pix e parcelamento com cálculo automático.
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodPrice">Preço Oficial de Venda (R$) *</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9e978e; font-size: 0.85rem;">R$</span>
+                            <input type="text" id="prodPrice" name="price" class="form-input" required placeholder="380,00" style="padding-left: 38px; font-weight: 600; font-size: 0.95rem;" onkeyup="formatCurrencyLive(this); updatePixLiveCalc();" oninput="updatePixLiveCalc();">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodPromotionalPrice">Preço Promocional "De R$..." (Opcional)</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9e978e; font-size: 0.85rem;">R$</span>
+                            <input type="text" id="prodPromotionalPrice" name="promotional_price" class="form-input" placeholder="Ex: 450,00" style="padding-left: 38px;" onkeyup="formatCurrencyLive(this); updatePixLiveCalc();" oninput="updatePixLiveCalc();">
+                        </div>
+                        <span style="font-size: 0.72rem; color: #8e8880; margin-top: 3px; display: block;">Se preenchido, exibe "De R$ 450,00 Por R$ 380,00" na vitrine.</span>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodPixDiscount">Desconto no Pix (%)</label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="number" id="prodPixDiscount" name="pix_discount_pct" class="form-input" value="5" min="0" max="99" style="width: 100px; text-align: center; font-weight: 600;" oninput="updatePixLiveCalc()">
+                            <span style="color: #ded7cf; font-size: 0.85rem;">% de desconto à vista</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label for="prodInstallmentsText" style="margin: 0;">Condições de Parcelamento</label>
+                            <button type="button" onclick="calculateInstallmentsSuggestion()" style="background: none; border: none; color: #CBD0D6; font-size: 0.72rem; cursor: pointer; text-decoration: underline;">
+                                ⚡ Sugerir 6x sem juros
+                            </button>
+                        </div>
+                        <input type="text" id="prodInstallmentsText" name="installments_text" class="form-input" placeholder="Ex: Em até 6x sem juros de R$ 63,33 no cartão">
+                    </div>
+                </div>
+
+                <!-- PREVIEW AO VIVO DO BLOCO DE PREÇOS -->
+                <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 186, 136, 0.25); border-radius: 10px; padding: 16px 20px; margin-top: 14px;">
+                    <span style="color: #9e978e; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 8px;">✦ Pré-visualização na Loja:</span>
+                    <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                        <span id="previewComparePrice" style="color: #737373; text-decoration: line-through; font-size: 0.95rem; display: none;">De R$ 0,00</span>
+                        <span id="previewCurrentPrice" style="font-family: var(--font-serif, serif); font-size: 1.5rem; font-weight: 600; color: #FFFFFF;">R$ 380,00</span>
+                        <span id="previewPixBadge" style="background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 6px; padding: 3px 8px; font-size: 0.78rem; font-weight: 600;">
+                            ⚡ R$ 361,00 no Pix (-5%)
+                        </span>
+                    </div>
+                    <div id="previewInstallments" style="margin-top: 6px; font-size: 0.8rem; color: #a8a096; display: flex; align-items: center; gap: 6px;">
+                        <span>💳 Em até 6x de R$ 63,33 sem juros nos cartões</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 3: IMAGENS & GALERIA                                     -->
+            <!-- ============================================================== -->
+            <div id="productTabImages" class="modal-tab-pane">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>🖼️ Imagem Principal & Galeria de Fotos:</strong> A foto principal representa o modelo autoral. A galeria permite fotos adicionais de ângulos, uso e detalhes. Fotos de gemas específicas são cadastradas na aba Variações.
+                </div>
+
+                <div style="display: grid; grid-template-columns: 160px 1fr; gap: 20px; margin-bottom: 20px; align-items: start;">
+                    <div>
+                        <label style="font-size: 0.8rem; color: #9e978e; display: block; margin-bottom: 6px; font-weight: 600;">Foto Principal</label>
+                        <div style="width: 160px; height: 160px; border-radius: 10px; overflow: hidden; border: 2px solid rgba(212, 186, 136, 0.35); background: #000000; position: relative;">
+                            <img id="mainImgPreview" src="/assets/images/hero/featured-green-shell.jpg" alt="Preview da Joia" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label for="prodImageUrl">URL da Imagem Principal</label>
+                            <input type="text" id="prodImageUrl" name="image_url" class="form-input" placeholder="/assets/images/products/... ou https://..." oninput="updateMainImagePreview(this.value)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prodImageFile">Ou Enviar Arquivo do Computador (Upload Direto)</label>
+                            <input type="file" id="prodImageFile" name="image_file" class="form-input" accept="image/jpeg,image/png,image/webp,image/avif" onchange="previewUploadedImage(this)" style="padding: 6px;">
+                            <span style="font-size: 0.72rem; color: #8e8880; margin-top: 3px; display: block;">Formatos aceitos: JPG, PNG, WebP, AVIF. Otimização automática para Quiet Luxury.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.88rem;">📸 Galeria de Fotos Adicionais (Ângulos e Manufatura)</strong>
+                            <span style="font-size: 0.75rem; color: #8e8880; display: block;">Fotos extras exibidas como miniaturas navegáveis na página do produto</span>
+                        </div>
+                    </div>
+
+                    <div id="galleryContainer" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;"></div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="newGalleryUrlInput" class="form-input" placeholder="Cole a URL de uma foto adicional (/assets/images/... ou https://...)" style="flex: 1;">
+                        <button type="button" class="btn-admin-gold" onclick="addGalleryItem()" style="white-space: nowrap; padding: 8px 16px; font-size: 0.8rem;">
+                            <span>+ Adicionar Foto</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 4: VARIAÇÕES & PEDRAS                                    -->
+            <!-- ============================================================== -->
+            <div id="productTabVariants" class="modal-tab-pane">
+                <div style="background: rgba(167, 173, 180, 0.08); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div>
+                        <strong style="color: #FFFFFF; font-size: 0.88rem;">💎 Variações Minerais & Estoques Individuais</strong>
+                        <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
+                            Cada variação possui sua gema mineral, foto exclusiva, SKU próprio, estoque físico individual e link específico de compra.
+                        </p>
+                    </div>
+                    <button type="button" class="btn-admin-gold" onclick="addModalVariantRow()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
+                        <span>+ Nova Variação Mineral</span>
+                    </button>
+                </div>
+
+                <!-- CONTAINER DINÂMICO DE VARIAÇÕES -->
+                <div id="modalVariantsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;"></div>
+
+                <button type="button" class="btn-admin-secondary" onclick="addModalVariantRow()" style="width: 100%; padding: 12px; justify-content: center; font-size: 0.84rem; border-style: dashed; border-color: rgba(212,186,136,0.35);">
+                    <span>+ Adicionar Outra Variação Mineral a este Modelo</span>
+                </button>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 5: ESTOQUE & IDENTIFICAÇÃO                               -->
+            <!-- ============================================================== -->
+            <div id="productTabStock" class="modal-tab-pane">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>📦 Estoque Consolidado & Identificação do Modelo:</strong> O estoque total é consolidado em tempo real somando todas as variações minerais cadastradas.
+                </div>
+
+                <div class="metrics-grid" style="margin-bottom: 18px;">
+                    <div class="metric-card" style="background: rgba(255,255,255,0.02);">
+                        <div class="metric-data">
+                            <span class="metric-value" id="stockTabTotalUnits" style="color: #4ade80;">0 un.</span>
+                            <span class="metric-label">Estoque Consolidado Total</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" style="background: rgba(255,255,255,0.02);">
+                        <div class="metric-data">
+                            <span class="metric-value" id="stockTabTotalVariants" style="color: #FFFFFF;">0</span>
+                            <span class="metric-label">Variações Minerais Vinculadas</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" style="background: rgba(255,255,255,0.02);">
+                        <div class="metric-data">
+                            <span class="metric-value" id="stockTabHealthStatus" style="font-size: 1.05rem; color: #CBD0D6;">Pronta Entrega</span>
+                            <span class="metric-label">Situação de Disponibilidade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodStockQuantity">Estoque Base do Modelo (Unidades)</label>
+                        <input type="number" id="prodStockQuantity" name="stock_quantity" class="form-input" min="0" value="10" placeholder="10" oninput="updateConsolidatedStockUI()">
+                        <span style="font-size: 0.72rem; color: #8e8880; margin-top: 3px; display: block;">Se este modelo não tiver variações, este estoque será o considerado.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodStockStatus">Status de Disponibilidade do Modelo</label>
+                        <select id="prodStockStatus" name="stock_status" class="form-select">
+                            <option value="in_stock">Pronta Entrega para Envio Imediato</option>
+                            <option value="made_to_order">Manufatura Sob Encomenda</option>
+                            <option value="out_of_stock">Temporariamente Esgotado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 6: FICHA TÉCNICA                                         -->
+            <!-- ============================================================== -->
             <div id="productTabSpecs" class="modal-tab-pane">
-                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.8rem; color: #ded7cf;">
-                    <strong>📋 Especificações do Grupo:</strong> Estes dados alimentam a tabela "Especificações & Manufatura" na página do produto.
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>📋 Especificações & Ficha Técnica de Manufatura:</strong> Estes dados são exibidos na aba "Especificações & Manufatura" na página do produto.
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group">
-                        <label for="prodMaterials">Acabamento Nobre</label>
-                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Banho de Prata 950 com Verniz Protetor Antialérgico">
+                        <label for="specAcabamento">Acabamento Nobre</label>
+                        <input type="text" id="specAcabamento" name="spec_acabamento" class="form-input" placeholder="Ex: Polimento espelhado de alta joalheria artesanal com verniz antialérgico">
                     </div>
 
                     <div class="form-group">
-                        <label for="prodColors">Nuances & Cores</label>
-                        <input type="text" id="prodColors" name="colors" class="form-input" placeholder="Ex: Prata Nobre Espelhada, Tons Minerais">
+                        <label for="prodMaterials">Material da Estrutura</label>
+                        <input type="text" id="prodMaterials" name="materials" class="form-input" placeholder="Ex: Banho de Prata 950 com Camada Protetora Nobre">
                     </div>
                 </div>
 
                 <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="specDesign">Design Autoral DIVINIUM</label>
+                        <input type="text" id="specDesign" name="spec_design" class="form-input" placeholder="Ex: Design Autoral Exclusivo DIVINIUM — Linha Atemporal">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specAutenticidade">Autenticidade & Garantia</label>
+                        <input type="text" id="specAutenticidade" name="spec_autenticidade" class="form-input" placeholder="Ex: Certificado de Garantia de Fábrica e Nota Fiscal Eletrônica Inclusos">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="specDisponibilidade">Disponibilidade & Envio</label>
+                        <input type="text" id="specDisponibilidade" name="spec_disponibilidade" class="form-input" placeholder="Ex: Pronta Entrega com Envio Imediato e Seguro Blindado">
+                    </div>
+
                     <div class="form-group">
                         <label for="prodDimensions">Medidas & Dimensões</label>
-                        <input type="text" id="prodDimensions" name="dimensions" class="form-input" placeholder="Ex: Diâmetro 6,5 cm • Aro anatômico ajustável">
+                        <input type="text" id="prodDimensions" name="dimensions" class="form-input" placeholder="Ex: Diâmetro 6,5 cm • Aro anatômico ajustável • Peso: 22g">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodColors">Nuances & Cores</label>
+                        <input type="text" id="prodColors" name="colors" class="form-input" placeholder="Ex: Prata Nobre Espelhada, Tons Minerais Translúcidos">
                     </div>
 
                     <div class="form-group">
@@ -1027,38 +1257,98 @@ $settings = $settings ?? [];
                         <input type="text" id="prodVariants" name="variants_json" class="form-input" placeholder="Ex: Tamanho Único Regulável, 16 ao 22">
                     </div>
                 </div>
+
+                <!-- LINHAS PERSONALIZADAS DA FICHA TÉCNICA -->
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 0.82rem; font-weight: 600; color: #FFFFFF;">Linhas Personalizadas Extras</span>
+                        <button type="button" class="btn-admin-gold" onclick="addCustomSpecRow()" style="padding: 4px 12px; font-size: 0.74rem;">
+                            <span>+ Adicionar Linha Extra</span>
+                        </button>
+                    </div>
+                    <div id="customSpecsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
             </div>
 
-            <!-- SUB-ABA 3: GESTOR DE VARIAÇÕES MINERAIS & ESTOQUE [ESPECÍFICO DE CADA VARIAÇÃO] -->
-            <div id="productTabVariants" class="modal-tab-pane">
-                <div style="background: rgba(167, 173, 180, 0.08); border: 1px solid rgba(167, 173, 180, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-                    <div>
-                        <strong style="color: #FFFFFF; font-size: 0.88rem;">💎 Variações Minerais & Estoques Individuais</strong>
-                        <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
-                            Cada variação possui sua gema mineral, foto exclusiva, SKU próprio, estoque físico e link de compra independente.
-                        </p>
-                    </div>
-                    <button type="button" class="btn-admin-gold" onclick="addModalVariantRow()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
-                        <span>+ Adicionar Variação</span>
-                    </button>
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 7: EXIBIÇÃO PÚBLICA & VISIBILIDADE                       -->
+            <!-- ============================================================== -->
+            <div id="productTabDisplay" class="modal-tab-pane">
+                <div style="background: rgba(212,186,136,0.06); border: 1px solid rgba(212,186,136,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: #ded7cf;">
+                    <strong>👁️ Controles de Visibilidade Pública do Card & Detalhe:</strong> Escolha exatamente quais elementos aparecem para os clientes. Ocultar não apaga dados nem afeta integrações fiscais ou de estoque.
                 </div>
 
-                <!-- CONTAINER DINÂMICO DE VARIAÇÕES -->
-                <div id="modalVariantsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px;"></div>
+                <div class="form-row-2" style="margin-bottom: 16px;">
+                    <div class="form-group">
+                        <label for="prodCardBehavior">Ao Clicar no Card desta Joia</label>
+                        <select id="prodCardBehavior" name="card_click_behavior" class="form-select" onchange="toggleCustomUrlGroup(this.value)">
+                            <option value="default">Padrão da Boutique (Herança Geral)</option>
+                            <option value="detail">💎 Abrir Página de Detalhes Interna (/produto/{slug})</option>
+                            <option value="external">↗ Abrir 1º Canal Externo Direto</option>
+                            <option value="custom">🔗 URL Personalizada Específica</option>
+                        </select>
+                    </div>
 
-                <button type="button" class="btn-admin-secondary" onclick="addModalVariantRow()" style="width: 100%; padding: 10px; justify-content: center; font-size: 0.82rem; border-style: dashed;">
-                    <span>+ Adicionar Outra Variação Mineral a este Modelo</span>
-                </button>
+                    <div class="form-group">
+                        <label for="prodDetailLayout">Disposição dos Botões de Compra</label>
+                        <select id="prodDetailLayout" name="detail_layout" class="form-select">
+                            <option value="default">Padrão da Boutique</option>
+                            <option value="list">Lista Vertical Padronizada</option>
+                            <option value="grid">Grade Lado a Lado (2 Colunas)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="customTargetUrlGroup" style="display: none; margin-bottom: 16px;">
+                    <label for="prodCustomTargetUrl">URL de Destino Personalizada</label>
+                    <input type="url" id="prodCustomTargetUrl" name="custom_target_url" class="form-input" placeholder="https://...">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 16px; border-radius: 8px;">
+                    <strong style="color: #CBD0D6; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em;">Opções de Exibir / Ocultar Informações:</strong>
+                    
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.84rem; color: #ede7df;">
+                        <input type="hidden" name="show_sku" value="0">
+                        <input type="checkbox" id="prodShowSku" name="show_sku" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
+                        <span>Exibir Código SKU / Referência publicamente na página e cards</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.84rem; color: #ede7df;">
+                        <input type="hidden" name="show_badge" value="0">
+                        <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
+                        <span>Exibir Selos flutuantes na foto (Banho de Prata / Sob Encomenda / Canais)</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.84rem; color: #ede7df;">
+                        <input type="hidden" name="show_specs" value="0">
+                        <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
+                        <span>Exibir Ficha Técnica & Especificações de Manufatura</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.84rem; color: #ede7df;">
+                        <input type="hidden" name="show_description" value="0">
+                        <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
+                        <span>Exibir Descrição Resumida da peça no card</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.84rem; color: #ede7df;">
+                        <input type="hidden" name="show_channels" value="0">
+                        <input type="checkbox" id="prodShowChannels" name="show_channels" value="1" checked style="width: 18px; height: 18px; accent-color: #737B85;">
+                        <span>Exibir Bloco "Escolha onde deseja adquirir sua joia" (Canais de compra)</span>
+                    </label>
+                </div>
             </div>
 
-            <!-- SUB-ABA 4: CANAIS DE VENDA DO GRUPO (COMPARTILHADOS) -->
+            <!-- ============================================================== -->
+            <!-- SEÇÃO 8: CANAIS DE VENDA                                       -->
+            <!-- ============================================================== -->
             <div id="productTabLinks" class="modal-tab-pane">
                 <div style="background: rgba(212, 186, 136, 0.05); border: 1px solid rgba(212, 186, 136, 0.2); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
                         <div>
                             <strong style="color: #ffffff; font-size: 0.9rem;">Canais de Venda Oficiais Compartilhados</strong>
                             <p style="margin: 3px 0 0; font-size: 0.78rem; color: #b5ada3;">
-                                Estes canais de compra (Shopee, Mercado Livre, Amazon, WhatsApp...) aplicam-se a todas as variações do modelo. Links específicos por pedra podem ser definidos na aba Variações.
+                                Estes canais de compra (Shopee, Mercado Livre, Amazon, WhatsApp Concierge, Compra Direta DIVINIUM) aplicam-se a todas as variações do modelo autoral.
                             </p>
                         </div>
                         <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink()" style="padding: 6px 14px; font-size: 0.8rem; white-space: nowrap;">
@@ -1067,85 +1357,20 @@ $settings = $settings ?? [];
                     </div>
                 </div>
 
-                <div id="productLinksContainer"></div>
+                <div id="productLinksContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
 
-                <button type="button" class="btn-add-platform-link" onclick="addNewPlatformLink()">
+                <button type="button" class="btn-add-platform-link" onclick="addNewPlatformLink()" style="margin-top: 12px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <span>+ Adicionar Canal de Venda (Shopee, Mercado Livre, Amazon, WhatsApp...)</span>
                 </button>
             </div>
 
-            <!-- SUB-ABA 5: EXIBIÇÃO & VISIBILIDADE PÚBLICA -->
-            <div id="productTabDisplay" class="modal-tab-pane">
-                <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px;">
-                    <label style="color: #CBD0D6; font-weight: 600; margin-bottom: 10px; display: block; font-size: 0.84rem;">
-                        👁️ Controles de Visibilidade Pública do Card & Detalhe
-                    </label>
-                    
-                    <div class="form-row-2" style="margin-bottom: 12px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="prodCardBehavior" style="font-size: 0.78rem;">Ao Clicar no Card desta Joia</label>
-                            <select id="prodCardBehavior" name="card_click_behavior" class="form-select" onchange="toggleCustomUrlGroup(this.value)">
-                                <option value="default">Padrão da Loja (Herança Geral da Boutique)</option>
-                                <option value="detail">💎 Abrir Página de Detalhes Interna (/produto/{slug})</option>
-                                <option value="external">↗ Abrir 1º Canal Externo Direto</option>
-                                <option value="custom">🔗 URL Personalizada Específica</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="prodDetailLayout" style="font-size: 0.78rem;">Disposição dos Botões de Compra</label>
-                            <select id="prodDetailLayout" name="detail_layout" class="form-select">
-                                <option value="default">Padrão da Boutique</option>
-                                <option value="list">Lista Vertical Padronizada</option>
-                                <option value="grid">Grade Lado a Lado (2 Colunas)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group" id="customTargetUrlGroup" style="display: none; margin-bottom: 12px;">
-                        <label for="prodCustomTargetUrl" style="font-size: 0.78rem;">URL de Destino Personalizada</label>
-                        <input type="url" id="prodCustomTargetUrl" name="custom_target_url" class="form-input" placeholder="https://...">
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
-                            <input type="hidden" name="show_badge" value="0">
-                            <input type="checkbox" id="prodShowBadge" name="show_badge" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir selos flutuantes na foto (Banho de Prata / Sob Encomenda / Canais)</span>
-                        </label>
-
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
-                            <input type="hidden" name="show_sku" value="0">
-                            <input type="checkbox" id="prodShowSku" name="show_sku" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir código SKU / Referência publicamente no site</span>
-                        </label>
-
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
-                            <input type="hidden" name="show_specs" value="0">
-                            <input type="checkbox" id="prodShowSpecs" name="show_specs" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir especificações técnicas (Materiais, Medidas e Acabamento)</span>
-                        </label>
-
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
-                            <input type="hidden" name="show_description" value="0">
-                            <input type="checkbox" id="prodShowDescription" name="show_description" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir descrição resumida da peça no card</span>
-                        </label>
-
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: #ede7df;">
-                            <input type="hidden" name="show_channels" value="0">
-                            <input type="checkbox" id="prodShowChannels" name="show_channels" value="1" checked style="width: 16px; height: 16px; accent-color: #737B85;">
-                            <span>Exibir painel de canais de compra na página de detalhes</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <!-- BOTÕES DO RODAPÉ DO MODAL -->
-            <div class="modal-footer" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="modal-footer" style="margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
                 <button type="button" class="btn-admin-secondary" onclick="closeProductModal()">Cancelar</button>
-                <button type="submit" class="btn-admin-gold" id="saveProdBtn">Salvar Joia & Variações</button>
+                <button type="submit" class="btn-admin-gold" id="saveProdBtn" style="padding: 10px 24px; font-size: 0.9rem;">
+                    <span>💾 Salvar Todas as Alterações da Joia</span>
+                </button>
             </div>
         </form>
     </div>
@@ -1290,9 +1515,11 @@ $settings = $settings ?? [];
 <!-- SCRIPTS DA CENTRAL UNIFICADA                                   -->
 <!-- ============================================================== -->
 <script>
-// Estado Global de Variações e Links do Modal
+// Estado Global da Central Única de Edição
 let currentProductLinks = [];
 let currentProductVariants = [];
+let currentProductGallery = [];
+let currentCustomSpecs = [];
 let deletedVariantIds = [];
 let currentPage = 1;
 let itemsPerPage = 25;
@@ -1401,6 +1628,245 @@ function switchProductTab(tab) {
     if (pane) pane.classList.add('active');
 }
 
+function updateModalStatusBadge(status) {
+    const badge = document.getElementById('modalStatusBadge');
+    if (!badge) return;
+    badge.className = 'badge-status badge-status-' + status;
+    if (status === 'published') badge.innerText = '● Publicado';
+    else if (status === 'draft') badge.innerText = '● Rascunho';
+    else if (status === 'hidden') badge.innerText = '● Oculto';
+}
+
+function updateMainImagePreview(url) {
+    const img = document.getElementById('mainImgPreview');
+    if (img) {
+        img.src = (url && url.trim()) ? url.trim() : '/assets/images/hero/featured-green-shell.jpg';
+    }
+}
+
+function previewUploadedImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('mainImgPreview');
+            if (img) img.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+/* ============================================================== */
+/* PREÇOS, PIX & PARCELAMENTO AO VIVO                            */
+/* ============================================================== */
+function parseMoneyValue(val) {
+    if (!val) return 0;
+    val = (val + '').replace(/\s/g, '').replace('R$', '').replace(/\./g, '').replace(',', '.');
+    return parseFloat(val) || 0;
+}
+
+function formatMoney(num) {
+    return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function updatePixLiveCalc() {
+    const priceVal = parseMoneyValue(document.getElementById('prodPrice')?.value || '380,00');
+    const promoVal = parseMoneyValue(document.getElementById('prodPromotionalPrice')?.value || '');
+    const pixPct = parseInt(document.getElementById('prodPixDiscount')?.value || '5', 10) || 0;
+
+    const previewCurrent = document.getElementById('previewCurrentPrice');
+    const previewCompare = document.getElementById('previewComparePrice');
+    const previewPix = document.getElementById('previewPixBadge');
+    const previewInstallments = document.getElementById('previewInstallments');
+
+    if (previewCurrent) previewCurrent.innerText = 'R$ ' + formatMoney(priceVal);
+
+    if (previewCompare) {
+        if (promoVal > priceVal) {
+            previewCompare.innerText = 'De R$ ' + formatMoney(promoVal);
+            previewCompare.style.display = 'inline';
+        } else {
+            previewCompare.style.display = 'none';
+        }
+    }
+
+    const pixPrice = priceVal * (1 - (pixPct / 100));
+    if (previewPix) {
+        previewPix.innerText = `⚡ R$ ${formatMoney(pixPrice)} no Pix (-${pixPct}%)`;
+    }
+
+    const instInput = document.getElementById('prodInstallmentsText');
+    if (previewInstallments) {
+        if (instInput && instInput.value.trim()) {
+            previewInstallments.innerHTML = `<span>💳 ${instInput.value.trim()}</span>`;
+        } else {
+            const parcel6 = priceVal > 0 ? (priceVal / 6) : 0;
+            previewInstallments.innerHTML = `<span>💳 Em até 6x de R$ ${formatMoney(parcel6)} sem juros nos cartões</span>`;
+        }
+    }
+}
+
+function calculateInstallmentsSuggestion() {
+    const priceVal = parseMoneyValue(document.getElementById('prodPrice')?.value || '380,00');
+    const parcel6 = priceVal > 0 ? (priceVal / 6) : 0;
+    const instInput = document.getElementById('prodInstallmentsText');
+    if (instInput) {
+        instInput.value = `Em até 6x sem juros de R$ ${formatMoney(parcel6)} no cartão`;
+    }
+    updatePixLiveCalc();
+}
+
+/* ============================================================== */
+/* GALERIA DE FOTOS ADICIONAIS                                    */
+/* ============================================================== */
+function renderGalleryItems() {
+    const container = document.getElementById('galleryContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!currentProductGallery || currentProductGallery.length === 0) {
+        container.innerHTML = `
+            <div style="font-size: 0.78rem; color: #8e8880; font-style: italic; padding: 6px 0;">
+                Nenhuma imagem adicional na galeria. Cole uma URL abaixo para adicionar.
+            </div>
+        `;
+        return;
+    }
+
+    currentProductGallery.forEach((url, idx) => {
+        const card = document.createElement('div');
+        card.style.position = 'relative';
+        card.style.width = '78px';
+        card.style.height = '78px';
+        card.style.borderRadius = '8px';
+        card.style.overflow = 'hidden';
+        card.style.border = '1px solid rgba(212, 186, 136, 0.4)';
+        card.style.background = '#0a0a0a';
+
+        card.innerHTML = `
+            <img src="${url}" alt="Galeria ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
+            <button type="button" onclick="removeGalleryItem(${idx})" title="Remover foto" style="position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.7); border: none; color: #f87171; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                ✕
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function addGalleryItem() {
+    const input = document.getElementById('newGalleryUrlInput');
+    const url = (input?.value || '').trim();
+    if (!url) {
+        alert('Por favor, informe a URL da foto adicional.');
+        return;
+    }
+    currentProductGallery.push(url);
+    if (input) input.value = '';
+    renderGalleryItems();
+}
+
+function removeGalleryItem(idx) {
+    currentProductGallery.splice(idx, 1);
+    renderGalleryItems();
+}
+
+/* ============================================================== */
+/* FICHA TÉCNICA PERSONALIZADA (LINHAS EXTRAS)                    */
+/* ============================================================== */
+function renderCustomSpecs() {
+    const container = document.getElementById('customSpecsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!currentCustomSpecs || currentCustomSpecs.length === 0) {
+        container.innerHTML = `
+            <div style="font-size: 0.78rem; color: #8e8880; font-style: italic; padding: 4px 0;">
+                Nenhuma linha adicional personalizada. Clique em "+ Adicionar Linha Extra" se desejar adicionar propriedades exclusivas (ex: "Lapidação", "Origem", "Peso da Gema").
+            </div>
+        `;
+        return;
+    }
+
+    currentCustomSpecs.forEach((spec, idx) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '180px 1fr 36px';
+        row.style.gap = '8px';
+        row.style.alignItems = 'center';
+
+        row.innerHTML = `
+            <input type="text" class="form-input" placeholder="Propriedade (ex: Lapidação)" value="${spec.label || ''}" oninput="updateCustomSpecField(${idx}, 'label', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+            <input type="text" class="form-input" placeholder="Descrição / Valor (ex: Oval cabochão facetado artesanalmente)" value="${spec.value || ''}" oninput="updateCustomSpecField(${idx}, 'value', this.value)" style="padding: 6px 10px; font-size: 0.8rem;">
+            <button type="button" onclick="removeCustomSpecRow(${idx})" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 4px; height: 32px; cursor: pointer;" title="Remover linha">
+                ✕
+            </button>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function addCustomSpecRow(label = '', value = '') {
+    currentCustomSpecs.push({ label, value });
+    renderCustomSpecs();
+}
+
+function removeCustomSpecRow(idx) {
+    currentCustomSpecs.splice(idx, 1);
+    renderCustomSpecs();
+}
+
+function updateCustomSpecField(idx, field, val) {
+    if (currentCustomSpecs[idx]) {
+        currentCustomSpecs[idx][field] = val;
+    }
+}
+
+function buildSpecsJson() {
+    return {
+        acabamento: document.getElementById('specAcabamento')?.value || '',
+        design: document.getElementById('specDesign')?.value || '',
+        autenticidade: document.getElementById('specAutenticidade')?.value || '',
+        disponibilidade: document.getElementById('specDisponibilidade')?.value || '',
+        custom_specs: currentCustomSpecs.filter(s => (s.label && s.label.trim()) || (s.value && s.value.trim()))
+    };
+}
+
+/* ============================================================== */
+/* ESTOQUE CONSOLIDADO DO MODELO                                  */
+/* ============================================================== */
+function updateConsolidatedStockUI() {
+    let totalUnits = 0;
+    if (currentProductVariants && currentProductVariants.length > 0) {
+        currentProductVariants.forEach(v => {
+            totalUnits += parseInt(v.stock_quantity || 0, 10);
+        });
+    } else {
+        totalUnits = parseInt(document.getElementById('prodStockQuantity')?.value || 0, 10);
+    }
+
+    const totalUnitsEl = document.getElementById('stockTabTotalUnits');
+    const totalVariantsEl = document.getElementById('stockTabTotalVariants');
+    const healthEl = document.getElementById('stockTabHealthStatus');
+
+    if (totalUnitsEl) totalUnitsEl.innerText = totalUnits + ' un.';
+    if (totalVariantsEl) totalVariantsEl.innerText = currentProductVariants.length;
+
+    if (healthEl) {
+        if (totalUnits > 3) {
+            healthEl.innerText = 'Pronta Entrega (Nível Saudável)';
+            healthEl.style.color = '#4ade80';
+        } else if (totalUnits > 0) {
+            healthEl.innerText = 'Estoque Baixo';
+            healthEl.style.color = '#facc15';
+        } else {
+            healthEl.innerText = 'Esgotado / Sob Encomenda';
+            healthEl.style.color = '#f87171';
+        }
+    }
+}
+
+/* ============================================================== */
+/* ABERTURA & CARREGAMENTO NA TELA ÚNICA DE EDIÇÃO                */
+/* ============================================================== */
 function openNewProductModal(e) {
     if (e) e.preventDefault();
     document.getElementById('productForm').reset();
@@ -1409,7 +1875,12 @@ function openNewProductModal(e) {
     document.getElementById('prodDeletedVariantIds').value = '';
     deletedVariantIds = [];
 
+    // 1. Informações Gerais
     document.getElementById('statusPublished').checked = true;
+    updateModalStatusBadge('published');
+    document.getElementById('modalGroupBadge').innerText = 'NOVA JOIA AUTORAL';
+    document.getElementById('modalSkuBadge').innerText = 'SKU: (novo)';
+
     document.getElementById('prodFeatured').checked = false;
     document.getElementById('prodShowBadge').checked = true;
     document.getElementById('prodShowSku').checked = true;
@@ -1417,7 +1888,52 @@ function openNewProductModal(e) {
     document.getElementById('prodShowDescription').checked = true;
     document.getElementById('prodShowChannels').checked = true;
 
-    currentProductLinks = [];
+    document.getElementById('prodCardBehavior').value = 'default';
+    toggleCustomUrlGroup('default');
+    document.getElementById('prodDetailLayout').value = 'default';
+
+    // 2. Preços & Pagamentos
+    document.getElementById('prodPrice').value = '380,00';
+    document.getElementById('prodPromotionalPrice').value = '';
+    document.getElementById('prodPixDiscount').value = '5';
+    document.getElementById('prodInstallmentsText').value = 'Em até 6x sem juros de R$ 63,33 no cartão';
+
+    // 3. Imagem Principal & Galeria
+    document.getElementById('prodImageUrl').value = '';
+    updateMainImagePreview('');
+    currentProductGallery = [];
+    renderGalleryItems();
+
+    // 4. Ficha Técnica Padrão
+    document.getElementById('specAcabamento').value = 'Polimento espelhado de alta joalheria artesanal com verniz antialérgico';
+    document.getElementById('prodMaterials').value = 'Banho de Prata 950 Nobre com Camada Protetora';
+    document.getElementById('specDesign').value = 'Design Autoral Exclusivo DIVINIUM — Linha Atemporal';
+    document.getElementById('specAutenticidade').value = 'Certificado de Garantia de Fábrica e Nota Fiscal Eletrônica Inclusos';
+    document.getElementById('specDisponibilidade').value = 'Pronta Entrega com Envio Imediato e Seguro Blindado';
+    document.getElementById('prodDimensions').value = 'Diâmetro ajustável • Aro anatômico';
+    document.getElementById('prodColors').value = 'Prata Nobre Espelhada, Nuances Minerais';
+    document.getElementById('prodVariants').value = 'Tamanho Único Regulável';
+    currentCustomSpecs = [];
+    renderCustomSpecs();
+
+    // 5. Estoque
+    document.getElementById('prodStockQuantity').value = '10';
+    document.getElementById('prodStockStatus').value = 'in_stock';
+
+    // 6. Canais
+    currentProductLinks = [{
+        platform_name: 'Shopee',
+        url: '',
+        price: '380,00',
+        button_text: 'Comprar na Shopee Oficial',
+        button_color: 'default',
+        button_size: 'md',
+        target: '_blank',
+        is_active: 1,
+        sort_order: 0
+    }];
+
+    // 7. Variações
     currentProductVariants = [{
         id: 0,
         sku: '',
@@ -1432,6 +1948,8 @@ function openNewProductModal(e) {
 
     renderPlatformLinks();
     renderModalVariants();
+    updatePixLiveCalc();
+    updateConsolidatedStockUI();
     switchProductTab('general');
     document.getElementById('productModalTitle').innerText = 'Cadastrar Novo Modelo de Joia';
     document.getElementById('productModal').classList.add('active');
@@ -1444,14 +1962,11 @@ function editGroupProduct(group) {
     deletedVariantIds = [];
     document.getElementById('prodDeletedVariantIds').value = '';
 
+    // 1. Informações Gerais
     document.getElementById('prodName').value = group.name || '';
     document.getElementById('prodSlug').value = group.slug || '';
     document.getElementById('prodSku').value = group.base_sku || '';
     document.getElementById('prodCategory').value = group.category_id || '';
-    document.getElementById('prodMaterials').value = group.materials || '';
-    document.getElementById('prodDimensions').value = group.dimensions || '';
-    document.getElementById('prodColors').value = group.colors || '';
-    document.getElementById('prodVariants').value = group.variants_json || '';
     document.getElementById('prodSortOrder').value = group.sort_order || 0;
     document.getElementById('prodShortDesc').value = group.short_description || '';
     document.getElementById('prodDesc').value = group.description || '';
@@ -1460,19 +1975,87 @@ function editGroupProduct(group) {
     if (status === 'draft') document.getElementById('statusDraft').checked = true;
     else if (status === 'hidden') document.getElementById('statusHidden').checked = true;
     else document.getElementById('statusPublished').checked = true;
+    updateModalStatusBadge(status);
+
+    document.getElementById('modalGroupBadge').innerText = group.name ? group.name.toUpperCase() : 'MODELO AUTORAL';
+    document.getElementById('modalSkuBadge').innerText = 'SKU: ' + (group.base_sku || '—');
 
     document.getElementById('prodFeatured').checked = group.is_featured == 1;
+
+    // 2. Preços & Pagamentos
+    let priceStr = '380,00';
+    if (group.price_cents && group.price_cents > 0) {
+        priceStr = (group.price_cents / 100).toFixed(2).replace('.', ',');
+    } else if (group.min_price_cents && group.min_price_cents > 0) {
+        priceStr = (group.min_price_cents / 100).toFixed(2).replace('.', ',');
+    }
+    document.getElementById('prodPrice').value = priceStr;
+
+    let promoStr = '';
+    if (group.promotional_price_cents && group.promotional_price_cents > 0) {
+        promoStr = (group.promotional_price_cents / 100).toFixed(2).replace('.', ',');
+    }
+    document.getElementById('prodPromotionalPrice').value = promoStr;
+
+    document.getElementById('prodPixDiscount').value = (group.pix_discount_pct !== undefined && group.pix_discount_pct !== null) ? group.pix_discount_pct : 5;
+    document.getElementById('prodInstallmentsText').value = group.installments_text || '';
+
+    updatePixLiveCalc();
+
+    // 3. Imagens & Galeria
+    document.getElementById('prodImageUrl').value = group.image_url || '';
+    updateMainImagePreview(group.image_url || '');
+
+    currentProductGallery = [];
+    if (group.gallery_json) {
+        try {
+            currentProductGallery = typeof group.gallery_json === 'string' ? JSON.parse(group.gallery_json) : group.gallery_json;
+            if (!Array.isArray(currentProductGallery)) currentProductGallery = [];
+        } catch(e) {
+            currentProductGallery = [];
+        }
+    }
+    renderGalleryItems();
+
+    // 4. Ficha Técnica
+    let parsedSpecs = {};
+    if (group.specs_json) {
+        try {
+            parsedSpecs = typeof group.specs_json === 'string' ? JSON.parse(group.specs_json) : group.specs_json;
+            if (typeof parsedSpecs !== 'object' || parsedSpecs === null) parsedSpecs = {};
+        } catch(e) {
+            parsedSpecs = {};
+        }
+    }
+    document.getElementById('specAcabamento').value = parsedSpecs.acabamento || 'Polimento espelhado de alta joalheria artesanal com verniz antialérgico';
+    document.getElementById('prodMaterials').value = group.materials || 'Banho de Prata 950 Nobre com Camada Protetora';
+    document.getElementById('specDesign').value = parsedSpecs.design || 'Design Autoral Exclusivo DIVINIUM — Linha Atemporal';
+    document.getElementById('specAutenticidade').value = parsedSpecs.autenticidade || 'Certificado de Garantia de Fábrica e Nota Fiscal Eletrônica Inclusos';
+    document.getElementById('specDisponibilidade').value = parsedSpecs.disponibilidade || 'Pronta Entrega com Envio Imediato e Seguro Blindado';
+    document.getElementById('prodDimensions').value = group.dimensions || 'Diâmetro regulável • Aro anatômico';
+    document.getElementById('prodColors').value = group.colors || '';
+    document.getElementById('prodVariants').value = group.variants_json || '';
+
+    currentCustomSpecs = Array.isArray(parsedSpecs.custom_specs) ? parsedSpecs.custom_specs : [];
+    renderCustomSpecs();
+
+    // 5. Exibição Pública
+    document.getElementById('prodCardBehavior').value = group.card_click_behavior || 'default';
+    toggleCustomUrlGroup(group.card_click_behavior || 'default');
+    document.getElementById('prodCustomTargetUrl').value = group.custom_target_url || '';
+    document.getElementById('prodDetailLayout').value = group.detail_layout || 'default';
+
     document.getElementById('prodShowBadge').checked = group.show_badge != 0;
     document.getElementById('prodShowSku').checked = group.show_sku != 0;
     document.getElementById('prodShowSpecs').checked = group.show_specs != 0;
     document.getElementById('prodShowDescription').checked = group.show_description != 0;
     document.getElementById('prodShowChannels').checked = group.show_channels != 0;
 
-    // Canais do Grupo
+    // 6. Canais de Venda
     currentProductLinks = (group.links || []).map(l => ({
         platform_name: l.platform_name || 'Shopee',
         url: l.url || '',
-        price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : priceStr,
         button_text: l.button_text || '',
         button_color: l.button_color || 'default',
         button_size: l.button_size || 'md',
@@ -1480,13 +2063,14 @@ function editGroupProduct(group) {
         is_active: l.is_active !== undefined ? l.is_active : 1,
         sort_order: l.sort_order || 0
     }));
+    renderPlatformLinks();
 
-    // Variações do Grupo
+    // 7. Variações & Pedras
     currentProductVariants = (group.variants || []).map(v => ({
         id: v.id || 0,
         sku: v.sku || '',
         stone_mineral: v.stone_mineral || '',
-        price: v.price_cents ? ((v.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        price: v.price_cents ? ((v.price_cents) / 100).toFixed(2).replace('.', ',') : priceStr,
         promotional_price: v.promotional_price_cents ? ((v.promotional_price_cents) / 100).toFixed(2).replace('.', ',') : '',
         stock_quantity: v.stock_quantity !== undefined ? v.stock_quantity : 10,
         stock_status: v.stock_status || 'in_stock',
@@ -1498,18 +2082,22 @@ function editGroupProduct(group) {
         currentProductVariants = [{
             id: group.id || 0,
             sku: group.base_sku || '',
-            stone_mineral: 'Gema Mineral Base',
-            price: '380,00',
-            promotional_price: '',
-            stock_quantity: group.total_stock || 10,
-            stock_status: 'in_stock',
+            stone_mineral: group.stone_mineral || 'Gema Mineral Base',
+            price: priceStr,
+            promotional_price: promoStr,
+            stock_quantity: group.stock_quantity !== undefined ? group.stock_quantity : (group.total_stock || 10),
+            stock_status: group.stock_status || 'in_stock',
             image_url: group.image_url || '/assets/images/hero/featured-green-shell.jpg',
             external_url: ''
         }];
     }
-
-    renderPlatformLinks();
     renderModalVariants();
+
+    // 8. Estoque & Identificação
+    document.getElementById('prodStockQuantity').value = group.stock_quantity !== undefined ? group.stock_quantity : (group.total_stock || 10);
+    document.getElementById('prodStockStatus').value = group.stock_status || 'in_stock';
+    updateConsolidatedStockUI();
+
     switchProductTab('general');
     document.getElementById('productModalTitle').innerText = 'Editar: ' + group.name;
     document.getElementById('productModal').classList.add('active');
@@ -1608,14 +2196,15 @@ function addModalVariantRow() {
         id: 0,
         sku: baseSku + '-VAR' + nextNum,
         stone_mineral: '',
-        price: '380,00',
+        price: document.getElementById('prodPrice')?.value || '380,00',
         promotional_price: '',
         stock_quantity: 10,
         stock_status: 'in_stock',
-        image_url: '/assets/images/hero/featured-green-shell.jpg',
+        image_url: document.getElementById('prodImageUrl')?.value || '/assets/images/hero/featured-green-shell.jpg',
         external_url: ''
     });
     renderModalVariants();
+    updateConsolidatedStockUI();
 }
 
 function removeModalVariantRow(idx) {
@@ -1627,27 +2216,34 @@ function removeModalVariantRow(idx) {
     }
     currentProductVariants.splice(idx, 1);
     renderModalVariants();
+    updateConsolidatedStockUI();
 }
 
 function updateModalVariantField(idx, field, val) {
     if (currentProductVariants[idx]) {
         currentProductVariants[idx][field] = val;
+        if (field === 'stock_quantity') {
+            updateConsolidatedStockUI();
+        }
     }
 }
 
 /* ============================================================== */
-/* SUBMISSÃO ATÔMICA DO PRODUTO & VARIAÇÕES                      */
+/* SUBMISSÃO ATÔMICA DA JOIA & TODAS AS 8 SEÇÕES                 */
 /* ============================================================== */
 async function handleProductSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('saveProdBtn');
+    const origHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerText = 'Salvando Joia & Variações...';
+    btn.innerHTML = '<span>⏳ Salvando Joia Completa...</span>';
 
-    // Serializar canais e variações
+    // 1. Serializar todas as estruturas dinâmicas nos campos ocultos
     document.getElementById('prodLinksJson').value = JSON.stringify(currentProductLinks);
     document.getElementById('prodVariantsJsonInput').value = JSON.stringify(currentProductVariants);
     document.getElementById('prodDeletedVariantIds').value = deletedVariantIds.join(',');
+    document.getElementById('prodGalleryJsonInput').value = JSON.stringify(currentProductGallery);
+    document.getElementById('prodSpecsJsonInput').value = JSON.stringify(buildSpecsJson());
 
     const formData = new FormData(document.getElementById('productForm'));
     const csrfToken = getCsrfToken();
@@ -1667,16 +2263,19 @@ async function handleProductSubmit(e) {
         });
         const data = await response.json();
         if (data.success) {
-            window.location.reload();
+            showToast(data.message || 'Todas as alterações da joia foram salvas!');
+            setTimeout(() => {
+                window.location.reload();
+            }, 600);
         } else {
             alert(data.error || 'Erro ao gravar produto.');
             btn.disabled = false;
-            btn.innerText = 'Salvar Joia & Variações';
+            btn.innerHTML = origHtml;
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);
         btn.disabled = false;
-        btn.innerText = 'Salvar Joia & Variações';
+        btn.innerHTML = origHtml;
     }
 }
 
@@ -1714,6 +2313,7 @@ function renderPlatformLinks() {
                         <option value="Mercado Livre" ${link.platform_name === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
                         <option value="Amazon" ${link.platform_name === 'Amazon' ? 'selected' : ''}>Amazon</option>
                         <option value="WhatsApp" ${link.platform_name === 'WhatsApp' ? 'selected' : ''}>WhatsApp Concierge</option>
+                        <option value="Compra Direta DIVINIUM" ${link.platform_name === 'Compra Direta DIVINIUM' ? 'selected' : ''}>Compra Direta DIVINIUM</option>
                         <option value="Outro" ${link.platform_name === 'Outro' ? 'selected' : ''}>Outro Canal</option>
                     </select>
                 </div>
@@ -1732,10 +2332,11 @@ function renderPlatformLinks() {
 }
 
 function addNewPlatformLink() {
+    const currentPrice = document.getElementById('prodPrice')?.value || '380,00';
     currentProductLinks.push({
         platform_name: 'Shopee',
         url: '',
-        price: '380,00',
+        price: currentPrice,
         button_text: 'Comprar na Shopee Oficial',
         button_color: 'default',
         button_size: 'md',
