@@ -1209,6 +1209,12 @@ body.admin-theme {
     color: #25d366;
 }
 
+.platform-mini-tag.tag-compradireta,
+.platform-mini-tag.tag-site {
+    border-color: rgba(212, 186, 136, 0.4);
+    color: #CBD0D6;
+}
+
 /* Card do Link Repeater */
 .platform-link-card {
     background: rgba(255, 255, 255, 0.02);

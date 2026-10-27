@@ -6363,5 +6363,79 @@ body.theme-rose .btn-store-back {
     }
 }
 
+/* Botões de Canais de Compra no Card da Boutique */
+.store-card-channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 10px;
+    justify-content: center;
+}
+
+.btn-channel-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-secondary, #ded7cf);
+}
+
+.btn-channel-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-channel-chip.platform-chip-shopee {
+    border-color: rgba(238, 77, 45, 0.4);
+    color: #ff7043;
+}
+.btn-channel-chip.platform-chip-shopee:hover {
+    background: rgba(238, 77, 45, 0.12);
+    border-color: #ee4d2d;
+}
+
+.btn-channel-chip.platform-chip-mercadolivre {
+    border-color: rgba(255, 214, 0, 0.4);
+    color: #ffd600;
+}
+.btn-channel-chip.platform-chip-mercadolivre:hover {
+    background: rgba(255, 214, 0, 0.12);
+    border-color: #ffd600;
+}
+
+.btn-channel-chip.platform-chip-tiktok {
+    border-color: rgba(254, 44, 85, 0.4);
+    color: #ff5252;
+}
+.btn-channel-chip.platform-chip-tiktok:hover {
+    background: rgba(254, 44, 85, 0.12);
+    border-color: #fe2c55;
+}
+
+.btn-channel-chip.platform-chip-compradireta {
+    border-color: rgba(212, 186, 136, 0.5);
+    color: #ded7cf;
+}
+.btn-channel-chip.platform-chip-compradireta:hover {
+    background: rgba(212, 186, 136, 0.15);
+    border-color: #ded7cf;
+}
+
+.btn-channel-chip.platform-chip-whatsapp {
+    border-color: rgba(37, 211, 102, 0.4);
+    color: #25d366;
+}
+.btn-channel-chip.platform-chip-whatsapp:hover {
+    background: rgba(37, 211, 102, 0.12);
+    border-color: #25d366;
+}
+
 
 

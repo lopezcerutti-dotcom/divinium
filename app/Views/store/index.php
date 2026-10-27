@@ -339,6 +339,38 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                             </div>
                             <?php endif; ?>
 
+                            <!-- Opções de Canais de Compra Ativos do Modelo -->
+                            <?php if (!empty($validLinks)): ?>
+                            <div class="store-card-channels">
+                                <?php foreach ($validLinks as $lnk): 
+                                    $platName = trim((string)($lnk['platform_name'] ?? 'Comprar'));
+                                    $platLower = strtolower($platName);
+                                    $platSlug = 'outro';
+                                    if (str_contains($platLower, 'shopee')) $platSlug = 'shopee';
+                                    elseif (str_contains($platLower, 'mercado') || str_contains($platLower, 'ml')) $platSlug = 'mercadolivre';
+                                    elseif (str_contains($platLower, 'tiktok')) $platSlug = 'tiktok';
+                                    elseif (str_contains($platLower, 'whatsapp') || str_contains($platLower, 'wa')) $platSlug = 'whatsapp';
+                                    elseif (str_contains($platLower, 'diret') || str_contains($platLower, 'site')) $platSlug = 'compradireta';
+                                    elseif (str_contains($platLower, 'amazon')) $platSlug = 'amazon';
+
+                                    $uLnk = trim((string)($lnk['url'] ?? ''));
+                                    $isDirect = str_starts_with($uLnk, '/');
+                                    $targetLnk = !empty($lnk['target']) ? $lnk['target'] : ($isDirect ? '_self' : '_blank');
+                                    $btnText = !empty($lnk['button_text']) ? $lnk['button_text'] : ('Comprar no ' . $platName);
+                                ?>
+                                    <a href="<?= View::e($uLnk) ?>" 
+                                       target="<?= $targetLnk ?>" 
+                                       <?= $targetLnk === '_blank' ? 'rel="noopener noreferrer"' : '' ?>
+                                       onclick="event.stopPropagation();"
+                                       class="btn-channel-chip platform-chip-<?= $platSlug ?>" 
+                                       title="<?= View::e($btnText) ?>">
+                                        <span><?= View::e($platName) ?></span>
+                                        <span>↗</span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+
                             <!-- Botão Discreto para Conhecer a Peça -->
                             <a href="<?= View::e($detailUrl) ?>" 
                                class="btn-card-discreet"

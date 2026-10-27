@@ -347,42 +347,80 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         // Configurações de Canais Externos
                         $centralChannels = Setting::getProductChannelsList();
                         
-                        // Mapear links específicos do produto/grupo por plataforma
-                        $prodLinksByPlat = [];
+                        // Montar lista de canais de compra ativos do Produto Principal (Modelo Pai)
+                        $displayChannels = [];
+                        $hasDirectInLinks = false;
+                        $directChannelConfigured = null;
+
                         if (!empty($validLinks)) {
                             foreach ($validLinks as $vl) {
-                                $pKey = strtolower(trim((string)($vl['platform_name'] ?? '')));
-                                if ($pKey !== '') {
-                                    $prodLinksByPlat[$pKey] = $vl;
+                                $u = trim((string)($vl['url'] ?? ''));
+                                if ($u === '') continue;
+
+                                $plat = trim((string)($vl['platform_name'] ?? 'Loja Oficial'));
+                                $platLower = strtolower($plat);
+                                $linkPriceCents = !empty($vl['price_cents']) ? (int)$vl['price_cents'] : $basePriceCents;
+                                $linkPriceFormatted = number_format($linkPriceCents / 100, 2, ',', '.');
+                                $hasOverride = !empty($vl['price_cents']);
+
+                                $isDirect = str_contains($platLower, 'compra direta') || str_contains($platLower, 'site') || (str_starts_with($u, '/') && !str_contains($platLower, 'shopee') && !str_contains($platLower, 'mercado') && !str_contains($platLower, 'tiktok'));
+
+                                $targetAttr = !empty($vl['target']) ? $vl['target'] : ($isDirect && str_starts_with($u, '/') ? '_self' : '_blank');
+
+                                $officialBadge = 'Oficial';
+                                if (str_contains($platLower, 'shopee')) $officialBadge = 'Shopee Oficial';
+                                elseif (str_contains($platLower, 'mercado') || str_contains($platLower, 'ml')) $officialBadge = 'Mercado Livre';
+                                elseif (str_contains($platLower, 'tiktok')) $officialBadge = 'TikTok Shop';
+                                elseif (str_contains($platLower, 'diret')) $officialBadge = 'Exclusivo';
+                                elseif (str_contains($platLower, 'whatsapp') || str_contains($platLower, 'wa')) $officialBadge = 'Atendimento VIP';
+
+                                $btnTitle = !empty($vl['button_text']) ? $vl['button_text'] : ('Comprar no ' . $plat);
+
+                                if ($isDirect) {
+                                    $hasDirectInLinks = true;
+                                    $directChannelConfigured = [
+                                        'title' => $btnTitle,
+                                        'url' => $u,
+                                        'price_formatted' => $linkPriceFormatted,
+                                        'badge' => $officialBadge,
+                                        'target' => $targetAttr
+                                    ];
+                                } else {
+                                    $displayChannels[] = [
+                                        'id' => $vl['id'] ?? 0,
+                                        'platform' => $plat,
+                                        'title' => $btnTitle,
+                                        'official_label' => 'Canal Homologado DIVINIUM',
+                                        'desc' => '',
+                                        'price_formatted' => $linkPriceFormatted,
+                                        'has_override' => $hasOverride,
+                                        'badge' => $officialBadge,
+                                        'icon' => $platLower,
+                                        'url' => $u,
+                                        'target' => $targetAttr
+                                    ];
                                 }
                             }
-                        }
 
-                        // Montar lista de exibição unificada
-                        $displayChannels = [];
-                        if (!empty($centralChannels)) {
+                            if ($directChannelConfigured) {
+                                $showDirectChannel = true;
+                                $directUrl = $directChannelConfigured['url'];
+                                $directTitle = $directChannelConfigured['title'];
+                                $directPixFormatted = $directChannelConfigured['price_formatted'];
+                                if (!empty($directChannelConfigured['badge'])) {
+                                    $directBadge = $directChannelConfigured['badge'];
+                                }
+                            }
+                        } elseif (!empty($centralChannels)) {
+                            // Fallback caso o modelo ainda não tenha canais individuais configurados
                             foreach ($centralChannels as $cCh) {
                                 if (empty($cCh['visible'])) continue;
-                                $platKey = strtolower(trim((string)($cCh['platform'] ?? '')));
-                                
-                                // Se o produto tiver link específico para este canal, aproveitar url e preço
                                 $itemUrl = trim((string)($cCh['url'] ?? ''));
+                                if ($itemUrl === '') continue;
+                                $platKey = strtolower(trim((string)($cCh['platform'] ?? '')));
                                 $itemPrice = trim((string)($cCh['price_override'] ?? ''));
                                 $hasOverride = !empty($itemPrice);
-
-                                if (isset($prodLinksByPlat[$platKey])) {
-                                    $spLink = $prodLinksByPlat[$platKey];
-                                    if (!empty($spLink['url'])) $itemUrl = $spLink['url'];
-                                    if (!empty($spLink['price_cents']) && empty($itemPrice)) {
-                                        $itemPrice = number_format(((int)$spLink['price_cents']) / 100, 2, ',', '.');
-                                    }
-                                } elseif (stripos($platKey, 'shopee') !== false && !empty($product['external_url'])) {
-                                    $itemUrl = $product['external_url'];
-                                }
-
-                                if (empty($itemPrice)) {
-                                    $itemPrice = $basePriceFormatted;
-                                }
+                                if (empty($itemPrice)) $itemPrice = $basePriceFormatted;
 
                                 $displayChannels[] = [
                                     'id' => $cCh['id'] ?? $platKey,
@@ -392,28 +430,10 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     'desc' => $cCh['desc'] ?? '',
                                     'price_formatted' => $itemPrice,
                                     'has_override' => $hasOverride,
-                                    'badge' => $cCh['badge'] ?? '',
+                                    'badge' => $cCh['badge'] ?? 'Oficial',
                                     'icon' => $cCh['icon'] ?? $platKey,
                                     'url' => $itemUrl,
                                     'target' => $cCh['target'] ?? '_blank'
-                                ];
-                            }
-                        } elseif (!empty($validLinks)) {
-                            foreach ($validLinks as $vl) {
-                                $plat = trim((string)($vl['platform_name'] ?? 'Loja Oficial'));
-                                $linkPriceCents = !empty($vl['price_cents']) ? (int)$vl['price_cents'] : $basePriceCents;
-                                $displayChannels[] = [
-                                    'id' => $vl['id'] ?? 0,
-                                    'platform' => $plat,
-                                    'title' => !empty($vl['button_text']) ? $vl['button_text'] : ('Comprar na ' . $plat),
-                                    'official_label' => 'Canal Homologado DIVINIUM',
-                                    'desc' => '',
-                                    'price_formatted' => number_format($linkPriceCents / 100, 2, ',', '.'),
-                                    'has_override' => !empty($vl['price_cents']),
-                                    'badge' => 'Oficial',
-                                    'icon' => $plat,
-                                    'url' => trim($vl['url']),
-                                    'target' => $vl['target'] ?? '_blank'
                                 ];
                             }
                         }
@@ -447,7 +467,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <div class="channel-option-wrapper" style="margin-bottom: 14px;">
                             <a href="<?= View::e($directUrl) ?>" 
                                id="btnDirectCheckoutVip"
-                               onclick="buySelectedVariation(event, true);" 
+                               onclick="buySelectedVariation(event, true, this.getAttribute('href'));" 
                                class="btn-channel-impartial platform-direct-vip"
                                style="background: var(--card-bg); border: 1.5px solid var(--gold-accent); box-shadow: var(--shadow-luxury, 0 4px 15px rgba(0,0,0,0.12));">
                                 
@@ -900,16 +920,12 @@ function selectProductVariation(btn) {
         }
     }
     
-    // 9. Atualizar botões de canais externos (Shopee e outros) sem alterar o botão de checkout VIP interno
+    // 9. Atualizar exibição de preço nos canais externos caso não haja preço fixo de canal
     document.querySelectorAll('.btn-channel-external').forEach(cBtn => {
         const hasOverride = cBtn.getAttribute('data-has-override') === '1';
         const pVal = cBtn.querySelector('.channel-price-val');
         if (pVal && priceFormatted && !hasOverride) {
             pVal.textContent = priceFormatted;
-        }
-        const plat = (cBtn.getAttribute('data-platform') || '').toLowerCase();
-        if (extUrl && (plat === 'shopee' || plat.indexOf('shopee') !== -1 || plat === 'loja oficial')) {
-            cBtn.href = extUrl;
         }
     });
 
@@ -921,7 +937,7 @@ function selectProductVariation(btn) {
     }
 }
 
-function buySelectedVariation(event, isDirectCheckout) {
+function buySelectedVariation(event, isDirectCheckout, targetUrl) {
     if (event) {
         event.preventDefault();
     }
@@ -945,7 +961,12 @@ function buySelectedVariation(event, isDirectCheckout) {
     }
 
     if (isDirectCheckout) {
-        window.location.href = '/checkout';
+        const dest = (targetUrl && targetUrl.trim() !== '') ? targetUrl.trim() : '/checkout';
+        if (dest.startsWith('http')) {
+            window.open(dest, '_blank', 'noopener,noreferrer');
+        } else {
+            window.location.href = dest;
+        }
     }
 }
 

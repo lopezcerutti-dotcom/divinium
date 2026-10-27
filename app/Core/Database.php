@@ -483,6 +483,7 @@ class Database
                     FROM products p 
                     WHERE p.external_url IS NOT NULL 
                       AND p.external_url != '' 
+                      AND (p.parent_sku IS NULL OR p.parent_sku = '' OR p.parent_sku = p.sku)
                       AND p.id NOT IN (SELECT DISTINCT product_id FROM product_links)
                 ");
                 if ($prodsWithoutLinks) {
@@ -524,6 +525,7 @@ class Database
                 $pdo->exec("UPDATE products SET image_url = '/assets/images/products/an-rd-25-capa.jpg' WHERE sku LIKE 'AN-RD-25%' AND (image_url LIKE '%bracelete%' OR image_url LIKE '%an-ov-40%' OR image_url IS NULL OR image_url = '');");
                 $pdo->exec("UPDATE products SET image_url = '/assets/images/products/an-rd-20-capa.jpg' WHERE sku LIKE 'AN-RD-20%' AND (image_url LIKE '%bracelete%' OR image_url IS NULL OR image_url = '');");
                 $pdo->exec("UPDATE products SET image_url = '/assets/images/products/br-sf-06-capa.jpg' WHERE sku LIKE 'BR-SF-06%' AND (image_url LIKE '%bracelete%' OR image_url IS NULL OR image_url = '');");
+                $pdo->exec("DELETE FROM product_links WHERE product_id IN (SELECT id FROM products WHERE parent_sku IS NOT NULL AND parent_sku != '' AND parent_sku != sku);");
             } catch (\Throwable $catCleanEx) {
                 // Silencioso se colunas ou registros já estiverem limpos
             }

@@ -241,18 +241,8 @@ class AdminController
             if (empty($grp['image_url'])) {
                 $grp['image_url'] = $defaultCapaImages[$bSku] ?? '/assets/images/hero/featured-green-shell.jpg';
             }
-            if (empty($grp['links'])) {
-                foreach ($grp['variants'] as $v) {
-                    if (!empty($v['links'])) {
-                        $grp['links'] = $v['links'];
-                        break;
-                    }
-                }
-            }
-            if (empty($grp['links'])) {
-                $extUrl = !empty($grp['parent_product']['external_url']) 
-                    ? $grp['parent_product']['external_url'] 
-                    : ('https://shopee.com.br/search?keyword=' . urlencode('Divinium ' . $grp['name']));
+            if (empty($grp['links']) && !empty($grp['parent_product']['external_url'])) {
+                $extUrl = $grp['parent_product']['external_url'];
                 $grp['links'] = [[
                     'id' => 0,
                     'product_id' => $grp['id'],
@@ -497,11 +487,11 @@ class AdminController
                     if ($u === '') {
                         continue;
                     }
-                    if (!preg_match('#^https?://#i', $u)) {
+                    if (!str_starts_with($u, '/') && !preg_match('#^https?://#i', $u)) {
                         $u = 'https://' . $u;
                     }
-                    // Validar formato de URL
-                    if (!filter_var($u, FILTER_VALIDATE_URL)) {
+                    // Validar formato de URL (permite URLs completas ou caminhos relativos internos como /checkout)
+                    if (!str_starts_with($u, '/') && !filter_var($u, FILTER_VALIDATE_URL)) {
                         continue;
                     }
 
@@ -529,9 +519,12 @@ class AdminController
                         $btnSize = 'md';
                     }
 
-                    $lTarget = trim((string) ($linkItem['target'] ?? '_blank'));
+                    $lTarget = trim((string) ($linkItem['target'] ?? ''));
+                    if ($lTarget === '') {
+                        $lTarget = str_starts_with($u, '/') ? '_self' : '_blank';
+                    }
                     if (!in_array($lTarget, ['_blank', '_self'], true)) {
-                        $lTarget = '_blank';
+                        $lTarget = str_starts_with($u, '/') ? '_self' : '_blank';
                     }
 
                     $lActive = isset($linkItem['is_active']) ? ((int) $linkItem['is_active'] ? 1 : 0) : 1;
@@ -555,7 +548,7 @@ class AdminController
                 }
             }
 
-            // Excluir links anteriores e re-inserir links atualizados com segurança
+            // Excluir links anteriores e re-inserir links atualizados com segurança (exclusivo para o produto pai)
             $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$productId]);
 
             if (!empty($validLinks)) {
@@ -582,51 +575,6 @@ class AdminController
             // Atualizar external_url legado na tabela products para compatibilidade retroativa
             if ($primaryExternalUrl !== '') {
                 $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $productId]);
-            }
-
-            // Compartilhar canais configurados com todas as variações do mesmo grupo autoral
-            $curSku = trim((string)($_POST['sku'] ?? ''));
-            $curParentSku = trim((string)($_POST['parent_sku'] ?? ''));
-            $groupSku = ($curParentSku !== '' && $curParentSku !== $curSku) ? $curParentSku : $curSku;
-            $parts = explode('-', $groupSku);
-            $baseGroupSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $groupSku;
-
-            if ($baseGroupSku !== '') {
-                try {
-                    $varStmt = $this->pdo->prepare("
-                        SELECT id, external_url FROM products 
-                        WHERE id != ? AND (sku = ? OR parent_sku = ? OR sku LIKE ?)
-                    ");
-                    $varStmt->execute([$productId, $baseGroupSku, $baseGroupSku, $baseGroupSku . '-%']);
-                    $siblingVars = $varStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
-
-                    foreach ($siblingVars as $sib) {
-                        $sibId = (int)$sib['id'];
-                        $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$sibId]);
-                        if (!empty($validLinks)) {
-                            foreach ($validLinks as $vl) {
-                                $vlUrl = $vl['url'];
-                                if (!empty($sib['external_url']) && stripos($vl['platform_name'], 'shopee') !== false) {
-                                    $vlUrl = $sib['external_url'];
-                                }
-                                $insLink->execute([
-                                    $sibId,
-                                    $vl['platform_name'],
-                                    $vlUrl,
-                                    $vl['price_cents'],
-                                    $vl['button_text'],
-                                    $vl['button_color'],
-                                    $vl['button_size'],
-                                    $vl['target'],
-                                    $vl['is_active'],
-                                    $vl['sort_order']
-                                ]);
-                            }
-                        }
-                    }
-                } catch (\Throwable $groupEx) {
-                    error_log('Erro ao propagar canais para grupo do produto: ' . $groupEx->getMessage());
-                }
             }
 
             // Processar lista de variações enviadas com o produto principal (cadastro unificado)
@@ -1484,6 +1432,15 @@ class AdminController
             return;
         }
 
+        // Verificar existência do produto pai
+        $parentCheck = $this->pdo->prepare("SELECT id, name FROM products WHERE id = ?");
+        $parentCheck->execute([$productId]);
+        $parentProd = $parentCheck->fetch(\PDO::FETCH_ASSOC);
+        if (!$parentProd) {
+            $this->respond(['success' => false, 'error' => 'Produto principal não encontrado.'], 200);
+            return;
+        }
+
         $rawLinks = $_POST['links'] ?? [];
         if (is_string($rawLinks)) {
             $rawLinks = json_decode($rawLinks, true) ?: [];
@@ -1495,7 +1452,7 @@ class AdminController
             $insStmt = $this->pdo->prepare("
                 INSERT INTO product_links 
                 (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order)
-                VALUES (?, ?, ?, ?, ?, 'default', 'md', '_blank', ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $primaryExternalUrl = '';
@@ -1504,10 +1461,10 @@ class AdminController
                 foreach ($rawLinks as $idx => $link) {
                     $url = trim((string)($link['url'] ?? ''));
                     if ($url === '') continue;
-                    if (!preg_match('#^https?://#i', $url)) {
+                    if (!str_starts_with($url, '/') && !preg_match('#^https?://#i', $url)) {
                         $url = 'https://' . $url;
                     }
-                    if (!filter_var($url, FILTER_VALIDATE_URL)) continue;
+                    if (!str_starts_with($url, '/') && !filter_var($url, FILTER_VALIDATE_URL)) continue;
 
                     $plat = trim((string)($link['platform_name'] ?? 'Shopee'));
                     if ($plat === '') $plat = 'Shopee';
@@ -1523,10 +1480,26 @@ class AdminController
                         $btnText = $plat === 'Shopee' ? 'Comprar na Shopee Oficial' : ('Comprar no ' . $plat);
                     }
 
+                    $btnColor = trim((string)($link['button_color'] ?? 'default'));
+                    if ($btnColor === '') $btnColor = 'default';
+
+                    $btnSize = trim((string)($link['button_size'] ?? 'md'));
+                    if (!in_array($btnSize, ['sm', 'md', 'lg', 'full'], true)) $btnSize = 'md';
+
+                    $target = trim((string)($link['target'] ?? ''));
+                    if ($target === '') {
+                        $target = str_starts_with($url, '/') ? '_self' : '_blank';
+                    }
+                    if (!in_array($target, ['_blank', '_self'], true)) {
+                        $target = str_starts_with($url, '/') ? '_self' : '_blank';
+                    }
+
                     $isActive = isset($link['is_active']) ? ((int)$link['is_active'] ? 1 : 0) : 1;
                     $sort = isset($link['sort_order']) ? (int)$link['sort_order'] : $idx;
 
-                    $insStmt->execute([$productId, $plat, $url, $priceCents, $btnText, $isActive, $sort]);
+                    $insStmt->execute([
+                        $productId, $plat, $url, $priceCents, $btnText, $btnColor, $btnSize, $target, $isActive, $sort
+                    ]);
 
                     if ($primaryExternalUrl === '' && $isActive) {
                         $primaryExternalUrl = $url;
@@ -1540,7 +1513,7 @@ class AdminController
 
             $this->respond([
                 'success' => true,
-                'message' => 'Canais de venda e links compartilhados salvos com sucesso!'
+                'message' => 'Canais de compra do modelo "' . $parentProd['name'] . '" salvos com sucesso!'
             ]);
         } catch (\Throwable $e) {
             $this->respond(['success' => false, 'error' => 'Erro ao salvar canais: ' . $e->getMessage()], 200);
