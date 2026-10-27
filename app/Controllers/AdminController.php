@@ -82,7 +82,7 @@ class AdminController
             SELECT p.*, c.name as category_name 
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id 
-            ORDER BY p.sort_order ASC, p.id DESC
+            ORDER BY p.sort_order ASC, p.id ASC
         ');
         $products = $productsStmt ? $productsStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
 
@@ -102,7 +102,7 @@ class AdminController
                     'product_id' => $p['id'],
                     'platform_name' => 'Shopee',
                     'url' => $p['external_url'],
-                    'price_cents' => $p['price_cents'] ?? 38000,
+                    'price_cents' => $p['price_cents'] ?? 4000,
                     'button_text' => 'Comprar na Shopee Oficial',
                     'button_color' => 'default',
                     'button_size' => 'md',
@@ -112,6 +112,18 @@ class AdminController
             }
         }
         unset($p);
+
+        // Mapas de fallback oficiais para capas dos 8 modelos autorais
+        $defaultCapaImages = [
+            'BRAC-ELO-15' => '/assets/images/products/brac-elo-15-capa.jpg',
+            'AN-RD-25'    => '/assets/images/products/an-rd-25-capa.jpg',
+            'AN-OV-40'    => '/assets/images/products/an-ov-40-capa.jpg',
+            'BRAC-CON-20' => '/assets/images/products/brac-con-20-capa.jpg',
+            'BRAC-CAM-20' => '/assets/images/products/brac-cam-20-capa.jpg',
+            'BR-SF-06'    => '/assets/images/products/br-sf-06-capa.jpg',
+            'AN-RD-20'    => '/assets/images/products/an-rd-20-capa.jpg',
+            'BRAC-CAM-25' => '/assets/images/products/brac-cam-25-capa.jpg',
+        ];
 
         // Agrupar produtos por Modelo Autoral / SKU Base para visualização unificada executiva
         $groups = [];
@@ -125,7 +137,7 @@ class AdminController
                 $baseSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $sku;
             }
 
-            $isParent = ($sku === $baseSku || $parent === '' || $parent === $sku);
+            $isParent = ($sku === $baseSku);
 
             if (!isset($groups[$baseSku])) {
                 $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$p['name']);
@@ -136,14 +148,19 @@ class AdminController
                     'raw_name' => $p['name'],
                     'slug' => $p['slug'] ?? '',
                     'category_id' => $p['category_id'] ?? null,
-                    'category_name' => $p['category_name'] ?? 'Coleção Autoral',
+                    'category_name' => !empty($p['category_name']) ? $p['category_name'] : 'Coleção Autoral',
+                    'price_cents' => (int)($p['price_cents'] ?? 0),
+                    'promotional_price_cents' => !empty($p['promotional_price_cents']) ? (int)$p['promotional_price_cents'] : null,
+                    'stock_quantity' => (int)($p['stock_quantity'] ?? 0),
+                    'stock_status' => $p['stock_status'] ?? 'in_stock',
                     'materials' => $p['materials'] ?? '',
                     'dimensions' => $p['dimensions'] ?? '',
                     'colors' => $p['colors'] ?? '',
                     'variants_json' => $p['variants_json'] ?? '',
+                    'stone_mineral' => $p['stone_mineral'] ?? '',
                     'short_description' => $p['short_description'] ?? '',
                     'description' => $p['description'] ?? '',
-                    'image_url' => $p['image_url'] ?? '',
+                    'image_url' => !empty($p['image_url']) ? $p['image_url'] : ($defaultCapaImages[$baseSku] ?? ''),
                     'status' => $p['status'] ?? (!empty($p['is_active']) ? 'published' : 'hidden'),
                     'sort_order' => $p['sort_order'] ?? 0,
                     'is_featured' => $p['is_featured'] ?? 0,
@@ -177,15 +194,80 @@ class AdminController
                     $cleanName = preg_replace('/\s*-\s*[^-]+$/u', '', (string)$p['name']);
                     $groups[$baseSku]['id'] = $p['id'];
                     $groups[$baseSku]['name'] = !empty($cleanName) ? $cleanName : $p['name'];
-                    $groups[$baseSku]['parent_product'] = $p;
-                    if (!empty($p['image_url'])) {
-                        $groups[$baseSku]['image_url'] = $p['image_url'];
+                    $groups[$baseSku]['raw_name'] = $p['name'];
+                    $groups[$baseSku]['slug'] = $p['slug'] ?? $groups[$baseSku]['slug'];
+                    if (!empty($p['category_id'])) {
+                        $groups[$baseSku]['category_id'] = $p['category_id'];
+                        $groups[$baseSku]['category_name'] = !empty($p['category_name']) ? $p['category_name'] : $groups[$baseSku]['category_name'];
                     }
+                    if ($pPrice > 0) {
+                        $groups[$baseSku]['price_cents'] = $pPrice;
+                    }
+                    if (!empty($p['promotional_price_cents'])) {
+                        $groups[$baseSku]['promotional_price_cents'] = (int)$p['promotional_price_cents'];
+                    }
+                    if (!empty($p['materials'])) $groups[$baseSku]['materials'] = $p['materials'];
+                    if (!empty($p['dimensions'])) $groups[$baseSku]['dimensions'] = $p['dimensions'];
+                    if (!empty($p['colors'])) $groups[$baseSku]['colors'] = $p['colors'];
+                    if (!empty($p['variants_json'])) $groups[$baseSku]['variants_json'] = $p['variants_json'];
+                    if (!empty($p['stone_mineral'])) $groups[$baseSku]['stone_mineral'] = $p['stone_mineral'];
+                    if (!empty($p['short_description'])) $groups[$baseSku]['short_description'] = $p['short_description'];
+                    if (!empty($p['description'])) $groups[$baseSku]['description'] = $p['description'];
+                    if (!empty($p['image_url'])) $groups[$baseSku]['image_url'] = $p['image_url'];
+                    if (!empty($p['links'])) $groups[$baseSku]['links'] = $p['links'];
+                    $groups[$baseSku]['status'] = $p['status'] ?? $groups[$baseSku]['status'];
+                    $groups[$baseSku]['sort_order'] = $p['sort_order'] ?? $groups[$baseSku]['sort_order'];
+                    $groups[$baseSku]['is_featured'] = $p['is_featured'] ?? $groups[$baseSku]['is_featured'];
+                    $groups[$baseSku]['show_badge'] = $p['show_badge'] ?? $groups[$baseSku]['show_badge'];
+                    $groups[$baseSku]['show_sku'] = $p['show_sku'] ?? $groups[$baseSku]['show_sku'];
+                    $groups[$baseSku]['show_specs'] = $p['show_specs'] ?? $groups[$baseSku]['show_specs'];
+                    $groups[$baseSku]['show_description'] = $p['show_description'] ?? $groups[$baseSku]['show_description'];
+                    $groups[$baseSku]['show_channels'] = $p['show_channels'] ?? $groups[$baseSku]['show_channels'];
+                    $groups[$baseSku]['card_click_behavior'] = $p['card_click_behavior'] ?? $groups[$baseSku]['card_click_behavior'];
+                    $groups[$baseSku]['custom_target_url'] = $p['custom_target_url'] ?? $groups[$baseSku]['custom_target_url'];
+                    $groups[$baseSku]['detail_layout'] = $p['detail_layout'] ?? $groups[$baseSku]['detail_layout'];
+                    $groups[$baseSku]['parent_product'] = $p;
                 }
             }
 
             $groups[$baseSku]['variants'][] = $p;
         }
+
+        // Pós-processamento dos grupos: assegurar links, preços e capa padrão
+        foreach ($groups as $bSku => &$grp) {
+            if ($grp['price_cents'] <= 0 && $grp['min_price_cents'] > 0) {
+                $grp['price_cents'] = $grp['min_price_cents'];
+            }
+            if (empty($grp['image_url'])) {
+                $grp['image_url'] = $defaultCapaImages[$bSku] ?? '/assets/images/hero/featured-green-shell.jpg';
+            }
+            if (empty($grp['links'])) {
+                foreach ($grp['variants'] as $v) {
+                    if (!empty($v['links'])) {
+                        $grp['links'] = $v['links'];
+                        break;
+                    }
+                }
+            }
+            if (empty($grp['links'])) {
+                $extUrl = !empty($grp['parent_product']['external_url']) 
+                    ? $grp['parent_product']['external_url'] 
+                    : ('https://shopee.com.br/search?keyword=' . urlencode('Divinium ' . $grp['name']));
+                $grp['links'] = [[
+                    'id' => 0,
+                    'product_id' => $grp['id'],
+                    'platform_name' => 'Shopee',
+                    'url' => $extUrl,
+                    'price_cents' => $grp['price_cents'] ?: 4000,
+                    'button_text' => 'Comprar na Shopee Oficial',
+                    'button_color' => 'default',
+                    'button_size' => 'md',
+                    'is_active' => 1,
+                    'sort_order' => 0
+                ]];
+            }
+        }
+        unset($grp);
 
         $categories = $this->pdo->query('SELECT * FROM categories ORDER BY sort_order ASC, name ASC')->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -228,19 +310,26 @@ class AdminController
         if ($priceCents <= 0 && !empty($_POST['price_cents'])) {
             $priceCents = (int) $_POST['price_cents'];
         }
+        if ($priceCents <= 0 && $id) {
+            $curP = $this->pdo->prepare('SELECT price_cents FROM products WHERE id = ?');
+            $curP->execute([$id]);
+            $priceCents = (int) $curP->fetchColumn();
+        }
 
         $promotionalPrice = !empty($_POST['promotional_price']) 
             ? (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string) $_POST['promotional_price']) 
             : 0;
-        $promotionalPriceCents = $promotionalPrice > 0 ? (int) round($promotionalPrice * 100) : (int) round($priceCents * 0.95);
+        $promotionalPriceCents = $promotionalPrice > 0 ? (int) round($promotionalPrice * 100) : null;
 
-        $stock = isset($_POST['stock_quantity']) ? (int) $_POST['stock_quantity'] : 10;
+        $stock = isset($_POST['stock_quantity']) && $_POST['stock_quantity'] !== '' ? (int) $_POST['stock_quantity'] : 10;
         $stockStatus = trim((string) ($_POST['stock_status'] ?? 'in_stock'));
         $shortDescription = trim((string) ($_POST['short_description'] ?? ''));
         $description = trim((string) ($_POST['description'] ?? ''));
         $imageUrl = trim((string) ($_POST['image_url'] ?? ''));
         $sortOrder = isset($_POST['sort_order']) ? (int) $_POST['sort_order'] : 0;
         $isFeatured = !empty($_POST['is_featured']) ? 1 : 0;
+
+        $parentSku = trim((string) ($_POST['parent_sku'] ?? ''));
 
         $status = trim((string) ($_POST['status'] ?? 'published'));
         if (!in_array($status, ['published', 'draft', 'hidden'], true)) {
@@ -264,6 +353,9 @@ class AdminController
         }
 
         $sku = !empty($_POST['sku']) ? trim($_POST['sku']) : 'DIV-' . strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $slug), 0, 8)) . '-' . rand(10, 99);
+        if ($parentSku === $sku) {
+            $parentSku = null;
+        }
 
         // Upload de imagem caso enviado arquivo
         if (!empty($_FILES['image_file']['tmp_name']) && is_uploaded_file($_FILES['image_file']['tmp_name'])) {
@@ -281,8 +373,27 @@ class AdminController
             }
         }
 
+        // Preservar imagem existente caso não tenha sido enviada nova
+        if ($imageUrl === '' && $id) {
+            $curImg = $this->pdo->prepare('SELECT image_url FROM products WHERE id = ?');
+            $curImg->execute([$id]);
+            $imageUrl = (string) $curImg->fetchColumn();
+        }
         if ($imageUrl === '') {
             $imageUrl = '/assets/images/hero/featured-green-shell.jpg';
+        }
+
+        // Preservar gema mineral existente caso não enviada
+        if ($stoneMineral === '' && !empty($_POST['variants_data'])) {
+            $rawVarsForStone = is_string($_POST['variants_data']) ? json_decode($_POST['variants_data'], true) : $_POST['variants_data'];
+            if (is_array($rawVarsForStone) && !empty($rawVarsForStone[0]['stone_mineral'])) {
+                $stoneMineral = trim((string)$rawVarsForStone[0]['stone_mineral']);
+            }
+        }
+        if ($stoneMineral === '' && $id) {
+            $curSt = $this->pdo->prepare('SELECT stone_mineral FROM products WHERE id = ?');
+            $curSt->execute([$id]);
+            $stoneMineral = (string) $curSt->fetchColumn();
         }
 
         $showBadge = isset($_POST['show_badge']) ? ((int) $_POST['show_badge'] ? 1 : 0) : 1;
@@ -327,7 +438,7 @@ class AdminController
             if ($id !== null && $id > 0) {
                 $stmt = $this->pdo->prepare('
                     UPDATE products SET 
-                        name = ?, slug = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
+                        parent_sku = ?, name = ?, slug = ?, category_id = ?, stone_mineral = ?, materials = ?, dimensions = ?, 
                         colors = ?, variants_json = ?, price_cents = ?, promotional_price_cents = ?, 
                         stock_quantity = ?, stock_status = ?, status = ?, sort_order = ?, 
                         short_description = ?, description = ?, image_url = ?, show_badge = ?, 
@@ -336,7 +447,7 @@ class AdminController
                     WHERE id = ?
                 ');
                 $stmt->execute([
-                    $name, $slug, $categoryId, $stoneMineral, $materials, $dimensions, 
+                    $parentSku, $name, $slug, $categoryId, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, 
                     $stock, $stockStatus, $status, $sortOrder, 
                     $shortDescription, $description, $imageUrl, $showBadge, 
@@ -348,13 +459,13 @@ class AdminController
                 $uuid = 'prod-' . uniqid();
                 $stmt = $this->pdo->prepare('
                     INSERT INTO products (
-                        uuid, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
+                        uuid, parent_sku, category_id, name, slug, sku, stone_mineral, materials, dimensions, 
                         colors, variants_json, price_cents, promotional_price_cents, stock_quantity, 
                         stock_status, status, sort_order, short_description, description, image_url, 
                         show_badge, show_sku, show_specs, show_description, card_click_behavior, custom_target_url,
                         detail_layout, show_channels, is_active, is_featured
                     ) VALUES (
-                        ?, ?, ?, ?, ?, ?, ?, ?, 
+                        ?, ?, ?, ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?, 
                         ?, ?, ?, ?, ?, ?,
@@ -362,7 +473,7 @@ class AdminController
                     )
                 ');
                 $stmt->execute([
-                    $uuid, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
+                    $uuid, $parentSku, $categoryId, $name, $slug, $sku, $stoneMineral, $materials, $dimensions, 
                     $colors, $variantsJson, $priceCents, $promotionalPriceCents, $stock, 
                     $stockStatus, $status, $sortOrder, $shortDescription, $description, $imageUrl, 
                     $showBadge, $showSku, $showSpecs, $showDescription, $cardClickBehavior, $customTargetUrl,
@@ -531,10 +642,13 @@ class AdminController
                         $vExtUrl = trim((string)($vItem['external_url'] ?? ''));
 
                         $vPrice = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string)($vItem['price'] ?? '0'));
-                        $vPriceCents = $vPrice > 0 ? (int)round($vPrice * 100) : $priceCents;
+                        $vPriceCents = $vPrice > 0 ? (int)round($vPrice * 100) : 0;
+                        if ($vPriceCents <= 0 && !empty($vItem['price_cents'])) {
+                            $vPriceCents = (int)$vItem['price_cents'];
+                        }
 
                         $vPromo = (float) str_replace(['R$', ' ', '.', ','], ['', '', '', '.'], (string)($vItem['promotional_price'] ?? '0'));
-                        $vPromoCents = $vPromo > 0 ? (int)round($vPromo * 100) : $promotionalPriceCents;
+                        $vPromoCents = $vPromo > 0 ? (int)round($vPromo * 100) : null;
 
                         $vStock = isset($vItem['stock_quantity']) ? (int)$vItem['stock_quantity'] : $stock;
                         $vStockStatus = trim((string)($vItem['stock_status'] ?? $stockStatus));
@@ -545,6 +659,28 @@ class AdminController
                         if ($vSku === '') {
                             $vSuffix = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $vStone), 0, 3));
                             $vSku = $sku . ($vSuffix !== '' ? '-' . $vSuffix : '-' . rand(10, 99));
+                        }
+
+                        // Preservar valores existentes se for atualização de variação
+                        if ($vId !== null && $vId > 0 && $vId !== $productId) {
+                            $curVar = $this->pdo->prepare('SELECT price_cents, image_url, stone_mineral FROM products WHERE id = ?');
+                            $curVar->execute([$vId]);
+                            $existingVar = $curVar->fetch(\PDO::FETCH_ASSOC);
+                            if ($existingVar) {
+                                if ($vPriceCents <= 0) {
+                                    $vPriceCents = (int)$existingVar['price_cents'] > 0 ? (int)$existingVar['price_cents'] : $priceCents;
+                                }
+                                if ($vImg === '') {
+                                    $vImg = !empty($existingVar['image_url']) ? $existingVar['image_url'] : $imageUrl;
+                                }
+                                if ($vStone === '') {
+                                    $vStone = (string)$existingVar['stone_mineral'];
+                                }
+                            }
+                        }
+
+                        if ($vPriceCents <= 0) {
+                            $vPriceCents = $priceCents;
                         }
                         if ($vImg === '') {
                             $vImg = $imageUrl;
@@ -640,6 +776,26 @@ class AdminController
         $imageUrl = trim((string)($_POST['image_url'] ?? ''));
         $externalUrl = trim((string)($_POST['external_url'] ?? ''));
 
+        // Preservar valores existentes caso não enviados pelo drawer
+        $curStmt = $this->pdo->prepare('SELECT price_cents, image_url, sku, stone_mineral FROM products WHERE id = ?');
+        $curStmt->execute([$id]);
+        $existing = $curStmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($existing) {
+            if ($priceCents <= 0) {
+                $priceCents = (int)$existing['price_cents'];
+            }
+            if ($imageUrl === '') {
+                $imageUrl = (string)$existing['image_url'];
+            }
+            if ($sku === '') {
+                $sku = (string)$existing['sku'];
+            }
+            if ($stoneMineral === '') {
+                $stoneMineral = (string)$existing['stone_mineral'];
+            }
+        }
+
         try {
             $stmt = $this->pdo->prepare('
                 UPDATE products SET 
@@ -651,6 +807,18 @@ class AdminController
                 $stoneMineral, $sku, $stock, $stockStatus, 
                 $priceCents, $imageUrl, $externalUrl, $id
             ]);
+
+            // Se informado link de canal (Shopee / marketplace), atualizar ou criar em product_links
+            if (!empty($externalUrl)) {
+                $chkLink = $this->pdo->prepare("SELECT id FROM product_links WHERE product_id = ? AND platform_name = 'Shopee' LIMIT 1");
+                $chkLink->execute([$id]);
+                $existLinkId = $chkLink->fetchColumn();
+                if ($existLinkId) {
+                    $this->pdo->prepare("UPDATE product_links SET url = ?, price_cents = ? WHERE id = ?")->execute([$externalUrl, $priceCents, $existLinkId]);
+                } else {
+                    $this->pdo->prepare("INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) VALUES (?, 'Shopee', ?, ?, 'Comprar na Shopee Oficial', 'default', 'md', '_blank', 1, 0)")->execute([$id, $externalUrl, $priceCents]);
+                }
+            }
 
             $this->respond([
                 'success' => true,

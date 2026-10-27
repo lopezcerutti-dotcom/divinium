@@ -335,6 +335,7 @@ class Database
                 'custom_target_url' => 'VARCHAR(500) NULL',
                 'detail_layout' => "VARCHAR(50) NOT NULL DEFAULT 'default'",
                 'show_channels' => 'INTEGER NOT NULL DEFAULT 1',
+                'show_sku' => 'INTEGER NOT NULL DEFAULT 1',
                 'parent_sku' => 'VARCHAR(60) NULL',
             ];
 
@@ -369,7 +370,7 @@ class Database
                 }
             }
 
-            // Sincronizar parent_sku e image_url a partir do catálogo oficial verificado
+            // Sincronizar parent_sku, image_url, stone_mineral e preços preservando dados existentes
             try {
                 $seedFile = dirname(__DIR__, 2) . '/database/seed_products.json';
                 if (file_exists($seedFile)) {
@@ -377,29 +378,40 @@ class Database
                     $seedData = json_decode((string)$jsonContent, true);
                     if (is_array($seedData) && !empty($seedData)) {
                         $items = isset($seedData['value']) && is_array($seedData['value']) ? $seedData['value'] : $seedData;
-                        $upStmt = $pdo->prepare("UPDATE products SET parent_sku = :parent_sku, image_url = :image_url, stone_mineral = :stone_mineral WHERE sku = :sku");
+                        $upStmt = $pdo->prepare("
+                            UPDATE products 
+                            SET parent_sku = COALESCE(NULLIF(parent_sku, ''), :parent_sku), 
+                                image_url = CASE WHEN (image_url IS NULL OR image_url = '' OR image_url LIKE '%featured-green-shell%') THEN :image_url ELSE image_url END, 
+                                stone_mineral = COALESCE(NULLIF(stone_mineral, ''), :stone_mineral),
+                                price_cents = CASE WHEN (price_cents IS NULL OR price_cents = 0) THEN :price_cents ELSE price_cents END
+                            WHERE sku = :sku
+                        ");
                         foreach ($items as $sp) {
                             $spSku = trim((string)($sp['sku'] ?? ''));
                             $spParent = trim((string)($sp['parent_sku'] ?? ''));
                             $spImg = trim((string)($sp['image_url'] ?? ''));
                             $spStone = trim((string)($sp['stone_mineral'] ?? ''));
+                            $spPrice = isset($sp['price_cents']) ? (int)$sp['price_cents'] : 0;
                             if ($spSku !== '') {
                                 $upStmt->execute([
                                     ':parent_sku'    => ($spParent !== '' && $spParent !== $spSku) ? $spParent : null,
                                     ':image_url'     => $spImg,
                                     ':stone_mineral' => $spStone !== '' ? $spStone : null,
+                                    ':price_cents'   => $spPrice,
                                     ':sku'           => $spSku,
                                 ]);
                             }
                         }
                     }
                     // Garantir parent_sku para variações com sufixo (ex: BRAC-CAM-20-AMT -> parent_sku = BRAC-CAM-20)
-                    $pdo->exec("
-                        UPDATE products 
-                        SET parent_sku = SUBSTRING_INDEX(sku, '-', 3) 
-                        WHERE (parent_sku IS NULL OR TRIM(parent_sku) = '' OR TRIM(parent_sku) = TRIM(sku)) 
-                          AND LENGTH(sku) - LENGTH(REPLACE(sku, '-', '')) >= 3
-                    ");
+                    if ($driver === 'mysql') {
+                        $pdo->exec("
+                            UPDATE products 
+                            SET parent_sku = SUBSTRING_INDEX(sku, '-', 3) 
+                            WHERE (parent_sku IS NULL OR TRIM(parent_sku) = '' OR TRIM(parent_sku) = TRIM(sku)) 
+                              AND LENGTH(sku) - LENGTH(REPLACE(sku, '-', '')) >= 3
+                        ");
+                    }
                     $pdo->exec("UPDATE products SET sku = TRIM(sku), parent_sku = TRIM(parent_sku)");
                 }
             } catch (\Throwable $syncEx) {

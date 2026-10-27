@@ -911,7 +911,7 @@ $settings = $settings ?? [];
             </button>
         </div>
 
-        <form id="productForm" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding-right: 6px; flex: 1;">
+        <form id="productForm" enctype="multipart/form-data" onsubmit="handleProductSubmit(event)" style="overflow-y: auto; padding-right: 6px; flex: 1;">
             <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
             <input type="hidden" name="id" id="prodId" value="">
             <input type="hidden" name="parent_sku" id="prodParentSku" value="">
@@ -957,28 +957,84 @@ $settings = $settings ?? [];
                     </div>
                 </div>
 
+                <!-- PREÇOS & ESTOQUE DO MODELO -->
                 <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodPrice">Preço Base de Venda Oficial (R$) *</label>
+                        <input type="text" id="prodPrice" name="price" class="form-input" required placeholder="Ex: 40,00" onkeyup="formatCurrencyLive(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodPromotionalPrice">Preço Promocional / Comparativo (R$)</label>
+                        <input type="text" id="prodPromotionalPrice" name="promotional_price" class="form-input" placeholder="Opcional (Ex: 35,00)" onkeyup="formatCurrencyLive(this)">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodMineral">Gema Mineral Base / Principal</label>
+                        <input type="text" id="prodMineral" name="stone_mineral" class="form-input" placeholder="Ex: Concha Verde Esmeralda">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prodStockQuantity">Estoque Físico do Modelo</label>
+                        <input type="number" id="prodStockQuantity" name="stock_quantity" class="form-input" min="0" value="10">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="prodStockStatus">Disponibilidade do Estoque</label>
+                        <select id="prodStockStatus" name="stock_status" class="form-select">
+                            <option value="in_stock">Pronta Entrega</option>
+                            <option value="made_to_order">Sob Encomenda</option>
+                            <option value="out_of_stock">Esgotado</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="prodSortOrder">Ordem de Exibição na Loja</label>
                         <input type="number" id="prodSortOrder" name="sort_order" class="form-input" value="0" placeholder="0">
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Status na Boutique</label>
-                        <div class="status-radio-group">
-                            <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusPublished" value="published" checked>
-                                <span style="color: #FFFFFF;">● Publicado</span>
-                            </label>
-                            <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusDraft" value="draft">
-                                <span style="color: #facc15;">● Rascunho</span>
-                            </label>
-                            <label class="status-radio-label">
-                                <input type="radio" name="status" id="statusHidden" value="hidden">
-                                <span style="color: #9ca3af;">● Oculto</span>
-                            </label>
+                <!-- FOTO PRINCIPAL (CAPA DO MODELO) -->
+                <div class="form-group" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); padding: 14px 16px; border-radius: 8px;">
+                    <label style="color: #ded7cf; font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.84rem;">
+                        Foto Principal da Joia (Capa do Modelo)
+                    </label>
+                    <div style="display: flex; gap: 14px; align-items: flex-start;">
+                        <img id="imagePreviewBox" src="/assets/images/hero/featured-green-shell.jpg" alt="Preview" 
+                             style="width: 74px; height: 74px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(212,186,136,0.3); background: #121212; flex-shrink: 0;"
+                             onerror="this.src='/assets/images/hero/featured-green-shell.jpg'">
+                        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                            <input type="text" id="prodImageUrl" name="image_url" class="form-input" placeholder="/assets/images/products/... ou URL externa" oninput="updateImagePreview(this.value)">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label class="btn-admin-secondary" style="margin: 0; padding: 6px 14px; font-size: 0.78rem; cursor: pointer;">
+                                    <span>📁 Fazer Upload de Imagem</span>
+                                    <input type="file" id="prodImageFile" name="image_file" accept="image/*" style="display: none;" onchange="handleImageFileUpload(this)">
+                                </label>
+                                <span id="imageFileName" style="font-size: 0.75rem; color: #8e8880;">Nenhum arquivo selecionado</span>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status na Boutique</label>
+                    <div class="status-radio-group">
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusPublished" value="published" checked>
+                            <span style="color: #FFFFFF;">● Publicado</span>
+                        </label>
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusDraft" value="draft">
+                            <span style="color: #facc15;">● Rascunho</span>
+                        </label>
+                        <label class="status-radio-label">
+                            <input type="radio" name="status" id="statusHidden" value="hidden">
+                            <span style="color: #9ca3af;">● Oculto</span>
+                        </label>
                     </div>
                 </div>
 
@@ -1401,6 +1457,26 @@ function switchProductTab(tab) {
     if (pane) pane.classList.add('active');
 }
 
+function updateImagePreview(url) {
+    const box = document.getElementById('imagePreviewBox');
+    if (box) {
+        box.src = url || '/assets/images/hero/featured-green-shell.jpg';
+    }
+}
+
+function handleImageFileUpload(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const label = document.getElementById('imageFileName');
+        if (label) label.innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            updateImagePreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 function openNewProductModal(e) {
     if (e) e.preventDefault();
     document.getElementById('productForm').reset();
@@ -1408,6 +1484,16 @@ function openNewProductModal(e) {
     document.getElementById('prodParentSku').value = '';
     document.getElementById('prodDeletedVariantIds').value = '';
     deletedVariantIds = [];
+
+    document.getElementById('prodPrice').value = '40,00';
+    document.getElementById('prodPromotionalPrice').value = '';
+    document.getElementById('prodMineral').value = '';
+    document.getElementById('prodStockQuantity').value = '10';
+    document.getElementById('prodStockStatus').value = 'in_stock';
+    document.getElementById('prodImageUrl').value = '';
+    updateImagePreview('/assets/images/hero/featured-green-shell.jpg');
+    const fileLabel = document.getElementById('imageFileName');
+    if (fileLabel) fileLabel.innerText = 'Nenhum arquivo selecionado';
 
     document.getElementById('statusPublished').checked = true;
     document.getElementById('prodFeatured').checked = false;
@@ -1417,12 +1503,33 @@ function openNewProductModal(e) {
     document.getElementById('prodShowDescription').checked = true;
     document.getElementById('prodShowChannels').checked = true;
 
-    currentProductLinks = [];
+    if (document.getElementById('prodCardBehavior')) {
+        document.getElementById('prodCardBehavior').value = 'default';
+        toggleCustomUrlGroup('default');
+    }
+    if (document.getElementById('prodCustomTargetUrl')) {
+        document.getElementById('prodCustomTargetUrl').value = '';
+    }
+    if (document.getElementById('prodDetailLayout')) {
+        document.getElementById('prodDetailLayout').value = 'default';
+    }
+
+    currentProductLinks = [{
+        platform_name: 'Shopee',
+        url: '',
+        price: '40,00',
+        button_text: 'Comprar na Shopee Oficial',
+        button_color: 'default',
+        button_size: 'md',
+        target: '_blank',
+        is_active: 1,
+        sort_order: 0
+    }];
     currentProductVariants = [{
         id: 0,
         sku: '',
         stone_mineral: 'Gema Mineral Autoral',
-        price: '380,00',
+        price: '40,00',
         promotional_price: '',
         stock_quantity: 10,
         stock_status: 'in_stock',
@@ -1448,6 +1555,23 @@ function editGroupProduct(group) {
     document.getElementById('prodSlug').value = group.slug || '';
     document.getElementById('prodSku').value = group.base_sku || '';
     document.getElementById('prodCategory').value = group.category_id || '';
+
+    // Preços & Estoque
+    const basePriceFormatted = group.price_cents ? (group.price_cents / 100).toFixed(2).replace('.', ',') : (group.min_price_cents ? (group.min_price_cents / 100).toFixed(2).replace('.', ',') : '40,00');
+    document.getElementById('prodPrice').value = basePriceFormatted;
+    document.getElementById('prodPromotionalPrice').value = group.promotional_price_cents ? (group.promotional_price_cents / 100).toFixed(2).replace('.', ',') : '';
+    document.getElementById('prodMineral').value = group.stone_mineral || '';
+    document.getElementById('prodStockQuantity').value = group.stock_quantity !== undefined ? group.stock_quantity : (group.total_stock !== undefined ? group.total_stock : 10);
+    document.getElementById('prodStockStatus').value = group.stock_status || 'in_stock';
+
+    // Imagem da Capa
+    const imgUrl = group.image_url || '/assets/images/hero/featured-green-shell.jpg';
+    document.getElementById('prodImageUrl').value = group.image_url || '';
+    updateImagePreview(imgUrl);
+    const fileLabel = document.getElementById('imageFileName');
+    if (fileLabel) fileLabel.innerText = 'Nenhum arquivo selecionado';
+
+    // Ficha Técnica & Descrição
     document.getElementById('prodMaterials').value = group.materials || '';
     document.getElementById('prodDimensions').value = group.dimensions || '';
     document.getElementById('prodColors').value = group.colors || '';
@@ -1468,11 +1592,23 @@ function editGroupProduct(group) {
     document.getElementById('prodShowDescription').checked = group.show_description != 0;
     document.getElementById('prodShowChannels').checked = group.show_channels != 0;
 
+    // Exibição Pública
+    if (document.getElementById('prodCardBehavior')) {
+        document.getElementById('prodCardBehavior').value = group.card_click_behavior || 'default';
+        toggleCustomUrlGroup(group.card_click_behavior || 'default');
+    }
+    if (document.getElementById('prodCustomTargetUrl')) {
+        document.getElementById('prodCustomTargetUrl').value = group.custom_target_url || '';
+    }
+    if (document.getElementById('prodDetailLayout')) {
+        document.getElementById('prodDetailLayout').value = group.detail_layout || 'default';
+    }
+
     // Canais do Grupo
     currentProductLinks = (group.links || []).map(l => ({
         platform_name: l.platform_name || 'Shopee',
         url: l.url || '',
-        price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : basePriceFormatted,
         button_text: l.button_text || '',
         button_color: l.button_color || 'default',
         button_size: l.button_size || 'md',
@@ -1486,7 +1622,7 @@ function editGroupProduct(group) {
         id: v.id || 0,
         sku: v.sku || '',
         stone_mineral: v.stone_mineral || '',
-        price: v.price_cents ? ((v.price_cents) / 100).toFixed(2).replace('.', ',') : '380,00',
+        price: v.price_cents ? ((v.price_cents) / 100).toFixed(2).replace('.', ',') : basePriceFormatted,
         promotional_price: v.promotional_price_cents ? ((v.promotional_price_cents) / 100).toFixed(2).replace('.', ',') : '',
         stock_quantity: v.stock_quantity !== undefined ? v.stock_quantity : 10,
         stock_status: v.stock_status || 'in_stock',
@@ -1498,8 +1634,8 @@ function editGroupProduct(group) {
         currentProductVariants = [{
             id: group.id || 0,
             sku: group.base_sku || '',
-            stone_mineral: 'Gema Mineral Base',
-            price: '380,00',
+            stone_mineral: group.stone_mineral || 'Gema Mineral Base',
+            price: basePriceFormatted,
             promotional_price: '',
             stock_quantity: group.total_stock || 10,
             stock_status: 'in_stock',
@@ -1513,6 +1649,63 @@ function editGroupProduct(group) {
     switchProductTab('general');
     document.getElementById('productModalTitle').innerText = 'Editar: ' + group.name;
     document.getElementById('productModal').classList.add('active');
+}
+
+function editProduct(p) {
+    if (!p) return;
+    if (p.base_sku && p.variants) {
+        editGroupProduct(p);
+        return;
+    }
+    const pSku = p.sku || '';
+    const parentSku = p.parent_sku || '';
+    let targetBase = parentSku;
+    if (!targetBase) {
+        const parts = pSku.split('-');
+        targetBase = parts.length >= 3 ? parts.slice(0, 3).join('-') : pSku;
+    }
+    const groupRow = document.getElementById('group-row-' + targetBase);
+    if (groupRow) {
+        const editBtn = groupRow.querySelector('button[title*="Editar"]');
+        if (editBtn) {
+            editBtn.click();
+            return;
+        }
+    }
+    editGroupProduct({
+        id: p.id,
+        base_sku: targetBase || p.sku,
+        name: p.name,
+        slug: p.slug,
+        category_id: p.category_id,
+        category_name: p.category_name,
+        price_cents: p.price_cents,
+        promotional_price_cents: p.promotional_price_cents,
+        stock_quantity: p.stock_quantity,
+        stock_status: p.stock_status,
+        materials: p.materials,
+        dimensions: p.dimensions,
+        colors: p.colors,
+        variants_json: p.variants_json,
+        stone_mineral: p.stone_mineral,
+        short_description: p.short_description,
+        description: p.description,
+        image_url: p.image_url,
+        status: p.status,
+        sort_order: p.sort_order,
+        is_featured: p.is_featured,
+        show_badge: p.show_badge,
+        show_sku: p.show_sku,
+        show_specs: p.show_specs,
+        show_description: p.show_description,
+        show_channels: p.show_channels,
+        card_click_behavior: p.card_click_behavior,
+        custom_target_url: p.custom_target_url,
+        detail_layout: p.detail_layout,
+        links: p.links || [],
+        total_stock: p.stock_quantity || 0,
+        variants: [p]
+    });
 }
 
 function addNewVariantToGroup(group) {
@@ -1604,15 +1797,17 @@ function renderModalVariants() {
 function addModalVariantRow() {
     const baseSku = document.getElementById('prodSku')?.value || 'DIV-NOVA';
     const nextNum = currentProductVariants.length + 1;
+    const defaultPrice = document.getElementById('prodPrice')?.value || '40,00';
+    const defaultImg = document.getElementById('prodImageUrl')?.value || '/assets/images/hero/featured-green-shell.jpg';
     currentProductVariants.push({
         id: 0,
         sku: baseSku + '-VAR' + nextNum,
         stone_mineral: '',
-        price: '380,00',
+        price: defaultPrice,
         promotional_price: '',
         stock_quantity: 10,
         stock_status: 'in_stock',
-        image_url: '/assets/images/hero/featured-green-shell.jpg',
+        image_url: defaultImg,
         external_url: ''
     });
     renderModalVariants();
@@ -1732,10 +1927,11 @@ function renderPlatformLinks() {
 }
 
 function addNewPlatformLink() {
+    const defaultPrice = document.getElementById('prodPrice')?.value || '40,00';
     currentProductLinks.push({
         platform_name: 'Shopee',
         url: '',
-        price: '380,00',
+        price: defaultPrice,
         button_text: 'Comprar na Shopee Oficial',
         button_color: 'default',
         button_size: 'md',
