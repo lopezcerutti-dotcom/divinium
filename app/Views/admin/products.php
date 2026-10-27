@@ -121,6 +121,38 @@ $settings = $settings ?? [];
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* Barra de Rolagem Horizontal Superior Sincronizada */
+.table-scroll-top-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.table-scroll-top-track {
+    height: 1px;
+}
+.table-scroll-top-wrapper::-webkit-scrollbar,
+.table-scroll-container::-webkit-scrollbar {
+    height: 10px;
+    width: 8px;
+}
+.table-scroll-top-wrapper::-webkit-scrollbar-track,
+.table-scroll-container::-webkit-scrollbar-track {
+    background: #141312;
+}
+.table-scroll-top-wrapper::-webkit-scrollbar-thumb,
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(167, 173, 180, 0.45);
+    border-radius: 6px;
+    border: 2px solid #141312;
+}
+.table-scroll-top-wrapper::-webkit-scrollbar-thumb:hover,
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 186, 136, 0.85);
+}
+
 /* Botão de Expandir Gaveta de Variações */
 .btn-drawer-toggle {
     background: rgba(255, 255, 255, 0.05);
@@ -461,6 +493,11 @@ $settings = $settings ?? [];
                 </div>
                 <div class="pagination-nav" id="paginationNavTop"></div>
             </div>
+        </div>
+
+        <!-- BARRA DE ROLAGEM HORIZONTAL SUPERIOR SINCRONIZADA -->
+        <div class="table-scroll-top-wrapper" id="catalogScrollTopWrapper">
+            <div class="table-scroll-top-track" id="catalogScrollTopTrack"></div>
         </div>
 
         <!-- CONTAINER DA TABELA -->
@@ -1401,6 +1438,10 @@ function switchMainTab(tab) {
     if (targetBtn) targetBtn.classList.add('active');
     if (targetPane) targetPane.classList.add('active');
 
+    if (tab === 'catalogo') {
+        setTimeout(updateScrollbarSync, 60);
+    }
+
     // Atualiza a URL sem recarregar
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tab);
@@ -1420,6 +1461,7 @@ function toggleVariationsDrawer(groupSku) {
         row.classList.add('is-expanded');
         drawer.classList.add('active');
     }
+    setTimeout(updateScrollbarSync, 60);
 }
 
 async function saveQuickVariant(variantId) {
@@ -2071,6 +2113,7 @@ function renderPagination(totalMatched) {
         : 'Nenhum modelo encontrado';
 
     document.querySelectorAll('.pagination-info').forEach(el => el.innerText = infoText);
+    updateScrollbarSync();
 }
 
 function changeItemsPerPage(val) {
@@ -2237,8 +2280,50 @@ async function handleBlingConfigSubmit(e) {
     }
 }
 
+/* ==============================================================================
+   SINCRONIZAÇÃO DE ROLAGEM HORIZONTAL SUPERIOR & INFERIOR (DUPLA BARRA)
+   ============================================================================== */
+function updateScrollbarSync() {
+    const topTrack = document.getElementById('catalogScrollTopTrack');
+    const table = document.getElementById('productsTable');
+    if (topTrack && table) {
+        topTrack.style.width = table.scrollWidth + 'px';
+    }
+}
+
+function initTableScrollSync() {
+    const topWrapper = document.getElementById('catalogScrollTopWrapper');
+    const bottomWrapper = document.getElementById('catalogTableScrollContainer');
+    const table = document.getElementById('productsTable');
+    if (!topWrapper || !bottomWrapper || !table) return;
+
+    updateScrollbarSync();
+
+    let isSyncingTop = false;
+    let isSyncingBottom = false;
+
+    topWrapper.addEventListener('scroll', () => {
+        if (!isSyncingTop) {
+            isSyncingBottom = true;
+            bottomWrapper.scrollLeft = topWrapper.scrollLeft;
+        }
+        isSyncingTop = false;
+    });
+
+    bottomWrapper.addEventListener('scroll', () => {
+        if (!isSyncingBottom) {
+            isSyncingTop = true;
+            topWrapper.scrollLeft = bottomWrapper.scrollLeft;
+        }
+        isSyncingBottom = false;
+    });
+
+    window.addEventListener('resize', updateScrollbarSync);
+}
+
 // Inicialização com suporte a tabs e hash
 document.addEventListener('DOMContentLoaded', () => {
+    initTableScrollSync();
     filterCatalog();
 
     const urlParams = new URLSearchParams(window.location.search);
