@@ -241,6 +241,15 @@ class AdminController
             if (empty($grp['image_url'])) {
                 $grp['image_url'] = $defaultCapaImages[$bSku] ?? '/assets/images/hero/featured-green-shell.jpg';
             }
+            // Assegurar herança de canais caso estejam salvos em alguma das variações do modelo
+            if (empty($grp['links']) && !empty($grp['variants'])) {
+                foreach ($grp['variants'] as $v) {
+                    if (!empty($v['links'])) {
+                        $grp['links'] = $v['links'];
+                        break;
+                    }
+                }
+            }
             if (empty($grp['links']) && !empty($grp['parent_product']['external_url'])) {
                 $extUrl = $grp['parent_product']['external_url'];
                 $grp['links'] = [[
@@ -491,7 +500,7 @@ class AdminController
                         $u = 'https://' . $u;
                     }
                     // Validar formato de URL (permite URLs completas ou caminhos relativos internos como /checkout)
-                    if (!str_starts_with($u, '/') && !filter_var($u, FILTER_VALIDATE_URL)) {
+                    if (!str_starts_with($u, '/') && !preg_match('#^https?://#i', $u)) {
                         continue;
                     }
 
@@ -550,34 +559,57 @@ class AdminController
                 }
             }
 
-            // Excluir links anteriores e re-inserir links atualizados com segurança (exclusivo para o produto pai)
-            $this->pdo->prepare('DELETE FROM product_links WHERE product_id = ?')->execute([$productId]);
+            // Descobrir todas as variações do mesmo grupo do modelo autoral para sincronização
+            $curSku = trim((string)($_POST['sku'] ?? ''));
+            $curParentSku = trim((string)($_POST['parent_sku'] ?? ''));
+            $groupSku = ($curParentSku !== '' && $curParentSku !== $curSku) ? $curParentSku : $curSku;
+            $parts = explode('-', $groupSku);
+            $baseGroupSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $groupSku;
+
+            $siblingIds = [$productId];
+            if ($baseGroupSku !== '') {
+                try {
+                    $sibStmt = $this->pdo->prepare("
+                        SELECT id FROM products 
+                        WHERE id = ? OR sku = ? OR parent_sku = ? OR sku LIKE ?
+                    ");
+                    $sibStmt->execute([$productId, $baseGroupSku, $baseGroupSku, $baseGroupSku . '-%']);
+                    $siblingRows = $sibStmt->fetchAll(\PDO::FETCH_COLUMN) ?: [];
+                    if (!empty($siblingRows)) {
+                        $siblingIds = array_unique(array_map('intval', $siblingRows));
+                    }
+                } catch (\Throwable $groupEx) {}
+            }
+
+            // Excluir links anteriores de todas as variações do grupo e re-inserir links atualizados sincronizados
+            $placeholders = implode(',', array_fill(0, count($siblingIds), '?'));
+            $this->pdo->prepare("DELETE FROM product_links WHERE product_id IN ($placeholders)")->execute($siblingIds);
 
             if (!empty($validLinks)) {
                 $insLink = $this->pdo->prepare('
                     INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
-                foreach ($validLinks as $vl) {
-                    $insLink->execute([
-                        $productId,
-                        $vl['platform_name'],
-                        $vl['url'],
-                        $vl['price_cents'],
-                        $vl['button_text'],
-                        $vl['button_color'],
-                        $vl['button_size'],
-                        $vl['target'],
-                        $vl['is_active'],
-                        $vl['sort_order'],
-                        $vl['badge']
-                    ]);
+                foreach ($siblingIds as $sId) {
+                    foreach ($validLinks as $vl) {
+                        $insLink->execute([
+                            $sId,
+                            $vl['platform_name'],
+                            $vl['url'],
+                            $vl['price_cents'],
+                            $vl['button_text'],
+                            $vl['button_color'],
+                            $vl['button_size'],
+                            $vl['target'],
+                            $vl['is_active'],
+                            $vl['sort_order'],
+                            $vl['badge']
+                        ]);
+                    }
+                    if ($primaryExternalUrl !== '') {
+                        $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $sId]);
+                    }
                 }
-            }
-
-            // Atualizar external_url legado na tabela products para compatibilidade retroativa
-            if ($primaryExternalUrl !== '') {
-                $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $productId]);
             }
 
             // Processar lista de variações enviadas com o produto principal (cadastro unificado)
@@ -1436,8 +1468,10 @@ class AdminController
             return;
         }
 
-        // Verificar existência do produto pai
-        $parentCheck = $this->pdo->prepare("SELECT id, name FROM products WHERE id = ?");
+        $baseSkuParam = trim((string)($_POST['base_sku'] ?? ''));
+
+        // Verificar existência do produto
+        $parentCheck = $this->pdo->prepare("SELECT id, name, sku, parent_sku FROM products WHERE id = ?");
         $parentCheck->execute([$productId]);
         $parentProd = $parentCheck->fetch(\PDO::FETCH_ASSOC);
         if (!$parentProd) {
@@ -1445,13 +1479,36 @@ class AdminController
             return;
         }
 
+        // Descobrir o baseSku do modelo autoral
+        $curSku = trim((string)($parentProd['sku'] ?? ''));
+        $curParent = trim((string)($parentProd['parent_sku'] ?? ''));
+        $baseSku = $baseSkuParam !== '' ? $baseSkuParam : (($curParent !== '' && $curParent !== $curSku) ? $curParent : $curSku);
+        $parts = explode('-', $baseSku);
+        $baseModelSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $baseSku;
+
         $rawLinks = $_POST['links'] ?? [];
         if (is_string($rawLinks)) {
             $rawLinks = json_decode($rawLinks, true) ?: [];
         }
 
         try {
-            $this->pdo->prepare("DELETE FROM product_links WHERE product_id = ?")->execute([$productId]);
+            // Encontrar todos os produtos irmãos pertencentes a este mesmo modelo autoral
+            $siblingIds = [$productId];
+            if ($baseModelSku !== '') {
+                $sibStmt = $this->pdo->prepare("
+                    SELECT id FROM products 
+                    WHERE id = ? OR sku = ? OR parent_sku = ? OR sku LIKE ?
+                ");
+                $sibStmt->execute([$productId, $baseModelSku, $baseModelSku, $baseModelSku . '-%']);
+                $siblingRows = $sibStmt->fetchAll(\PDO::FETCH_COLUMN) ?: [];
+                if (!empty($siblingRows)) {
+                    $siblingIds = array_unique(array_map('intval', $siblingRows));
+                }
+            }
+
+            // Excluir links anteriores de todas as variações deste modelo
+            $placeholders = implode(',', array_fill(0, count($siblingIds), '?'));
+            $this->pdo->prepare("DELETE FROM product_links WHERE product_id IN ($placeholders)")->execute($siblingIds);
 
             $insStmt = $this->pdo->prepare("
                 INSERT INTO product_links 
@@ -1460,6 +1517,7 @@ class AdminController
             ");
 
             $primaryExternalUrl = '';
+            $validLinksToInsert = [];
 
             if (is_array($rawLinks)) {
                 foreach ($rawLinks as $idx => $link) {
@@ -1468,7 +1526,7 @@ class AdminController
                     if (!str_starts_with($url, '/') && !preg_match('#^https?://#i', $url)) {
                         $url = 'https://' . $url;
                     }
-                    if (!str_starts_with($url, '/') && !filter_var($url, FILTER_VALIDATE_URL)) continue;
+                    if (!str_starts_with($url, '/') && !preg_match('#^https?://#i', $url)) continue;
 
                     $plat = trim((string)($link['platform_name'] ?? 'Shopee'));
                     if ($plat === '') $plat = 'Shopee';
@@ -1502,9 +1560,18 @@ class AdminController
                     $isActive = isset($link['is_active']) ? ((int)$link['is_active'] ? 1 : 0) : 1;
                     $sort = isset($link['sort_order']) ? (int)$link['sort_order'] : $idx;
 
-                    $insStmt->execute([
-                        $productId, $plat, $url, $priceCents, $btnText, $btnColor, $btnSize, $target, $isActive, $sort, $badge
-                    ]);
+                    $validLinksToInsert[] = [
+                        'platform_name' => $plat,
+                        'url' => $url,
+                        'price_cents' => $priceCents,
+                        'button_text' => $btnText,
+                        'button_color' => $btnColor,
+                        'button_size' => $btnSize,
+                        'target' => $target,
+                        'is_active' => $isActive,
+                        'sort_order' => $sort,
+                        'badge' => $badge
+                    ];
 
                     if ($primaryExternalUrl === '' && $isActive) {
                         $primaryExternalUrl = $url;
@@ -1512,8 +1579,26 @@ class AdminController
                 }
             }
 
-            if ($primaryExternalUrl !== '') {
-                $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?")->execute([$primaryExternalUrl, $productId]);
+            // Inserir os canais sincronizados para todas as variações do modelo
+            foreach ($siblingIds as $sId) {
+                foreach ($validLinksToInsert as $vl) {
+                    $insStmt->execute([
+                        $sId,
+                        $vl['platform_name'],
+                        $vl['url'],
+                        $vl['price_cents'],
+                        $vl['button_text'],
+                        $vl['button_color'],
+                        $vl['button_size'],
+                        $vl['target'],
+                        $vl['is_active'],
+                        $vl['sort_order'],
+                        $vl['badge']
+                    ]);
+                }
+                if ($primaryExternalUrl !== '') {
+                    $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?")->execute([$primaryExternalUrl, $sId]);
+                }
             }
 
             // Buscar os links atualizados para retornar ao frontend
@@ -1523,7 +1608,7 @@ class AdminController
 
             $this->respond([
                 'success' => true,
-                'message' => 'Canais de compra do modelo "' . $parentProd['name'] . '" salvos com sucesso!',
+                'message' => 'Canais de compra do modelo "' . $parentProd['name'] . '" salvos e sincronizados com sucesso!',
                 'links' => $savedLinks
             ]);
         } catch (\Throwable $e) {

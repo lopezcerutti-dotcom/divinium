@@ -117,15 +117,47 @@ class StoreController
                 $linksStmt = $pdo->query('SELECT * FROM product_links WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
                 $allLinks = $linksStmt ? $linksStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
                 $linksByProduct = [];
+                $linksByBaseSku = [];
+
                 foreach ($allLinks as $l) {
                     $linksByProduct[(int) $l['product_id']][] = $l;
                 }
+
+                // Mapear também por SKU base para que produtos agrupados herdem os canais mesmo que salvos em outra variação
+                try {
+                    $prodMapStmt = $pdo->query("SELECT id, sku, parent_sku FROM products");
+                    $allProdMap = $prodMapStmt ? $prodMapStmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+                    $idToBaseSku = [];
+                    foreach ($allProdMap as $pm) {
+                        $pSku = trim((string)($pm['sku'] ?? ''));
+                        $pParent = trim((string)($pm['parent_sku'] ?? ''));
+                        $bSku = ($pParent !== '' && $pParent !== $pSku) ? $pParent : $pSku;
+                        $parts = explode('-', $bSku);
+                        $baseGroup = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $bSku;
+                        $idToBaseSku[(int)$pm['id']] = $baseGroup;
+                    }
+                    foreach ($allLinks as $l) {
+                        $bg = $idToBaseSku[(int)$l['product_id']] ?? '';
+                        if ($bg !== '' && !isset($linksByBaseSku[$bg])) {
+                            $linksByBaseSku[$bg] = $linksByProduct[(int)$l['product_id']] ?? [];
+                        }
+                    }
+                } catch (\Throwable $mapEx) {}
 
                 foreach ($products as &$prod) {
                     if (empty($prod['slug'])) {
                         $prod['slug'] = self::slugify((string)($prod['name'] ?? ('joia-' . $prod['id'])));
                     }
-                    $prod['links'] = $linksByProduct[(int) $prod['id']] ?? [];
+                    $pBaseSku = $prod['base_sku'] ?? '';
+                    if (empty($pBaseSku)) {
+                        $pSku = trim((string)($prod['sku'] ?? ''));
+                        $pParent = trim((string)($prod['parent_sku'] ?? ''));
+                        $bSku = ($pParent !== '' && $pParent !== $pSku) ? $pParent : $pSku;
+                        $parts = explode('-', $bSku);
+                        $pBaseSku = count($parts) >= 3 ? implode('-', array_slice($parts, 0, 3)) : $bSku;
+                    }
+
+                    $prod['links'] = $linksByProduct[(int) $prod['id']] ?? ($linksByBaseSku[$pBaseSku] ?? []);
                     if (empty($prod['links']) && !empty($prod['external_url'])) {
                         $prod['links'] = [
                             [
@@ -228,34 +260,38 @@ class StoreController
                 $linksStmt->execute([(int)$product['id']]);
                 $links = $linksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
 
-                // Se a variação atual não tiver links próprios, herdar os canais do produto pai / modelo do grupo
+                // 2. Se a variação atual não tiver links próprios, herdar os canais de qualquer produto do mesmo grupo autoral
                 if (empty($links) && !empty($baseModelSku)) {
                     try {
-                        $parentStmt = $pdo->prepare('
-                            SELECT id FROM products 
-                            WHERE (sku = :base_sku OR (parent_sku IS NULL OR parent_sku = "" OR parent_sku = sku)) 
-                              AND (sku = :base_sku2 OR sku LIKE :prefix) 
-                            ORDER BY id ASC LIMIT 1
+                        $groupLinksStmt = $pdo->prepare('
+                            SELECT pl.* 
+                            FROM product_links pl
+                            INNER JOIN products p ON pl.product_id = p.id
+                            WHERE (p.sku = :base_sku OR p.parent_sku = :base_sku OR p.sku LIKE :prefix)
+                              AND pl.is_active = 1
+                            ORDER BY CASE WHEN p.sku = :base_sku2 THEN 0 ELSE 1 END, pl.sort_order ASC, pl.id ASC
                         ');
-                        $parentStmt->execute([
-                            ':base_sku' => $baseModelSku,
+                        $groupLinksStmt->execute([
+                            ':base_sku'  => $baseModelSku,
                             ':base_sku2' => $baseModelSku,
-                            ':prefix' => $baseModelSku . '%'
+                            ':prefix'    => $baseModelSku . '-%'
                         ]);
-                        $parentId = $parentStmt->fetchColumn();
-                        if ($parentId && (int)$parentId !== (int)$product['id']) {
-                            $parentLinksStmt = $pdo->prepare('
-                                SELECT * FROM product_links 
-                                WHERE product_id = ? AND is_active = 1 
-                                ORDER BY sort_order ASC, id ASC
-                            ');
-                            $parentLinksStmt->execute([(int)$parentId]);
-                            $links = $parentLinksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                        $foundLinks = $groupLinksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+                        if (!empty($foundLinks)) {
+                            // Deduplica por plataforma caso haja mais de um produto no grupo com links salvos
+                            $seenPlats = [];
+                            foreach ($foundLinks as $fl) {
+                                $pKey = strtolower(trim((string)($fl['platform_name'] ?? '')));
+                                if (!isset($seenPlats[$pKey])) {
+                                    $seenPlats[$pKey] = true;
+                                    $links[] = $fl;
+                                }
+                            }
                         }
                     } catch (\Throwable $pLinksEx) {}
                 }
 
-                // Se ainda não houver canais específicos, usar os canais centralizados da loja
+                // 3. Se ainda não houver canais específicos, usar os canais centralizados da loja
                 if (empty($links)) {
                     $configuredChannels = \App\Models\Setting::getProductChannelsList();
                     foreach ($configuredChannels as $idx => $cc) {
@@ -264,6 +300,7 @@ class StoreController
                         if (!empty($product['external_url']) && stripos($cc['platform'], 'shopee') !== false) {
                             $cUrl = $product['external_url'];
                         }
+                        if ($cUrl === '') continue;
                         $links[] = [
                             'id' => $cc['id'] ?? $idx,
                             'product_id' => $product['id'],
@@ -284,35 +321,24 @@ class StoreController
                     }
                 }
 
-                // Se houver external_url cadastrada na joia mas nenhum canal Shopee nos links, garantir Shopee
-                if (!empty($product['external_url'])) {
-                    $hasShopee = false;
-                    foreach ($links as &$lk) {
-                        if (stripos($lk['platform_name'] ?? '', 'shopee') !== false) {
-                            $hasShopee = true;
-                            $lk['url'] = $product['external_url'];
-                            break;
-                        }
-                    }
-                    unset($lk);
-                    if (!$hasShopee) {
-                        $links[] = [
-                            'id' => 0,
-                            'product_id' => $product['id'],
-                            'platform_name' => 'Shopee',
-                            'official_label' => 'Canal Homologado DIVINIUM',
-                            'url' => $product['external_url'],
-                            'price_cents' => $product['price_cents'] ?? 38000,
-                            'button_text' => 'Comprar na Shopee Oficial',
-                            'button_color' => 'default',
-                            'button_size' => 'md',
-                            'badge' => 'Oficial',
-                            'icon' => 'shopee',
-                            'target' => '_blank',
-                            'is_active' => 1,
-                            'sort_order' => 0
-                        ];
-                    }
+                // 4. Se links ainda estiver totalmente vazio e houver external_url cadastrada na joia, usar como fallback
+                if (empty($links) && !empty($product['external_url'])) {
+                    $links[] = [
+                        'id' => 0,
+                        'product_id' => $product['id'],
+                        'platform_name' => 'Shopee',
+                        'official_label' => 'Canal Homologado DIVINIUM',
+                        'url' => $product['external_url'],
+                        'price_cents' => $product['price_cents'] ?? 38000,
+                        'button_text' => 'Comprar na Shopee Oficial',
+                        'button_color' => 'default',
+                        'button_size' => 'md',
+                        'badge' => 'Oficial',
+                        'icon' => 'shopee',
+                        'target' => '_blank',
+                        'is_active' => 1,
+                        'sort_order' => 0
+                    ];
                 }
 
                 // 1. Carregar variações do banco de dados

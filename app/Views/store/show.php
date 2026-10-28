@@ -426,6 +426,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 if (!empty($directChannelConfigured['badge'])) {
                                     $directBadge = $directChannelConfigured['badge'];
                                 }
+                            } else {
+                                $showDirectChannel = false;
                             }
                         } elseif (!empty($centralChannels)) {
                             // Fallback caso o modelo ainda não tenha canais individuais configurados
@@ -941,7 +943,7 @@ function selectProductVariation(btn) {
         const hasOverride = cBtn.getAttribute('data-has-override') === '1';
         const pVal = cBtn.querySelector('.channel-price-val');
         if (pVal && priceFormatted && !hasOverride) {
-            pVal.textContent = priceFormatted;
+            pVal.textContent = 'R$ ' + priceFormatted;
         }
     });
 

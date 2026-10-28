@@ -653,7 +653,7 @@ $settings = $settings ?? [];
                                             <?php endif; ?>
                                         </div>
 
-                                        <button type="button" class="btn-channel-quick-edit" onclick='openModelChannelsQuickModal(<?= $groupJson ?>)' title="Configurar canais de venda para <?= \App\Core\View::e($grp['name']) ?>">
+                                        <button type="button" class="btn-channel-quick-edit" onclick="openModelChannelsBySku('<?= \App\Core\View::e($grp['base_sku']) ?>')" title="Configurar canais de venda para <?= \App\Core\View::e($grp['name']) ?>">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                             <span>Editar Canais</span>
                                         </button>
@@ -1488,6 +1488,18 @@ $settings = $settings ?? [];
 <!-- SCRIPTS DA CENTRAL UNIFICADA                                   -->
 <!-- ============================================================== -->
 <script>
+// Catálogo de Modelos Auturais para acesso dinâmico de canais sem escape HTML
+window.allCatalogGroups = <?= json_encode(array_values($groups), JSON_UNESCAPED_UNICODE) ?>;
+
+function openModelChannelsBySku(baseSku) {
+    const group = (window.allCatalogGroups || []).find(g => (g.base_sku === baseSku || g.sku === baseSku));
+    if (group) {
+        openModelChannelsQuickModal(group);
+    } else {
+        alert('Modelo autoral não encontrado.');
+    }
+}
+
 // Estado Global de Variações e Links do Modal
 let currentProductLinks = [];
 let currentProductVariants = [];
@@ -2243,10 +2255,11 @@ function openModelChannelsQuickModal(group) {
     const basePriceFormatted = group.price_cents ? ((group.price_cents) / 100).toFixed(2).replace('.', ',') : (group.min_price_cents ? ((group.min_price_cents) / 100).toFixed(2).replace('.', ',') : '380,00');
     const fallbackExtUrl = group.parent_product?.external_url || group.external_url || '';
 
+    const bSku = group.base_sku || group.sku || '';
     document.getElementById('quickModalProdId').value = group.id || 0;
-    document.getElementById('quickModalBaseSku').value = group.sku || '';
+    document.getElementById('quickModalBaseSku').value = bSku;
     document.getElementById('quickModalModelTitle').innerText = 'Canais de Venda — ' + (group.name || 'Modelo Autoral');
-    document.getElementById('quickModalModelSubtitle').innerText = 'SKU Base: ' + (group.sku || 'N/A') + ' • Configure as opções de canais de venda externos e botões de compra para este modelo';
+    document.getElementById('quickModalModelSubtitle').innerText = 'SKU Base: ' + (bSku || 'N/A') + ' • Configure as opções de canais de venda externos e botões de compra para este modelo';
 
     currentProductLinks = normalizeModelLinks(group.links, basePriceFormatted, fallbackExtUrl);
 
@@ -2584,6 +2597,7 @@ async function saveQuickModelChannels() {
 
     const formData = new FormData();
     formData.append('product_id', prodId);
+    formData.append('base_sku', document.getElementById('quickModalBaseSku')?.value || '');
     formData.append('links', JSON.stringify(currentProductLinks));
     const csrf = getCsrfToken();
     if (csrf) formData.append('_csrf_token', csrf);
@@ -2631,6 +2645,7 @@ async function saveCurrentModelChannels() {
 
     const formData = new FormData();
     formData.append('product_id', prodId);
+    formData.append('base_sku', document.getElementById('prodParentSku')?.value || document.getElementById('prodSku')?.value || '');
     formData.append('links', JSON.stringify(currentProductLinks));
     const csrf = getCsrfToken();
     if (csrf) formData.append('_csrf_token', csrf);
