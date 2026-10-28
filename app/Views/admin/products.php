@@ -604,7 +604,7 @@ $settings = $settings ?? [];
                                     </div>
                                 </td>
 
-                                <!-- CANAIS DE VENDA DO GRUPO -->
+                                <!-- CANAIS DE VENDA DO MODELO -->
                                 <td>
                                     <?php 
                                         $activeLinks = [];
@@ -618,34 +618,46 @@ $settings = $settings ?? [];
                                             }
                                         }
                                     ?>
-                                    <?php if (!empty($activeLinks)): ?>
-                                        <div class="platform-links-list">
-                                            <?php foreach ($activeLinks as $lnk): ?>
-                                                <?php 
-                                                    $platName = trim((string)($lnk['platform_name'] ?? 'Canal'));
-                                                    $rawSlug = strtolower(preg_replace('/[^a-z0-9]/', '', $platName));
-                                                    $platSlug = 'outro';
-                                                    if (str_contains($rawSlug, 'shopee')) $platSlug = 'shopee';
-                                                    elseif (str_contains($rawSlug, 'mercado') || str_contains($rawSlug, 'ml')) $platSlug = 'mercadolivre';
-                                                    elseif (str_contains($rawSlug, 'tiktok')) $platSlug = 'tiktok';
-                                                    elseif (str_contains($rawSlug, 'whatsapp') || str_contains($rawSlug, 'wa')) $platSlug = 'whatsapp';
-                                                    elseif (str_contains($rawSlug, 'diret') || str_contains($rawSlug, 'site')) $platSlug = 'compradireta';
-                                                    elseif (str_contains($rawSlug, 'amazon')) $platSlug = 'amazon';
+                                    <div class="model-channels-cell" id="model-channels-cell-<?= $grp['id'] ?>">
+                                        <div class="platform-links-list" id="model-links-tags-<?= $grp['id'] ?>">
+                                            <?php if (!empty($activeLinks)): ?>
+                                                <?php foreach ($activeLinks as $lnk): ?>
+                                                    <?php 
+                                                        $platName = trim((string)($lnk['platform_name'] ?? 'Canal'));
+                                                        $rawSlug = strtolower(preg_replace('/[^a-z0-9]/', '', $platName));
+                                                        $platSlug = 'outro';
+                                                        if (str_contains($rawSlug, 'shopee')) $platSlug = 'shopee';
+                                                        elseif (str_contains($rawSlug, 'mercado') || str_contains($rawSlug, 'ml')) $platSlug = 'mercadolivre';
+                                                        elseif (str_contains($rawSlug, 'amazon')) $platSlug = 'amazon';
+                                                        elseif (str_contains($rawSlug, 'tiktok')) $platSlug = 'tiktok';
+                                                        elseif (str_contains($rawSlug, 'whatsapp') || str_contains($rawSlug, 'wa')) $platSlug = 'whatsapp';
+                                                        elseif (str_contains($rawSlug, 'diret') || str_contains($rawSlug, 'site') || str_contains($rawSlug, 'checkout')) $platSlug = 'compradireta';
+                                                        elseif (str_contains($rawSlug, 'pix') || str_contains($rawSlug, 'asaas')) $platSlug = 'pix';
+                                                        elseif (str_contains($rawSlug, 'instagram')) $platSlug = 'instagram';
+                                                        elseif (str_contains($rawSlug, 'enjoei')) $platSlug = 'enjoei';
+                                                        elseif (str_contains($rawSlug, 'elo7')) $platSlug = 'elo7';
 
-                                                    $linkPriceFormatted = !empty($lnk['price_cents']) ? number_format($lnk['price_cents'] / 100, 2, ',', '.') : '';
-                                                    $targetAttr = !empty($lnk['target']) && $lnk['target'] === '_self' ? '_self' : '_blank';
-                                                ?>
-                                                <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="<?= $targetAttr ?>" rel="noopener noreferrer" 
-                                                   class="platform-mini-tag tag-<?= $platSlug ?>" 
-                                                   title="<?= \App\Core\View::e($lnk['button_text'] ?? $platName) ?><?= $linkPriceFormatted ? ' — R$ ' . $linkPriceFormatted : '' ?>">
-                                                    <span><?= \App\Core\View::e($platName) ?></span>
-                                                    <span>↗</span>
-                                                </a>
-                                            <?php endforeach; ?>
+                                                        $linkPriceFormatted = !empty($lnk['price_cents']) ? number_format($lnk['price_cents'] / 100, 2, ',', '.') : '';
+                                                        $targetAttr = !empty($lnk['target']) && $lnk['target'] === '_self' ? '_self' : '_blank';
+                                                        $linkBadge = !empty($lnk['badge']) ? ' [' . $lnk['badge'] . ']' : '';
+                                                    ?>
+                                                    <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="<?= $targetAttr ?>" rel="noopener noreferrer" 
+                                                       class="platform-mini-tag tag-<?= $platSlug ?>" 
+                                                       title="<?= \App\Core\View::e(($lnk['button_text'] ?? $platName) . $linkBadge) ?><?= $linkPriceFormatted ? ' — R$ ' . $linkPriceFormatted : '' ?>">
+                                                        <span><?= \App\Core\View::e($platName) ?></span>
+                                                        <span>↗</span>
+                                                    </a>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <span style="color: #6b655c; font-size: 0.74rem;">Nenhum canal ativo</span>
+                                            <?php endif; ?>
                                         </div>
-                                    <?php else: ?>
-                                        <span style="color: #6b655c; font-size: 0.74rem;">Nenhum canal ativo</span>
-                                    <?php endif; ?>
+
+                                        <button type="button" class="btn-channel-quick-edit" onclick='openModelChannelsQuickModal(<?= $groupJson ?>)' title="Configurar canais de venda para <?= \App\Core\View::e($grp['name']) ?>">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                            <span>Editar Canais</span>
+                                        </button>
+                                    </div>
                                 </td>
 
                                 <!-- ESTOQUE CONSOLIDADO DO GRUPO -->
@@ -1289,6 +1301,55 @@ $settings = $settings ?? [];
 </div>
 
 <!-- ============================================================== -->
+<!-- MODAL RÁPIDO: GESTÃO DE CANAIS DE VENDA POR MODELO AUTORAL     -->
+<!-- ============================================================== -->
+<div class="modal-overlay" id="modelChannelsQuickModal" style="display: none; z-index: 10005;">
+    <div class="modal-content" style="max-width: 860px; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal-header" style="flex-shrink: 0; padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(212,186,136,0.15); border: 1px solid rgba(212,186,136,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                    🛒
+                </div>
+                <div>
+                    <h3 class="modal-title" id="quickModalModelTitle" style="margin: 0; font-size: 1.15rem; color: #FFFFFF;">Canais de Venda do Modelo</h3>
+                    <p style="margin: 4px 0 0; font-size: 0.78rem; color: #a8a096;" id="quickModalModelSubtitle">
+                        Configure opções editáveis de canais de venda externos e botões de compra para este modelo autoral.
+                    </p>
+                </div>
+            </div>
+            <button type="button" class="close-modal-btn" onclick="closeModelChannelsQuickModal()" style="font-size: 1.4rem; background: transparent; border: none; color: #CBD0D6; cursor: pointer;">&times;</button>
+        </div>
+
+        <div class="modal-body" style="overflow-y: auto; padding: 20px 24px; flex: 1;">
+            <input type="hidden" id="quickModalProdId" value="0">
+            <input type="hidden" id="quickModalBaseSku" value="">
+
+            <div style="background: rgba(212, 186, 136, 0.06); border: 1px solid rgba(212, 186, 136, 0.25); border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div>
+                    <strong style="color: #ffffff; font-size: 0.88rem;">💎 Canais de Venda e Botões de Compra Independentes</strong>
+                    <p style="margin: 3px 0 0; font-size: 0.76rem; color: #b5ada3;">
+                        Adicione, reordene (↑ / ↓), defina preços por canal ou ative/desative canais para este modelo. As opções são compartilhadas por todas as variações desta joia.
+                    </p>
+                </div>
+                <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink('quickModalLinksContainer')" style="padding: 7px 16px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>+ Adicionar Canal de Venda</span>
+                </button>
+            </div>
+
+            <!-- CONTAINER DOS CANAIS -->
+            <div id="quickModalLinksContainer"></div>
+        </div>
+
+        <div class="modal-footer" style="flex-shrink: 0; padding: 14px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="btn-admin-secondary" onclick="closeModelChannelsQuickModal()">Fechar</button>
+            <button type="button" class="btn-admin-gold" id="btnQuickSaveChannels" onclick="saveQuickModelChannels()">
+                <span>💾 Salvar Canais Deste Modelo</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================== -->
 <!-- MODAL DE CONFIGURAÇÃO BLING ERP (API v3)                       -->
 <!-- ============================================================== -->
 <div class="modal-overlay" id="blingModal">
@@ -1691,109 +1752,8 @@ function editGroupProduct(group) {
     }
 
     // Canais de Compra Exclusivos do Produto Principal (Modelo Pai)
-    const canonicalChannels = [
-        {
-            key: 'Compra Direta',
-            matchRegex: /compra\s*direta|site|checkout|boutique/i,
-            label: '💎 Compra Direta / Site (ou WhatsApp)',
-            defaultBtn: 'Comprar Direto na Boutique',
-            defaultTarget: '_self',
-            placeholder: '/checkout ou https://wa.me/55...',
-            accentColor: '#CBD0D6',
-            defaultUrl: '/checkout'
-        },
-        {
-            key: 'Mercado Livre',
-            matchRegex: /mercado\s*livre|mercadolivre/i,
-            label: '🟡 Mercado Livre',
-            defaultBtn: 'Comprar no Mercado Livre',
-            defaultTarget: '_blank',
-            placeholder: 'https://produto.mercadolivre.com.br/...',
-            accentColor: '#FFE600',
-            defaultUrl: ''
-        },
-        {
-            key: 'Shopee',
-            matchRegex: /shopee/i,
-            label: '🟠 Shopee',
-            defaultBtn: 'Comprar na Shopee Oficial',
-            defaultTarget: '_blank',
-            placeholder: 'https://shopee.com.br/...',
-            accentColor: '#EE4D2D',
-            defaultUrl: group.parent_product?.external_url || group.external_url || ''
-        },
-        {
-            key: 'TikTok Shop',
-            matchRegex: /tiktok/i,
-            label: '⚫ TikTok Shop',
-            defaultBtn: 'Comprar no TikTok Shop',
-            defaultTarget: '_blank',
-            placeholder: 'https://www.tiktok.com/...',
-            accentColor: '#FE2C55',
-            defaultUrl: ''
-        }
-    ];
-
-    const rawLinks = Array.isArray(group.links) ? group.links : [];
-    const usedIndices = new Set();
-
-    // 1. Inicializar os 4 canais oficiais do modelo pai
-    currentProductLinks = canonicalChannels.map((cDef, cIdx) => {
-        let found = null;
-        rawLinks.forEach((l, idx) => {
-            if (!found && !usedIndices.has(idx)) {
-                const plat = (l.platform_name || '').trim();
-                if (cDef.matchRegex.test(plat) || plat.toLowerCase() === cDef.key.toLowerCase()) {
-                    found = l;
-                    usedIndices.add(idx);
-                }
-            }
-        });
-
-        const url = found ? (found.url || '') : cDef.defaultUrl;
-        const isActive = found ? (found.is_active !== undefined ? parseInt(found.is_active, 10) : 1) : (url && url !== '/checkout' ? 1 : 0);
-
-        return {
-            platform_name: cDef.key,
-            canonical_key: cDef.key,
-            label: cDef.label,
-            placeholder: cDef.placeholder,
-            accent_color: cDef.accentColor,
-            url: url,
-            price: found && found.price_cents ? ((found.price_cents) / 100).toFixed(2).replace('.', ',') : basePriceFormatted,
-            button_text: found && found.button_text ? found.button_text : cDef.defaultBtn,
-            button_color: found && found.button_color ? found.button_color : 'default',
-            button_size: found && found.button_size ? found.button_size : 'md',
-            target: found && found.target ? found.target : cDef.defaultTarget,
-            is_active: isActive,
-            sort_order: cIdx,
-            is_canonical: true
-        };
-    });
-
-    // 2. Preservar outros canais adicionais se houver (ex: Amazon)
-    rawLinks.forEach((l, idx) => {
-        if (!usedIndices.has(idx)) {
-            const url = l.url || '';
-            const isActive = l.is_active !== undefined ? parseInt(l.is_active, 10) : (url ? 1 : 0);
-            currentProductLinks.push({
-                platform_name: l.platform_name || 'Outro Canal',
-                canonical_key: 'custom',
-                label: '🔗 ' + (l.platform_name || 'Canal Personalizado'),
-                placeholder: 'https://...',
-                accent_color: '#9e978e',
-                url: url,
-                price: l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : basePriceFormatted,
-                button_text: l.button_text || ('Comprar no ' + (l.platform_name || 'Canal')),
-                button_color: l.button_color || 'default',
-                button_size: l.button_size || 'md',
-                target: l.target || '_blank',
-                is_active: isActive,
-                sort_order: currentProductLinks.length,
-                is_canonical: false
-            });
-        }
-    });
+    const fallbackExtUrl = group.parent_product?.external_url || group.external_url || '';
+    currentProductLinks = normalizeModelLinks(group.links, basePriceFormatted, fallbackExtUrl);
 
     // Variações do Grupo
     currentProductVariants = (group.variants || []).map(v => ({
@@ -2056,6 +2016,253 @@ async function handleProductSubmit(e) {
 /* ============================================================== */
 /* CANAIS DE COMPRA POR PRODUTO PRINCIPAL (MODELO PAI)            */
 /* ============================================================== */
+const CHANNEL_PLATFORMS = {
+    'Shopee': {
+        name: 'Shopee',
+        label: '🟠 Shopee',
+        badge: 'Shopee Oficial',
+        defaultBtn: 'Comprar na Shopee Oficial',
+        placeholder: 'https://shopee.com.br/produto-...',
+        accentColor: '#EE4D2D',
+        target: '_blank'
+    },
+    'Mercado Livre': {
+        name: 'Mercado Livre',
+        label: '🟡 Mercado Livre',
+        badge: 'Mercado Livre',
+        defaultBtn: 'Comprar no Mercado Livre',
+        placeholder: 'https://produto.mercadolivre.com.br/...',
+        accentColor: '#FFE600',
+        target: '_blank'
+    },
+    'Amazon': {
+        name: 'Amazon',
+        label: '📦 Amazon',
+        badge: 'Amazon Prime',
+        defaultBtn: 'Comprar na Amazon',
+        placeholder: 'https://www.amazon.com.br/dp/...',
+        accentColor: '#FF9900',
+        target: '_blank'
+    },
+    'WhatsApp': {
+        name: 'WhatsApp',
+        label: '💬 WhatsApp (Consultor VIP)',
+        badge: 'Atendimento VIP',
+        defaultBtn: 'Comprar via Consultora no WhatsApp',
+        placeholder: 'https://wa.me/5511999999999?text=Olá, quero atendimento...',
+        accentColor: '#25D366',
+        target: '_blank'
+    },
+    'Compra Direta': {
+        name: 'Compra Direta',
+        label: '💎 Compra Direta / Boutique (/checkout)',
+        badge: 'Exclusivo',
+        defaultBtn: 'Comprar Direto na Boutique',
+        placeholder: '/checkout ou https://...',
+        accentColor: '#CBD0D6',
+        target: '_self'
+    },
+    'TikTok Shop': {
+        name: 'TikTok Shop',
+        label: '⚫ TikTok Shop',
+        badge: 'TikTok Shop',
+        defaultBtn: 'Comprar no TikTok Shop',
+        placeholder: 'https://www.tiktok.com/@divinium/...',
+        accentColor: '#FE2C55',
+        target: '_blank'
+    },
+    'Asaas Pix': {
+        name: 'Asaas Pix',
+        label: '💠 Asaas / Pix Direto',
+        badge: '5% OFF no Pix',
+        defaultBtn: 'Pagar com Pix com Desconto',
+        placeholder: 'https://asaas.com/c/...',
+        accentColor: '#00d2c6',
+        target: '_blank'
+    },
+    'Enjoei': {
+        name: 'Enjoei',
+        label: '🛍️ Enjoei',
+        badge: 'Enjoei Pro',
+        defaultBtn: 'Comprar no Enjoei',
+        placeholder: 'https://www.enjoei.com.br/@...',
+        accentColor: '#E83B5E',
+        target: '_blank'
+    },
+    'Elo7': {
+        name: 'Elo7',
+        label: '🎀 Elo7',
+        badge: 'Elo7 Oficial',
+        defaultBtn: 'Comprar no Elo7',
+        placeholder: 'https://www.elo7.com.br/...',
+        accentColor: '#FF8800',
+        target: '_blank'
+    },
+    'Instagram Shop': {
+        name: 'Instagram Shop',
+        label: '📸 Instagram Shop',
+        badge: 'Instagram',
+        defaultBtn: 'Ver e Comprar no Instagram',
+        placeholder: 'https://www.instagram.com/...',
+        accentColor: '#E1306C',
+        target: '_blank'
+    },
+    'Outro': {
+        name: 'Outro',
+        label: '🔗 Outro / Canal Personalizado',
+        badge: 'Canal Oficial',
+        defaultBtn: 'Comprar no Canal Oficial',
+        placeholder: 'https://...',
+        accentColor: '#A7ADB4',
+        target: '_blank'
+    }
+};
+
+function getPlatformConfig(platName) {
+    const raw = (platName || '').trim().toLowerCase();
+    if (raw.includes('shopee')) return CHANNEL_PLATFORMS['Shopee'];
+    if (raw.includes('mercado') || raw.includes('ml')) return CHANNEL_PLATFORMS['Mercado Livre'];
+    if (raw.includes('amazon')) return CHANNEL_PLATFORMS['Amazon'];
+    if (raw.includes('whatsapp') || raw.includes('wa')) return CHANNEL_PLATFORMS['WhatsApp'];
+    if (raw.includes('diret') || raw.includes('site') || raw.includes('checkout') || raw.includes('boutique')) return CHANNEL_PLATFORMS['Compra Direta'];
+    if (raw.includes('tiktok')) return CHANNEL_PLATFORMS['TikTok Shop'];
+    if (raw.includes('pix') || raw.includes('asaas')) return CHANNEL_PLATFORMS['Asaas Pix'];
+    if (raw.includes('enjoei')) return CHANNEL_PLATFORMS['Enjoei'];
+    if (raw.includes('elo7')) return CHANNEL_PLATFORMS['Elo7'];
+    if (raw.includes('instagram')) return CHANNEL_PLATFORMS['Instagram Shop'];
+    return CHANNEL_PLATFORMS['Outro'];
+}
+
+function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl = '') {
+    const links = Array.isArray(rawLinks) ? rawLinks : [];
+    if (links.length > 0) {
+        return links.map((l, idx) => {
+            const plat = (l.platform_name || 'Shopee').trim();
+            const pConfig = getPlatformConfig(plat);
+            const isKnown = Object.keys(CHANNEL_PLATFORMS).some(k => k.toLowerCase() === plat.toLowerCase());
+            const canonicalKey = isKnown ? plat : (pConfig.name === 'Outro' ? 'Outro' : pConfig.name);
+            const price = l.price_cents ? ((l.price_cents) / 100).toFixed(2).replace('.', ',') : (l.price ? String(l.price) : basePriceFormatted);
+            const target = l.target ? l.target : (l.url && l.url.startsWith('/') ? '_self' : '_blank');
+            const isActive = l.is_active !== undefined ? (parseInt(l.is_active, 10) === 1 ? 1 : 0) : 1;
+
+            return {
+                platform_name: plat,
+                canonical_key: canonicalKey,
+                label: pConfig.label,
+                placeholder: pConfig.placeholder,
+                accent_color: pConfig.accentColor,
+                url: l.url || '',
+                price: price,
+                button_text: l.button_text || pConfig.defaultBtn,
+                badge: l.badge || '',
+                button_color: l.button_color || 'default',
+                button_size: l.button_size || 'md',
+                target: target,
+                is_active: isActive,
+                sort_order: l.sort_order !== undefined ? parseInt(l.sort_order, 10) : idx
+            };
+        });
+    }
+
+    return [
+        {
+            platform_name: 'Shopee',
+            canonical_key: 'Shopee',
+            label: CHANNEL_PLATFORMS['Shopee'].label,
+            placeholder: CHANNEL_PLATFORMS['Shopee'].placeholder,
+            accent_color: CHANNEL_PLATFORMS['Shopee'].accentColor,
+            url: fallbackExternalUrl || '',
+            price: basePriceFormatted,
+            button_text: CHANNEL_PLATFORMS['Shopee'].defaultBtn,
+            badge: CHANNEL_PLATFORMS['Shopee'].badge,
+            button_color: 'default',
+            button_size: 'md',
+            target: '_blank',
+            is_active: fallbackExternalUrl ? 1 : 0,
+            sort_order: 0
+        },
+        {
+            platform_name: 'Mercado Livre',
+            canonical_key: 'Mercado Livre',
+            label: CHANNEL_PLATFORMS['Mercado Livre'].label,
+            placeholder: CHANNEL_PLATFORMS['Mercado Livre'].placeholder,
+            accent_color: CHANNEL_PLATFORMS['Mercado Livre'].accentColor,
+            url: '',
+            price: basePriceFormatted,
+            button_text: CHANNEL_PLATFORMS['Mercado Livre'].defaultBtn,
+            badge: CHANNEL_PLATFORMS['Mercado Livre'].badge,
+            button_color: 'default',
+            button_size: 'md',
+            target: '_blank',
+            is_active: 0,
+            sort_order: 1
+        },
+        {
+            platform_name: 'Compra Direta',
+            canonical_key: 'Compra Direta',
+            label: CHANNEL_PLATFORMS['Compra Direta'].label,
+            placeholder: CHANNEL_PLATFORMS['Compra Direta'].placeholder,
+            accent_color: CHANNEL_PLATFORMS['Compra Direta'].accentColor,
+            url: '/checkout',
+            price: basePriceFormatted,
+            button_text: CHANNEL_PLATFORMS['Compra Direta'].defaultBtn,
+            badge: CHANNEL_PLATFORMS['Compra Direta'].badge,
+            button_color: 'default',
+            button_size: 'md',
+            target: '_self',
+            is_active: 1,
+            sort_order: 2
+        },
+        {
+            platform_name: 'WhatsApp',
+            canonical_key: 'WhatsApp',
+            label: CHANNEL_PLATFORMS['WhatsApp'].label,
+            placeholder: CHANNEL_PLATFORMS['WhatsApp'].placeholder,
+            accent_color: CHANNEL_PLATFORMS['WhatsApp'].accentColor,
+            url: '',
+            price: basePriceFormatted,
+            button_text: CHANNEL_PLATFORMS['WhatsApp'].defaultBtn,
+            badge: CHANNEL_PLATFORMS['WhatsApp'].badge,
+            button_color: 'default',
+            button_size: 'md',
+            target: '_blank',
+            is_active: 0,
+            sort_order: 3
+        }
+    ];
+}
+
+let quickModalCurrentGroup = null;
+
+function openModelChannelsQuickModal(group) {
+    if (!group) return;
+    quickModalCurrentGroup = group;
+    const modal = document.getElementById('modelChannelsQuickModal');
+    if (!modal) return;
+
+    const basePriceFormatted = group.price_cents ? ((group.price_cents) / 100).toFixed(2).replace('.', ',') : (group.min_price_cents ? ((group.min_price_cents) / 100).toFixed(2).replace('.', ',') : '380,00');
+    const fallbackExtUrl = group.parent_product?.external_url || group.external_url || '';
+
+    document.getElementById('quickModalProdId').value = group.id || 0;
+    document.getElementById('quickModalBaseSku').value = group.sku || '';
+    document.getElementById('quickModalModelTitle').innerText = 'Canais de Venda — ' + (group.name || 'Modelo Autoral');
+    document.getElementById('quickModalModelSubtitle').innerText = 'SKU Base: ' + (group.sku || 'N/A') + ' • Configure as opções de canais de venda externos e botões de compra para este modelo';
+
+    currentProductLinks = normalizeModelLinks(group.links, basePriceFormatted, fallbackExtUrl);
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    renderPlatformLinks('quickModalLinksContainer');
+}
+
+function closeModelChannelsQuickModal() {
+    const modal = document.getElementById('modelChannelsQuickModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+    quickModalCurrentGroup = null;
+}
+
 function updateLinksCountBadge() {
     const badge = document.getElementById('linksCountBadge');
     if (!badge) return;
@@ -2065,139 +2272,347 @@ function updateLinksCountBadge() {
     badge.style.color = activeCount > 0 ? '#4ade80' : '#CBD0D6';
 }
 
-function renderPlatformLinks() {
-    const container = document.getElementById('productLinksContainer');
-    if (!container) return;
-    container.innerHTML = '';
+function renderPlatformLinks(targetContainerId = 'productLinksContainer') {
+    const containers = [];
+    const mainContainer = document.getElementById('productLinksContainer');
+    const quickContainer = document.getElementById('quickModalLinksContainer');
+
+    if (targetContainerId === 'all') {
+        if (mainContainer) containers.push(mainContainer);
+        if (quickContainer) containers.push(quickContainer);
+    } else {
+        const c = document.getElementById(targetContainerId);
+        if (c) containers.push(c);
+    }
+
+    if (containers.length === 0) return;
 
     updateLinksCountBadge();
 
-    currentProductLinks.forEach((link, idx) => {
-        const item = document.createElement('div');
-        const isActive = parseInt(link.is_active, 10) === 1;
-        const isCanonical = link.is_canonical === true;
-        const brandColor = link.accent_color || '#CBD0D6';
+    containers.forEach(container => {
+        const isQuick = container.id === 'quickModalLinksContainer';
+        container.innerHTML = '';
 
-        item.className = 'channel-editor-card';
-        item.style.background = isActive ? 'rgba(255,255,255,0.025)' : 'rgba(255,255,255,0.01)';
-        item.style.border = isActive ? `1.5px solid ${brandColor}66` : '1px solid rgba(255,255,255,0.08)';
-        item.style.borderRadius = '10px';
-        item.style.padding = '14px 16px';
-        item.style.marginBottom = '12px';
-        item.style.transition = 'all 0.2s ease';
-        item.style.opacity = isActive ? '1' : '0.65';
-
-        let headerRightHtml = `
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; margin: 0;">
-                <input type="checkbox" ${isActive ? 'checked' : ''} 
-                       onchange="toggleChannelActive(${idx}, this.checked)" 
-                       style="width: 17px; height: 17px; accent-color: #22c55e; cursor: pointer;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: ${isActive ? '#4ade80' : '#9ca3af'};">
-                    ${isActive ? '● Ativo na Loja' : '○ Inativo'}
-                </span>
-            </label>
-        `;
-
-        if (!isCanonical) {
-            headerRightHtml = `
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    ${headerRightHtml}
-                    <button type="button" onclick="removePlatformLink(${idx})" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 4px; padding: 3px 10px; font-size: 0.74rem; cursor: pointer;">
-                        Remover
+        if (currentProductLinks.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 32px 20px; background: rgba(255,255,255,0.015); border: 1px dashed rgba(255,255,255,0.1); border-radius: 10px; color: #a8a096;">
+                    <p style="margin: 0 0 8px; font-size: 0.9rem; color: #ffffff;">Nenhum canal de venda cadastrado para este modelo.</p>
+                    <p style="margin: 0 0 14px; font-size: 0.78rem;">Clique no botão abaixo para adicionar opções como Shopee, Mercado Livre, Amazon, WhatsApp ou Checkout próprio.</p>
+                    <button type="button" class="btn-admin-gold" onclick="addNewPlatformLink('${container.id}')" style="padding: 6px 14px; font-size: 0.78rem;">
+                        + Adicionar Primeiro Canal
                     </button>
                 </div>
             `;
+            return;
         }
 
-        let platformTitleHtml = `
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <strong style="color: #FFFFFF; font-size: 0.88rem;">${link.label || link.platform_name}</strong>
-                <span style="font-size: 0.7rem; color: #a8a096; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 4px;">Produto Pai</span>
-            </div>
-        `;
+        currentProductLinks.forEach((link, idx) => {
+            const item = document.createElement('div');
+            const isActive = parseInt(link.is_active, 10) === 1;
+            const pConfig = getPlatformConfig(link.platform_name);
+            const brandColor = pConfig.accentColor || '#CBD0D6';
+            const isCustom = !Object.keys(CHANNEL_PLATFORMS).some(k => k.toLowerCase() === (link.platform_name || '').toLowerCase() && k !== 'Outro');
+            const selectedSelectVal = isCustom ? 'Outro' : link.platform_name;
 
-        if (!isCanonical) {
-            platformTitleHtml = `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <strong style="color: #FFFFFF; font-size: 0.86rem;">🔗 Canal Personalizado:</strong>
-                    <input type="text" class="form-input" value="${link.platform_name || ''}" placeholder="Ex: Amazon" 
-                           oninput="currentProductLinks[${idx}].platform_name = this.value; currentProductLinks[${idx}].button_text = 'Comprar no ' + this.value;"
-                           style="padding: 4px 8px; font-size: 0.78rem; width: 140px; display: inline-block;">
+            item.className = 'channel-editor-card';
+            item.style.background = isActive ? 'rgba(255,255,255,0.025)' : 'rgba(255,255,255,0.01)';
+            item.style.border = isActive ? `1.5px solid ${brandColor}77` : '1px solid rgba(255,255,255,0.08)';
+            item.style.borderRadius = '10px';
+            item.style.padding = '14px 16px';
+            item.style.marginBottom = '14px';
+            item.style.transition = 'all 0.2s ease';
+            item.style.opacity = isActive ? '1' : '0.65';
+
+            const priceDisplay = link.price || '';
+            const badgeDisplay = link.badge || '';
+            const btnTextDisplay = link.button_text || pConfig.defaultBtn;
+            const targetVal = link.target || '_blank';
+
+            item.innerHTML = `
+                <!-- TOPO DO CARD: CANAL, ORDEM, STATUS E REMOVER -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: rgba(212,186,136,0.18); color: #ded7cf; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(212,186,136,0.3);">
+                            #${idx + 1}
+                        </span>
+
+                        <!-- SELETOR DE PLATAFORMA COM PRESETS -->
+                        <select class="form-select" style="font-size: 0.82rem; padding: 4px 10px; width: 220px; font-weight: 600;" onchange="changeChannelPlatform(${idx}, this.value, '${container.id}')">
+                            <option value="Shopee" ${selectedSelectVal === 'Shopee' ? 'selected' : ''}>🟠 Shopee</option>
+                            <option value="Mercado Livre" ${selectedSelectVal === 'Mercado Livre' ? 'selected' : ''}>🟡 Mercado Livre</option>
+                            <option value="Amazon" ${selectedSelectVal === 'Amazon' ? 'selected' : ''}>📦 Amazon</option>
+                            <option value="WhatsApp" ${selectedSelectVal === 'WhatsApp' ? 'selected' : ''}>💬 WhatsApp (Consultor VIP)</option>
+                            <option value="Compra Direta" ${selectedSelectVal === 'Compra Direta' ? 'selected' : ''}>💎 Compra Direta / Boutique</option>
+                            <option value="TikTok Shop" ${selectedSelectVal === 'TikTok Shop' ? 'selected' : ''}>⚫ TikTok Shop</option>
+                            <option value="Asaas Pix" ${selectedSelectVal === 'Asaas Pix' ? 'selected' : ''}>💠 Asaas Pix</option>
+                            <option value="Enjoei" ${selectedSelectVal === 'Enjoei' ? 'selected' : ''}>🛍️ Enjoei</option>
+                            <option value="Elo7" ${selectedSelectVal === 'Elo7' ? 'selected' : ''}>🎀 Elo7</option>
+                            <option value="Instagram Shop" ${selectedSelectVal === 'Instagram Shop' ? 'selected' : ''}>📸 Instagram Shop</option>
+                            <option value="Outro" ${selectedSelectVal === 'Outro' ? 'selected' : ''}>🔗 Outro / Personalizado</option>
+                        </select>
+
+                        <!-- INPUT PARA NOME PERSONALIZADO SE SELECIONADO 'OUTRO' -->
+                        <input type="text" class="form-input" value="${isCustom ? escapeHtml(link.platform_name || '') : ''}" 
+                               placeholder="Nome do Canal (Ex: Shein)" 
+                               style="font-size: 0.78rem; padding: 4px 8px; width: 140px; display: ${isCustom ? 'inline-block' : 'none'};"
+                               oninput="currentProductLinks[${idx}].platform_name = this.value"
+                               onchange="if(!currentProductLinks[${idx}].button_text || currentProductLinks[${idx}].button_text.startsWith('Comprar')) { currentProductLinks[${idx}].button_text = 'Comprar no ' + this.value; } renderPlatformLinks('${container.id}');">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <!-- BOTÕES DE REORDENAÇÃO (SUBIR / DESCER) -->
+                        <button type="button" class="btn-table-action" onclick="moveChannelLink(${idx}, -1, '${container.id}')" ${idx === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''} title="Mover canal para cima" style="padding: 2px 7px; font-size: 0.78rem;">
+                            ↑
+                        </button>
+                        <button type="button" class="btn-table-action" onclick="moveChannelLink(${idx}, 1, '${container.id}')" ${idx === currentProductLinks.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''} title="Mover canal para baixo" style="padding: 2px 7px; font-size: 0.78rem;">
+                            ↓
+                        </button>
+
+                        <!-- STATUS SWITCH ATIVO/INATIVO -->
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; margin: 0 4px;">
+                            <input type="checkbox" ${isActive ? 'checked' : ''} 
+                                   onchange="toggleChannelActive(${idx}, this.checked, '${container.id}')" 
+                                   style="width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer;">
+                            <span style="font-size: 0.78rem; font-weight: 600; color: ${isActive ? '#4ade80' : '#9ca3af'};">
+                                ${isActive ? '● Ativo' : '○ Inativo'}
+                            </span>
+                        </label>
+
+                        <!-- REMOVER CANAL -->
+                        <button type="button" onclick="removePlatformLink(${idx}, '${container.id}')" title="Excluir este canal deste modelo" style="background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 5px; padding: 3px 8px; font-size: 0.74rem; cursor: pointer;">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LINHA 1 DE INPUTS: URL + PREÇO ESPECÍFICO -->
+                <div style="display: grid; grid-template-columns: 2.2fr 1fr; gap: 12px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
+                            URL do Anúncio ou Ação de Compra *
+                        </label>
+                        <input type="text" class="form-input" value="${escapeHtml(link.url || '')}" 
+                               placeholder="${pConfig.placeholder}" 
+                               oninput="currentProductLinks[${idx}].url = this.value.trim(); updateLinksCountBadge();" 
+                               style="padding: 7px 10px; font-size: 0.82rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
+                            Preço Específico (R$)
+                        </label>
+                        <input type="text" class="form-input" value="${escapeHtml(priceDisplay)}" 
+                               placeholder="Padrão do modelo"
+                               onkeyup="formatCurrencyLive(this)" 
+                               oninput="currentProductLinks[${idx}].price = this.value" 
+                               style="padding: 7px 10px; font-size: 0.82rem;">
+                    </div>
+                </div>
+
+                <!-- LINHA 2 DE INPUTS: TEXTO DO BOTÃO + SELO/BADGE + DESTINO -->
+                <div style="display: grid; grid-template-columns: 1.6fr 1.2fr 130px; gap: 12px; margin-bottom: 8px;">
+                    <div>
+                        <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
+                            Texto do Botão
+                        </label>
+                        <input type="text" class="form-input" value="${escapeHtml(btnTextDisplay)}" 
+                               placeholder="Ex: Comprar"
+                               oninput="currentProductLinks[${idx}].button_text = this.value" 
+                               style="padding: 7px 10px; font-size: 0.82rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
+                            Selo / Destaque do Canal (Opcional)
+                        </label>
+                        <input type="text" class="form-input" value="${escapeHtml(badgeDisplay)}" 
+                               placeholder="Ex: Oficial, Frete Grátis..." 
+                               oninput="currentProductLinks[${idx}].badge = this.value" 
+                               style="padding: 7px 10px; font-size: 0.82rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
+                            Destino da Janela
+                        </label>
+                        <select class="form-select" style="padding: 7px 8px; font-size: 0.78rem;" onchange="currentProductLinks[${idx}].target = this.value">
+                            <option value="_blank" ${targetVal === '_blank' ? 'selected' : ''}>Nova Aba (↗)</option>
+                            <option value="_self" ${targetVal === '_self' ? 'selected' : ''}>Mesma Aba (↻)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- MINI PRÉVIA DO BOTÃO COMO APARECERÁ NA VITRINE -->
+                <div style="background: rgba(0,0,0,0.25); border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; font-size: 0.74rem; color: #a8a096; margin-top: 6px;">
+                    <span style="font-size: 0.7rem;">Prévia na Boutique:</span>
+                    <span style="color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        <span style="color: ${brandColor}; font-weight: bold;">●</span>
+                        <span>${escapeHtml(btnTextDisplay)}</span>
+                        ${badgeDisplay ? `<span style="background: rgba(212,186,136,0.2); color: #ded7cf; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px;">${escapeHtml(badgeDisplay)}</span>` : ''}
+                        <span style="color: #CBD0D6; font-size: 0.72rem;">${priceDisplay ? '— R$ ' + priceDisplay : ''}</span>
+                        <span>↗</span>
+                    </span>
                 </div>
             `;
-        }
-
-        item.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px;">
-                ${platformTitleHtml}
-                ${headerRightHtml}
-            </div>
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1.2fr; gap: 12px;">
-                <div>
-                    <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 4px; font-weight: 500;">
-                        URL do Anúncio ou Ação de Compra
-                    </label>
-                    <input type="text" class="form-input" value="${link.url || ''}" 
-                           placeholder="${link.placeholder || 'https://...'}" 
-                           oninput="currentProductLinks[${idx}].url = this.value.trim(); updateLinksCountBadge();" 
-                           style="padding: 7px 10px; font-size: 0.82rem;">
-                </div>
-                <div>
-                    <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 4px; font-weight: 500;">
-                        Preço Específico (R$)
-                    </label>
-                    <input type="text" class="form-input" value="${link.price || ''}" 
-                           placeholder="Padrão do modelo"
-                           onkeyup="formatCurrencyLive(this)" 
-                           oninput="currentProductLinks[${idx}].price = this.value" 
-                           style="padding: 7px 10px; font-size: 0.82rem;">
-                </div>
-                <div>
-                    <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 4px; font-weight: 500;">
-                        Texto do Botão
-                    </label>
-                    <input type="text" class="form-input" value="${link.button_text || ''}" 
-                           placeholder="Ex: Comprar"
-                           oninput="currentProductLinks[${idx}].button_text = this.value" 
-                           style="padding: 7px 10px; font-size: 0.82rem;">
-                </div>
-            </div>
-        `;
-        container.appendChild(item);
+            container.appendChild(item);
+        });
     });
 }
 
-function toggleChannelActive(idx, isChecked) {
+function changeChannelPlatform(idx, newPlat, containerId) {
+    if (!currentProductLinks[idx]) return;
+    const item = currentProductLinks[idx];
+    const prevConfig = getPlatformConfig(item.platform_name);
+    const newConfig = getPlatformConfig(newPlat);
+
+    item.platform_name = newPlat;
+    item.canonical_key = newPlat;
+    item.accent_color = newConfig.accentColor;
+    item.label = newConfig.label;
+    item.placeholder = newConfig.placeholder;
+    item.target = newConfig.target;
+
+    // Se o texto do botão era o padrão do canal anterior, atualizar para o padrão do novo canal
+    if (!item.button_text || item.button_text === prevConfig.defaultBtn || item.button_text.startsWith('Comprar no ') || item.button_text.startsWith('Comprar na ')) {
+        item.button_text = newConfig.defaultBtn;
+    }
+
+    if (!item.badge || item.badge === prevConfig.badge) {
+        item.badge = newConfig.badge;
+    }
+
+    if (newPlat === 'Compra Direta' && (!item.url || item.url === '')) {
+        item.url = '/checkout';
+    }
+
+    renderPlatformLinks(containerId);
+}
+
+function moveChannelLink(idx, direction, containerId) {
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= currentProductLinks.length) return;
+
+    const temp = currentProductLinks[idx];
+    currentProductLinks[idx] = currentProductLinks[targetIdx];
+    currentProductLinks[targetIdx] = temp;
+
+    currentProductLinks.forEach((l, i) => { l.sort_order = i; });
+    renderPlatformLinks(containerId);
+}
+
+function toggleChannelActive(idx, isChecked, containerId = 'productLinksContainer') {
     if (currentProductLinks[idx]) {
         currentProductLinks[idx].is_active = isChecked ? 1 : 0;
-        renderPlatformLinks();
+        renderPlatformLinks(containerId);
     }
 }
 
-function addNewPlatformLink() {
-    const defaultPrice = document.getElementById('prodPrice')?.value || '40,00';
+function addNewPlatformLink(containerId = 'productLinksContainer') {
+    const defaultPrice = document.getElementById('prodPrice')?.value || '380,00';
+    const newPlatKey = 'Shopee';
+    const pConfig = CHANNEL_PLATFORMS[newPlatKey];
+
     currentProductLinks.push({
-        platform_name: 'Outro Canal',
-        canonical_key: 'custom',
-        label: '🔗 Canal Adicional',
-        placeholder: 'https://...',
-        accent_color: '#9e978e',
+        platform_name: newPlatKey,
+        canonical_key: newPlatKey,
+        label: pConfig.label,
+        placeholder: pConfig.placeholder,
+        accent_color: pConfig.accentColor,
         url: '',
         price: defaultPrice,
-        button_text: 'Comprar no Canal Oficial',
+        button_text: pConfig.defaultBtn,
+        badge: pConfig.badge,
         button_color: 'default',
         button_size: 'md',
-        target: '_blank',
+        target: pConfig.target,
         is_active: 1,
         sort_order: currentProductLinks.length,
         is_canonical: false
     });
-    renderPlatformLinks();
+
+    renderPlatformLinks(containerId);
 }
 
-function removePlatformLink(idx) {
+function removePlatformLink(idx, containerId = 'productLinksContainer') {
     currentProductLinks.splice(idx, 1);
-    renderPlatformLinks();
+    currentProductLinks.forEach((l, i) => { l.sort_order = i; });
+    renderPlatformLinks(containerId);
+}
+
+function updateTableRowChannelTags(prodId, links) {
+    const container = document.getElementById(`model-links-tags-${prodId}`);
+    if (!container) return;
+    const active = (links || []).filter(l => (parseInt(l.is_active, 10) === 1) && l.url && l.url.trim() !== '');
+    if (active.length === 0) {
+        container.innerHTML = '<span style="color: #6b655c; font-size: 0.74rem;">Nenhum canal ativo</span>';
+        return;
+    }
+    container.innerHTML = active.map(lnk => {
+        const plat = (lnk.platform_name || 'Canal').trim();
+        const rawSlug = plat.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let slug = 'outro';
+        if (rawSlug.includes('shopee')) slug = 'shopee';
+        else if (rawSlug.includes('mercado') || rawSlug.includes('ml')) slug = 'mercadolivre';
+        else if (rawSlug.includes('amazon')) slug = 'amazon';
+        else if (rawSlug.includes('tiktok')) slug = 'tiktok';
+        else if (rawSlug.includes('whatsapp') || rawSlug.includes('wa')) slug = 'whatsapp';
+        else if (rawSlug.includes('diret') || rawSlug.includes('site') || rawSlug.includes('checkout')) slug = 'compradireta';
+        else if (rawSlug.includes('pix') || rawSlug.includes('asaas')) slug = 'pix';
+        else if (rawSlug.includes('instagram')) slug = 'instagram';
+        else if (rawSlug.includes('enjoei')) slug = 'enjoei';
+        else if (rawSlug.includes('elo7')) slug = 'elo7';
+
+        const priceFmt = lnk.price_cents ? ' — R$ ' + (lnk.price_cents / 100).toFixed(2).replace('.', ',') : (lnk.price ? ' — R$ ' + lnk.price : '');
+        const target = lnk.target === '_self' ? '_self' : '_blank';
+        const badge = lnk.badge ? ` [${escapeHtml(lnk.badge)}]` : '';
+        const title = escapeHtml((lnk.button_text || plat) + badge + priceFmt);
+
+        return `<a href="${escapeHtml(lnk.url)}" target="${target}" rel="noopener noreferrer" class="platform-mini-tag tag-${slug}" title="${title}"><span>${escapeHtml(plat)}</span><span>↗</span></a>`;
+    }).join('');
+}
+
+async function saveQuickModelChannels() {
+    const prodId = document.getElementById('quickModalProdId')?.value;
+    if (!prodId || parseInt(prodId, 10) <= 0) {
+        alert('Modelo inválido selecionado.');
+        return;
+    }
+
+    const btn = document.getElementById('btnQuickSaveChannels');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Salvando Canais...</span>';
+    }
+
+    const formData = new FormData();
+    formData.append('product_id', prodId);
+    formData.append('links', JSON.stringify(currentProductLinks));
+    const csrf = getCsrfToken();
+    if (csrf) formData.append('_csrf_token', csrf);
+
+    try {
+        const res = await fetch('/admin/produtos/salvar-canais', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf }
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message || 'Canais de venda salvos com sucesso!');
+            if (quickModalCurrentGroup) {
+                quickModalCurrentGroup.links = data.links || currentProductLinks;
+            }
+            updateTableRowChannelTags(prodId, data.links || currentProductLinks);
+            closeModelChannelsQuickModal();
+        } else {
+            alert(data.error || 'Erro ao salvar canais.');
+        }
+    } catch (err) {
+        alert('Erro ao conectar com o servidor: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
 }
 
 async function saveCurrentModelChannels() {
@@ -2230,6 +2645,7 @@ async function saveCurrentModelChannels() {
         if (data.success) {
             showToast(data.message || 'Canais de compra salvos com sucesso!');
             updateLinksCountBadge();
+            updateTableRowChannelTags(prodId, data.links || currentProductLinks);
         } else {
             alert(data.error || 'Erro ao salvar canais.');
         }

@@ -527,6 +527,7 @@ class AdminController
                         $lTarget = str_starts_with($u, '/') ? '_self' : '_blank';
                     }
 
+                    $lBadge = !empty($linkItem['badge']) ? trim((string) $linkItem['badge']) : null;
                     $lActive = isset($linkItem['is_active']) ? ((int) $linkItem['is_active'] ? 1 : 0) : 1;
                     $lSort = isset($linkItem['sort_order']) ? (int) $linkItem['sort_order'] : (int) $idx;
 
@@ -538,6 +539,7 @@ class AdminController
                         'button_color' => $btnColor,
                         'button_size' => $btnSize,
                         'target' => $lTarget,
+                        'badge' => $lBadge,
                         'is_active' => $lActive,
                         'sort_order' => $lSort,
                     ];
@@ -553,8 +555,8 @@ class AdminController
 
             if (!empty($validLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($validLinks as $vl) {
                     $insLink->execute([
@@ -567,7 +569,8 @@ class AdminController
                         $vl['button_size'],
                         $vl['target'],
                         $vl['is_active'],
-                        $vl['sort_order']
+                        $vl['sort_order'],
+                        $vl['badge']
                     ]);
                 }
             }
@@ -865,8 +868,8 @@ class AdminController
 
             if (!empty($origLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($origLinks as $ol) {
                     $insLink->execute([
@@ -879,7 +882,8 @@ class AdminController
                         $ol['button_size'] ?? 'md',
                         $ol['target'] ?? '_blank',
                         $ol['is_active'],
-                        $ol['sort_order']
+                        $ol['sort_order'],
+                        $ol['badge'] ?? null
                     ]);
                 }
             }
@@ -1451,8 +1455,8 @@ class AdminController
 
             $insStmt = $this->pdo->prepare("
                 INSERT INTO product_links 
-                (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $primaryExternalUrl = '';
@@ -1494,11 +1498,12 @@ class AdminController
                         $target = str_starts_with($url, '/') ? '_self' : '_blank';
                     }
 
+                    $badge = !empty($link['badge']) ? trim((string)$link['badge']) : null;
                     $isActive = isset($link['is_active']) ? ((int)$link['is_active'] ? 1 : 0) : 1;
                     $sort = isset($link['sort_order']) ? (int)$link['sort_order'] : $idx;
 
                     $insStmt->execute([
-                        $productId, $plat, $url, $priceCents, $btnText, $btnColor, $btnSize, $target, $isActive, $sort
+                        $productId, $plat, $url, $priceCents, $btnText, $btnColor, $btnSize, $target, $isActive, $sort, $badge
                     ]);
 
                     if ($primaryExternalUrl === '' && $isActive) {
@@ -1511,9 +1516,15 @@ class AdminController
                 $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?")->execute([$primaryExternalUrl, $productId]);
             }
 
+            // Buscar os links atualizados para retornar ao frontend
+            $updatedLinksStmt = $this->pdo->prepare("SELECT * FROM product_links WHERE product_id = ? ORDER BY sort_order ASC, id ASC");
+            $updatedLinksStmt->execute([$productId]);
+            $savedLinks = $updatedLinksStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+
             $this->respond([
                 'success' => true,
-                'message' => 'Canais de compra do modelo "' . $parentProd['name'] . '" salvos com sucesso!'
+                'message' => 'Canais de compra do modelo "' . $parentProd['name'] . '" salvos com sucesso!',
+                'links' => $savedLinks
             ]);
         } catch (\Throwable $e) {
             $this->respond(['success' => false, 'error' => 'Erro ao salvar canais: ' . $e->getMessage()], 200);

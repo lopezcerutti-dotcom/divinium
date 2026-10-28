@@ -6437,5 +6437,60 @@ body.theme-rose .btn-store-back {
     border-color: #25d366;
 }
 
+.btn-channel-chip.platform-chip-amazon {
+    border-color: rgba(255, 153, 0, 0.4);
+    color: #ffb74d;
+}
+.btn-channel-chip.platform-chip-amazon:hover {
+    background: rgba(255, 153, 0, 0.12);
+    border-color: #ff9900;
+}
+
+.btn-channel-chip.platform-chip-pix {
+    border-color: rgba(0, 210, 198, 0.4);
+    color: #00d2c6;
+}
+.btn-channel-chip.platform-chip-pix:hover {
+    background: rgba(0, 210, 198, 0.12);
+    border-color: #00d2c6;
+}
+
+.btn-channel-chip.platform-chip-instagram {
+    border-color: rgba(225, 48, 108, 0.4);
+    color: #f472b6;
+}
+.btn-channel-chip.platform-chip-instagram:hover {
+    background: rgba(225, 48, 108, 0.12);
+    border-color: #e1306c;
+}
+
+.btn-channel-chip.platform-chip-enjoei {
+    border-color: rgba(232, 59, 94, 0.4);
+    color: #fb7185;
+}
+.btn-channel-chip.platform-chip-enjoei:hover {
+    background: rgba(232, 59, 94, 0.12);
+    border-color: #e83b5e;
+}
+
+.btn-channel-chip.platform-chip-elo7 {
+    border-color: rgba(255, 136, 0, 0.4);
+    color: #fb923c;
+}
+.btn-channel-chip.platform-chip-elo7:hover {
+    background: rgba(255, 136, 0, 0.12);
+    border-color: #ff8800;
+}
+
+.btn-channel-chip.platform-chip-outro {
+    border-color: rgba(167, 173, 180, 0.35);
+    color: #ded7cf;
+}
+.btn-channel-chip.platform-chip-outro:hover {
+    background: rgba(167, 173, 180, 0.15);
+    border-color: #ffffff;
+}
+
+
 
 

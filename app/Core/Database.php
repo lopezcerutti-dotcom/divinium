@@ -289,6 +289,7 @@ class Database
                         url VARCHAR(500) NOT NULL,
                         price_cents INTEGER NULL,
                         button_text VARCHAR(100) NULL,
+                        badge VARCHAR(50) NULL,
                         is_active INTEGER DEFAULT 1,
                         sort_order INTEGER DEFAULT 0,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -304,6 +305,7 @@ class Database
                         `url` VARCHAR(500) NOT NULL,
                         `price_cents` INT UNSIGNED NULL,
                         `button_text` VARCHAR(100) NULL,
+                        `badge` VARCHAR(50) NULL,
                         `is_active` TINYINT(1) NOT NULL DEFAULT 1,
                         `sort_order` INT NOT NULL DEFAULT 0,
                         `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -436,11 +438,12 @@ class Database
                 // Silencioso
             }
 
-            // 2.1 Garantir novas colunas em product_links (cor, tamanho e target do botão)
+            // 2.1 Garantir novas colunas em product_links (cor, tamanho, target e badge do botão)
             $neededLinkCols = [
                 'button_color' => "VARCHAR(50) DEFAULT 'default'",
                 'button_size' => "VARCHAR(20) DEFAULT 'md'",
                 'target' => "VARCHAR(20) DEFAULT '_blank'",
+                'badge' => "VARCHAR(50) NULL",
             ];
 
             $existingLinkCols = [];

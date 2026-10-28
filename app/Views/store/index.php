@@ -352,6 +352,10 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                     elseif (str_contains($platLower, 'whatsapp') || str_contains($platLower, 'wa')) $platSlug = 'whatsapp';
                                     elseif (str_contains($platLower, 'diret') || str_contains($platLower, 'site')) $platSlug = 'compradireta';
                                     elseif (str_contains($platLower, 'amazon')) $platSlug = 'amazon';
+                                    elseif (str_contains($platLower, 'pix') || str_contains($platLower, 'asaas')) $platSlug = 'pix';
+                                    elseif (str_contains($platLower, 'instagram')) $platSlug = 'instagram';
+                                    elseif (str_contains($platLower, 'enjoei')) $platSlug = 'enjoei';
+                                    elseif (str_contains($platLower, 'elo7')) $platSlug = 'elo7';
 
                                     $uLnk = trim((string)($lnk['url'] ?? ''));
                                     $isDirect = str_starts_with($uLnk, '/');

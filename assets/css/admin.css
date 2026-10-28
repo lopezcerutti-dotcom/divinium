@@ -1215,6 +1215,63 @@ body.admin-theme {
     color: #CBD0D6;
 }
 
+.platform-mini-tag.tag-pix,
+.platform-mini-tag.tag-asaas {
+    border-color: rgba(0, 210, 198, 0.4);
+    color: #00d2c6;
+}
+
+.platform-mini-tag.tag-instagram {
+    border-color: rgba(225, 48, 108, 0.4);
+    color: #f472b6;
+}
+
+.platform-mini-tag.tag-enjoei {
+    border-color: rgba(232, 59, 94, 0.4);
+    color: #fb7185;
+}
+
+.platform-mini-tag.tag-elo7 {
+    border-color: rgba(255, 136, 0, 0.4);
+    color: #fb923c;
+}
+
+.platform-mini-tag.tag-outro {
+    border-color: rgba(167, 173, 180, 0.35);
+    color: #CBD0D6;
+}
+
+.btn-channel-quick-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(212, 186, 136, 0.08);
+    border: 1px solid rgba(212, 186, 136, 0.3);
+    color: #ded7cf;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-channel-quick-edit:hover {
+    background: rgba(212, 186, 136, 0.2);
+    border-color: #ded7cf;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.model-channels-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
 /* Card do Link Repeater */
 .platform-link-card {
     background: rgba(255, 255, 255, 0.02);

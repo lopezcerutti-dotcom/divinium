@@ -576,49 +576,87 @@ function renderCategoryProductsList(products) {
 
 function renderChannelRowHtml(prodId, idx, link = {}) {
     const plat = link.platform_name || 'Shopee';
+    const isCustomPlat = !['Shopee', 'Mercado Livre', 'Amazon', 'WhatsApp', 'Compra Direta', 'Asaas Pix', 'TikTok Shop', 'Enjoei', 'Elo7', 'Instagram Shop'].includes(plat);
+    const selectedPlat = isCustomPlat ? 'Outro' : plat;
     const url = link.url || '';
     const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : `Comprar no ${plat}`);
-    const price = link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : '';
-    const isActive = link.is_active !== undefined ? link.is_active == 1 : true;
+    const price = link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : (link.price || '');
+    const badge = link.badge || '';
+    const target = link.target || (url.startsWith('/') ? '_self' : '_blank');
+    const isActive = link.is_active !== undefined ? (link.is_active == 1) : true;
 
     return `
-        <div class="channel-row-item channel-item-${prodId}">
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <div style="width: 140px; flex-shrink: 0;">
+        <div class="channel-row-item channel-item-${prodId}" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+            <div style="display: grid; grid-template-columns: 160px 1fr 110px; gap: 10px; margin-bottom: 8px;">
+                <div>
                     <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Plataforma</label>
-                    <select class="form-select channel-plat" style="font-size: 0.78rem; padding: 6px 8px;">
-                        <option value="Shopee" ${plat === 'Shopee' ? 'selected' : ''}>Shopee</option>
-                        <option value="Mercado Livre" ${plat === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
-                        <option value="Amazon" ${plat === 'Amazon' ? 'selected' : ''}>Amazon</option>
-                        <option value="WhatsApp" ${plat === 'WhatsApp' ? 'selected' : ''}>WhatsApp</option>
-                        <option value="Asaas Pix" ${plat === 'Asaas Pix' ? 'selected' : ''}>Asaas / Pix Direto</option>
-                        <option value="TikTok Shop" ${plat === 'TikTok Shop' ? 'selected' : ''}>TikTok Shop</option>
-                        <option value="Outro" ${!['Shopee','Mercado Livre','Amazon','WhatsApp','Asaas Pix','TikTok Shop'].includes(plat) ? 'selected' : ''}>Outro</option>
+                    <select class="form-select channel-plat" style="font-size: 0.78rem; padding: 6px 8px;" onchange="onCategoryChannelPlatChange(this)">
+                        <option value="Shopee" ${selectedPlat === 'Shopee' ? 'selected' : ''}>🟠 Shopee</option>
+                        <option value="Mercado Livre" ${selectedPlat === 'Mercado Livre' ? 'selected' : ''}>🟡 Mercado Livre</option>
+                        <option value="Amazon" ${selectedPlat === 'Amazon' ? 'selected' : ''}>📦 Amazon</option>
+                        <option value="WhatsApp" ${selectedPlat === 'WhatsApp' ? 'selected' : ''}>💬 WhatsApp</option>
+                        <option value="Compra Direta" ${selectedPlat === 'Compra Direta' ? 'selected' : ''}>💎 Compra Direta</option>
+                        <option value="Asaas Pix" ${selectedPlat === 'Asaas Pix' ? 'selected' : ''}>💠 Asaas Pix</option>
+                        <option value="TikTok Shop" ${selectedPlat === 'TikTok Shop' ? 'selected' : ''}>⚫ TikTok Shop</option>
+                        <option value="Enjoei" ${selectedPlat === 'Enjoei' ? 'selected' : ''}>🛍️ Enjoei</option>
+                        <option value="Elo7" ${selectedPlat === 'Elo7' ? 'selected' : ''}>🎀 Elo7</option>
+                        <option value="Instagram Shop" ${selectedPlat === 'Instagram Shop' ? 'selected' : ''}>📸 Instagram</option>
+                        <option value="Outro" ${selectedPlat === 'Outro' ? 'selected' : ''}>🔗 Outro (Personalizado)</option>
+                    </select>
+                    <input type="text" class="form-input channel-custom-plat" value="${isCustomPlat ? escapeHtml(plat) : ''}" placeholder="Nome do Canal" style="margin-top: 4px; font-size: 0.75rem; padding: 4px 6px; display: ${isCustomPlat ? 'block' : 'none'};">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">URL de Compra</label>
+                    <input type="text" class="form-input channel-url" value="${escapeHtml(url)}" placeholder="https://..." style="font-size: 0.78rem; padding: 6px 10px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Preço (R$)</label>
+                    <input type="text" class="form-input channel-price" value="${escapeHtml(price)}" placeholder="Padrão" style="font-size: 0.78rem; padding: 6px 8px;">
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr 120px auto; gap: 10px; align-items: flex-end;">
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Texto do Botão</label>
+                    <input type="text" class="form-input channel-btn-text" value="${escapeHtml(btnText)}" placeholder="Ex: Comprar agora" style="font-size: 0.78rem; padding: 6px 10px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Selo / Destaque</label>
+                    <input type="text" class="form-input channel-badge" value="${escapeHtml(badge)}" placeholder="Ex: Oficial, Frete Grátis..." style="font-size: 0.78rem; padding: 6px 10px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Destino</label>
+                    <select class="form-select channel-target" style="font-size: 0.76rem; padding: 6px 6px;">
+                        <option value="_blank" ${target === '_blank' ? 'selected' : ''}>Nova Aba (↗)</option>
+                        <option value="_self" ${target === '_self' ? 'selected' : ''}>Mesma Aba (↻)</option>
                     </select>
                 </div>
-                <div style="flex: 2; min-width: 200px;">
-                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">URL de Compra</label>
-                    <input type="url" class="form-input channel-url" value="${escapeHtml(url)}" placeholder="https://shopee.com.br/..." style="font-size: 0.78rem; padding: 6px 10px;">
-                </div>
-                <div style="width: 110px; flex-shrink: 0;">
-                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Preço Canal R$</label>
-                    <input type="text" class="form-input channel-price" value="${escapeHtml(price)}" placeholder="380,00" style="font-size: 0.78rem; padding: 6px 8px;">
-                </div>
-                <div style="flex: 1.5; min-width: 150px;">
-                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Texto do Botão</label>
-                    <input type="text" class="form-input channel-btn-text" value="${escapeHtml(btnText)}" placeholder="Comprar agora" style="font-size: 0.78rem; padding: 6px 10px;">
-                </div>
-                <div style="display: flex; align-items: center; gap: 6px; padding-top: 14px; flex-shrink: 0;">
-                    <label style="display: flex; align-items: center; gap: 4px; font-size: 0.74rem; color: #EDE7DF; cursor: pointer;">
-                        <input type="checkbox" class="channel-active" ${isActive ? 'checked' : ''} style="accent-color: #A7ADB4;"> Ativo
+                <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 4px;">
+                    <label style="display: flex; align-items: center; gap: 4px; font-size: 0.76rem; color: #EDE7DF; cursor: pointer; margin: 0;">
+                        <input type="checkbox" class="channel-active" ${isActive ? 'checked' : ''} style="accent-color: #22c55e;"> Ativo
                     </label>
-                    <button type="button" class="btn-table-action btn-delete" onclick="this.closest('.channel-row-item').remove()" style="padding: 4px 8px; font-size: 0.74rem;">
+                    <button type="button" class="btn-table-action btn-delete" onclick="this.closest('.channel-row-item').remove()" title="Remover Canal" style="padding: 5px 8px; font-size: 0.74rem;">
                         ✕
                     </button>
                 </div>
             </div>
         </div>
     `;
+}
+
+function onCategoryChannelPlatChange(selectElem) {
+    const row = selectElem.closest('.channel-row-item');
+    if (!row) return;
+    const customInput = row.querySelector('.channel-custom-plat');
+    const val = selectElem.value;
+    if (val === 'Outro') {
+        if (customInput) customInput.style.display = 'block';
+    } else {
+        if (customInput) customInput.style.display = 'none';
+        const btnTextInput = row.querySelector('.channel-btn-text');
+        if (btnTextInput && (!btnTextInput.value || btnTextInput.value.startsWith('Comprar'))) {
+            btnTextInput.value = (val === 'Shopee' || val === 'Amazon') ? ('Comprar na ' + val) : ('Comprar no ' + val);
+        }
+    }
 }
 
 function toggleProductVariantsAccordion(prodId) {
@@ -811,10 +849,16 @@ async function saveProductChannelsData(productId, btnElem) {
     const links = [];
 
     rows.forEach((row, idx) => {
-        const plat = row.querySelector('.channel-plat')?.value || 'Shopee';
+        let plat = row.querySelector('.channel-plat')?.value || 'Shopee';
+        if (plat === 'Outro') {
+            const customPlat = row.querySelector('.channel-custom-plat')?.value.trim();
+            if (customPlat) plat = customPlat;
+        }
         const url = row.querySelector('.channel-url')?.value || '';
         const price = row.querySelector('.channel-price')?.value || '';
         const btnText = row.querySelector('.channel-btn-text')?.value || '';
+        const badge = row.querySelector('.channel-badge')?.value || '';
+        const target = row.querySelector('.channel-target')?.value || '_blank';
         const isActive = row.querySelector('.channel-active')?.checked ? 1 : 0;
 
         if (url.trim() !== '') {
@@ -823,6 +867,8 @@ async function saveProductChannelsData(productId, btnElem) {
                 url: url,
                 price: price,
                 button_text: btnText,
+                badge: badge,
+                target: target,
                 is_active: isActive,
                 sort_order: idx
             });
