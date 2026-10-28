@@ -638,10 +638,12 @@ $settings = $settings ?? [];
                                                         elseif (str_contains($rawSlug, 'elo7')) $platSlug = 'elo7';
 
                                                         $linkPriceFormatted = !empty($lnk['price_cents']) ? number_format($lnk['price_cents'] / 100, 2, ',', '.') : '';
+                                                        $rawLinkUrl = trim((string)($lnk['url'] ?? ''));
+                                                        $linkUrl = ($rawLinkUrl !== '' && !str_starts_with($rawLinkUrl, '/') && !preg_match('#^https?://#i', $rawLinkUrl)) ? ('https://' . $rawLinkUrl) : $rawLinkUrl;
                                                         $targetAttr = !empty($lnk['target']) && $lnk['target'] === '_self' ? '_self' : '_blank';
                                                         $linkBadge = !empty($lnk['badge']) ? ' [' . $lnk['badge'] . ']' : '';
                                                     ?>
-                                                    <a href="<?= \App\Core\View::e($lnk['url']) ?>" target="<?= $targetAttr ?>" rel="noopener noreferrer" 
+                                                    <a href="<?= \App\Core\View::e($linkUrl) ?>" target="<?= $targetAttr ?>" rel="noopener noreferrer" 
                                                        class="platform-mini-tag tag-<?= $platSlug ?>" 
                                                        title="<?= \App\Core\View::e(($lnk['button_text'] ?? $platName) . $linkBadge) ?><?= $linkPriceFormatted ? ' — R$ ' . $linkPriceFormatted : '' ?>">
                                                         <span><?= \App\Core\View::e($platName) ?></span>
@@ -653,7 +655,11 @@ $settings = $settings ?? [];
                                             <?php endif; ?>
                                         </div>
 
-                                        <button type="button" class="btn-channel-quick-edit" onclick="openModelChannelsBySku('<?= \App\Core\View::e($grp['base_sku']) ?>')" title="Configurar canais de venda para <?= \App\Core\View::e($grp['name']) ?>">
+                                        <button type="button" class="btn-channel-quick-edit" 
+                                                data-base-sku="<?= \App\Core\View::e($grp['base_sku']) ?>" 
+                                                data-group-id="<?= (int)$grp['id'] ?>"
+                                                onclick="openModelChannelsBySku(this.getAttribute('data-base-sku'), this.getAttribute('data-group-id'))" 
+                                                title="Configurar canais de venda para <?= \App\Core\View::e($grp['name']) ?>">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                             <span>Editar Canais</span>
                                         </button>
@@ -1488,15 +1494,37 @@ $settings = $settings ?? [];
 <!-- SCRIPTS DA CENTRAL UNIFICADA                                   -->
 <!-- ============================================================== -->
 <script>
-// Catálogo de Modelos Auturais para acesso dinâmico de canais sem escape HTML
-window.allCatalogGroups = <?= json_encode(array_values($groups), JSON_UNESCAPED_UNICODE) ?>;
+// Função utilitária global para sanitização e escape HTML
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
 
-function openModelChannelsBySku(baseSku) {
-    const group = (window.allCatalogGroups || []).find(g => (g.base_sku === baseSku || g.sku === baseSku));
+// Catálogo de Modelos Autorais para acesso dinâmico de canais protegido contra quebras de tag script
+window.allCatalogGroups = <?= json_encode(array_values($groups), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?>;
+
+function openModelChannelsBySku(baseSku, prodId = null) {
+    let group = null;
+    const allGroups = window.allCatalogGroups || [];
+    if (baseSku) {
+        const cleanSku = String(baseSku).trim().toUpperCase();
+        group = allGroups.find(g => 
+            (g.base_sku && String(g.base_sku).trim().toUpperCase() === cleanSku) ||
+            (g.sku && String(g.sku).trim().toUpperCase() === cleanSku)
+        );
+    }
+    if (!group && prodId) {
+        group = allGroups.find(g => String(g.id) === String(prodId));
+    }
     if (group) {
         openModelChannelsQuickModal(group);
     } else {
-        alert('Modelo autoral não encontrado.');
+        alert('Modelo autoral não encontrado (' + (baseSku || prodId) + ').');
     }
 }
 
@@ -1614,6 +1642,10 @@ function switchProductTab(tab) {
 
     if (btn) btn.classList.add('active');
     if (pane) pane.classList.add('active');
+
+    if (tab === 'links') {
+        renderPlatformLinks('productLinksContainer');
+    }
 }
 
 function updateImagePreview(url) {

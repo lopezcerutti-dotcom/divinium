@@ -159,6 +159,16 @@
 
     <!-- SCRIPT PROTETOR GLOBAL DE REQUISIÇÕES ADMINISTRATIVAS -->
     <script>
+    window.escapeHtml = function(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
     (function() {
         // Blindagem do Response.prototype.json para nunca quebrar com HTML inesperado
         const originalJson = Response.prototype.json;

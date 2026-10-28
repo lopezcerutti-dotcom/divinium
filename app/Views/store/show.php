@@ -529,10 +529,14 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <div class="channels-action-list <?= $buttonLayout === 'grid' ? 'channels-layout-grid' : 'channels-layout-list' ?>">
                                 <?php foreach ($displayChannels as $channel): 
                                     $platSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $channel['platform']));
+                                    $cUrl = trim((string)($channel['url'] ?? ''));
+                                    if ($cUrl !== '' && !str_starts_with($cUrl, '/') && !preg_match('#^https?://#i', $cUrl)) {
+                                        $cUrl = 'https://' . $cUrl;
+                                    }
                                     $targetAttr = !empty($channel['target']) && $channel['target'] === '_self' ? '_self' : '_blank';
                                 ?>
                                     <div class="channel-option-wrapper">
-                                        <a href="<?= View::e($channel['url']) ?>" 
+                                        <a href="<?= View::e($cUrl) ?>" 
                                            target="<?= $targetAttr ?>" 
                                            rel="noopener noreferrer"
                                            class="btn-channel-impartial btn-channel-external platform-<?= $platSlug ?>"
@@ -946,6 +950,14 @@ function selectProductVariation(btn) {
             pVal.textContent = 'R$ ' + priceFormatted;
         }
     });
+
+    // 9.1 Atualizar link da Shopee/canal externo se a variação tiver link individual
+    if (extUrl) {
+        const extBtn = document.querySelector('.btn-channel-external.platform-shopee') || document.querySelector('.btn-channel-external[data-platform*="shopee"]');
+        if (extBtn) {
+            extBtn.href = extUrl;
+        }
+    }
 
     // 10. Atualizar URL com o parâmetro da variante selecionada sem recarregar a página
     if (sku && window.history && window.history.replaceState) {

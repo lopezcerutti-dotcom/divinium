@@ -175,6 +175,30 @@ class StoreController
                             ]
                         ];
                     }
+                    if (empty($prod['links'])) {
+                        $centralChannels = \App\Models\Setting::getProductChannelsList();
+                        if (!empty($centralChannels)) {
+                            foreach ($centralChannels as $cIdx => $cc) {
+                                if (empty($cc['visible'])) continue;
+                                $cUrl = trim((string)($cc['url'] ?? ''));
+                                if ($cUrl === '') continue;
+                                $prod['links'][] = [
+                                    'id' => 0,
+                                    'product_id' => $prod['id'],
+                                    'platform_name' => $cc['platform'] ?? 'Comprar',
+                                    'url' => $cUrl,
+                                    'price_cents' => $prod['price_cents'] ?? 38000,
+                                    'button_text' => !empty($cc['title']) ? $cc['title'] : ('Comprar na ' . ($cc['platform'] ?? 'Loja Oficial')),
+                                    'button_color' => 'default',
+                                    'button_size' => 'md',
+                                    'badge' => $cc['badge'] ?? '',
+                                    'target' => $cc['target'] ?? '_blank',
+                                    'is_active' => 1,
+                                    'sort_order' => $cIdx
+                                ];
+                            }
+                        }
+                    }
                 }
                 unset($prod);
             }

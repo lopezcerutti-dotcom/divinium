@@ -232,6 +232,26 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                 ]
                             ];
                         }
+
+                        if (empty($validLinks)) {
+                            $cChannels = Setting::getProductChannelsList();
+                            if (!empty($cChannels)) {
+                                foreach ($cChannels as $cCh) {
+                                    if (empty($cCh['visible'])) continue;
+                                    $cu = trim((string)($cCh['url'] ?? ''));
+                                    if ($cu === '') continue;
+                                    $validLinks[] = [
+                                        'id' => $cCh['id'] ?? 0,
+                                        'platform_name' => $cCh['platform'] ?? 'Comprar',
+                                        'url' => $cu,
+                                        'price_cents' => $basePriceCents,
+                                        'button_text' => !empty($cCh['title']) ? $cCh['title'] : ('Comprar no ' . ($cCh['platform'] ?? 'Canal')),
+                                        'target' => !empty($cCh['target']) ? $cCh['target'] : '_blank',
+                                        'is_active' => 1
+                                    ];
+                                }
+                            }
+                        }
                         
                         // Resolução de URL Própria e Comportamento de Clique do Card
                         $prodSlug = !empty($prod['slug']) ? $prod['slug'] : ('joia-' . $prod['id']);
@@ -358,6 +378,9 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                     elseif (str_contains($platLower, 'elo7')) $platSlug = 'elo7';
 
                                     $uLnk = trim((string)($lnk['url'] ?? ''));
+                                    if ($uLnk !== '' && !str_starts_with($uLnk, '/') && !preg_match('#^https?://#i', $uLnk)) {
+                                        $uLnk = 'https://' . $uLnk;
+                                    }
                                     $isDirect = str_starts_with($uLnk, '/');
                                     $targetLnk = !empty($lnk['target']) ? $lnk['target'] : ($isDirect ? '_self' : '_blank');
                                     $btnText = !empty($lnk['button_text']) ? $lnk['button_text'] : ('Comprar no ' . $platName);
