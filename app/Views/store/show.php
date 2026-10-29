@@ -14,36 +14,8 @@ use App\Models\Setting;
 use App\Core\View;
 
 if (!function_exists('getPlatformIconSvgShow')) {
-    function getPlatformIconSvgShow(string $platform): string {
-        $plat = strtolower(trim($platform));
-        if (str_contains($plat, 'shopee')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="channel-svg"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h6v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"/></svg>';
-        }
-        if (str_contains($plat, 'mercado')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
-        }
-        if (str_contains($plat, 'amazon')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>';
-        }
-        if (str_contains($plat, 'tiktok')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="channel-svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.49 6.27 6.27 0 0 0 1.87-4.49V8.62a8.28 8.28 0 0 0 3.9 1.07V6.69z"/></svg>';
-        }
-        if (str_contains($plat, 'whatsapp') || str_contains($plat, 'wa.me')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
-        }
-        if (str_contains($plat, 'pix') || str_contains($plat, 'asaas')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><path d="M12 2L3 12l9 10 9-10L12 2zm0 3.8L18.2 12 12 18.2 5.8 12 12 5.8z"/></svg>';
-        }
-        if (str_contains($plat, 'instagram')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>';
-        }
-        if (str_contains($plat, 'enjoei') || str_contains($plat, 'elo7')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
-        }
-        if (str_contains($plat, 'oficial') || str_contains($plat, 'divinium') || str_contains($plat, 'diret') || str_contains($plat, 'site') || str_contains($plat, 'checkout')) {
-            return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
-        }
-        return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="channel-svg"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+    function getPlatformIconSvgShow(string $platform, int $size = 22): string {
+        return View::getPlatformLogoSvg($platform, $size);
     }
 }
 
@@ -512,8 +484,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                style="<?= $dirStyleStr ?>">
                                 
                                 <div class="channel-btn-left">
-                                    <span class="channel-icon-pill" style="background: rgba(167,173,180,0.15); color: <?= $dirColor ? View::e($dirColor) : 'var(--gold-accent)' ?>; border: 1px solid var(--border-light);">
-                                        <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '') ? '💎' : getPlatformIconSvgShow($directIcon) ?>
+                                    <span class="channel-icon-pill" style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); <?= $dirColor ? 'border-color: ' . View::e($dirColor) . ' !important;' : '' ?>">
+                                        <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '') ? View::getPlatformLogoSvg('direta', 22) : View::getPlatformLogoSvg($directIcon, 22) ?>
                                     </span>
                                     <div class="channel-meta-text">
                                         <span class="channel-action-name" style="color: <?= $dirColor ? View::e($dirColor) : 'var(--text-primary)' ?> !important; font-weight: 700;">
@@ -583,8 +555,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                             
                                             <!-- Lado Esquerdo: Ícone da Plataforma + Nome de Ação -->
                                             <div class="channel-btn-left">
-                                                <span class="channel-icon-pill" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>
-                                                    <?= getPlatformIconSvgShow($channel['icon']) ?>
+                                                <span class="channel-icon-pill" <?= $chColor ? 'style="border-color: ' . View::e($chColor) . ' !important;"' : '' ?>>
+                                                    <?= View::getPlatformLogoSvg($channel['platform'] ?: $channel['icon'], 22) ?>
                                                 </span>
                                                 <div class="channel-meta-text">
                                                     <span class="channel-action-name" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>
@@ -628,7 +600,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     
                                     <div class="channel-btn-left">
                                         <span class="channel-icon-pill">
-                                            <?= getPlatformIconSvgShow('whatsapp') ?>
+                                            <?= View::getPlatformLogoSvg('whatsapp', 22) ?>
                                         </span>
                                         <div class="channel-meta-text">
                                             <span class="channel-action-name">Consultar Disponibilidade com Consultor VIP</span>

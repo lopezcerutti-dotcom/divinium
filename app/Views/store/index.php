@@ -404,6 +404,7 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                        class="btn-channel-chip platform-chip-<?= $platSlug ?>" 
                                        <?= $chipStyleAttr ?>
                                        title="<?= View::e($btnText) ?>">
+                                        <span class="channel-logo-icon"><?= View::getPlatformLogoSvg($platName, 14) ?></span>
                                         <span <?= $chipText ? 'style="color: ' . View::e($chipText) . ' !important;"' : '' ?>><?= View::e($platName) ?></span>
                                         <span <?= $chipText ? 'style="color: ' . View::e($chipText) . ' !important;"' : '' ?>>↗</span>
                                     </a>
