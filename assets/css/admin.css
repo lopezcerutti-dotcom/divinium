@@ -1166,79 +1166,130 @@ body.admin-theme {
 .platform-mini-tag {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.68rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #ded7cf;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.25;
+    padding: 3px 8px 3px 5px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    color: #202428;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     text-decoration: none;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    max-width: 100%;
 }
 
 .platform-mini-tag:hover {
-    background: rgba(167, 173, 180, 0.15);
-    border-color: rgba(167, 173, 180, 0.4);
-    color: #ffffff;
+    background: #FAF8F5;
+    border-color: rgba(0, 0, 0, 0.24);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+    color: #111418;
 }
 
-.platform-mini-tag.tag-shopee {
-    border-color: rgba(238, 77, 45, 0.4);
-    color: #ff7043;
+.platform-mini-tag:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-.platform-mini-tag.tag-mercadolivre {
-    border-color: rgba(255, 214, 0, 0.4);
-    color: #ffd600;
+.platform-mini-tag .channel-logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    overflow: hidden;
+    line-height: 0;
 }
 
-.platform-mini-tag.tag-amazon {
-    border-color: rgba(255, 153, 0, 0.4);
-    color: #ffb74d;
+.platform-mini-tag .channel-logo-icon svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
 }
 
-.platform-mini-tag.tag-tiktok {
-    border-color: rgba(254, 44, 85, 0.4);
-    color: #ff5252;
+.platform-mini-tag .channel-tag-name {
+    font-weight: 600;
+    color: #242220;
+    letter-spacing: -0.01em;
+    font-size: 0.72rem;
 }
 
-.platform-mini-tag.tag-whatsapp {
-    border-color: rgba(37, 211, 102, 0.4);
-    color: #25d366;
+.platform-mini-tag .channel-tag-arrow {
+    font-size: 0.65rem;
+    color: #8C867E;
+    margin-left: 1px;
+    transition: transform 0.15s ease, color 0.15s ease;
 }
 
-.platform-mini-tag.tag-compradireta,
-.platform-mini-tag.tag-site {
-    border-color: rgba(212, 186, 136, 0.4);
-    color: #CBD0D6;
+.platform-mini-tag:hover .channel-tag-arrow {
+    color: #202428;
+    transform: translate(1px, -1px);
 }
 
-.platform-mini-tag.tag-pix,
-.platform-mini-tag.tag-asaas {
-    border-color: rgba(0, 210, 198, 0.4);
-    color: #00d2c6;
+/* Bordas e tons neutros com sutis destaques no hover */
+.platform-mini-tag.tag-shopee:hover {
+    border-color: rgba(238, 77, 45, 0.5);
+    background: #FFF9F7;
 }
 
-.platform-mini-tag.tag-instagram {
-    border-color: rgba(225, 48, 108, 0.4);
-    color: #f472b6;
+.platform-mini-tag.tag-mercadolivre:hover {
+    border-color: rgba(212, 175, 0, 0.6);
+    background: #FFFDF0;
 }
 
-.platform-mini-tag.tag-enjoei {
-    border-color: rgba(232, 59, 94, 0.4);
-    color: #fb7185;
+.platform-mini-tag.tag-amazon:hover {
+    border-color: rgba(255, 153, 0, 0.5);
+    background: #FFFBF5;
 }
 
-.platform-mini-tag.tag-elo7 {
-    border-color: rgba(255, 136, 0, 0.4);
-    color: #fb923c;
+.platform-mini-tag.tag-tiktok:hover {
+    border-color: rgba(0, 0, 0, 0.4);
+    background: #F8F8F9;
 }
 
-.platform-mini-tag.tag-outro {
-    border-color: rgba(167, 173, 180, 0.35);
-    color: #CBD0D6;
+.platform-mini-tag.tag-whatsapp:hover {
+    border-color: rgba(37, 211, 102, 0.5);
+    background: #F4FDF7;
+}
+
+.platform-mini-tag.tag-compradireta:hover,
+.platform-mini-tag.tag-site:hover {
+    border-color: rgba(212, 186, 136, 0.7);
+    background: #FAF8F5;
+}
+
+.platform-mini-tag.tag-pix:hover,
+.platform-mini-tag.tag-asaas:hover {
+    border-color: rgba(0, 191, 165, 0.5);
+    background: #F2FCFA;
+}
+
+.platform-mini-tag.tag-instagram:hover {
+    border-color: rgba(225, 48, 108, 0.5);
+    background: #FFF5F8;
+}
+
+.platform-mini-tag.tag-enjoei:hover {
+    border-color: rgba(232, 59, 94, 0.5);
+    background: #FFF5F7;
+}
+
+.platform-mini-tag.tag-elo7:hover {
+    border-color: rgba(255, 136, 0, 0.5);
+    background: #FFF8F2;
+}
+
+.platform-mini-tag.tag-outro:hover {
+    border-color: rgba(120, 125, 135, 0.5);
+    background: #F8F9FA;
 }
 
 .btn-channel-quick-edit {
