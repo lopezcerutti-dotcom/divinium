@@ -243,6 +243,7 @@ class Router
         $this->get('/garantia-e-cuidados', [\App\Controllers\StoreController::class, 'institutionalPage']);
         $this->get('/politica-de-privacidade', [\App\Controllers\StoreController::class, 'institutionalPage']);
         $this->get('/termos-de-uso', [\App\Controllers\StoreController::class, 'institutionalPage']);
+        $this->get('/politica-de-frete-e-entrega', [\App\Controllers\StoreController::class, 'institutionalPage']);
         $this->get('/guia-de-medidas', [\App\Controllers\StoreController::class, 'institutionalPage']);
         $this->get('/dpo', [\App\Controllers\StoreController::class, 'institutionalPage']);
         $this->get('/institucional/{slug}', [\App\Controllers\StoreController::class, 'institutionalPage']);

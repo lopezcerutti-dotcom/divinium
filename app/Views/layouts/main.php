@@ -1325,6 +1325,9 @@
                 <ul>
                     <li><a href="/politica-de-privacidade"><?= \App\Core\View::e(\App\Models\Setting::get('footer_privacy_text', 'Política de Privacidade (LGPD)')) ?></a></li>
                     <li><a href="/termos-de-uso"><?= \App\Core\View::e(\App\Models\Setting::get('footer_terms_text', 'Termos de Uso')) ?></a></li>
+                    <?php if (\App\Models\Setting::get('page_frete_enabled', '1') === '1'): ?>
+                    <li><a href="/politica-de-frete-e-entrega"><?= \App\Core\View::e(\App\Models\Setting::get('footer_shipping_text', \App\Models\Setting::get('page_frete_title', 'Política de Frete e Entrega'))) ?></a></li>
+                    <?php endif; ?>
                     <li><a href="/dpo"><?= \App\Core\View::e(\App\Models\Setting::get('footer_dpo_text', 'Encarregado de Dados (DPO)')) ?></a></li>
                     <li><span><?= \App\Core\View::e(\App\Models\Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?></span></li>
                 </ul>

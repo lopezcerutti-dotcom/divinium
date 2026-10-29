@@ -3574,7 +3574,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
                                 <span>📄</span> Conteúdo das Páginas Institucionais Oficiais
                             </h4>
-                            <span class="field-hint" style="margin: 0;">Ative ou desative o conteúdo editorial e páginas oficiais (Trocas, Garantia, LGPD e Termos de Uso).</span>
+                            <span class="field-hint" style="margin: 0;">Ative ou desative o conteúdo editorial e páginas oficiais (Trocas, Garantia, LGPD, Termos de Uso e Política de Frete e Entrega).</span>
                         </div>
                         <?= $renderToggle('institutional_pages_content_enabled') ?>
                     </div>
@@ -3615,7 +3615,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     </div>
 
                     <!-- Página 4: Termos de Uso -->
-                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <strong style="color: #ffffff;">4. Termos de Uso do Site</strong>
                             <a href="/termos-de-uso" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
@@ -3623,6 +3623,86 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         <input type="text" name="page_termos_title" class="form-input" style="margin-bottom: 8px;"
                                value="<?= View::e(Setting::get('page_termos_title', 'Termos de Uso')) ?>" placeholder="Título da Página">
                         <textarea name="page_termos_content" class="form-textarea" rows="4" placeholder="Conteúdo dos termos de uso..."><?= View::e(Setting::get('page_termos_content', 'Ao navegar e efetuar compras no ambiente digital DIVINIUM, você concorda com nossos termos operacionais de compra, prazos de confecção e modalidades de entrega.')) ?></textarea>
+                    </div>
+
+                    <!-- Página 5: Política de Frete e Entrega -->
+                    <div class="form-group full-width <?= Setting::get('page_frete_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <strong style="color: #ffffff;">5. Política de Frete e Entrega</strong>
+                                <?= $renderToggle('page_frete_enabled') ?>
+                            </div>
+                            <a href="/politica-de-frete-e-entrega" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Título da Página</label>
+                            <input type="text" name="page_frete_title" class="form-input"
+                                   value="<?= View::e(Setting::get('page_frete_title', 'Política de Frete e Entrega')) ?>" placeholder="Título da Página">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Introdução / Conteúdo Geral</label>
+                            <textarea name="page_frete_content" class="form-textarea" rows="4" placeholder="Texto introdutório ou diretrizes gerais de envio e entrega..."><?= View::e(Setting::get('page_frete_content', 'Na DIVINIUM, cada joia é cuidadosamente preparada e embalada com máxima segurança para garantir que sua experiência de abertura seja impecável.')) ?></textarea>
+                            <span class="field-hint" style="margin-top: 4px; font-size: 0.75rem;">Texto introdutório ou diretrizes gerais. Os campos detalhados abaixo complementam os parâmetros operacionais.</span>
+                        </div>
+
+                        <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+                            <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                                📦 Parâmetros Detalhados de Envio & Entrega
+                            </span>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Origem de Envio</label>
+                                    <input type="text" name="page_frete_origem" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_origem', '')) ?>"
+                                           placeholder="Ex: Central de Expedição DIVINIUM">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Regiões Atendidas</label>
+                                    <input type="text" name="page_frete_regioes" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_regioes', '')) ?>"
+                                           placeholder="Ex: Todo o território nacional">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Modalidades de Transporte</label>
+                                    <input type="text" name="page_frete_modalidades" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_modalidades', '')) ?>"
+                                           placeholder="Ex: Transportadoras parceiras com seguro de carga">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Cálculo do Frete</label>
+                                    <input type="text" name="page_frete_calculo" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_calculo', '')) ?>"
+                                           placeholder="Ex: Calculado automaticamente pelo CEP no checkout">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Prazo de Preparação / Manuseio</label>
+                                    <input type="text" name="page_frete_prazo_preparacao" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_prazo_preparacao', '')) ?>"
+                                           placeholder="Ex: Curadoria e embalagem protegida após aprovação">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Prazo Estimado de Entrega</label>
+                                    <input type="text" name="page_frete_prazo_entrega" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_prazo_entrega', '')) ?>"
+                                           placeholder="Ex: Informado na consulta de CEP no pedido">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Rastreamento do Pedido</label>
+                                    <input type="text" name="page_frete_rastreamento" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_rastreamento', '')) ?>"
+                                           placeholder="Ex: Código de rastreio enviado após expedição">
+                                </div>
+                                <div>
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Condições Especiais / Frete Cortesia</label>
+                                    <input type="text" name="page_frete_condicoes_especiais" class="form-input"
+                                           value="<?= View::e(Setting::get('page_frete_condicoes_especiais', '')) ?>"
+                                           placeholder="Ex: Conforme campanhas ativas informadas na loja">
+                                </div>
+                            </div>
+                            <span class="field-hint" style="margin-top: 8px; font-size: 0.75rem;">Campos em branco serão apresentados de maneira neutra e institucional, sem inventar valores ou prazos fixos.</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3817,6 +3897,12 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <label for="footer_terms_text">Link: Termos de Uso</label>
                     <input type="text" id="footer_terms_text" name="footer_terms_text" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('footer_terms_text', 'Termos de Uso')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_shipping_text">Link: Política de Frete e Entrega</label>
+                    <input type="text" id="footer_shipping_text" name="footer_shipping_text" class="form-input"
+                           value="<?= \App\Core\View::e(Setting::get('footer_shipping_text', 'Política de Frete e Entrega')) ?>">
                 </div>
 
                 <div class="form-group">

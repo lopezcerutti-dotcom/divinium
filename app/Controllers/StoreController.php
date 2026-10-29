@@ -954,6 +954,12 @@ class StoreController
                 'content_key' => 'page_termos_content',
                 'default_content' => "<h3>Termos de Uso do Site DIVINIUM</h3><p>Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.</p><h4>1. Propriedade Intelectual</h4><p>Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Lei de Propriedade Industrial (Lei nº 9.279/1996).</p><h4>2. Exatidão das Informações</h4><p>As fotografias reproduzem fielmente os modelos. Por se tratarem de gemas minerais autênticas extraídas da natureza, pequenas nuances de cor e grafismos naturais nas conchas e pedras comprovam a singularidade e exclusividade de cada joia.</p>"
             ],
+            'politica-de-frete-e-entrega' => [
+                'title' => \App\Models\Setting::get('page_frete_title', 'Política de Frete e Entrega'),
+                'desc' => \App\Models\Setting::get('page_frete_desc', 'Diretrizes oficiais sobre envio, prazos de expedição e entrega das joias DIVINIUM.'),
+                'content_key' => 'page_frete_content',
+                'default_content' => ''
+            ],
             'guia-de-medidas' => [
                 'title' => \App\Models\Setting::get('page_size_guide_title', 'Guia de Medidas & Tamanhos de Anéis'),
                 'desc' => 'Aprenda a identificar a medida exata do seu aro para um ajuste perfeito e confortável.',
@@ -967,6 +973,11 @@ class StoreController
                 'default_content' => "<h3>Canal do Encarregado de Dados (DPO)</h3><p>Em atendimento ao Artigo 41 da Lei Federal nº 13.709/2018 (LGPD), a DIVINIUM disponibiliza este canal oficial de comunicação direto entre os titulares de dados, a empresa e a Autoridade Nacional de Proteção de Dados (ANPD).</p><h4>Encarregado Oficial:</h4><p><strong>Comitê de Privacidade & Governança de Dados</strong><br>E-mail: <strong>dpo@divinium.com.br</strong><br>Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília)</p><p>As solicitações de consulta, retificação ou exclusão de dados serão respondidas dentro dos prazos legais estipulados pela legislação vigente.</p>"
             ]
         ];
+
+        if ($slug === 'politica-de-frete-e-entrega' && \App\Models\Setting::get('page_frete_enabled', '1') !== '1') {
+            header('Location: /');
+            exit;
+        }
 
         $page = $pageMap[$slug] ?? null;
         if (!$page) {
@@ -984,7 +995,11 @@ class StoreController
             }
         }
 
-        $bodyContent = \App\Models\Setting::get($page['content_key'], $page['default_content']);
+        if ($slug === 'politica-de-frete-e-entrega') {
+            $bodyContent = $this->buildShippingPolicyHtml();
+        } else {
+            $bodyContent = \App\Models\Setting::get($page['content_key'], $page['default_content']);
+        }
 
         View::render('home/page', [
             'pageTitle' => $page['title'],
@@ -994,6 +1009,77 @@ class StoreController
             'pageBodyHtml' => $bodyContent,
             'pageSlug' => $slug
         ]);
+    }
+
+    /**
+     * Monta o conteúdo estruturado da Política de Frete e Entrega
+     */
+    private function buildShippingPolicyHtml(): string
+    {
+        $rawIntro = trim((string)\App\Models\Setting::get('page_frete_content', ''));
+        if ($rawIntro === '') {
+            $rawIntro = 'Na DIVINIUM, cada joia autoral é cuidadosamente embalada e protegida com critérios rigorosos de segurança e discrição, assegurando que sua experiência seja nobre desde o envio até o recebimento.';
+        }
+
+        $html = '';
+        if (str_contains($rawIntro, '<p>') || str_contains($rawIntro, '<h3>') || str_contains($rawIntro, '<h4>')) {
+            $html .= $rawIntro;
+        } else {
+            $html .= '<h3>Envio Seguro & Proteção de Alta Joalheria</h3>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($rawIntro)) . '</p>';
+        }
+
+        $sections = [
+            [
+                'title' => '1. Origem de Envio',
+                'key' => 'page_frete_origem',
+                'default' => 'Os pedidos são expedidos diretamente de nossa central de curadoria e logística especializada.'
+            ],
+            [
+                'title' => '2. Regiões Atendidas',
+                'key' => 'page_frete_regioes',
+                'default' => 'Atendemos todo o território nacional com cobertura de entrega para as localidades contempladas no checkout.'
+            ],
+            [
+                'title' => '3. Modalidades de Transporte',
+                'key' => 'page_frete_modalidades',
+                'default' => 'O transporte é realizado por serviços logísticos parceiros e transportadoras homologadas com seguro de carga integrado.'
+            ],
+            [
+                'title' => '4. Cálculo do Frete',
+                'key' => 'page_frete_calculo',
+                'default' => 'O valor do frete é calculado automaticamente no carrinho ou na etapa de finalização de compra, com base no CEP informado, peso e cubagem do pacote.'
+            ],
+            [
+                'title' => '5. Prazo de Preparação e Manuseio',
+                'key' => 'page_frete_prazo_preparacao',
+                'default' => 'Após a confirmação do pagamento, as joias passam por criteriosa revisão de qualidade, higienização e embalagem nobre antes de serem despachadas.'
+            ],
+            [
+                'title' => '6. Prazo Estimado de Entrega',
+                'key' => 'page_frete_prazo_entrega',
+                'default' => 'O prazo estimado de entrega é informado na consulta de frete do produto ou checkout e passa a ser contado a partir da postagem da remessa.'
+            ],
+            [
+                'title' => '7. Rastreamento do Pedido',
+                'key' => 'page_frete_rastreamento',
+                'default' => 'Após o envio, as informações e o código de rastreamento são enviados para acompanhamento seguro de cada etapa até a entrega.'
+            ],
+            [
+                'title' => '8. Condições Especiais & Benefícios',
+                'key' => 'page_frete_condicoes_especiais',
+                'default' => 'Eventuais condições de frete cortesia ou promoções especiais são aplicadas conforme campanhas vigentes divulgadas em nossos canais oficiais.'
+            ],
+        ];
+
+        foreach ($sections as $sec) {
+            $val = trim((string)\App\Models\Setting::get($sec['key'], ''));
+            $text = $val !== '' ? \App\Core\View::e($val) : $sec['default'];
+            $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
+            $html .= '<p>' . nl2br($text) . '</p>';
+        }
+
+        return $html;
     }
 }
 

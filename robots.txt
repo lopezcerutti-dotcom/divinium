@@ -11,6 +11,7 @@ Allow: /catalogo
 Allow: /produto/
 Allow: /politica-de-privacidade
 Allow: /termos-de-uso
+Allow: /politica-de-frete-e-entrega
 Allow: /trocas-e-devolucoes
 Allow: /garantia-e-cuidados
 Allow: /guia-de-medidas
