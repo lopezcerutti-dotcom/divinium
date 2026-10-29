@@ -67,6 +67,8 @@
     
     <meta name="description" content="<?= \App\Core\View::e($metaDesc) ?>">
     <meta name="keywords" content="<?= \App\Core\View::e($metaKeywords) ?>">
+    <!-- Google Search Console: Verificação de Propriedade do Domínio -->
+    <meta name="google-site-verification" content="<?= \App\Core\View::e(\App\Models\Setting::get('google_site_verification', 'T5Ch24JLJl6L5hLahazzSiHA3mFyfCB0F05zyV0PVPA')) ?>" />
     <link rel="canonical" href="<?= \App\Core\View::e($renderedCanonical) ?>">
     <link rel="icon" href="<?= \App\Core\View::e($faviconUrl) ?>">
 

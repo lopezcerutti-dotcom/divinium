@@ -3650,6 +3650,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width">
+                    <label for="google_site_verification">Código de Verificação do Google Search Console (&lt;meta name="google-site-verification"&gt;)</label>
+                    <input type="text" id="google_site_verification" name="google_site_verification" class="form-input"
+                           value="<?= View::e(Setting::get('google_site_verification', 'T5Ch24JLJl6L5hLahazzSiHA3mFyfCB0F05zyV0PVPA')) ?>"
+                           placeholder="T5Ch24JLJl6L5hLahazzSiHA3mFyfCB0F05zyV0PVPA">
+                    <span class="field-hint">Token oficial de validação de propriedade do site no Google Search Console.</span>
+                </div>
+
+                <div class="form-group full-width">
                     <label for="seo_site_title">Título da Página Principal / Home (&lt;title&gt;)</label>
                     <input type="text" id="seo_site_title" name="seo_site_title" class="form-input"
                            value="<?= View::e(Setting::get('seo_site_title', 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro')) ?>"
