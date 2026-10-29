@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <?php
+        $defaultSiteTitle = \App\Models\Setting::get('seo_site_title', 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro');
+        $defaultMetaDesc = \App\Models\Setting::get('seo_meta_description', 'Descubra acessórios autorais de design atemporal e acabamento artesanal. Peças exclusivas em edições limitadas criadas no Rio de Janeiro.');
         $titleFormat = \App\Models\Setting::get('seo_site_title_format', '{title} | Divinium');
         $siteBrand = \App\Models\Setting::get('header_logo_text', 'Divinium');
-        $currentTitle = isset($pageTitle) ? $pageTitle : 'Joias Autorais & Luxo Silencioso';
-        $renderedTitle = str_replace(['{title}', '{brand}'], [$currentTitle, $siteBrand], $titleFormat);
-        if (!str_contains($titleFormat, '{title}')) {
-            $renderedTitle = $currentTitle . ' | ' . $siteBrand;
+
+        $reqUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $isHome = ($reqUri === '/' || $reqUri === '' || $reqUri === '/index.php' || $reqUri === '/index');
+
+        if ($isHome || empty($pageTitle)) {
+            $renderedTitle = $defaultSiteTitle;
+        } else {
+            $currentTitle = (string)$pageTitle;
+            if (stripos($currentTitle, 'divinium') !== false || str_contains($currentTitle, '|')) {
+                $renderedTitle = $currentTitle;
+            } else {
+                $renderedTitle = str_replace(['{title}', '{brand}'], [$currentTitle, $siteBrand], $titleFormat);
+                if (!str_contains($titleFormat, '{title}')) {
+                    $renderedTitle = $currentTitle . ' | ' . $siteBrand;
+                }
+            }
         }
-        $metaDesc = isset($pageDescription) ? $pageDescription : \App\Models\Setting::get('seo_meta_description', 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.');
-        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, banho de prata, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre');
+
+        $metaDesc = (!empty($pageDescription) && !$isHome) ? $pageDescription : $defaultMetaDesc;
+        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, biojoias contemporâneas, joalheria rio de janeiro, acessórios de luxo, edições limitadas, acabamento artesanal, design atemporal');
         $ogImage = \App\Models\Setting::get('seo_og_image', '/assets/images/hero/hero-main.webp');
         $faviconUrl = \App\Models\Setting::get('site_favicon_url', '/assets/images/favicon.ico');
 

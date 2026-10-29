@@ -565,6 +565,8 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 -- Configurações Globais Padrão
 INSERT INTO `settings` (`key_name`, `value`, `is_encrypted`, `description`) VALUES
 ('site_canonical_url', 'https://divinium.com.br', 0, 'Domínio oficial e URL canônica base para indexação e redes sociais'),
+('seo_site_title', 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro', 0, 'Título principal da página inicial nos mecanismos de busca'),
+('seo_meta_description', 'Descubra acessórios autorais de design atemporal e acabamento artesanal. Peças exclusivas em edições limitadas criadas no Rio de Janeiro.', 0, 'Meta descrição global exibida no snippet do Google e redes sociais'),
 ('store_name', 'Divinium Brand', 0, 'Nome comercial da loja exibido nos e-mails e cabeçalho'),
 ('store_document_cnpj', '00.000.000/0001-00', 0, 'CNPJ oficial exibido no rodapé (obrigatório pelo Decreto 7.962/2013)'),
 ('store_support_email', 'atendimento@divinium.com.br', 0, 'E-mail de contato e SAC oficial'),

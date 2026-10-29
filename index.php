@@ -102,8 +102,8 @@ try {
     if (php_sapi_name() !== 'cli') {
         try {
             \App\Core\View::render('home/index', [
-                'pageTitle' => 'Joias que Revelam o Luxo Silencioso',
-                'pageDescription' => 'Divinium — Joias exclusivas com banho de prata e gemas minerais raras com a essência do quiet luxury.'
+                'pageTitle' => 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro',
+                'pageDescription' => 'Descubra acessórios autorais de design atemporal e acabamento artesanal. Peças exclusivas em edições limitadas criadas no Rio de Janeiro.'
             ]);
             exit(0);
         } catch (Throwable $renderErr) {

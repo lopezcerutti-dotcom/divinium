@@ -58,6 +58,15 @@ class Setting
             return $trimmed;
         }
 
+        // Normalização dos metadados de SEO oficiais DIVINIUM
+        if ($key === 'seo_site_title' && ($val === null || stripos($val, 'Joias Autorais & Luxo') !== false || stripos($val, 'Joias que Revelam') !== false)) {
+            return 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro';
+        }
+
+        if ($key === 'seo_meta_description' && ($val === null || stripos($val, 'metais nobres e pedras preciosas') !== false || stripos($val, 'ouro 18k') !== false)) {
+            return 'Descubra acessórios autorais de design atemporal e acabamento artesanal. Peças exclusivas em edições limitadas criadas no Rio de Janeiro.';
+        }
+
         // Se for cor legada em tons dourados, amarelos, champagnes, bronzes, rose gold ou verdes
         $legacyGoldsAndGreens = [
             '#CAA15C', '#D4BA88', '#EBD5A0', '#C5A880', '#D4AF37', '#B89758',

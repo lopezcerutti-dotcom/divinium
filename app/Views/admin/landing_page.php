@@ -3650,24 +3650,32 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="seo_site_title_format">Padrão do Título da Página (&lt;title&gt;)</label>
+                    <label for="seo_site_title">Título da Página Principal / Home (&lt;title&gt;)</label>
+                    <input type="text" id="seo_site_title" name="seo_site_title" class="form-input"
+                           value="<?= View::e(Setting::get('seo_site_title', 'DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro')) ?>"
+                           placeholder="DIVINIUM | Joalheria Autoral e Biojoias Contemporâneas no Rio de Janeiro">
+                    <span class="field-hint">Título principal indexado pelo Google para a página inicial da DIVINIUM.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="seo_site_title_format">Padrão do Título das Demais Páginas (&lt;title&gt;)</label>
                     <input type="text" id="seo_site_title_format" name="seo_site_title_format" class="form-input"
                            value="<?= View::e(Setting::get('seo_site_title_format', '{title} | Divinium')) ?>"
                            placeholder="{title} | Divinium">
-                    <span class="field-hint">Use <code>{title}</code> para o título da página atual e <code>{brand}</code> para o nome da marca.</span>
+                    <span class="field-hint">Usado nas subpáginas e produtos. Use <code>{title}</code> para o título da página e <code>{brand}</code> para a marca.</span>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="seo_meta_description">Meta Descrição Global (Snippet do Google)</label>
-                    <textarea id="seo_meta_description" name="seo_meta_description" class="form-textarea" rows="3"><?= View::e(Setting::get('seo_meta_description', 'Divinium — Joias autorais criadas com metais nobres e pedras preciosas. Design atemporal, acabamento artesanal e a essência do quiet luxury.')) ?></textarea>
+                    <textarea id="seo_meta_description" name="seo_meta_description" class="form-textarea" rows="3"><?= View::e(Setting::get('seo_meta_description', 'Descubra acessórios autorais de design atemporal e acabamento artesanal. Peças exclusivas em edições limitadas criadas no Rio de Janeiro.')) ?></textarea>
                     <span class="field-hint">Recomendado entre 140 e 160 caracteres para visualização perfeita nos resultados de busca do Google.</span>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="seo_meta_keywords">Palavras-chave (Keywords)</label>
                     <input type="text" id="seo_meta_keywords" name="seo_meta_keywords" class="form-input"
-                           value="<?= View::e(Setting::get('seo_meta_keywords', 'joias autorais, banho de prata, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre')) ?>"
-                           placeholder="joias autorais, banho de prata, ...">
+                           value="<?= View::e(Setting::get('seo_meta_keywords', 'joias autorais, biojoias contemporâneas, joalheria rio de janeiro, peças exclusivas, edições limitadas, design atemporal')) ?>"
+                           placeholder="joias autorais, biojoias contemporâneas, joalheria rio de janeiro, ...">
                     <span class="field-hint">Termos separados por vírgula que descrevem o catálogo da marca.</span>
                 </div>
 
