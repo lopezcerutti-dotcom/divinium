@@ -81,12 +81,12 @@
     <meta name="google-site-verification" content="<?= \App\Core\View::e(\App\Models\Setting::get('google_site_verification', 'T5Ch24JLJl6L5hLahazzSiHA3mFyfCB0F05zyV0PVPA')) ?>" />
     <link rel="canonical" href="<?= \App\Core\View::e($renderedCanonical) ?>">
     <!-- Favicon & Identidade Visual Oficial DIVINIUM -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon-48x48.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=20261029b">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png?v=20261029b">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png?v=20261029b">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon-48x48.png?v=20261029b">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png?v=20261029b">
+    <link rel="manifest" href="/site.webmanifest?v=20261029b">
     <meta name="theme-color" content="#202020">
     <meta name="msapplication-TileColor" content="#202020">
 
