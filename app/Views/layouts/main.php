@@ -80,7 +80,15 @@
     <!-- Google Search Console: Verificação de Propriedade do Domínio -->
     <meta name="google-site-verification" content="<?= \App\Core\View::e(\App\Models\Setting::get('google_site_verification', 'T5Ch24JLJl6L5hLahazzSiHA3mFyfCB0F05zyV0PVPA')) ?>" />
     <link rel="canonical" href="<?= \App\Core\View::e($renderedCanonical) ?>">
-    <link rel="icon" href="<?= \App\Core\View::e($faviconUrl) ?>">
+    <!-- Favicon & Identidade Visual Oficial DIVINIUM -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#202020">
+    <meta name="msapplication-TileColor" content="#202020">
 
     <!-- Open Graph / Redes Sociais -->
     <meta property="og:type" content="website">
