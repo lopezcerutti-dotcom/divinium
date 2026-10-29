@@ -162,6 +162,12 @@ class Database
                     url VARCHAR(500) NOT NULL,
                     price_cents INTEGER NULL,
                     button_text VARCHAR(100) NULL,
+                    button_color VARCHAR(50) DEFAULT 'default',
+                    button_bg_color VARCHAR(150) NULL,
+                    button_text_color VARCHAR(50) NULL,
+                    button_size VARCHAR(20) DEFAULT 'md',
+                    target VARCHAR(20) DEFAULT '_blank',
+                    badge VARCHAR(50) NULL,
                     is_active INTEGER DEFAULT 1,
                     sort_order INTEGER DEFAULT 0,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -184,6 +190,107 @@ class Database
     }
 
     /**
+     * Garante a criação da tabela product_links e a existência de todas as colunas modernas
+     * (incluindo button_bg_color e button_text_color).
+     * Método público e idempotente com auto-cura imediata em tempo de execução.
+     */
+    public static function ensureProductLinksColumns(PDO $pdo): void
+    {
+        try {
+            $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+            // 1. Garantir que a tabela base existe
+            if ($driver === 'sqlite') {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS product_links (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        product_id INTEGER NOT NULL,
+                        platform_name VARCHAR(100) NOT NULL,
+                        url VARCHAR(500) NOT NULL,
+                        price_cents INTEGER NULL,
+                        button_text VARCHAR(100) NULL,
+                        button_color VARCHAR(50) DEFAULT 'default',
+                        button_bg_color VARCHAR(150) NULL,
+                        button_text_color VARCHAR(50) NULL,
+                        button_size VARCHAR(20) DEFAULT 'md',
+                        target VARCHAR(20) DEFAULT '_blank',
+                        badge VARCHAR(50) NULL,
+                        is_active INTEGER DEFAULT 1,
+                        sort_order INTEGER DEFAULT 0,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                ");
+            } else {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS `product_links` (
+                        `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        `product_id` BIGINT UNSIGNED NOT NULL,
+                        `platform_name` VARCHAR(100) NOT NULL,
+                        `url` VARCHAR(500) NOT NULL,
+                        `price_cents` INT UNSIGNED NULL,
+                        `button_text` VARCHAR(100) NULL,
+                        `button_color` VARCHAR(50) DEFAULT 'default',
+                        `button_bg_color` VARCHAR(150) NULL,
+                        `button_text_color` VARCHAR(50) NULL,
+                        `button_size` VARCHAR(20) DEFAULT 'md',
+                        `target` VARCHAR(20) DEFAULT '_blank',
+                        `badge` VARCHAR(50) NULL,
+                        `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+                        `sort_order` INT NOT NULL DEFAULT 0,
+                        `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        INDEX `idx_prod_links_prod` (`product_id`, `sort_order`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ");
+            }
+
+            // 2. Garantir cada coluna individualmente se a tabela já existia com schema antigo
+            $neededLinkCols = [
+                'button_color'      => "VARCHAR(50) DEFAULT 'default'",
+                'button_bg_color'   => "VARCHAR(150) NULL",
+                'button_text_color' => "VARCHAR(50) NULL",
+                'button_size'       => "VARCHAR(20) DEFAULT 'md'",
+                'target'            => "VARCHAR(20) DEFAULT '_blank'",
+                'badge'             => "VARCHAR(50) NULL",
+            ];
+
+            $existingLinkCols = [];
+            if ($driver === 'sqlite') {
+                $stmt = $pdo->query("PRAGMA table_info(product_links)");
+                if ($stmt) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $existingLinkCols[] = strtolower((string)$row['name']);
+                    }
+                }
+            } else {
+                $stmt = $pdo->query("SHOW COLUMNS FROM `product_links`");
+                if ($stmt) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $existingLinkCols[] = strtolower((string)$row['Field']);
+                    }
+                }
+            }
+
+            foreach ($neededLinkCols as $col => $definition) {
+                if (!in_array(strtolower($col), $existingLinkCols, true)) {
+                    try {
+                        if ($driver === 'sqlite') {
+                            $pdo->exec("ALTER TABLE product_links ADD COLUMN {$col} {$definition}");
+                        } else {
+                            $pdo->exec("ALTER TABLE `product_links` ADD COLUMN `{$col}` {$definition}");
+                        }
+                    } catch (\Throwable $ex) {
+                        // Silencioso se a coluna já foi adicionada concorrentemente
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            error_log('Database::ensureProductLinksColumns warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Auto-cura e evolução contínua de schema (MySQL e SQLite)
      * Garante existência da tabela product_links e novas colunas em products sem perdas
      */
@@ -193,10 +300,23 @@ class Database
         if ($ensured) {
             return;
         }
-        $ensured = true;
 
         // Flag de cache em disco para evitar execuções pesadas de DDL (ALTER/SHOW) em cada requisição web
-        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v8_ensured.flag';
+        $flagFile = (defined('STORAGE_PATH') ? STORAGE_PATH : dirname(__DIR__, 2) . '/storage') . '/cache/schema_v12_ensured.flag';
+        $cacheDir = dirname($flagFile);
+
+        // Limpar flags de versões anteriores para forçar a execução imediata após atualização
+        if (is_dir($cacheDir)) {
+            $oldFlags = glob($cacheDir . '/schema_v*.flag');
+            if (is_array($oldFlags)) {
+                foreach ($oldFlags as $oldF) {
+                    if (basename($oldF) !== basename($flagFile)) {
+                        @unlink($oldF);
+                    }
+                }
+            }
+        }
+
         if (file_exists($flagFile) && (time() - filemtime($flagFile)) < 86400) {
             return;
         }
@@ -279,41 +399,8 @@ class Database
                 ");
             }
 
-            // 1. Criar tabela product_links se não existir
-            if ($driver === 'sqlite') {
-                $pdo->exec("
-                    CREATE TABLE IF NOT EXISTS product_links (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        product_id INTEGER NOT NULL,
-                        platform_name VARCHAR(100) NOT NULL,
-                        url VARCHAR(500) NOT NULL,
-                        price_cents INTEGER NULL,
-                        button_text VARCHAR(100) NULL,
-                        badge VARCHAR(50) NULL,
-                        is_active INTEGER DEFAULT 1,
-                        sort_order INTEGER DEFAULT 0,
-                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                    );
-                ");
-            } else {
-                $pdo->exec("
-                    CREATE TABLE IF NOT EXISTS `product_links` (
-                        `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                        `product_id` BIGINT UNSIGNED NOT NULL,
-                        `platform_name` VARCHAR(100) NOT NULL,
-                        `url` VARCHAR(500) NOT NULL,
-                        `price_cents` INT UNSIGNED NULL,
-                        `button_text` VARCHAR(100) NULL,
-                        `badge` VARCHAR(50) NULL,
-                        `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-                        `sort_order` INT NOT NULL DEFAULT 0,
-                        `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                        INDEX `idx_prod_links_prod` (`product_id`, `sort_order`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-                ");
-            }
+            // 1. Criar tabela product_links e garantir todas as colunas modernas
+            self::ensureProductLinksColumns($pdo);
 
             // 2. Garantir novas colunas em products
             $neededCols = [
@@ -439,45 +526,7 @@ class Database
             }
 
             // 2.1 Garantir novas colunas em product_links (cor de fundo, cor da letra, tamanho, target e badge do botão)
-            $neededLinkCols = [
-                'button_color' => "VARCHAR(50) DEFAULT 'default'",
-                'button_bg_color' => "VARCHAR(150) NULL",
-                'button_text_color' => "VARCHAR(50) NULL",
-                'button_size' => "VARCHAR(20) DEFAULT 'md'",
-                'target' => "VARCHAR(20) DEFAULT '_blank'",
-                'badge' => "VARCHAR(50) NULL",
-            ];
-
-            $existingLinkCols = [];
-            if ($driver === 'sqlite') {
-                $stmt = $pdo->query("PRAGMA table_info(product_links)");
-                if ($stmt) {
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $existingLinkCols[] = strtolower($row['name']);
-                    }
-                }
-            } else {
-                $stmt = $pdo->query("SHOW COLUMNS FROM `product_links`");
-                if ($stmt) {
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $existingLinkCols[] = strtolower($row['Field']);
-                    }
-                }
-            }
-
-            foreach ($neededLinkCols as $col => $definition) {
-                if (!in_array(strtolower($col), $existingLinkCols, true)) {
-                    try {
-                        if ($driver === 'sqlite') {
-                            $pdo->exec("ALTER TABLE product_links ADD COLUMN {$col} {$definition}");
-                        } else {
-                            $pdo->exec("ALTER TABLE `product_links` ADD COLUMN `{$col}` {$definition}");
-                        }
-                    } catch (\Throwable $ex) {
-                        // Coluna já existia ou adicionada concorrentemente
-                    }
-                }
-            }
+            self::ensureProductLinksColumns($pdo);
 
             // 3. Migração automática e retrocompatibilidade para produtos existentes:
             // Se um produto tiver external_url e ainda não tiver registros em product_links,

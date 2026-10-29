@@ -591,30 +591,11 @@ class AdminController
             $this->pdo->prepare("DELETE FROM product_links WHERE product_id IN ($placeholders)")->execute($siblingIds);
 
             if (!empty($validLinks)) {
-                $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ');
-                foreach ($siblingIds as $sId) {
-                    foreach ($validLinks as $vl) {
-                        $insLink->execute([
-                            $sId,
-                            $vl['platform_name'],
-                            $vl['url'],
-                            $vl['price_cents'],
-                            $vl['button_text'],
-                            $vl['button_color'],
-                            $vl['button_bg_color'],
-                            $vl['button_text_color'],
-                            $vl['button_size'],
-                            $vl['target'],
-                            $vl['is_active'],
-                            $vl['sort_order'],
-                            $vl['badge']
-                        ]);
-                    }
-                    if ($primaryExternalUrl !== '') {
-                        $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?')->execute([$primaryExternalUrl, $sId]);
+                $this->insertProductLinksResilient($siblingIds, $validLinks);
+                if ($primaryExternalUrl !== '') {
+                    $upUrl = $this->pdo->prepare('UPDATE products SET external_url = ? WHERE id = ?');
+                    foreach ($siblingIds as $sId) {
+                        $upUrl->execute([$primaryExternalUrl, $sId]);
                     }
                 }
             }
@@ -806,7 +787,17 @@ class AdminController
                 if ($existLinkId) {
                     $this->pdo->prepare("UPDATE product_links SET url = ?, price_cents = ? WHERE id = ?")->execute([$externalUrl, $priceCents, $existLinkId]);
                 } else {
-                    $this->pdo->prepare("INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order) VALUES (?, 'Shopee', ?, ?, 'Comprar na Shopee Oficial', 'default', 'md', '_blank', 1, 0)")->execute([$id, $externalUrl, $priceCents]);
+                    $this->insertProductLinksResilient([$id], [[
+                        'platform_name' => 'Shopee',
+                        'url' => $externalUrl,
+                        'price_cents' => $priceCents,
+                        'button_text' => 'Comprar na Shopee Oficial',
+                        'button_color' => 'default',
+                        'button_size' => 'md',
+                        'target' => '_blank',
+                        'is_active' => 1,
+                        'sort_order' => 0
+                    ]]);
                 }
             }
 
@@ -906,27 +897,7 @@ class AdminController
             $origLinks = $linksStmt->fetchAll(\PDO::FETCH_ASSOC);
 
             if (!empty($origLinks)) {
-                $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ');
-                foreach ($origLinks as $ol) {
-                    $insLink->execute([
-                        $newId,
-                        $ol['platform_name'],
-                        $ol['url'],
-                        $ol['price_cents'],
-                        $ol['button_text'],
-                        $ol['button_color'] ?? 'default',
-                        $ol['button_bg_color'] ?? null,
-                        $ol['button_text_color'] ?? null,
-                        $ol['button_size'] ?? 'md',
-                        $ol['target'] ?? '_blank',
-                        $ol['is_active'],
-                        $ol['sort_order'],
-                        $ol['badge'] ?? null
-                    ]);
-                }
+                $this->insertProductLinksResilient([$newId], $origLinks);
             }
 
             $this->respond([
@@ -1519,12 +1490,6 @@ class AdminController
             $placeholders = implode(',', array_fill(0, count($siblingIds), '?'));
             $this->pdo->prepare("DELETE FROM product_links WHERE product_id IN ($placeholders)")->execute($siblingIds);
 
-            $insStmt = $this->pdo->prepare("
-                INSERT INTO product_links 
-                (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-
             $primaryExternalUrl = '';
             $validLinksToInsert = [];
 
@@ -1593,27 +1558,15 @@ class AdminController
                 }
             }
 
-            // Inserir os canais sincronizados para todas as variações do modelo
-            foreach ($siblingIds as $sId) {
-                foreach ($validLinksToInsert as $vl) {
-                    $insStmt->execute([
-                        $sId,
-                        $vl['platform_name'],
-                        $vl['url'],
-                        $vl['price_cents'],
-                        $vl['button_text'],
-                        $vl['button_color'],
-                        $vl['button_bg_color'],
-                        $vl['button_text_color'],
-                        $vl['button_size'],
-                        $vl['target'],
-                        $vl['is_active'],
-                        $vl['sort_order'],
-                        $vl['badge']
-                    ]);
-                }
-                if ($primaryExternalUrl !== '') {
-                    $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?")->execute([$primaryExternalUrl, $sId]);
+            // Inserir os canais sincronizados para todas as variações do modelo de forma resiliente
+            if (!empty($validLinksToInsert)) {
+                $this->insertProductLinksResilient($siblingIds, $validLinksToInsert);
+            }
+
+            if ($primaryExternalUrl !== '') {
+                $upUrlStmt = $this->pdo->prepare("UPDATE products SET external_url = ? WHERE id = ?");
+                foreach ($siblingIds as $sId) {
+                    $upUrlStmt->execute([$primaryExternalUrl, $sId]);
                 }
             }
 
@@ -2609,6 +2562,131 @@ class AdminController
                 'success' => false,
                 'error'   => 'Erro na sincronização com Bling: ' . $e->getMessage(),
             ], 200);
+        }
+    }
+
+    /**
+     * Inserção resiliente de canais de venda com auto-cura de schema e fallback retrocompatível
+     *
+     * @param int[] $productIds Lista de IDs de produtos a receberem os canais
+     * @param array[] $links Dados dos canais a serem inseridos
+     */
+    private function insertProductLinksResilient(array $productIds, array $links): void
+    {
+        if (empty($productIds) || empty($links)) {
+            return;
+        }
+
+        \App\Core\Database::ensureProductLinksColumns($this->pdo);
+
+        $fullSql = '
+            INSERT INTO product_links 
+            (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ';
+
+        $legacySql = '
+            INSERT INTO product_links 
+            (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ';
+
+        $minimalSql = '
+            INSERT INTO product_links 
+            (product_id, platform_name, url, price_cents, button_text, is_active, sort_order) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ';
+
+        try {
+            $stmt = $this->pdo->prepare($fullSql);
+            foreach ($productIds as $pId) {
+                foreach ($links as $l) {
+                    $stmt->execute([
+                        $pId,
+                        $l['platform_name'] ?? 'Shopee',
+                        $l['url'],
+                        $l['price_cents'] ?? null,
+                        $l['button_text'] ?? null,
+                        $l['button_color'] ?? 'default',
+                        $l['button_bg_color'] ?? null,
+                        $l['button_text_color'] ?? null,
+                        $l['button_size'] ?? 'md',
+                        $l['target'] ?? '_blank',
+                        $l['is_active'] ?? 1,
+                        $l['sort_order'] ?? 0,
+                        $l['badge'] ?? null,
+                    ]);
+                }
+            }
+        } catch (\PDOException $e) {
+            // Se a coluna ainda não existir (código 42S22 ou mensagem contendo Unknown column),
+            // executa auto-cura de schema imediatamente e tenta novamente
+            if ($e->getCode() === '42S22' || stripos($e->getMessage(), 'Unknown column') !== false || stripos($e->getMessage(), 'button_bg_color') !== false) {
+                \App\Core\Database::ensureProductLinksColumns($this->pdo);
+                try {
+                    $stmt = $this->pdo->prepare($fullSql);
+                    foreach ($productIds as $pId) {
+                        foreach ($links as $l) {
+                            $stmt->execute([
+                                $pId,
+                                $l['platform_name'] ?? 'Shopee',
+                                $l['url'],
+                                $l['price_cents'] ?? null,
+                                $l['button_text'] ?? null,
+                                $l['button_color'] ?? 'default',
+                                $l['button_bg_color'] ?? null,
+                                $l['button_text_color'] ?? null,
+                                $l['button_size'] ?? 'md',
+                                $l['target'] ?? '_blank',
+                                $l['is_active'] ?? 1,
+                                $l['sort_order'] ?? 0,
+                                $l['badge'] ?? null,
+                            ]);
+                        }
+                    }
+                    return;
+                } catch (\Throwable $retryEx) {
+                    // Fallback para colunas legadas se o host impedir DDL (ALTER TABLE)
+                    try {
+                        $stmt = $this->pdo->prepare($legacySql);
+                        foreach ($productIds as $pId) {
+                            foreach ($links as $l) {
+                                $stmt->execute([
+                                    $pId,
+                                    $l['platform_name'] ?? 'Shopee',
+                                    $l['url'],
+                                    $l['price_cents'] ?? null,
+                                    $l['button_text'] ?? null,
+                                    $l['button_color'] ?? 'default',
+                                    $l['button_size'] ?? 'md',
+                                    $l['target'] ?? '_blank',
+                                    $l['is_active'] ?? 1,
+                                    $l['sort_order'] ?? 0,
+                                    $l['badge'] ?? null,
+                                ]);
+                            }
+                        }
+                        return;
+                    } catch (\Throwable $legacyEx) {
+                        $stmt = $this->pdo->prepare($minimalSql);
+                        foreach ($productIds as $pId) {
+                            foreach ($links as $l) {
+                                $stmt->execute([
+                                    $pId,
+                                    $l['platform_name'] ?? 'Shopee',
+                                    $l['url'],
+                                    $l['price_cents'] ?? null,
+                                    $l['button_text'] ?? null,
+                                    $l['is_active'] ?? 1,
+                                    $l['sort_order'] ?? 0,
+                                ]);
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+            throw $e;
         }
     }
 
