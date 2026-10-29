@@ -391,6 +391,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 }
 
                                 $btnTitle = !empty($vl['button_text']) ? $vl['button_text'] : ('Comprar no ' . $plat);
+                                $channelBgColor = trim((string)($vl['button_bg_color'] ?? ''));
+                                $channelTextColor = trim((string)($vl['button_text_color'] ?? ''));
 
                                 if ($isDirect) {
                                     $hasDirectInLinks = true;
@@ -399,7 +401,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                         'url' => $u,
                                         'price_formatted' => $linkPriceFormatted,
                                         'badge' => $officialBadge,
-                                        'target' => $targetAttr
+                                        'target' => $targetAttr,
+                                        'button_bg_color' => $channelBgColor,
+                                        'button_text_color' => $channelTextColor
                                     ];
                                 } else {
                                     $displayChannels[] = [
@@ -413,7 +417,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                         'badge' => $officialBadge,
                                         'icon' => $platLower,
                                         'url' => $u,
-                                        'target' => $targetAttr
+                                        'target' => $targetAttr,
+                                        'button_bg_color' => $channelBgColor,
+                                        'button_text_color' => $channelTextColor
                                     ];
                                 }
                             }
@@ -451,7 +457,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                     'badge' => $cCh['badge'] ?? 'Oficial',
                                     'icon' => $cCh['icon'] ?? $platKey,
                                     'url' => $itemUrl,
-                                    'target' => $cCh['target'] ?? '_blank'
+                                    'target' => $cCh['target'] ?? '_blank',
+                                    'button_bg_color' => trim((string)($cCh['button_bg_color'] ?? '')),
+                                    'button_text_color' => trim((string)($cCh['button_text_color'] ?? ''))
                                 ];
                             }
                         }
@@ -481,42 +489,56 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <?php endif; ?>
 
                         <!-- 1. Opção Direta de Compra na Boutique DIVINIUM -->
-                        <?php if ($showDirectChannel): ?>
+                        <?php if ($showDirectChannel): 
+                            $dirBg = !empty($directChannelConfigured['button_bg_color']) ? $directChannelConfigured['button_bg_color'] : '';
+                            $dirColor = !empty($directChannelConfigured['button_text_color']) ? $directChannelConfigured['button_text_color'] : '';
+                            $dirCustomStyles = [];
+                            if ($dirBg !== '') {
+                                $dirCustomStyles[] = 'background: ' . $dirBg . ' !important; border-color: rgba(255,255,255,0.2) !important;';
+                            } else {
+                                $dirCustomStyles[] = 'background: var(--card-bg); border: 1.5px solid var(--gold-accent);';
+                            }
+                            if ($dirColor !== '') {
+                                $dirCustomStyles[] = 'color: ' . $dirColor . ' !important;';
+                            }
+                            $dirCustomStyles[] = 'box-shadow: var(--shadow-luxury, 0 4px 15px rgba(0,0,0,0.12));';
+                            $dirStyleStr = implode(' ', $dirCustomStyles);
+                        ?>
                         <div class="channel-option-wrapper" style="margin-bottom: 14px;">
                             <a href="<?= View::e($directUrl) ?>" 
                                id="btnDirectCheckoutVip"
                                onclick="buySelectedVariation(event, true, this.getAttribute('href'));" 
                                class="btn-channel-impartial platform-direct-vip"
-                               style="background: var(--card-bg); border: 1.5px solid var(--gold-accent); box-shadow: var(--shadow-luxury, 0 4px 15px rgba(0,0,0,0.12));">
+                               style="<?= $dirStyleStr ?>">
                                 
                                 <div class="channel-btn-left">
-                                    <span class="channel-icon-pill" style="background: rgba(167,173,180,0.15); color: var(--gold-accent); border: 1px solid var(--border-light);">
+                                    <span class="channel-icon-pill" style="background: rgba(167,173,180,0.15); color: <?= $dirColor ? View::e($dirColor) : 'var(--gold-accent)' ?>; border: 1px solid var(--border-light);">
                                         <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '') ? '💎' : getPlatformIconSvgShow($directIcon) ?>
                                     </span>
                                     <div class="channel-meta-text">
-                                        <span class="channel-action-name" style="color: var(--text-primary); font-weight: 700;">
+                                        <span class="channel-action-name" style="color: <?= $dirColor ? View::e($dirColor) : 'var(--text-primary)' ?> !important; font-weight: 700;">
                                             <?= View::e($directTitle) ?>
                                             <?php if (!empty($directBadge)): ?>
-                                                <span class="channel-mini-badge" style="background: rgba(212,186,136,0.25); color: #ded7cf; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; font-weight: 700; border: 1px solid rgba(212,186,136,0.4); vertical-align: middle;">
+                                                <span class="channel-mini-badge" style="background: rgba(212,186,136,0.25); color: <?= $dirColor ? View::e($dirColor) : '#ded7cf' ?>; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; font-weight: 700; border: 1px solid rgba(212,186,136,0.4); vertical-align: middle;">
                                                     <?= View::e($directBadge) ?>
                                                 </span>
                                             <?php endif; ?>
                                         </span>
-                                        <span class="channel-protection-sub" style="color: var(--gold-accent);"><?= View::e($directSubtitle) ?></span>
+                                        <span class="channel-protection-sub" style="color: <?= $dirColor ? View::e($dirColor) : 'var(--gold-accent)' ?> !important; <?= $dirColor ? 'opacity: 0.85;' : '' ?>"><?= View::e($directSubtitle) ?></span>
                                     </div>
                                 </div>
 
                                 <div class="channel-btn-right">
                                     <div class="channel-price-wrap">
-                                        <span class="channel-price-label" style="color: var(--text-secondary);"><?= View::e($directPixLabel) ?></span>
+                                        <span class="channel-price-label" style="color: <?= $dirColor ? View::e($dirColor) : 'var(--text-secondary)' ?> !important; <?= $dirColor ? 'opacity: 0.75;' : '' ?>"><?= View::e($directPixLabel) ?></span>
                                         <span class="channel-price-val vip-pix-val" 
-                                              style="color: var(--gold-accent); font-size: 1.05rem;"
+                                              style="color: <?= $dirColor ? View::e($dirColor) : 'var(--gold-accent)' ?> !important; font-size: 1.05rem;"
                                               data-discount-pct="<?= $directPixDiscountPct ?>"
                                               data-override="<?= View::e($directPriceOverride) ?>">
                                             R$ <?= $directPixFormatted ?>
                                         </span>
                                     </div>
-                                    <span class="channel-arrow-circle" style="background: var(--gold-accent); color: var(--bg-dark, #202020);">
+                                    <span class="channel-arrow-circle" style="background: <?= $dirColor ? 'rgba(255,255,255,0.15)' : 'var(--gold-accent)' ?>; color: <?= $dirColor ? View::e($dirColor) : 'var(--bg-dark, #202020)' ?>; border: 1px solid <?= $dirColor ? View::e($dirColor) : 'transparent' ?>;">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                     </span>
                                 </div>
@@ -534,12 +556,24 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                         $cUrl = 'https://' . $cUrl;
                                     }
                                     $targetAttr = !empty($channel['target']) && $channel['target'] === '_self' ? '_self' : '_blank';
+                                    
+                                    $chBg = !empty($channel['button_bg_color']) ? $channel['button_bg_color'] : '';
+                                    $chColor = !empty($channel['button_text_color']) ? $channel['button_text_color'] : '';
+                                    $chCustomStyles = [];
+                                    if ($chBg !== '') {
+                                        $chCustomStyles[] = 'background: ' . $chBg . ' !important; border-color: rgba(255,255,255,0.18) !important;';
+                                    }
+                                    if ($chColor !== '') {
+                                        $chCustomStyles[] = 'color: ' . $chColor . ' !important;';
+                                    }
+                                    $chStyleAttr = !empty($chCustomStyles) ? ' style="' . implode(' ', $chCustomStyles) . '"' : '';
                                 ?>
                                     <div class="channel-option-wrapper">
                                         <a href="<?= View::e($cUrl) ?>" 
                                            target="<?= $targetAttr ?>" 
                                            rel="noopener noreferrer"
                                            class="btn-channel-impartial btn-channel-external platform-<?= $platSlug ?>"
+                                           <?= $chStyleAttr ?>
                                            data-platform="<?= View::e(strtolower($channel['platform'])) ?>"
                                            data-track-product-id="<?= $prodId ?>"
                                            data-track-product-name="<?= View::e($prodName) ?>"
@@ -549,29 +583,29 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                             
                                             <!-- Lado Esquerdo: Ícone da Plataforma + Nome de Ação -->
                                             <div class="channel-btn-left">
-                                                <span class="channel-icon-pill">
+                                                <span class="channel-icon-pill" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>
                                                     <?= getPlatformIconSvgShow($channel['icon']) ?>
                                                 </span>
                                                 <div class="channel-meta-text">
-                                                    <span class="channel-action-name">
+                                                    <span class="channel-action-name" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>
                                                         <?= View::e($channel['title']) ?>
                                                         <?php if (!empty($channel['badge'])): ?>
-                                                            <span class="channel-mini-badge" style="background: rgba(212,186,136,0.18); color: #ded7cf; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; margin-left: 5px; font-weight: 600; border: 1px solid rgba(212,186,136,0.3); vertical-align: middle;">
+                                                            <span class="channel-mini-badge" style="background: rgba(212,186,136,0.18); color: <?= $chColor ? View::e($chColor) : '#ded7cf' ?>; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; margin-left: 5px; font-weight: 600; border: 1px solid rgba(212,186,136,0.3); vertical-align: middle;">
                                                                 <?= View::e($channel['badge']) ?>
                                                             </span>
                                                         <?php endif; ?>
                                                     </span>
-                                                    <span class="channel-protection-sub"><?= View::e($channel['official_label']) ?></span>
+                                                    <span class="channel-protection-sub" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important; opacity: 0.85;"' : '' ?>><?= View::e($channel['official_label']) ?></span>
                                                 </div>
                                             </div>
 
                                             <!-- Lado Direito: Preço Específico e Seta Elegante -->
                                             <div class="channel-btn-right">
                                                 <div class="channel-price-wrap">
-                                                    <span class="channel-price-label">Preço</span>
-                                                    <span class="channel-price-val">R$ <?= $channel['price_formatted'] ?></span>
+                                                    <span class="channel-price-label" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important; opacity: 0.75;"' : '' ?>>Preço</span>
+                                                    <span class="channel-price-val" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>R$ <?= $channel['price_formatted'] ?></span>
                                                 </div>
-                                                <span class="channel-arrow-circle" aria-hidden="true">
+                                                <span class="channel-arrow-circle" aria-hidden="true" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important; border-color: ' . View::e($chColor) . ' !important;"' : '' ?>>
                                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                                 </span>
                                             </div>

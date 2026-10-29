@@ -246,6 +246,8 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                         'url' => $cu,
                                         'price_cents' => $basePriceCents,
                                         'button_text' => !empty($cCh['title']) ? $cCh['title'] : ('Comprar no ' . ($cCh['platform'] ?? 'Canal')),
+                                        'button_bg_color' => trim((string)($cCh['button_bg_color'] ?? '')),
+                                        'button_text_color' => trim((string)($cCh['button_text_color'] ?? '')),
                                         'target' => !empty($cCh['target']) ? $cCh['target'] : '_blank',
                                         'is_active' => 1
                                     ];
@@ -384,15 +386,26 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
                                     $isDirect = str_starts_with($uLnk, '/');
                                     $targetLnk = !empty($lnk['target']) ? $lnk['target'] : ($isDirect ? '_self' : '_blank');
                                     $btnText = !empty($lnk['button_text']) ? $lnk['button_text'] : ('Comprar no ' . $platName);
+                                    $chipBg = trim((string)($lnk['button_bg_color'] ?? ''));
+                                    $chipText = trim((string)($lnk['button_text_color'] ?? ''));
+                                    $chipStyles = [];
+                                    if ($chipBg !== '') {
+                                        $chipStyles[] = 'background: ' . $chipBg . ' !important; border-color: rgba(255,255,255,0.2) !important;';
+                                    }
+                                    if ($chipText !== '') {
+                                        $chipStyles[] = 'color: ' . $chipText . ' !important;';
+                                    }
+                                    $chipStyleAttr = !empty($chipStyles) ? ' style="' . implode(' ', $chipStyles) . '"' : '';
                                 ?>
                                     <a href="<?= View::e($uLnk) ?>" 
                                        target="<?= $targetLnk ?>" 
                                        <?= $targetLnk === '_blank' ? 'rel="noopener noreferrer"' : '' ?>
                                        onclick="event.stopPropagation();"
                                        class="btn-channel-chip platform-chip-<?= $platSlug ?>" 
+                                       <?= $chipStyleAttr ?>
                                        title="<?= View::e($btnText) ?>">
-                                        <span><?= View::e($platName) ?></span>
-                                        <span>↗</span>
+                                        <span <?= $chipText ? 'style="color: ' . View::e($chipText) . ' !important;"' : '' ?>><?= View::e($platName) ?></span>
+                                        <span <?= $chipText ? 'style="color: ' . View::e($chipText) . ' !important;"' : '' ?>>↗</span>
                                     </a>
                                 <?php endforeach; ?>
                             </div>

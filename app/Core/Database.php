@@ -438,9 +438,11 @@ class Database
                 // Silencioso
             }
 
-            // 2.1 Garantir novas colunas em product_links (cor, tamanho, target e badge do botão)
+            // 2.1 Garantir novas colunas em product_links (cor de fundo, cor da letra, tamanho, target e badge do botão)
             $neededLinkCols = [
                 'button_color' => "VARCHAR(50) DEFAULT 'default'",
+                'button_bg_color' => "VARCHAR(150) NULL",
+                'button_text_color' => "VARCHAR(50) NULL",
                 'button_size' => "VARCHAR(20) DEFAULT 'md'",
                 'target' => "VARCHAR(20) DEFAULT '_blank'",
                 'badge' => "VARCHAR(50) NULL",

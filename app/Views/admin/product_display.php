@@ -707,6 +707,8 @@ $renderToggle = function(string $key, string $default = '1'): string {
                         $cIcon = (string)($cItem['icon'] ?? 'oficial');
                         $cUrl = (string)($cItem['url'] ?? '');
                         $cTarget = (string)($cItem['target'] ?? '_blank');
+                        $cBgColor = (string)($cItem['button_bg_color'] ?? '');
+                        $cTextColor = (string)($cItem['button_text_color'] ?? '');
                         $cVis = !empty($cItem['visible']);
                         $cIsCustom = !empty($cItem['is_custom']);
                         $cIsDeletable = !isset($cItem['is_deletable']) || !empty($cItem['is_deletable']);
@@ -819,6 +821,38 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                     <option value="_blank" <?= $cTarget === '_blank' ? 'selected' : '' ?>>Nova Aba (_blank)</option>
                                     <option value="_self" <?= $cTarget === '_self' ? 'selected' : '' ?>>Mesma Aba (_self)</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Linha 4 de Campos: Cores do Botão (Fundo e Letra) -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08);">
+                            <div>
+                                <label style="display: block; font-size: 0.74rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">
+                                    Cor de Fundo do Botão (Opcional)
+                                </label>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <input type="color" value="<?= !empty($cBgColor) && str_starts_with($cBgColor, '#') && strlen($cBgColor) === 7 ? View::e($cBgColor) : '#202020' ?>" 
+                                           onchange="this.nextElementSibling.value = this.value; serializeChannelsRows();" 
+                                           title="Escolher cor de fundo"
+                                           style="width: 34px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                                    <input type="text" class="form-input channel-row-bg-color-input" value="<?= View::e($cBgColor) ?>" placeholder="Padrão (Ex: #ded7cf ou #202020)" 
+                                           oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value; serializeChannelsRows();"
+                                           style="font-size: 0.78rem; padding: 6px 8px; font-family: monospace; flex: 1;">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.74rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">
+                                    Cor da Letra / Texto do Botão (Opcional)
+                                </label>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <input type="color" value="<?= !empty($cTextColor) && str_starts_with($cTextColor, '#') && strlen($cTextColor) === 7 ? View::e($cTextColor) : '#FFFFFF' ?>" 
+                                           onchange="this.nextElementSibling.value = this.value; serializeChannelsRows();" 
+                                           title="Escolher cor da letra"
+                                           style="width: 34px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                                    <input type="text" class="form-input channel-row-text-color-input" value="<?= View::e($cTextColor) ?>" placeholder="Padrão (Ex: #FFFFFF ou #202020)" 
+                                           oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value; serializeChannelsRows();"
+                                           style="font-size: 0.78rem; padding: 6px 8px; font-family: monospace; flex: 1;">
+                                </div>
                             </div>
                         </div>
 
@@ -1407,7 +1441,7 @@ function addCustomChannelRow() {
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 12px;">
+        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 12px; margin-bottom: 10px;">
             <div>
                 <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Link de Compra / URL do Canal</label>
                 <input type="url" class="form-input channel-row-url-input" value="" placeholder="https://...">
@@ -1418,6 +1452,23 @@ function addCustomChannelRow() {
                     <option value="_blank">Nova Aba (_blank)</option>
                     <option value="_self">Mesma Aba (_self)</option>
                 </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08);">
+            <div>
+                <label style="display: block; font-size: 0.74rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Fundo do Botão (Opcional)</label>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <input type="color" value="#202020" onchange="this.nextElementSibling.value = this.value; serializeChannelsRows();" style="width: 34px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                    <input type="text" class="form-input channel-row-bg-color-input" value="" placeholder="Padrão (Ex: #ded7cf ou #202020)" oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value; serializeChannelsRows();" style="font-size: 0.78rem; padding: 6px 8px; font-family: monospace; flex: 1;">
+                </div>
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.74rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Cor da Letra / Texto (Opcional)</label>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <input type="color" value="#FFFFFF" onchange="this.nextElementSibling.value = this.value; serializeChannelsRows();" style="width: 34px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                    <input type="text" class="form-input channel-row-text-color-input" value="" placeholder="Padrão (Ex: #FFFFFF ou #202020)" oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value; serializeChannelsRows();" style="font-size: 0.78rem; padding: 6px 8px; font-family: monospace; flex: 1;">
+                </div>
             </div>
         </div>
     `;
@@ -1507,6 +1558,8 @@ function serializeChannelsRows() {
         const urlInput = row.querySelector('.channel-row-url-input');
         const targetSelect = row.querySelector('.channel-row-target-select');
         const visCheckbox = row.querySelector('.channel-vis-checkbox');
+        const bgColorInput = row.querySelector('.channel-row-bg-color-input');
+        const textColorInput = row.querySelector('.channel-row-text-color-input');
 
         const plat = platformInput ? platformInput.value.trim() : 'Loja Oficial';
         const title = titleInput ? titleInput.value.trim() : ('Comprar na ' + plat);
@@ -1523,6 +1576,8 @@ function serializeChannelsRows() {
             icon: iconSelect ? iconSelect.value : 'oficial',
             url: urlInput ? urlInput.value.trim() : '',
             target: targetSelect ? targetSelect.value : '_blank',
+            button_bg_color: bgColorInput ? bgColorInput.value.trim() : '',
+            button_text_color: textColorInput ? textColorInput.value.trim() : '',
             visible: (visCheckbox && visCheckbox.checked) ? 1 : 0,
             is_custom: isCustom ? 1 : 0,
             is_deletable: 1

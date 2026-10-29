@@ -1711,6 +1711,8 @@ function openNewProductModal(e) {
         price: '40,00',
         button_text: 'Comprar na Shopee Oficial',
         button_color: 'default',
+        button_bg_color: '',
+        button_text_color: '',
         button_size: 'md',
         target: '_blank',
         is_active: 1,
@@ -2200,6 +2202,8 @@ function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl =
                 button_text: l.button_text || pConfig.defaultBtn,
                 badge: l.badge || '',
                 button_color: l.button_color || 'default',
+                button_bg_color: l.button_bg_color || '',
+                button_text_color: l.button_text_color || '',
                 button_size: l.button_size || 'md',
                 target: target,
                 is_active: isActive,
@@ -2220,6 +2224,8 @@ function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl =
             button_text: CHANNEL_PLATFORMS['Shopee'].defaultBtn,
             badge: CHANNEL_PLATFORMS['Shopee'].badge,
             button_color: 'default',
+            button_bg_color: '',
+            button_text_color: '',
             button_size: 'md',
             target: '_blank',
             is_active: fallbackExternalUrl ? 1 : 0,
@@ -2236,6 +2242,8 @@ function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl =
             button_text: CHANNEL_PLATFORMS['Mercado Livre'].defaultBtn,
             badge: CHANNEL_PLATFORMS['Mercado Livre'].badge,
             button_color: 'default',
+            button_bg_color: '',
+            button_text_color: '',
             button_size: 'md',
             target: '_blank',
             is_active: 0,
@@ -2252,6 +2260,8 @@ function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl =
             button_text: CHANNEL_PLATFORMS['Compra Direta'].defaultBtn,
             badge: CHANNEL_PLATFORMS['Compra Direta'].badge,
             button_color: 'default',
+            button_bg_color: '',
+            button_text_color: '',
             button_size: 'md',
             target: '_self',
             is_active: 1,
@@ -2268,6 +2278,8 @@ function normalizeModelLinks(rawLinks, basePriceFormatted, fallbackExternalUrl =
             button_text: CHANNEL_PLATFORMS['WhatsApp'].defaultBtn,
             badge: CHANNEL_PLATFORMS['WhatsApp'].badge,
             button_color: 'default',
+            button_bg_color: '',
+            button_text_color: '',
             button_size: 'md',
             target: '_blank',
             is_active: 0,
@@ -2372,6 +2384,11 @@ function renderPlatformLinks(targetContainerId = 'productLinksContainer') {
             const badgeDisplay = link.badge || '';
             const btnTextDisplay = link.button_text || pConfig.defaultBtn;
             const targetVal = link.target || '_blank';
+            const bgColorVal = link.button_bg_color || '';
+            const textColorVal = link.button_text_color || '';
+            const previewBg = bgColorVal ? bgColorVal : 'rgba(0,0,0,0.35)';
+            const previewColor = textColorVal ? textColorVal : '#FFFFFF';
+            const previewBorder = bgColorVal ? '1px solid rgba(255,255,255,0.2)' : `1px solid ${brandColor}55`;
 
             item.innerHTML = `
                 <!-- TOPO DO CARD: CANAL, ORDEM, STATUS E REMOVER -->
@@ -2454,7 +2471,7 @@ function renderPlatformLinks(targetContainerId = 'productLinksContainer') {
                 </div>
 
                 <!-- LINHA 2 DE INPUTS: TEXTO DO BOTÃO + SELO/BADGE + DESTINO -->
-                <div style="display: grid; grid-template-columns: 1.6fr 1.2fr 130px; gap: 12px; margin-bottom: 8px;">
+                <div style="display: grid; grid-template-columns: 1.6fr 1.2fr 130px; gap: 12px; margin-bottom: 10px;">
                     <div>
                         <label style="font-size: 0.72rem; color: #b5ada3; display: block; margin-bottom: 3px; font-weight: 500;">
                             Texto do Botão
@@ -2484,15 +2501,76 @@ function renderPlatformLinks(targetContainerId = 'productLinksContainer') {
                     </div>
                 </div>
 
+                <!-- LINHA 3 DE INPUTS: PERSONALIZAÇÃO DE COR DE FUNDO E COR DA LETRA -->
+                <div style="background: rgba(0,0,0,0.22); border: 1px solid rgba(212,186,136,0.15); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px;">
+                    <div style="font-size: 0.72rem; color: #ded7cf; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="display: inline-flex; align-items: center; gap: 5px;">🎨 Cores do Botão deste Canal</span>
+                        <span style="font-size: 0.68rem; color: #8e8880; font-weight: normal;">(Personalize a cor da letra e fundo na vitrine)</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <!-- COR DE FUNDO -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label style="font-size: 0.7rem; color: #b5ada3; font-weight: 500; margin: 0;">Fundo do Botão</label>
+                                ${bgColorVal ? `<button type="button" onclick="resetChannelBtnColor(${idx}, 'bg', '${container.id}')" style="background:none; border:none; color:#f87171; font-size:0.65rem; cursor:pointer; padding:0;">↺ Padrão</button>` : ''}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="color" value="${bgColorVal && bgColorVal.startsWith('#') && bgColorVal.length === 7 ? bgColorVal : '#202020'}" 
+                                       onchange="updateChannelColor(${idx}, 'bg', this.value, '${container.id}')" 
+                                       title="Escolher cor de fundo"
+                                       style="width: 36px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                                <input type="text" class="form-input" value="${escapeHtml(bgColorVal)}" 
+                                       placeholder="Padrão (Ex: #ded7cf ou #202020)" 
+                                       oninput="updateChannelColor(${idx}, 'bg', this.value, '${container.id}', false)"
+                                       style="padding: 5px 8px; font-size: 0.78rem; font-family: monospace; flex: 1;">
+                            </div>
+                            <div style="display: flex; gap: 4px; margin-top: 5px; align-items: center; flex-wrap: wrap;">
+                                <span style="font-size: 0.62rem; color: #737B85; margin-right: 2px;">Paleta:</span>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#ded7cf', '${container.id}')" title="Dourado DIVINIUM" style="width: 16px; height: 16px; border-radius: 3px; background: #ded7cf; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#202020', '${container.id}')" title="Preto Ébano" style="width: 16px; height: 16px; border-radius: 3px; background: #202020; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#EE4D2D', '${container.id}')" title="Shopee Oficial" style="width: 16px; height: 16px; border-radius: 3px; background: #EE4D2D; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#FFE600', '${container.id}')" title="Mercado Livre" style="width: 16px; height: 16px; border-radius: 3px; background: #FFE600; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#25D366', '${container.id}')" title="WhatsApp VIP" style="width: 16px; height: 16px; border-radius: 3px; background: #25D366; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'bg', '#232F3E', '${container.id}')" title="Amazon Dark" style="width: 16px; height: 16px; border-radius: 3px; background: #232F3E; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                            </div>
+                        </div>
+
+                        <!-- COR DA LETRA / TEXTO -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label style="font-size: 0.7rem; color: #b5ada3; font-weight: 500; margin: 0;">Cor da Letra (Texto)</label>
+                                ${textColorVal ? `<button type="button" onclick="resetChannelBtnColor(${idx}, 'text', '${container.id}')" style="background:none; border:none; color:#f87171; font-size:0.65rem; cursor:pointer; padding:0;">↺ Padrão</button>` : ''}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="color" value="${textColorVal && textColorVal.startsWith('#') && textColorVal.length === 7 ? textColorVal : '#FFFFFF'}" 
+                                       onchange="updateChannelColor(${idx}, 'text', this.value, '${container.id}')" 
+                                       title="Escolher cor da letra"
+                                       style="width: 36px; height: 32px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                                <input type="text" class="form-input" value="${escapeHtml(textColorVal)}" 
+                                       placeholder="Padrão (Ex: #FFFFFF ou #202020)" 
+                                       oninput="updateChannelColor(${idx}, 'text', this.value, '${container.id}', false)"
+                                       style="padding: 5px 8px; font-size: 0.78rem; font-family: monospace; flex: 1;">
+                            </div>
+                            <div style="display: flex; gap: 4px; margin-top: 5px; align-items: center; flex-wrap: wrap;">
+                                <span style="font-size: 0.62rem; color: #737B85; margin-right: 2px;">Paleta:</span>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'text', '#FFFFFF', '${container.id}')" title="Branco Puro" style="width: 16px; height: 16px; border-radius: 3px; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'text', '#202020', '${container.id}')" title="Preto Ébano" style="width: 16px; height: 16px; border-radius: 3px; background: #202020; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'text', '#ded7cf', '${container.id}')" title="Dourado DIVINIUM" style="width: 16px; height: 16px; border-radius: 3px; background: #ded7cf; border: 1px solid rgba(0,0,0,0.3); cursor: pointer;"></button>
+                                <button type="button" onclick="updateChannelColor(${idx}, 'text', '#111827', '${container.id}')" title="Grafite Escuro" style="width: 16px; height: 16px; border-radius: 3px; background: #111827; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- MINI PRÉVIA DO BOTÃO COMO APARECERÁ NA VITRINE -->
-                <div style="background: rgba(0,0,0,0.25); border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; font-size: 0.74rem; color: #a8a096; margin-top: 6px;">
-                    <span style="font-size: 0.7rem;">Prévia na Boutique:</span>
-                    <span style="color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <div class="channel-mini-preview-btn" style="background: ${previewBg}; color: ${previewColor}; border: ${previewBorder}; border-radius: 7px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; font-size: 0.76rem; margin-top: 6px; transition: all 0.25s ease;">
+                    <span style="font-size: 0.68rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.05em;">Prévia na Boutique:</span>
+                    <span style="color: inherit; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">
                         <span style="color: ${brandColor}; font-weight: bold;">●</span>
-                        <span>${escapeHtml(btnTextDisplay)}</span>
-                        ${badgeDisplay ? `<span style="background: rgba(212,186,136,0.2); color: #ded7cf; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px;">${escapeHtml(badgeDisplay)}</span>` : ''}
-                        <span style="color: #CBD0D6; font-size: 0.72rem;">${priceDisplay ? '— R$ ' + priceDisplay : ''}</span>
-                        <span>↗</span>
+                        <span style="color: inherit;">${escapeHtml(btnTextDisplay)}</span>
+                        ${badgeDisplay ? `<span style="background: rgba(255,255,255,0.2); color: inherit; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700;">${escapeHtml(badgeDisplay)}</span>` : ''}
+                        <span style="color: inherit; opacity: 0.85; font-size: 0.72rem;">${priceDisplay ? '— R$ ' + priceDisplay : ''}</span>
+                        <span style="color: inherit;">↗</span>
                     </span>
                 </div>
             `;
@@ -2565,6 +2643,8 @@ function addNewPlatformLink(containerId = 'productLinksContainer') {
         button_text: pConfig.defaultBtn,
         badge: pConfig.badge,
         button_color: 'default',
+        button_bg_color: '',
+        button_text_color: '',
         button_size: 'md',
         target: pConfig.target,
         is_active: 1,
@@ -2572,6 +2652,37 @@ function addNewPlatformLink(containerId = 'productLinksContainer') {
         is_canonical: false
     });
 
+    renderPlatformLinks(containerId);
+}
+
+function updateChannelColor(idx, type, val, containerId, rerender = true) {
+    if (!currentProductLinks[idx]) return;
+    if (type === 'bg') {
+        currentProductLinks[idx].button_bg_color = val;
+    } else if (type === 'text') {
+        currentProductLinks[idx].button_text_color = val;
+    }
+    if (rerender) {
+        renderPlatformLinks(containerId);
+    } else {
+        const parentElem = document.getElementById(containerId);
+        if (parentElem) {
+            const cards = parentElem.querySelectorAll('.channel-editor-card');
+            if (cards[idx]) {
+                const prevBox = cards[idx].querySelector('.channel-mini-preview-btn');
+                if (prevBox) {
+                    if (type === 'bg') prevBox.style.background = val || 'rgba(0,0,0,0.35)';
+                    if (type === 'text') prevBox.style.color = val || '#FFFFFF';
+                }
+            }
+        }
+    }
+}
+
+function resetChannelBtnColor(idx, type, containerId) {
+    if (!currentProductLinks[idx]) return;
+    if (type === 'bg') currentProductLinks[idx].button_bg_color = '';
+    if (type === 'text') currentProductLinks[idx].button_text_color = '';
     renderPlatformLinks(containerId);
 }
 

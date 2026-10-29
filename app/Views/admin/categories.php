@@ -584,6 +584,8 @@ function renderChannelRowHtml(prodId, idx, link = {}) {
     const badge = link.badge || '';
     const target = link.target || (url.startsWith('/') ? '_self' : '_blank');
     const isActive = link.is_active !== undefined ? (link.is_active == 1) : true;
+    const bgColor = link.button_bg_color || '';
+    const textColor = link.button_text_color || '';
 
     return `
         <div class="channel-row-item channel-item-${prodId}" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
@@ -637,6 +639,31 @@ function renderChannelRowHtml(prodId, idx, link = {}) {
                     <button type="button" class="btn-table-action btn-delete" onclick="this.closest('.channel-row-item').remove()" title="Remover Canal" style="padding: 5px 8px; font-size: 0.74rem;">
                         ✕
                     </button>
+                </div>
+            </div>
+            <!-- Personalização de Cores do Botão (Fundo e Letra) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.08);">
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Fundo do Botão</label>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="color" value="${bgColor && bgColor.startsWith('#') && bgColor.length === 7 ? bgColor : '#202020'}" 
+                               onchange="this.nextElementSibling.value = this.value" 
+                               style="width: 30px; height: 28px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                        <input type="text" class="form-input channel-bg-color" value="${escapeHtml(bgColor)}" placeholder="Padrão (Ex: #ded7cf ou #202020)" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value"
+                               style="font-size: 0.76rem; padding: 5px 8px; font-family: monospace; flex: 1;">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block; margin-bottom: 2px;">Cor da Letra (Texto)</label>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="color" value="${textColor && textColor.startsWith('#') && textColor.length === 7 ? textColor : '#FFFFFF'}" 
+                               onchange="this.nextElementSibling.value = this.value" 
+                               style="width: 30px; height: 28px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer; padding: 1px;">
+                        <input type="text" class="form-input channel-text-color" value="${escapeHtml(textColor)}" placeholder="Padrão (Ex: #FFFFFF ou #202020)" 
+                               oninput="if(this.value.startsWith('#') && this.value.length === 7) this.previousElementSibling.value = this.value"
+                               style="font-size: 0.76rem; padding: 5px 8px; font-family: monospace; flex: 1;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -860,6 +887,8 @@ async function saveProductChannelsData(productId, btnElem) {
         const badge = row.querySelector('.channel-badge')?.value || '';
         const target = row.querySelector('.channel-target')?.value || '_blank';
         const isActive = row.querySelector('.channel-active')?.checked ? 1 : 0;
+        const bgColor = row.querySelector('.channel-bg-color')?.value.trim() || '';
+        const textColor = row.querySelector('.channel-text-color')?.value.trim() || '';
 
         if (url.trim() !== '') {
             links.push({
@@ -868,6 +897,8 @@ async function saveProductChannelsData(productId, btnElem) {
                 price: price,
                 button_text: btnText,
                 badge: badge,
+                button_bg_color: bgColor,
+                button_text_color: textColor,
                 target: target,
                 is_active: isActive,
                 sort_order: idx

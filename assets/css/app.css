@@ -6491,6 +6491,23 @@ body.theme-rose .btn-store-back {
     border-color: #ffffff;
 }
 
+/* Custom sales channels styling & micro-interactions */
+.btn-channel-impartial[style*="background"] {
+    transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-channel-impartial[style*="background"]:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.btn-channel-chip[style*="background"] {
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+.btn-channel-chip[style*="background"]:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+}
+
 
 
 

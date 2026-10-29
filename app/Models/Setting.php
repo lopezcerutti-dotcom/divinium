@@ -437,6 +437,8 @@ class Setting
                         'url' => trim((string)($item['url'] ?? '')),
                         'target' => trim((string)($item['target'] ?? '_blank')),
                         'visible' => !empty($item['visible']) ? 1 : 0,
+                        'button_bg_color' => trim((string)($item['button_bg_color'] ?? '')),
+                        'button_text_color' => trim((string)($item['button_text_color'] ?? '')),
                         'is_custom' => !empty($item['is_custom']),
                         'is_deletable' => !isset($item['is_deletable']) || !empty($item['is_deletable']),
                     ];

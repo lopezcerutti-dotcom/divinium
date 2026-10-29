@@ -523,6 +523,9 @@ class AdminController
                     $btnColor = trim((string) ($linkItem['button_color'] ?? 'default'));
                     if ($btnColor === '') $btnColor = 'default';
 
+                    $btnBgColor = !empty($linkItem['button_bg_color']) ? trim((string) $linkItem['button_bg_color']) : null;
+                    $btnTextColor = !empty($linkItem['button_text_color']) ? trim((string) $linkItem['button_text_color']) : null;
+
                     $btnSize = trim((string) ($linkItem['button_size'] ?? 'md'));
                     if (!in_array($btnSize, ['sm', 'md', 'lg', 'full'], true)) {
                         $btnSize = 'md';
@@ -546,6 +549,8 @@ class AdminController
                         'price_cents' => $lPriceCents,
                         'button_text' => $btnText,
                         'button_color' => $btnColor,
+                        'button_bg_color' => $btnBgColor,
+                        'button_text_color' => $btnTextColor,
                         'button_size' => $btnSize,
                         'target' => $lTarget,
                         'badge' => $lBadge,
@@ -587,8 +592,8 @@ class AdminController
 
             if (!empty($validLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($siblingIds as $sId) {
                     foreach ($validLinks as $vl) {
@@ -599,6 +604,8 @@ class AdminController
                             $vl['price_cents'],
                             $vl['button_text'],
                             $vl['button_color'],
+                            $vl['button_bg_color'],
+                            $vl['button_text_color'],
                             $vl['button_size'],
                             $vl['target'],
                             $vl['is_active'],
@@ -900,8 +907,8 @@ class AdminController
 
             if (!empty($origLinks)) {
                 $insLink = $this->pdo->prepare('
-                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO product_links (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ');
                 foreach ($origLinks as $ol) {
                     $insLink->execute([
@@ -911,6 +918,8 @@ class AdminController
                         $ol['price_cents'],
                         $ol['button_text'],
                         $ol['button_color'] ?? 'default',
+                        $ol['button_bg_color'] ?? null,
+                        $ol['button_text_color'] ?? null,
                         $ol['button_size'] ?? 'md',
                         $ol['target'] ?? '_blank',
                         $ol['is_active'],
@@ -1512,8 +1521,8 @@ class AdminController
 
             $insStmt = $this->pdo->prepare("
                 INSERT INTO product_links 
-                (product_id, platform_name, url, price_cents, button_text, button_color, button_size, target, is_active, sort_order, badge)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (product_id, platform_name, url, price_cents, button_text, button_color, button_bg_color, button_text_color, button_size, target, is_active, sort_order, badge)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $primaryExternalUrl = '';
@@ -1545,6 +1554,9 @@ class AdminController
                     $btnColor = trim((string)($link['button_color'] ?? 'default'));
                     if ($btnColor === '') $btnColor = 'default';
 
+                    $btnBgColor = !empty($link['button_bg_color']) ? trim((string)$link['button_bg_color']) : null;
+                    $btnTextColor = !empty($link['button_text_color']) ? trim((string)$link['button_text_color']) : null;
+
                     $btnSize = trim((string)($link['button_size'] ?? 'md'));
                     if (!in_array($btnSize, ['sm', 'md', 'lg', 'full'], true)) $btnSize = 'md';
 
@@ -1566,6 +1578,8 @@ class AdminController
                         'price_cents' => $priceCents,
                         'button_text' => $btnText,
                         'button_color' => $btnColor,
+                        'button_bg_color' => $btnBgColor,
+                        'button_text_color' => $btnTextColor,
                         'button_size' => $btnSize,
                         'target' => $target,
                         'is_active' => $isActive,
@@ -1589,6 +1603,8 @@ class AdminController
                         $vl['price_cents'],
                         $vl['button_text'],
                         $vl['button_color'],
+                        $vl['button_bg_color'],
+                        $vl['button_text_color'],
                         $vl['button_size'],
                         $vl['target'],
                         $vl['is_active'],
