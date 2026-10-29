@@ -221,7 +221,8 @@ class Router
         $homeHandler = function (): void {
             \App\Core\View::render('home/index', [
                 'pageTitle' => 'Joias que Revelam o Luxo Silencioso',
-                'pageDescription' => 'Divinium — Joias exclusivas em ouro 18k e pedras preciosas com a essência do quiet luxury.'
+                'pageDescription' => 'Divinium — Joias exclusivas em ouro 18k e pedras preciosas com a essência do quiet luxury.',
+                'canonicalUrl' => 'https://divinium.com.br/'
             ]);
         };
 

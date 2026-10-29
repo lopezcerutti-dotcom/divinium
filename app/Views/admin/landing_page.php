@@ -3642,6 +3642,14 @@ $renderToggle = function(string $key, string $default = '1'): string {
 
             <div class="form-grid">
                 <div class="form-group full-width">
+                    <label for="site_canonical_url">Domínio Canônico Oficial (rel="canonical")</label>
+                    <input type="url" id="site_canonical_url" name="site_canonical_url" class="form-input"
+                           value="<?= View::e(Setting::get('site_canonical_url', 'https://divinium.com.br')) ?>"
+                           placeholder="https://divinium.com.br">
+                    <span class="field-hint">URL canônica base utilizada na tag <code>&lt;link rel="canonical"&gt;</code> e metadados Open Graph / Redes Sociais. Padrão oficial: <code>https://divinium.com.br</code>.</span>
+                </div>
+
+                <div class="form-group full-width">
                     <label for="seo_site_title_format">Padrão do Título da Página (&lt;title&gt;)</label>
                     <input type="text" id="seo_site_title_format" name="seo_site_title_format" class="form-input"
                            value="<?= View::e(Setting::get('seo_site_title_format', '{title} | Divinium')) ?>"

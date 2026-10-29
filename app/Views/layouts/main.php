@@ -15,12 +15,44 @@
         $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'joias autorais, banho de prata, pedras naturais, quiet luxury, alta joalheria brasileira, orgonite nobre');
         $ogImage = \App\Models\Setting::get('seo_og_image', '/assets/images/hero/hero-main.webp');
         $faviconUrl = \App\Models\Setting::get('site_favicon_url', '/assets/images/favicon.ico');
+
+        // Domínio oficial e resolução dinâmica do link canônico (rel="canonical")
+        $rawCanonicalBase = \App\Models\Setting::get('site_canonical_url', \App\Core\Env::get('APP_URL', 'https://divinium.com.br'));
+        $canonicalBase = rtrim(trim((string)$rawCanonicalBase), '/');
+        if (empty($canonicalBase) || str_contains($canonicalBase, 'seudominio.com.br') || str_contains($canonicalBase, 'localhost')) {
+            $canonicalBase = 'https://divinium.com.br';
+        }
+        if (!str_starts_with($canonicalBase, 'http://') && !str_starts_with($canonicalBase, 'https://')) {
+            $canonicalBase = 'https://' . $canonicalBase;
+        }
+
+        if (!empty($canonicalUrl)) {
+            $trimmedCanonical = trim((string)$canonicalUrl);
+            if (str_starts_with($trimmedCanonical, 'http://') || str_starts_with($trimmedCanonical, 'https://')) {
+                $renderedCanonical = str_replace(['http://seudominio.com.br', 'https://seudominio.com.br'], $canonicalBase, $trimmedCanonical);
+            } else {
+                $renderedCanonical = $canonicalBase . '/' . ltrim($trimmedCanonical, '/');
+            }
+        } else {
+            $reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+            if (empty($reqPath) || $reqPath === '/' || $reqPath === '/index.php' || $reqPath === '/index') {
+                $renderedCanonical = $canonicalBase . '/';
+            } else {
+                $renderedCanonical = $canonicalBase . '/' . ltrim($reqPath, '/');
+            }
+        }
+
+        // Resolução de imagem para redes sociais com URL absoluta
+        $renderedOgImage = $ogImage;
+        if (!empty($ogImage) && !str_starts_with($ogImage, 'http://') && !str_starts_with($ogImage, 'https://')) {
+            $renderedOgImage = $canonicalBase . '/' . ltrim($ogImage, '/');
+        }
     ?>
     <title><?= \App\Core\View::e($renderedTitle) ?></title>
     
     <meta name="description" content="<?= \App\Core\View::e($metaDesc) ?>">
     <meta name="keywords" content="<?= \App\Core\View::e($metaKeywords) ?>">
-    <link rel="canonical" href="https://seudominio.com.br<?= \App\Core\View::e($_SERVER['REQUEST_URI'] ?? '/') ?>">
+    <link rel="canonical" href="<?= \App\Core\View::e($renderedCanonical) ?>">
     <link rel="icon" href="<?= \App\Core\View::e($faviconUrl) ?>">
 
     <!-- Open Graph / Redes Sociais -->
@@ -28,7 +60,15 @@
     <meta property="og:site_name" content="<?= \App\Core\View::e($siteBrand) ?>">
     <meta property="og:title" content="<?= \App\Core\View::e($renderedTitle) ?>">
     <meta property="og:description" content="<?= \App\Core\View::e($metaDesc) ?>">
-    <meta property="og:image" content="<?= \App\Core\View::e($ogImage) ?>">
+    <meta property="og:url" content="<?= \App\Core\View::e($renderedCanonical) ?>">
+    <meta property="og:image" content="<?= \App\Core\View::e($renderedOgImage) ?>">
+    <meta property="og:locale" content="pt_BR">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= \App\Core\View::e($renderedTitle) ?>">
+    <meta name="twitter:description" content="<?= \App\Core\View::e($metaDesc) ?>">
+    <meta name="twitter:image" content="<?= \App\Core\View::e($renderedOgImage) ?>">
 
     <!-- Tipografia Editorial: Cormorant Garamond (Serif de Luxo) + Plus Jakarta Sans (UI moderna) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

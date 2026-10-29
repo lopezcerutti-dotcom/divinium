@@ -550,7 +550,7 @@ INSERT INTO `users` (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1,
     'Administrador Inicial',
-    'admin@seudominio.com.br',
+    'admin@divinium.com.br',
     '$argon2id$v=19$m=65536,t=4,p=1$cTBoN3dEaFpuSEoxUllXdw$a0P1/v68jD03l7d45fE6g7h8i9j0k1l2m3n4o5p6q7r',
     'active',
     NOW()
@@ -564,14 +564,15 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
 -- Configurações Globais Padrão
 INSERT INTO `settings` (`key_name`, `value`, `is_encrypted`, `description`) VALUES
+('site_canonical_url', 'https://divinium.com.br', 0, 'Domínio oficial e URL canônica base para indexação e redes sociais'),
 ('store_name', 'Divinium Brand', 0, 'Nome comercial da loja exibido nos e-mails e cabeçalho'),
 ('store_document_cnpj', '00.000.000/0001-00', 0, 'CNPJ oficial exibido no rodapé (obrigatório pelo Decreto 7.962/2013)'),
-('store_support_email', 'atendimento@seudominio.com.br', 0, 'E-mail de contato e SAC oficial'),
+('store_support_email', 'atendimento@divinium.com.br', 0, 'E-mail de contato e SAC oficial'),
 ('store_support_whatsapp', '5511999999999', 0, 'Número do WhatsApp para suporte ao cliente'),
-('store_dpo_contact', 'dpo@seudominio.com.br', 0, 'Contato do Encarregado de Proteção de Dados (LGPD)'),
+('store_dpo_contact', 'dpo@divinium.com.br', 0, 'Contato do Encarregado de Proteção de Dados (LGPD)'),
 ('asaas_environment', 'sandbox', 0, 'Ambiente do gateway: sandbox ou production'),
 ('policy_version_current', '1.0.0', 0, 'Versão vigente dos Termos e Políticas de Privacidade'),
-('default_theme', 'theme-gold', 0, 'Tema visual padrão da loja (theme-gold, theme-silver, theme-emerald, theme-rose)')
+('default_theme', 'theme-silver-noir', 0, 'Tema visual padrão da loja')
 ON DUPLICATE KEY UPDATE `value` = VALUES(`value`);
 
 -- ------------------------------------------------------------------------------

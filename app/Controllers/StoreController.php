@@ -222,6 +222,7 @@ class StoreController
         View::render('store/index', [
             'pageTitle' => 'Loja Oficial | Joias & Coleções Autorais',
             'pageDescription' => 'Conheça o catálogo completo de joias Divinium. Escolha sua gema mineral e finalize sua compra com segurança na nossa loja oficial na Shopee.',
+            'canonicalUrl' => 'https://divinium.com.br/loja',
             'categories' => $categories,
             'products' => $products
         ]);
@@ -691,11 +692,13 @@ class StoreController
             exit;
         }
 
+        $canonicalProdSlug = !empty($product['slug']) ? $product['slug'] : $rawSlug;
         View::render('store/show', [
             'pageTitle' => ($product['name'] ?? 'Joia Autoral') . ' | Boutique DIVINIUM',
             'pageDescription' => !empty($product['short_description']) 
                 ? $product['short_description'] 
                 : (!empty($product['description']) ? substr(strip_tags((string)$product['description']), 0, 160) : 'Conheça todos os detalhes desta joia exclusiva DIVINIUM.'),
+            'canonicalUrl' => 'https://divinium.com.br/produto/' . $canonicalProdSlug,
             'product' => $product,
             'variations' => $variations ?? [],
             'selectedSku' => $product['sku'] ?? '',
@@ -905,7 +908,8 @@ class StoreController
 
         View::render('store/checkout', [
             'pageTitle' => 'Finalizar Escolhas | Sacola Divinium',
-            'pageDescription' => 'Conclua seu pedido com atendimento exclusivo, Pix instantâneo com 5% de desconto ou canais homologados.'
+            'pageDescription' => 'Conclua seu pedido com atendimento exclusivo, Pix instantâneo com 5% de desconto ou canais homologados.',
+            'canonicalUrl' => 'https://divinium.com.br/checkout'
         ]);
     }
 
@@ -985,6 +989,7 @@ class StoreController
         View::render('home/page', [
             'pageTitle' => $page['title'],
             'pageDescription' => $page['desc'],
+            'canonicalUrl' => 'https://divinium.com.br/' . $slug,
             'pageHeading' => $page['title'],
             'pageBodyHtml' => $bodyContent,
             'pageSlug' => $slug
