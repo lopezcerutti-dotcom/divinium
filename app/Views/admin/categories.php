@@ -605,18 +605,18 @@ function getPlatformLogoSvg(platform, size = 15) {
     if (raw.includes('elo7')) {
         return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#FF8800"/><path d="M6 7h12v2.2H9.2v2.8h6.6v2.2H9.2v2.8h8.8V19H6V7z" fill="#FFFFFF"/></svg>`;
     }
-    if (raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout') || raw.includes('divinium')) {
-        return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#202020"/><path d="M6 3h12l3 5-9 13L3 8l3-5z" stroke="#ded7cf" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M3 8h18M12 21L8 8m4 13l4-13M6 3l2 5m10-5l-2 5" stroke="#ded7cf" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+    if (raw.includes('divinium') || raw.includes('loja oficial') || raw.includes('oficial') || raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout')) {
+        return `<img src="/assets/images/brand/divinium-canal-oficial.png" alt="DIVINIUM" class="channel-logo-img" style="width:${s}px; height:${s}px; object-fit:contain; flex-shrink:0; vertical-align:middle; display:inline-block; border-radius:3px;">`;
     }
     return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#50555E"/><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 }
 
 function renderChannelRowHtml(prodId, idx, link = {}) {
     const plat = link.platform_name || 'Shopee';
-    const isCustomPlat = !['Shopee', 'Mercado Livre', 'Amazon', 'WhatsApp', 'Compra Direta', 'Asaas Pix', 'TikTok Shop', 'Enjoei', 'Elo7', 'Instagram Shop'].includes(plat);
+    const isCustomPlat = !['Loja Oficial DIVINIUM', 'Shopee', 'Mercado Livre', 'Amazon', 'WhatsApp', 'Compra Direta', 'Asaas Pix', 'TikTok Shop', 'Enjoei', 'Elo7', 'Instagram Shop'].includes(plat);
     const selectedPlat = isCustomPlat ? 'Outro' : plat;
     const url = link.url || '';
-    const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : `Comprar no ${plat}`);
+    const btnText = link.button_text || (plat === 'Shopee' ? 'Comprar na Shopee Oficial' : (plat === 'Loja Oficial DIVINIUM' ? 'Comprar na Loja Oficial DIVINIUM' : `Comprar no ${plat}`));
     const price = link.price_cents ? (link.price_cents / 100).toFixed(2).replace('.', ',') : (link.price || '');
     const badge = link.badge || '';
     const target = link.target || (url.startsWith('/') ? '_self' : '_blank');
@@ -634,6 +634,7 @@ function renderChannelRowHtml(prodId, idx, link = {}) {
                             ${getPlatformLogoSvg(plat, 18)}
                         </span>
                         <select class="form-select channel-plat" style="font-size: 0.78rem; padding: 6px 8px; flex: 1;" onchange="onCategoryChannelPlatChange(this)">
+                            <option value="Loja Oficial DIVINIUM" ${selectedPlat === 'Loja Oficial DIVINIUM' ? 'selected' : ''}>✦ Loja Oficial DIVINIUM</option>
                             <option value="Shopee" ${selectedPlat === 'Shopee' ? 'selected' : ''}>Shopee</option>
                             <option value="Mercado Livre" ${selectedPlat === 'Mercado Livre' ? 'selected' : ''}>Mercado Livre</option>
                             <option value="Amazon" ${selectedPlat === 'Amazon' ? 'selected' : ''}>Amazon</option>
@@ -726,7 +727,11 @@ function onCategoryChannelPlatChange(selectElem) {
         if (logoSpan) logoSpan.innerHTML = getPlatformLogoSvg(val, 18);
         const btnTextInput = row.querySelector('.channel-btn-text');
         if (btnTextInput && (!btnTextInput.value || btnTextInput.value.startsWith('Comprar'))) {
-            btnTextInput.value = (val === 'Shopee' || val === 'Amazon') ? ('Comprar na ' + val) : ('Comprar no ' + val);
+            if (val === 'Loja Oficial DIVINIUM') {
+                btnTextInput.value = 'Comprar na Loja Oficial DIVINIUM';
+            } else {
+                btnTextInput.value = (val === 'Shopee' || val === 'Amazon') ? ('Comprar na ' + val) : ('Comprar no ' + val);
+            }
         }
     }
 }

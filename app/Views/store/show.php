@@ -485,7 +485,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 
                                 <div class="channel-btn-left">
                                     <span class="channel-icon-pill" style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); <?= $dirColor ? 'border-color: ' . View::e($dirColor) . ' !important;' : '' ?>">
-                                        <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '') ? View::getPlatformLogoSvg('direta', 22) : View::getPlatformLogoSvg($directIcon, 22) ?>
+                                        <?= ($directIcon === 'diamond' || $directIcon === 'diamante' || $directIcon === '' || $directIcon === 'oficial') ? View::getPlatformLogoSvg('divinium', 26) : View::getPlatformLogoSvg($directIcon, 26) ?>
                                     </span>
                                     <div class="channel-meta-text">
                                         <span class="channel-action-name" style="color: <?= $dirColor ? View::e($dirColor) : 'var(--text-primary)' ?> !important; font-weight: 700;">
@@ -556,7 +556,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                             <!-- Lado Esquerdo: Ícone da Plataforma + Nome de Ação -->
                                             <div class="channel-btn-left">
                                                 <span class="channel-icon-pill" <?= $chColor ? 'style="border-color: ' . View::e($chColor) . ' !important;"' : '' ?>>
-                                                    <?= View::getPlatformLogoSvg($channel['platform'] ?: $channel['icon'], 22) ?>
+                                                    <?= View::getPlatformLogoSvg($channel['platform'] ?: $channel['icon'], 26) ?>
                                                 </span>
                                                 <div class="channel-meta-text">
                                                     <span class="channel-action-name" <?= $chColor ? 'style="color: ' . View::e($chColor) . ' !important;"' : '' ?>>

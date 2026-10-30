@@ -727,7 +727,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                 </span>
                                 <span class="channel-platform-preview" style="font-size: 0.75rem; color: #ffffff; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
                                     <span class="channel-logo-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: #ffffff; padding: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
-                                        <?= View::getPlatformLogoSvg($cPlat, 16) ?>
+                                        <?= View::getPlatformLogoSvg($cPlat ?: $cIcon, 16) ?>
                                     </span>
                                     <span><?= View::e($cPlat) ?></span>
                                 </span>
@@ -795,13 +795,13 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             </div>
                             <div>
                                 <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Ícone Visual</label>
-                                <select class="form-select channel-row-icon-select" style="font-size: 0.8rem; height: 38px;">
+                                <select class="form-select channel-row-icon-select" onchange="updateIconSelectPreview(this)" style="font-size: 0.8rem; height: 38px;">
+                                    <option value="oficial" <?= ($cIcon === 'oficial' || $cIcon === 'divinium' || str_contains(strtolower($cPlat), 'oficial') || str_contains(strtolower($cPlat), 'divinium')) ? 'selected' : '' ?>>✦ Oficial DIVINIUM</option>
                                     <option value="shopee" <?= str_contains(strtolower($cIcon), 'shopee') ? 'selected' : '' ?>>Shopee</option>
                                     <option value="mercadolivre" <?= str_contains(strtolower($cIcon), 'mercado') ? 'selected' : '' ?>>Mercado Livre</option>
                                     <option value="whatsapp" <?= str_contains(strtolower($cIcon), 'whatsapp') ? 'selected' : '' ?>>WhatsApp VIP</option>
                                     <option value="amazon" <?= str_contains(strtolower($cIcon), 'amazon') ? 'selected' : '' ?>>Amazon</option>
                                     <option value="tiktok" <?= str_contains(strtolower($cIcon), 'tiktok') ? 'selected' : '' ?>>TikTok Shop</option>
-                                    <option value="oficial" <?= ($cIcon === 'oficial' || $cIcon === 'divinium') ? 'selected' : '' ?>>✦ Oficial DIVINIUM</option>
                                     <option value="sacola" <?= $cIcon === 'sacola' ? 'selected' : '' ?>>Sacola de Compras</option>
                                 </select>
                             </div>
@@ -1390,8 +1390,8 @@ function getPlatformLogoSvg(platform, size = 15) {
     if (raw.includes('elo7')) {
         return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#FF8800"/><path d="M6 7h12v2.2H9.2v2.8h6.6v2.2H9.2v2.8h8.8V19H6V7z" fill="#FFFFFF"/></svg>`;
     }
-    if (raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout') || raw.includes('divinium')) {
-        return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#202020"/><path d="M6 3h12l3 5-9 13L3 8l3-5z" stroke="#ded7cf" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M3 8h18M12 21L8 8m4 13l4-13M6 3l2 5m10-5l-2 5" stroke="#ded7cf" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+    if (raw.includes('divinium') || raw.includes('loja oficial') || raw.includes('oficial') || raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout')) {
+        return `<img src="/assets/images/brand/divinium-canal-oficial.png" alt="DIVINIUM" class="channel-logo-img" width="${s}" height="${s}" style="width:${s}px; height:${s}px; object-fit:contain; border-radius:3px; display:inline-block; vertical-align:middle; flex-shrink:0;">`;
     }
     return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#50555E"/><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 }
@@ -1472,7 +1472,7 @@ function addCustomChannelRow() {
             </div>
             <div>
                 <label style="display: block; font-size: 0.76rem; color: #CBD0D6; margin-bottom: 3px; font-weight: 600;">Ícone Visual</label>
-                <select class="form-select channel-row-icon-select" style="font-size: 0.8rem; height: 38px;">
+                <select class="form-select channel-row-icon-select" onchange="updateIconSelectPreview(this)" style="font-size: 0.8rem; height: 38px;">
                     <option value="oficial">✦ Oficial DIVINIUM</option>
                     <option value="shopee">Shopee</option>
                     <option value="mercadolivre">Mercado Livre</option>
@@ -1529,9 +1529,24 @@ function updatePlatformPreview(input) {
     const row = input.closest('.channel-row-item');
     if (!row) return;
     const preview = row.querySelector('.channel-platform-preview');
+    const iconSelect = row.querySelector('.channel-row-icon-select');
     if (preview) {
-        const val = input.value.trim() || 'Novo Canal';
-        preview.innerHTML = `<span class="channel-logo-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: #ffffff; padding: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">${getPlatformLogoSvg(val, 16)}</span><span>${escapeHtml(val)}</span>`;
+        const val = input.value.trim() || (iconSelect ? iconSelect.value : 'Novo Canal');
+        preview.innerHTML = `<span class="channel-logo-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: #ffffff; padding: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">${getPlatformLogoSvg(val, 16)}</span><span>${escapeHtml(input.value.trim() || 'Novo Canal')}</span>`;
+    }
+    serializeChannelsRows();
+}
+
+function updateIconSelectPreview(select) {
+    const row = select.closest('.channel-row-item');
+    if (!row) return;
+    const preview = row.querySelector('.channel-platform-preview');
+    const platInput = row.querySelector('.channel-row-platform-input');
+    const platVal = platInput ? platInput.value.trim() : '';
+    const iconVal = select.value;
+    const targetVal = platVal || iconVal;
+    if (preview) {
+        preview.innerHTML = `<span class="channel-logo-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: #ffffff; padding: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">${getPlatformLogoSvg(targetVal, 16)}</span><span>${escapeHtml(platVal || (iconVal === 'oficial' ? 'Loja Oficial DIVINIUM' : iconVal))}</span>`;
     }
     serializeChannelsRows();
 }

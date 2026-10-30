@@ -2094,8 +2094,8 @@ function getPlatformLogoSvg(platform, size = 15) {
     if (raw.includes('elo7')) {
         return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#FF8800"/><path d="M6 7h12v2.2H9.2v2.8h6.6v2.2H9.2v2.8h8.8V19H6V7z" fill="#FFFFFF"/></svg>`;
     }
-    if (raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout') || raw.includes('divinium')) {
-        return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#202020"/><path d="M6 3h12l3 5-9 13L3 8l3-5z" stroke="#ded7cf" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M3 8h18M12 21L8 8m4 13l4-13M6 3l2 5m10-5l-2 5" stroke="#ded7cf" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+    if (raw.includes('divinium') || raw.includes('loja oficial') || raw.includes('oficial') || raw.includes('diret') || raw.includes('boutique') || raw.includes('site') || raw.includes('checkout')) {
+        return `<img src="/assets/images/brand/divinium-canal-oficial.png" alt="DIVINIUM" class="channel-logo-img" width="${s}" height="${s}" style="width:${s}px; height:${s}px; object-fit:contain; border-radius:3px; display:inline-block; vertical-align:middle; flex-shrink:0;">`;
     }
     return `<svg class="channel-logo-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#50555E"/><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 }
@@ -2104,6 +2104,15 @@ function getPlatformLogoSvg(platform, size = 15) {
 /* CANAIS DE COMPRA POR PRODUTO PRINCIPAL (MODELO PAI)            */
 /* ============================================================== */
 const CHANNEL_PLATFORMS = {
+    'Loja Oficial DIVINIUM': {
+        name: 'Loja Oficial DIVINIUM',
+        label: '✦ Loja Oficial DIVINIUM',
+        badge: 'Oficial DIVINIUM',
+        defaultBtn: 'Comprar na Loja Oficial DIVINIUM',
+        placeholder: '/checkout ou https://...',
+        accentColor: '#202020',
+        target: '_self'
+    },
     'Shopee': {
         name: 'Shopee',
         label: '🟠 Shopee',
@@ -2211,6 +2220,7 @@ function getPlatformConfig(platName) {
     if (raw.includes('mercado') || raw.includes('ml')) return CHANNEL_PLATFORMS['Mercado Livre'];
     if (raw.includes('amazon')) return CHANNEL_PLATFORMS['Amazon'];
     if (raw.includes('whatsapp') || raw.includes('wa')) return CHANNEL_PLATFORMS['WhatsApp'];
+    if (raw.includes('divinium') || raw.includes('loja oficial') || raw.includes('oficial')) return CHANNEL_PLATFORMS['Loja Oficial DIVINIUM'];
     if (raw.includes('diret') || raw.includes('site') || raw.includes('checkout') || raw.includes('boutique')) return CHANNEL_PLATFORMS['Compra Direta'];
     if (raw.includes('tiktok')) return CHANNEL_PLATFORMS['TikTok Shop'];
     if (raw.includes('pix') || raw.includes('asaas')) return CHANNEL_PLATFORMS['Asaas Pix'];

@@ -1215,6 +1215,17 @@ body.admin-theme {
     flex-shrink: 0;
 }
 
+.platform-mini-tag .channel-logo-icon img,
+.platform-mini-tag .channel-logo-icon .channel-logo-img,
+.category-row-logo img,
+.category-row-logo .channel-logo-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
 .platform-mini-tag .channel-tag-name {
     font-weight: 600;
     color: #242220;

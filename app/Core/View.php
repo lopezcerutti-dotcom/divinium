@@ -98,8 +98,8 @@ class View
             return '<svg class="channel-logo-svg" width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#FF8800"/><path d="M6 7h12v2.2H9.2v2.8h6.6v2.2H9.2v2.8h8.8V19H6V7z" fill="#FFFFFF"/></svg>';
         }
 
-        if (str_contains($raw, 'diret') || str_contains($raw, 'boutique') || str_contains($raw, 'site') || str_contains($raw, 'checkout') || str_contains($raw, 'divinium')) {
-            return '<svg class="channel-logo-svg" width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#202020"/><path d="M6 3h12l3 5-9 13L3 8l3-5z" stroke="#ded7cf" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M3 8h18M12 21L8 8m4 13l4-13M6 3l2 5m10-5l-2 5" stroke="#ded7cf" stroke-width="1.2" stroke-linecap="round"/></svg>';
+        if (str_contains($raw, 'divinium') || str_contains($raw, 'loja oficial') || str_contains($raw, 'oficial') || str_contains($raw, 'diret') || str_contains($raw, 'boutique') || str_contains($raw, 'site') || str_contains($raw, 'checkout')) {
+            return '<img src="/assets/images/brand/divinium-canal-oficial.png" alt="DIVINIUM" class="channel-logo-img" width="' . $s . '" height="' . $s . '" style="width:' . $s . 'px; height:' . $s . 'px; object-fit:contain; border-radius:3px; display:inline-block; vertical-align:middle; flex-shrink:0;">';
         }
 
         return '<svg class="channel-logo-svg" width="' . $s . '" height="' . $s . '" viewBox="0 0 24 24" fill="none" style="flex-shrink:0; vertical-align:middle;"><rect width="24" height="24" rx="5" fill="#50555E"/><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></svg>';
