@@ -1908,6 +1908,149 @@ body.admin-theme {
     }
 }
 
+/* ==============================================================
+   GERENCIADOR CENTRALIZADO DE PÁGINAS INSTITUCIONAIS
+   ============================================================== */
+.institutional-nav-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 16px 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-inst-pill {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #A7ADB4;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.btn-inst-pill:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-inst-pill.active {
+    background: rgba(202, 161, 92, 0.12);
+    border-color: #CBD0D6;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.inst-page-panel {
+    display: none;
+    animation: fadeInInstTab 0.25s ease;
+}
+
+.inst-page-panel.active {
+    display: block;
+}
+
+@keyframes fadeInInstTab {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.inst-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+}
+
+.inst-block-row {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.inst-block-row:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.inst-block-row.is-dimmed {
+    opacity: 0.45;
+}
+
+/* Modal de Prévia */
+.inst-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(10px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeInInstModal 0.25s ease;
+}
+
+@keyframes fadeInInstModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.inst-preview-dialog {
+    background: #141312;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 960px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+}
+
+.inst-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #1c1b1a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inst-preview-body {
+    padding: 30px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.inst-preview-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    background: #1c1b1a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 
 
 

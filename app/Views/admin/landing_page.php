@@ -3581,127 +3581,467 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <div id="institutionalPagesFields" class="sub-section-fields-container <?= Setting::get('institutional_pages_content_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="transition: all 0.3s ease; <?= Setting::get('institutional_pages_content_enabled', '1') !== '1' ? 'opacity: 0.35; pointer-events: none;' : '' ?>">
-                    <!-- Página 1: Trocas e Devoluções -->
-                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <strong style="color: #ffffff;">1. Trocas e Devoluções (CDC 7 Dias)</strong>
-                            <a href="/trocas-e-devolucoes" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
-                        </div>
-                        <input type="text" name="page_trocas_title" class="form-input" style="margin-bottom: 8px;"
-                               value="<?= View::e(Setting::get('page_trocas_title', 'Política de Trocas e Devoluções')) ?>" placeholder="Título da Página">
-                        <textarea name="page_trocas_content" class="form-textarea" rows="4" placeholder="Conteúdo da página de trocas e devoluções..."><?= View::e(Setting::get('page_trocas_content', 'Na DIVINIUM, respeitamos integralmente o Código de Defesa do Consumidor (Lei nº 8.078/1990). Você possui até 7 (sete) dias corridos a partir da data de entrega para solicitar a troca ou devolução da sua joia sem qualquer custo adicional.')) ?></textarea>
+                    <?php
+                    $instPagesConfig = [
+                        'trocas' => [
+                            'name' => '1. Trocas e Devoluções',
+                            'slug' => 'trocas-e-devolucoes',
+                            'enabled_key' => 'page_trocas_enabled',
+                            'title_key' => 'page_trocas_title',
+                            'default_title' => 'Política de Trocas e Devoluções',
+                            'subtitle_key' => 'page_trocas_subtitle',
+                            'default_subtitle' => 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.',
+                            'content_key' => 'page_trocas_content',
+                            'default_content' => 'Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje solicitar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.',
+                            'blocks_key' => 'page_trocas_blocks_json',
+                            'fields' => [
+                                [
+                                    'key' => 'page_trocas_arrependimento',
+                                    'label' => 'Direito de Arrependimento e Prazo Legal Aplicável (CDC Art. 49)',
+                                    'placeholder' => 'Ex: Você possui até 7 (sete) dias corridos a partir da data de recebimento do pedido para manifestar seu direito de arrependimento com devolução sem custos e ressarcimento integral...',
+                                    'hint' => 'Prazo legal garantido pelo Código de Defesa do Consumidor. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_trocas_procedimento',
+                                    'label' => 'Procedimento para Solicitar Devolução',
+                                    'placeholder' => 'Ex: Entre em contato com nosso Concierge VIP informando o número do pedido ou CPF para receber a autorização de postagem reversa cortesia dos Correios ou transportadora...',
+                                    'hint' => 'Passo a passo simples e orientações para postagem. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_trocas_condicoes',
+                                    'label' => 'Condições da Joia para Devolução',
+                                    'placeholder' => 'Ex: A joia deverá ser devolvida em sua embalagem aveludada original, acompanhada do Certificado de Garantia e sem sinais de uso indevido ou avarias mecânicas...',
+                                    'hint' => 'Exigências de integridade da peça, certificado e embalagem. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_trocas_reembolso',
+                                    'label' => 'Procedimentos e Prazos de Reembolso',
+                                    'placeholder' => 'Ex: O estorno é realizado de imediato via Pix ou processado na fatura do cartão conforme prazos da operadora após conferência em nossa central...',
+                                    'hint' => 'Condições de ressarcimento por meio de pagamento. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_trocas_canais',
+                                    'label' => 'Canais Oficiais de Atendimento',
+                                    'placeholder' => 'Ex: Concierge VIP WhatsApp oficial informado no rodapé e e-mail: atendimento@divinium.com.br (Segunda a Sexta, das 09h às 18h)...',
+                                    'hint' => 'Contatos oficiais para assistência de trocas e devoluções. Deixe em branco para ocultar.'
+                                ],
+                            ]
+                        ],
+                        'garantia' => [
+                            'name' => '2. Garantia e Cuidados com a Joia',
+                            'slug' => 'garantia-e-cuidados',
+                            'enabled_key' => 'page_garantia_enabled',
+                            'title_key' => 'page_garantia_title',
+                            'default_title' => 'Certificado de Garantia & Cuidados com a Joia',
+                            'subtitle_key' => 'page_garantia_subtitle',
+                            'default_subtitle' => 'Conheça o compromisso de qualidade do banho de prata nobre, gemas naturais e as orientações para conservação.',
+                            'content_key' => 'page_garantia_content',
+                            'default_content' => 'A DIVINIUM assegura a nobreza e excelência de cada peça autoral. Nossas criações recebem acabamento nobre em Banho de Prata de alta durabilidade e abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina.',
+                            'blocks_key' => 'page_garantia_blocks_json',
+                            'fields' => [
+                                [
+                                    'key' => 'page_garantia_prazo',
+                                    'label' => 'Prazo e Condições da Garantia',
+                                    'placeholder' => 'Ex: Todas as peças contam com garantia legal de 90 dias conforme o CDC e garantia de manufatura quanto ao acabamento do banho de prata nobre...',
+                                    'hint' => 'Prazos legais e contratuais oferecidos pela marca. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_garantia_cobertura',
+                                    'label' => 'Itens Cobertos e Não Cobertos',
+                                    'placeholder' => 'Ex: Cobertura: falhas de manufatura e fixação das pedras. Não coberto: quedas, atritos mecânicos abrasivos ou contato com químicas agressivas...',
+                                    'hint' => 'Especificação clara de coberturas e exclusões. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_garantia_cuidados',
+                                    'label' => 'Cuidados e Conservação das Peças',
+                                    'placeholder' => 'Ex: Evite contato com cloro de piscina, alvejantes, produtos de limpeza ou perfumes borrifados diretamente sobre a peça...',
+                                    'hint' => 'Orientações práticas de preservação e uso cotidiano. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_garantia_limpeza',
+                                    'label' => 'Orientações de Limpeza e Armazenamento',
+                                    'placeholder' => 'Ex: Higienize delicadamente com flanela mágica de polimento ou água morna com sabão neutro. Guarde individualmente no estojo aveludado original...',
+                                    'hint' => 'Método de limpeza e estojo protetor. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_garantia_assistencia',
+                                    'label' => 'Procedimentos para Solicitar Assistência Técnica',
+                                    'placeholder' => 'Ex: Entre em contato com nosso Concierge VIP com o número do pedido e fotos da peça para avaliação e orientações imediatas...',
+                                    'hint' => 'Caminho para o cliente acionar suporte de manutenção. Deixe em branco para ocultar.'
+                                ],
+                            ]
+                        ],
+                        'privacidade' => [
+                            'name' => '3. Política de Privacidade (LGPD)',
+                            'slug' => 'politica-de-privacidade',
+                            'enabled_key' => 'page_privacidade_enabled',
+                            'title_key' => 'page_privacidade_title',
+                            'default_title' => 'Política de Privacidade e Proteção de Dados (LGPD)',
+                            'subtitle_key' => 'page_privacidade_subtitle',
+                            'default_subtitle' => 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).',
+                            'content_key' => 'page_privacidade_content',
+                            'default_content' => 'A sua privacidade é sagrada para a DIVINIUM JOIAS. Em total conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações autorizadas.',
+                            'blocks_key' => 'page_privacidade_blocks_json',
+                            'fields' => [
+                                [
+                                    'key' => 'page_privacidade_coleta',
+                                    'label' => 'Dados Coletados',
+                                    'placeholder' => 'Ex: Coletamos apenas dados cadastrais necessários para emissão de nota fiscal, faturamento e endereço para entrega segura de seus pedidos...',
+                                    'hint' => 'Discriminação dos dados tratados. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_privacidade_finalidades',
+                                    'label' => 'Finalidades do Tratamento',
+                                    'placeholder' => 'Ex: Processamento de pedidos, entrega logística, emissão de NF-e, prevenção a fraudes no checkout e suporte personalizado...',
+                                    'hint' => 'Propósitos específicos de uso das informações. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_privacidade_compartilhamento',
+                                    'label' => 'Compartilhamento com Plataformas e Parceiros',
+                                    'placeholder' => 'Ex: Compartilhamento restrito apenas com parceiros operacionais indispensáveis (gateway ASAAS e transportadoras homologadas)...',
+                                    'hint' => 'Parceiros de pagamento e logística. Não venda de dados. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_privacidade_direitos',
+                                    'label' => 'Direitos dos Titulares de Dados (LGPD Art. 18)',
+                                    'placeholder' => 'Ex: Confirmação de tratamento, acesso aos dados, correção de inconsistências, eliminação ou revogação de consentimento...',
+                                    'hint' => 'Direitos expressos previstos na legislação. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_privacidade_canal',
+                                    'label' => 'Canal de Atendimento de Privacidade & DPO',
+                                    'placeholder' => 'Ex: Encarregado oficial de dados (DPO): dpo@divinium.com.br (Atendimento de segunda a sexta, das 09h às 18h)...',
+                                    'hint' => 'Canal formal do Encarregado de Dados. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_privacidade_cookies',
+                                    'label' => 'Cookies e Tecnologias de Rastreamento',
+                                    'placeholder' => 'Ex: Cookies operacionais para retenção da sacola e segurança da sessão, além de medição analítica anônima...',
+                                    'hint' => 'Declaração de cookies de sessão e métricas. Deixe em branco para ocultar.'
+                                ],
+                            ]
+                        ],
+                        'termos' => [
+                            'name' => '4. Termos de Uso do Site',
+                            'slug' => 'termos-de-uso',
+                            'enabled_key' => 'page_termos_enabled',
+                            'title_key' => 'page_termos_title',
+                            'default_title' => 'Termos de Uso do Site & Condições Gerais',
+                            'subtitle_key' => 'page_termos_subtitle',
+                            'default_subtitle' => 'Diretrizes de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.',
+                            'content_key' => 'page_termos_content',
+                            'default_content' => 'Ao navegar e efetuar compras no ambiente digital oficial da DIVINIUM, você concorda plenamente com os termos operacionais de navegação, propriedade intelectual e aquisição de joias.',
+                            'blocks_key' => 'page_termos_blocks_json',
+                            'fields' => [
+                                [
+                                    'key' => 'page_termos_utilizacao',
+                                    'label' => 'Condições de Utilização do Site',
+                                    'placeholder' => 'Ex: O usuário compromete-se a utilizar o portal de boa-fé, com finalidades lícitas e fornecimento de dados legítimos...',
+                                    'hint' => 'Diretrizes de conduta e acesso. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_termos_cadastro',
+                                    'label' => 'Cadastro e Segurança',
+                                    'placeholder' => 'Ex: Responsabilidade pela exatidão das informações fornecidas e sigilo das credenciais de acesso à conta...',
+                                    'hint' => 'Responsabilidade cadastral do usuário. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_termos_propriedade',
+                                    'label' => 'Propriedade Intelectual & Marcas',
+                                    'placeholder' => 'Ex: Design autoral, fotografias, logomarcas, identidade visual e textos são protegidos pelas Leis 9.610/98 e 9.279/96...',
+                                    'hint' => 'Proteção autoral das joias e da marca. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_termos_comerciais',
+                                    'label' => 'Condições Comerciais e Pedidos',
+                                    'placeholder' => 'Ex: Preços, disponibilidades de estoque e prazos de postagem sujeitos a validação após aprovação do pagamento...',
+                                    'hint' => 'Políticas comerciais de compra. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_termos_responsabilidades',
+                                    'label' => 'Responsabilidades e Limitações Legais',
+                                    'placeholder' => 'Ex: Aplica-se a legislação brasileira de proteção ao consumidor e do comércio eletrônico, com foro eleito nos termos da lei...',
+                                    'hint' => 'Limitações legais e foro competente. Deixe em branco para ocultar.'
+                                ],
+                            ]
+                        ],
+                        'frete' => [
+                            'name' => '5. Política de Frete e Entrega',
+                            'slug' => 'politica-de-frete-e-entrega',
+                            'enabled_key' => 'page_frete_enabled',
+                            'title_key' => 'page_frete_title',
+                            'default_title' => 'Política de Frete e Entrega',
+                            'subtitle_key' => 'page_frete_subtitle',
+                            'default_subtitle' => 'Diretrizes oficiais sobre envio, prazos de expedição e entrega das joias DIVINIUM.',
+                            'content_key' => 'page_frete_content',
+                            'default_content' => 'Na DIVINIUM, cada joia autoral é cuidadosamente embalada e protegida com critérios rigorosos de segurança e discrição, assegurando que sua experiência seja nobre desde o envio até o recebimento.',
+                            'blocks_key' => 'page_frete_blocks_json',
+                            'fields' => [
+                                [
+                                    'key' => 'page_frete_origem',
+                                    'label' => 'Origem de Envio',
+                                    'placeholder' => 'Ex: Central de Expedição e Curadoria DIVINIUM',
+                                    'hint' => 'Local de expedição. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_regioes',
+                                    'label' => 'Regiões Atendidas',
+                                    'placeholder' => 'Ex: Atendimento a todo o território nacional com cobertura de entrega',
+                                    'hint' => 'Cobertura de entrega. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_modalidades',
+                                    'label' => 'Modalidades de Transporte',
+                                    'placeholder' => 'Ex: Transportadoras parceiras homologadas com seguro de carga integrado',
+                                    'hint' => 'Empresas e modalidades de envio. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_calculo',
+                                    'label' => 'Cálculo do Frete',
+                                    'placeholder' => 'Ex: Calculado automaticamente pelo CEP no checkout com base em peso e cubagem',
+                                    'hint' => 'Critérios de cálculo logístico. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_prazo_preparacao',
+                                    'label' => 'Prazo de Preparação / Manuseio',
+                                    'placeholder' => 'Ex: Curadoria, polimento final e embalagem nobre protegida após aprovação',
+                                    'hint' => 'Tempo de manuseio e embalagem. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_prazo_entrega',
+                                    'label' => 'Prazo Estimado de Entrega',
+                                    'placeholder' => 'Ex: Informado na consulta de CEP no produto ou na etapa de finalização',
+                                    'hint' => 'Contagem do prazo logístico. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_rastreamento',
+                                    'label' => 'Rastreamento do Pedido',
+                                    'placeholder' => 'Ex: Código de rastreamento enviado por e-mail e WhatsApp logo após a postagem',
+                                    'hint' => 'Como o cliente acompanha a remessa. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_condicoes_especiais',
+                                    'label' => 'Condições Especiais / Frete Cortesia',
+                                    'placeholder' => 'Ex: Conforme campanhas ativas e valores mínimos divulgados na vitrine',
+                                    'hint' => 'Campanhas de frete grátis ou benefícios VIP. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_endereco_incompleto',
+                                    'label' => 'Endereço Incorreto ou Incompleto',
+                                    'placeholder' => 'Ex: Certifique-se do preenchimento exato dos dados. Reenvios por divergência informada pelo cliente poderão incorrer em novo prazo e custos de reexpedição...',
+                                    'hint' => 'Procedimento em caso de divergência de endereço informada pelo cliente. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_ausencia_destinatario',
+                                    'label' => 'Ausência do Destinatário',
+                                    'placeholder' => 'Ex: As transportadoras parceiras realizam até 3 tentativas de entrega. Certifique-se de que haverá alguém autorizado no local para assinar o recebimento...',
+                                    'hint' => 'Tentativas de entrega das transportadoras e retirada. Deixe em branco para ocultar.'
+                                ],
+                                [
+                                    'key' => 'page_frete_extravio_avaria',
+                                    'label' => 'Atraso, Extravio ou Avaria durante o Transporte',
+                                    'placeholder' => 'Ex: Todas as remessas contam com seguro de transporte. Em caso de sinistro, avaria ou extravio comprovado pela transportadora, garantimos a reposição imediata da joia ou estorno integral...',
+                                    'hint' => 'Garantia de segurança e seguro de transporte. Deixe em branco para ocultar.'
+                                ],
+                            ]
+                        ]
+                    ];
+                    ?>
+
+                    <!-- NAVEGAÇÃO ENTRE AS 5 PÁGINAS (SUB-TABS EM DESTAQUE) -->
+                    <div class="institutional-nav-pills" style="margin-top: 10px;">
+                        <?php $tabIndex = 0; foreach ($instPagesConfig as $pKey => $pCfg): $tabIndex++; ?>
+                        <button type="button" class="btn-inst-pill <?= $pKey === 'trocas' ? 'active' : '' ?>" onclick="switchInstPageTab('<?= $pKey ?>', this)">
+                            <span><?= $pCfg['name'] ?></span>
+                        </button>
+                        <?php endforeach; ?>
                     </div>
 
-                    <!-- Página 2: Garantia e Cuidados -->
-                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <strong style="color: #ffffff;">2. Garantia e Cuidados com a Joia</strong>
-                            <a href="/garantia-e-cuidados" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
-                        </div>
-                        <input type="text" name="page_garantia_title" class="form-input" style="margin-bottom: 8px;"
-                               value="<?= View::e(Setting::get('page_garantia_title', 'Certificado de Garantia & Cuidados')) ?>" placeholder="Título da Página">
-                        <textarea name="page_garantia_content" class="form-textarea" rows="4" placeholder="Conteúdo sobre garantia e cuidados..."><?= View::e(Setting::get('page_garantia_content', 'Todas as joias DIVINIUM acompanham Certificado de Autenticidade e Garantia quanto ao acabamento em Banho de Prata e autenticidade das pedras e cristais nobres.')) ?></textarea>
-                    </div>
-
-                    <!-- Página 3: LGPD & Privacidade -->
-                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <strong style="color: #ffffff;">3. Política de Privacidade (LGPD)</strong>
-                            <a href="/politica-de-privacidade" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
-                        </div>
-                        <input type="text" name="page_privacidade_title" class="form-input" style="margin-bottom: 8px;"
-                               value="<?= View::e(Setting::get('page_privacidade_title', 'Política de Privacidade e Proteção de Dados')) ?>" placeholder="Título da Página">
-                        <textarea name="page_privacidade_content" class="form-textarea" rows="4" placeholder="Conteúdo da política de privacidade..."><?= View::e(Setting::get('page_privacidade_content', 'A sua privacidade é sagrada para a DIVINIUM. Em conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações VIP autorizadas.')) ?></textarea>
-                    </div>
-
-                    <!-- Página 4: Termos de Uso -->
-                    <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <strong style="color: #ffffff;">4. Termos de Uso do Site</strong>
-                            <a href="/termos-de-uso" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
-                        </div>
-                        <input type="text" name="page_termos_title" class="form-input" style="margin-bottom: 8px;"
-                               value="<?= View::e(Setting::get('page_termos_title', 'Termos de Uso')) ?>" placeholder="Título da Página">
-                        <textarea name="page_termos_content" class="form-textarea" rows="4" placeholder="Conteúdo dos termos de uso..."><?= View::e(Setting::get('page_termos_content', 'Ao navegar e efetuar compras no ambiente digital DIVINIUM, você concorda com nossos termos operacionais de compra, prazos de confecção e modalidades de entrega.')) ?></textarea>
-                    </div>
-
-                    <!-- Página 5: Política de Frete e Entrega -->
-                    <div class="form-group full-width <?= Setting::get('page_frete_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <strong style="color: #ffffff;">5. Política de Frete e Entrega</strong>
-                                <?= $renderToggle('page_frete_enabled') ?>
+                    <!-- PAINÉIS INDIVIDUAIS DE CADA UMA DAS 5 PÁGINAS -->
+                    <?php foreach ($instPagesConfig as $pKey => $pCfg): 
+                        $isPageActive = Setting::get($pCfg['enabled_key'], '1') === '1';
+                        $pageTitleVal = Setting::get($pCfg['title_key'], $pCfg['default_title']);
+                        $pageSubtitleVal = Setting::get($pCfg['subtitle_key'], $pCfg['default_subtitle']);
+                        $pageContentVal = Setting::get($pCfg['content_key'], $pCfg['default_content']);
+                        $blocksJson = Setting::get($pCfg['blocks_key'], '[]');
+                        $blocksList = json_decode($blocksJson, true);
+                        if (!is_array($blocksList)) $blocksList = [];
+                    ?>
+                    <div class="inst-page-panel <?= $pKey === 'trocas' ? 'active' : '' ?>" id="inst-pane-<?= $pKey ?>" data-slug="<?= $pCfg['slug'] ?>">
+                        <!-- BARRA SUPERIOR DE CONTROLE E AÇÕES DA PÁGINA -->
+                        <div class="inst-panel-header">
+                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <strong style="color: #ffffff; font-size: 1.05rem; letter-spacing: 0.2px;"><?= $pCfg['name'] ?></strong>
+                                <span class="inst-status-badge badge-<?= $pKey ?>" style="font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; <?= $isPageActive ? 'background: rgba(74, 222, 128, 0.15); color: #4ADE80; border: 1px solid rgba(74, 222, 128, 0.3);' : 'background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3);' ?>">
+                                    <?= $isPageActive ? '● Ativa na Loja' : '○ Desativada' ?>
+                                </span>
+                                <?= $renderToggle($pCfg['enabled_key']) ?>
                             </div>
-                            <a href="/politica-de-frete-e-entrega" target="_blank" class="btn-admin-secondary" style="font-size: 0.74rem; padding: 4px 10px;">Ver Página ↗</a>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Título da Página</label>
-                            <input type="text" name="page_frete_title" class="form-input"
-                                   value="<?= View::e(Setting::get('page_frete_title', 'Política de Frete e Entrega')) ?>" placeholder="Título da Página">
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 16px;">
-                            <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Introdução / Conteúdo Geral</label>
-                            <textarea name="page_frete_content" class="form-textarea" rows="4" placeholder="Texto introdutório ou diretrizes gerais de envio e entrega..."><?= View::e(Setting::get('page_frete_content', 'Na DIVINIUM, cada joia é cuidadosamente preparada e embalada com máxima segurança para garantir que sua experiência de abertura seja impecável.')) ?></textarea>
-                            <span class="field-hint" style="margin-top: 4px; font-size: 0.75rem;">Texto introdutório ou diretrizes gerais. Os campos detalhados abaixo complementam os parâmetros operacionais.</span>
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="btn-admin-secondary" onclick="openInstPreview('<?= $pKey ?>')" style="font-size: 0.76rem; padding: 6px 12px; display: inline-flex; align-items: center; gap: 5px;" title="Visualizar prévia em tempo real">
+                                    <span>👁️ Prévia ao Vivo</span>
+                                </button>
+                                <a href="/<?= $pCfg['slug'] ?>" target="_blank" class="btn-admin-secondary" style="font-size: 0.76rem; padding: 6px 12px; display: inline-flex; align-items: center; gap: 5px;" title="Ver URL oficial pública">
+                                    <span>↗ Ver Página</span>
+                                </a>
+                                <button type="button" class="btn-admin-gold" onclick="saveSingleInstitutionalPage('<?= $pKey ?>', this)" style="font-size: 0.76rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 5px;" title="Salvar apenas esta página sem afetar as demais">
+                                    <span>💾 Salvar Apenas Esta Página</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+                        <!-- CABEÇALHO EDITORIAL (TÍTULO, SUBTÍTULO E INTRODUÇÃO) -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
                             <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
-                                📦 Parâmetros Detalhados de Envio & Entrega
+                                ✍️ Cabeçalho Editorial & Diretrizes
                             </span>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Origem de Envio</label>
-                                    <input type="text" name="page_frete_origem" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_origem', '')) ?>"
-                                           placeholder="Ex: Central de Expedição DIVINIUM">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Título Principal da Página</label>
+                                    <input type="text" name="<?= $pCfg['title_key'] ?>" id="<?= $pCfg['title_key'] ?>" class="form-input inst-field-title"
+                                           value="<?= View::e($pageTitleVal) ?>" placeholder="Título da Página">
                                 </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Regiões Atendidas</label>
-                                    <input type="text" name="page_frete_regioes" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_regioes', '')) ?>"
-                                           placeholder="Ex: Todo o território nacional">
+                                <div class="form-group">
+                                    <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Subtítulo / Frase de Impacto</label>
+                                    <input type="text" name="<?= $pCfg['subtitle_key'] ?>" id="<?= $pCfg['subtitle_key'] ?>" class="form-input inst-field-subtitle"
+                                           value="<?= View::e($pageSubtitleVal) ?>" placeholder="Subtítulo ou resumo da página...">
                                 </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Modalidades de Transporte</label>
-                                    <input type="text" name="page_frete_modalidades" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_modalidades', '')) ?>"
-                                           placeholder="Ex: Transportadoras parceiras com seguro de carga">
-                                </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Cálculo do Frete</label>
-                                    <input type="text" name="page_frete_calculo" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_calculo', '')) ?>"
-                                           placeholder="Ex: Calculado automaticamente pelo CEP no checkout">
-                                </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Prazo de Preparação / Manuseio</label>
-                                    <input type="text" name="page_frete_prazo_preparacao" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_prazo_preparacao', '')) ?>"
-                                           placeholder="Ex: Curadoria e embalagem protegida após aprovação">
-                                </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Prazo Estimado de Entrega</label>
-                                    <input type="text" name="page_frete_prazo_entrega" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_prazo_entrega', '')) ?>"
-                                           placeholder="Ex: Informado na consulta de CEP no pedido">
-                                </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Rastreamento do Pedido</label>
-                                    <input type="text" name="page_frete_rastreamento" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_rastreamento', '')) ?>"
-                                           placeholder="Ex: Código de rastreio enviado após expedição">
-                                </div>
-                                <div>
-                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">Condições Especiais / Frete Cortesia</label>
-                                    <input type="text" name="page_frete_condicoes_especiais" class="form-input"
-                                           value="<?= View::e(Setting::get('page_frete_condicoes_especiais', '')) ?>"
-                                           placeholder="Ex: Conforme campanhas ativas informadas na loja">
+                                <div class="form-group full-width">
+                                    <label style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Introdução / Conteúdo Geral</label>
+                                    <textarea name="<?= $pCfg['content_key'] ?>" id="<?= $pCfg['content_key'] ?>" class="form-textarea inst-field-intro" rows="3" placeholder="Texto introdutório ou diretrizes gerais..."><?= View::e($pageContentVal) ?></textarea>
+                                    <span class="field-hint" style="margin-top: 4px; font-size: 0.74rem;">Texto introdutório da página. Aceita formatação simples ou parágrafos.</span>
                                 </div>
                             </div>
-                            <span class="field-hint" style="margin-top: 8px; font-size: 0.75rem;">Campos em branco serão apresentados de maneira neutra e institucional, sem inventar valores ou prazos fixos.</span>
+                        </div>
+
+                        <!-- PARÂMETROS ESTRUTURADOS ESPECÍFICOS POR TEMA -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                                <div>
+                                    <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        📋 Parâmetros Estruturados & Campos Temáticos
+                                    </span>
+                                    <span style="font-size: 0.74rem; color: #8e8880;">As informações preenchidas alimentam automaticamente os blocos numerados da página pública. Deixe em branco para ocultar qualquer parâmetro.</span>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px;">
+                                <?php foreach ($pCfg['fields'] as $fld): 
+                                    $fVal = Setting::get($fld['key'], '');
+                                ?>
+                                <div class="inst-param-card" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px 14px;">
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">
+                                        <?= View::e($fld['label']) ?>
+                                    </label>
+                                    <textarea name="<?= $fld['key'] ?>" class="form-textarea inst-param-input" rows="2" style="font-size: 0.78rem; padding: 6px 10px; line-height: 1.45;" placeholder="<?= View::e($fld['placeholder']) ?>"><?= View::e($fVal) ?></textarea>
+                                    <span class="field-hint" style="font-size: 0.7rem; color: #8e8880; margin-top: 3px; display: block;">
+                                        <?= View::e($fld['hint']) ?>
+                                    </span>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <!-- BLOCOS DINÂMICOS & AVISOS COMPLEMENTARES -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                <div>
+                                    <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        ✨ Blocos Adicionais, Avisos & Informações Complementares
+                                    </span>
+                                    <span style="font-size: 0.74rem; color: #8e8880;">Adicione avisos em destaque (callouts), seções de links ou cláusulas personalizadas. Você pode reordenar (⬆️/⬇️), ocultar ou excluir livremente.</span>
+                                </div>
+                                <button type="button" class="btn-admin-secondary" onclick="addInstBlock('<?= $pKey ?>')" style="font-size: 0.76rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(212,186,136,0.3); color: #ded7cf;">
+                                    <span>➕ Adicionar Novo Bloco</span>
+                                </button>
+                            </div>
+
+                            <!-- Container de Blocos da Página -->
+                            <div id="inst-blocks-<?= $pKey ?>" class="inst-blocks-container">
+                                <?php if (empty($blocksList)): ?>
+                                <div class="inst-empty-notice" style="text-align: center; padding: 20px; color: #8e8880; font-size: 0.78rem; border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px;">
+                                    Nenhum bloco adicional cadastrado. Clique no botão acima para criar avisos, comunicados ou notas complementares.
+                                </div>
+                                <?php else: ?>
+                                    <?php foreach ($blocksList as $bIdx => $blk): 
+                                        $bId = $blk['id'] ?? ('blk_' . $bIdx);
+                                        $bTitle = $blk['title'] ?? '';
+                                        $bContent = $blk['content'] ?? '';
+                                        $bType = $blk['type'] ?? 'standard';
+                                        $bVis = isset($blk['visible']) ? ((int)$blk['visible'] === 1) : true;
+                                    ?>
+                                    <div class="inst-block-row <?= !$bVis ? 'is-dimmed' : '' ?>" data-id="<?= View::e($bId) ?>">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <div style="display: inline-flex; gap: 3px;">
+                                                    <button type="button" class="btn-admin-secondary" onclick="moveInstBlock(this, 'up', '<?= $pKey ?>')" style="padding: 2px 6px; font-size: 0.7rem;" title="Mover Bloco para Cima">⬆️</button>
+                                                    <button type="button" class="btn-admin-secondary" onclick="moveInstBlock(this, 'down', '<?= $pKey ?>')" style="padding: 2px 6px; font-size: 0.7rem;" title="Mover Bloco para Baixo">⬇️</button>
+                                                </div>
+                                                <input type="text" class="form-input inst-blk-title" value="<?= View::e($bTitle) ?>" placeholder="Título do Bloco Adicional" style="font-size: 0.78rem; padding: 5px 8px; width: 260px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                <select class="form-select inst-blk-type" style="font-size: 0.75rem; padding: 5px 8px; width: 180px;" onchange="syncInstBlocks('<?= $pKey ?>')">
+                                                    <option value="standard" <?= $bType === 'standard' ? 'selected' : '' ?>>Parágrafo Normal</option>
+                                                    <option value="callout" <?= $bType === 'callout' ? 'selected' : '' ?>>✦ Caixa de Destaque (Callout)</option>
+                                                    <option value="links" <?= $bType === 'links' ? 'selected' : '' ?>>Bloco de Links & Contatos</option>
+                                                </select>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <label class="element-toggle-switch <?= $bVis ? 'is-visible' : 'is-hidden' ?>" title="Exibir ou ocultar este bloco">
+                                                    <input type="checkbox" class="inst-blk-vis" <?= $bVis ? 'checked' : '' ?> onchange="toggleInstBlockVis(this, '<?= $pKey ?>')">
+                                                    <span class="toggle-text"><?= $bVis ? 'Visível' : 'Oculto' ?></span>
+                                                </label>
+                                                <button type="button" class="btn-admin-secondary" onclick="removeInstBlock(this, '<?= $pKey ?>')" style="padding: 4px 8px; font-size: 0.72rem; color: #f87171; border-color: rgba(248,113,113,0.3);" title="Excluir Bloco">
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <textarea class="form-textarea inst-blk-content" rows="2" style="font-size: 0.78rem; padding: 6px 10px;" placeholder="Conteúdo do bloco adicional..." oninput="syncInstBlocks('<?= $pKey ?>')"><?= View::e($bContent) ?></textarea>
+                                    </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Input oculto com JSON serializado -->
+                            <input type="hidden" id="<?= $pCfg['blocks_key'] ?>" name="<?= $pCfg['blocks_key'] ?>" value="<?= View::e($blocksJson) ?>">
+                        </div>
+
+                        <!-- BARRA INFERIOR DE SALVAMENTO DEDICADO -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;">
+                            <span id="inst-status-<?= $pKey ?>" style="font-size: 0.78rem; color: #8e8880;">As alterações podem ser salvas individualmente ou pelo botão geral no rodapé do editor.</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <button type="button" class="btn-admin-secondary" onclick="openInstPreview('<?= $pKey ?>')" style="font-size: 0.78rem; padding: 7px 14px;">
+                                    <span>👁️ Prévia ao Vivo</span>
+                                </button>
+                                <button type="button" class="btn-admin-gold" onclick="saveSingleInstitutionalPage('<?= $pKey ?>', this)" style="font-size: 0.78rem; padding: 7px 18px;">
+                                    <span>💾 Salvar Alterações de <?= View::e($pCfg['name']) ?></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- MODAL DE PRÉVIA EM TEMPO REAL DAS PÁGINAS INSTITUCIONAIS -->
+                <div id="institutionalPreviewModal" class="inst-preview-overlay" style="display: none;" onclick="if(event.target === this) closeInstPreview()">
+                    <div class="inst-preview-dialog" onclick="event.stopPropagation()">
+                        <div class="inst-preview-header">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">👁️</span>
+                                <div>
+                                    <h4 id="instPreviewModalTitle" style="margin: 0; color: #ffffff; font-size: 1.05rem; font-family: var(--font-serif, Georgia, serif);">Prévia da Página</h4>
+                                    <span style="font-size: 0.72rem; color: #ded7cf; background: rgba(212,186,136,0.15); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(212,186,136,0.3); font-weight: 600;">✦ MODO PRÉVIA EM TEMPO REAL</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="closeInstPreview()" style="background: transparent; border: none; color: #8e8880; font-size: 1.4rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#8e8880'">✕</button>
+                        </div>
+                        <div class="inst-preview-body" id="instPreviewModalBody">
+                            <!-- Conteúdo renderizado injetado via JS -->
+                        </div>
+                        <div class="inst-preview-footer">
+                            <span style="font-size: 0.75rem; color: #8e8880;">Esta prévia reflete com precisão exata o layout e os textos que o cliente verá na loja pública DIVINIUM.</span>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" class="btn-admin-secondary" onclick="closeInstPreview()" style="font-size: 0.78rem; padding: 7px 16px;">Fechar Prévia</button>
+                                <button type="button" class="btn-admin-gold" id="instPreviewSaveBtn" onclick="saveFromInstPreview()" style="font-size: 0.78rem; padding: 7px 18px;"><span>💾 Salvar Esta Página Agora</span></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4129,6 +4469,27 @@ function handleToggleSwitch(chk) {
         }
     }
 
+    if (chk.name && chk.name.startsWith('page_') && chk.name.endsWith('_enabled')) {
+        const slugMatch = chk.name.match(/^page_(.+)_enabled$/);
+        if (slugMatch) {
+            const pKey = slugMatch[1];
+            const badge = document.querySelector(`.inst-status-badge.badge-${pKey}`);
+            if (badge) {
+                if (chk.checked) {
+                    badge.style.background = 'rgba(74, 222, 128, 0.15)';
+                    badge.style.color = '#4ADE80';
+                    badge.style.borderColor = 'rgba(74, 222, 128, 0.3)';
+                    badge.textContent = '● Ativa na Loja';
+                } else {
+                    badge.style.background = 'rgba(248, 113, 113, 0.15)';
+                    badge.style.color = '#f87171';
+                    badge.style.borderColor = 'rgba(248, 113, 113, 0.3)';
+                    badge.textContent = '○ Desativada';
+                }
+            }
+        }
+    }
+
     if (chk.name && chk.name.startsWith('about_')) {
         if (typeof updateAboutLivePreview === 'function') {
             updateAboutLivePreview();
@@ -4168,6 +4529,10 @@ async function handleEditorSubmit(e) {
     // Sincronizar dados do carrossel antes de coletar o FormData
     if (typeof syncCarouselSlidesToForm === 'function') {
         syncCarouselSlidesToForm();
+    }
+    // Sincronizar blocos institucionais dinâmicos
+    if (typeof syncAllInstBlocks === 'function') {
+        syncAllInstBlocks();
     }
 
     const form = document.getElementById('landingPageForm');
@@ -4228,6 +4593,378 @@ async function handleEditorSubmit(e) {
         btn.disabled = false;
         btn.innerHTML = '<span>Salvar Alterações da Landing Page</span>';
     }
+}
+
+/* ==============================================================
+   GERENCIAMENTO AVANÇADO DAS PÁGINAS INSTITUCIONAIS DIVINIUM
+   ============================================================== */
+
+function switchInstPageTab(slug, btn) {
+    document.querySelectorAll('.institutional-nav-pills .btn-inst-pill').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.inst-page-panel').forEach(p => p.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const pane = document.getElementById('inst-pane-' + slug);
+    if (pane) {
+        pane.classList.add('active');
+    }
+}
+
+function syncInstBlocks(slug) {
+    const container = document.getElementById('inst-blocks-' + slug);
+    if (!container) return;
+    const rows = container.querySelectorAll('.inst-block-row');
+    const blocks = [];
+    rows.forEach((row, idx) => {
+        const titleInput = row.querySelector('.inst-blk-title');
+        const typeSelect = row.querySelector('.inst-blk-type');
+        const visChk = row.querySelector('.inst-blk-vis');
+        const contentArea = row.querySelector('.inst-blk-content');
+        
+        blocks.push({
+            id: row.getAttribute('data-id') || ('blk_' + Date.now() + '_' + idx),
+            title: titleInput ? titleInput.value.trim() : '',
+            type: typeSelect ? typeSelect.value : 'standard',
+            visible: visChk ? (visChk.checked ? 1 : 0) : 1,
+            content: contentArea ? contentArea.value.trim() : ''
+        });
+    });
+
+    const hiddenInput = document.getElementById('page_' + slug + '_blocks_json');
+    if (hiddenInput) {
+        hiddenInput.value = JSON.stringify(blocks);
+    }
+}
+
+function syncAllInstBlocks() {
+    ['trocas', 'garantia', 'privacidade', 'termos', 'frete'].forEach(s => syncInstBlocks(s));
+}
+
+function addInstBlock(slug) {
+    const container = document.getElementById('inst-blocks-' + slug);
+    if (!container) return;
+    const emptyNotice = container.querySelector('.inst-empty-notice');
+    if (emptyNotice) emptyNotice.remove();
+
+    const blockId = 'blk_' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'inst-block-row';
+    row.setAttribute('data-id', blockId);
+    row.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: inline-flex; gap: 3px;">
+                    <button type="button" class="btn-admin-secondary" onclick="moveInstBlock(this, 'up', '${slug}')" style="padding: 2px 6px; font-size: 0.7rem;" title="Mover Bloco para Cima">⬆️</button>
+                    <button type="button" class="btn-admin-secondary" onclick="moveInstBlock(this, 'down', '${slug}')" style="padding: 2px 6px; font-size: 0.7rem;" title="Mover Bloco para Baixo">⬇️</button>
+                </div>
+                <input type="text" class="form-input inst-blk-title" value="" placeholder="Título do Bloco Adicional" style="font-size: 0.78rem; padding: 5px 8px; width: 260px;" oninput="syncInstBlocks('${slug}')">
+                <select class="form-select inst-blk-type" style="font-size: 0.75rem; padding: 5px 8px; width: 180px;" onchange="syncInstBlocks('${slug}')">
+                    <option value="standard">Parágrafo Normal</option>
+                    <option value="callout">✦ Caixa de Destaque (Callout)</option>
+                    <option value="links">Bloco de Links & Contatos</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label class="element-toggle-switch is-visible" title="Exibir ou ocultar este bloco">
+                    <input type="checkbox" class="inst-blk-vis" checked onchange="toggleInstBlockVis(this, '${slug}')">
+                    <span class="toggle-text">Visível</span>
+                </label>
+                <button type="button" class="btn-admin-secondary" onclick="removeInstBlock(this, '${slug}')" style="padding: 4px 8px; font-size: 0.72rem; color: #f87171; border-color: rgba(248,113,113,0.3);" title="Excluir Bloco">
+                    🗑️
+                </button>
+            </div>
+        </div>
+        <textarea class="form-textarea inst-blk-content" rows="2" style="font-size: 0.78rem; padding: 6px 10px;" placeholder="Conteúdo do bloco adicional..." oninput="syncInstBlocks('${slug}')"></textarea>
+    `;
+    container.appendChild(row);
+    syncInstBlocks(slug);
+}
+
+function removeInstBlock(btn, slug) {
+    if (!confirm('Deseja realmente remover este bloco de conteúdo?')) return;
+    const row = btn.closest('.inst-block-row');
+    if (row) {
+        const container = row.parentElement;
+        row.remove();
+        if (container && container.querySelectorAll('.inst-block-row').length === 0) {
+            container.innerHTML = `
+                <div class="inst-empty-notice" style="text-align: center; padding: 20px; color: #8e8880; font-size: 0.78rem; border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px;">
+                    Nenhum bloco adicional cadastrado. Clique no botão acima para criar avisos, comunicados ou notas complementares.
+                </div>
+            `;
+        }
+        syncInstBlocks(slug);
+    }
+}
+
+function moveInstBlock(btn, direction, slug) {
+    const row = btn.closest('.inst-block-row');
+    if (!row) return;
+    if (direction === 'up' && row.previousElementSibling && row.previousElementSibling.classList.contains('inst-block-row')) {
+        row.parentNode.insertBefore(row, row.previousElementSibling);
+        syncInstBlocks(slug);
+    } else if (direction === 'down' && row.nextElementSibling && row.nextElementSibling.classList.contains('inst-block-row')) {
+        row.parentNode.insertBefore(row.nextElementSibling, row);
+        syncInstBlocks(slug);
+    }
+}
+
+function toggleInstBlockVis(chk, slug) {
+    const row = chk.closest('.inst-block-row');
+    const label = chk.closest('.element-toggle-switch');
+    const txt = label ? label.querySelector('.toggle-text') : null;
+    if (chk.checked) {
+        if (row) row.classList.remove('is-dimmed');
+        if (label) { label.classList.add('is-visible'); label.classList.remove('is-hidden'); }
+        if (txt) txt.textContent = 'Visível';
+    } else {
+        if (row) row.classList.add('is-dimmed');
+        if (label) { label.classList.remove('is-visible'); label.classList.add('is-hidden'); }
+        if (txt) txt.textContent = 'Oculto';
+    }
+    syncInstBlocks(slug);
+}
+
+async function saveSingleInstitutionalPage(slug, btn) {
+    syncInstBlocks(slug);
+    const panel = document.getElementById('inst-pane-' + slug);
+    if (!panel) return;
+
+    const originalBtnHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳ Salvando Página...</span>';
+    }
+
+    const statusEl = document.getElementById('inst-status-' + slug);
+    if (statusEl) {
+        statusEl.innerText = 'Gravando alterações desta página no banco de dados...';
+        statusEl.style.color = '#CBD0D6';
+    }
+
+    const formData = new FormData();
+    formData.append('page_slug', slug);
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+        || document.querySelector('input[name="_csrf_token"]')?.value 
+        || '';
+    formData.append('_csrf_token', csrfToken);
+
+    const inputs = panel.querySelectorAll('input, textarea, select');
+    inputs.forEach(el => {
+        if (!el.name) return;
+        if (el.type === 'checkbox') {
+            formData.append(el.name, el.checked ? '1' : '0');
+        } else if (el.type === 'radio') {
+            if (el.checked) formData.append(el.name, el.value);
+        } else {
+            formData.append(el.name, el.value);
+        }
+    });
+
+    try {
+        const response = await fetch('/admin/institucionais/salvar', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+
+        const rawText = await response.text();
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            console.error('Resposta do servidor:', rawText);
+            throw new Error('Formato inesperado retornado pelo servidor.');
+        }
+
+        if (data.success) {
+            if (statusEl) {
+                statusEl.innerText = '✓ ' + (data.message || 'Página salva e publicada com sucesso!');
+                statusEl.style.color = '#4ADE80';
+            }
+            if (btn) {
+                btn.innerHTML = '<span>✓ Salva com Sucesso!</span>';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnHtml;
+                }, 2500);
+            }
+        } else {
+            const err = data.error || 'Erro ao salvar a página.';
+            if (statusEl) {
+                statusEl.innerText = '✕ ' + err;
+                statusEl.style.color = '#f87171';
+            }
+            alert(err);
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+            }
+        }
+    } catch (err) {
+        if (statusEl) {
+            statusEl.innerText = '✕ Falha na conexão: ' + err.message;
+            statusEl.style.color = '#f87171';
+        }
+        alert('Erro ao salvar a página: ' + err.message);
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+    }
+}
+
+function escapeInstHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.toString().replace(/[&<>"']/g, m => map[m]);
+}
+
+function openInstPreview(slug) {
+    syncInstBlocks(slug);
+    const panel = document.getElementById('inst-pane-' + slug);
+    if (!panel) return;
+
+    const titleInput = panel.querySelector('.inst-field-title');
+    const subtitleInput = panel.querySelector('.inst-field-subtitle');
+    const introInput = panel.querySelector('.inst-field-intro');
+
+    const titleVal = titleInput ? titleInput.value.trim() : 'Página Institucional';
+    const subtitleVal = subtitleInput ? subtitleInput.value.trim() : '';
+    const introVal = introInput ? introInput.value.trim() : '';
+
+    // Coletar cartões de parâmetros temáticos preenchidos
+    let paramsHtml = '';
+    const paramCards = panel.querySelectorAll('.inst-param-card');
+    paramCards.forEach(card => {
+        const lbl = card.querySelector('label')?.innerText || '';
+        const val = card.querySelector('textarea')?.value?.trim() || '';
+        if (val) {
+            paramsHtml += `
+                <div style="margin-top: 24px;">
+                    <h4 style="font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif); font-size: 1.25rem; color: #CBD0D6; margin: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">
+                        ${escapeInstHtml(lbl)}
+                    </h4>
+                    <p style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: #ded7cf; margin: 0 0 16px;">${escapeInstHtml(val)}</p>
+                </div>
+            `;
+        }
+    });
+
+    // Coletar blocos customizados visíveis
+    let blocksHtml = '';
+    const blockRows = panel.querySelectorAll('.inst-block-row');
+    blockRows.forEach(row => {
+        const visChk = row.querySelector('.inst-blk-vis');
+        if (visChk && !visChk.checked) return; // Bloco oculto não renderiza
+
+        const bTitle = row.querySelector('.inst-blk-title')?.value?.trim() || '';
+        const bContent = row.querySelector('.inst-blk-content')?.value?.trim() || '';
+        const bType = row.querySelector('.inst-blk-type')?.value || 'standard';
+
+        if (!bContent) return;
+
+        if (bType === 'callout') {
+            blocksHtml += `
+                <div style="margin: 22px 0; padding: 16px 20px; background: rgba(212,186,136,0.08); border-left: 3px solid #CBD0D6; border-radius: 4px;">
+                    ${bTitle ? `<h5 style="color: #CBD0D6; margin: 0 0 6px; font-size: 0.95rem; font-weight: 700;">✦ ${escapeInstHtml(bTitle)}</h5>` : ''}
+                    <p style="margin: 0; color: #ded7cf; font-size: 0.92rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>
+                </div>
+            `;
+        } else if (bType === 'links') {
+            blocksHtml += `
+                <div style="margin: 22px 0; padding: 18px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;">
+                    ${bTitle ? `<h5 style="color: #ffffff; margin: 0 0 10px; font-size: 0.95rem; font-weight: 700;">${escapeInstHtml(bTitle)}</h5>` : ''}
+                    <p style="margin: 0; color: #a8a096; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>
+                </div>
+            `;
+        } else {
+            blocksHtml += `
+                <div style="margin: 22px 0;">
+                    ${bTitle ? `<h4 style="font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif); font-size: 1.25rem; color: #CBD0D6; margin: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">${escapeInstHtml(bTitle)}</h4>` : ''}
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: #ded7cf; white-space: pre-wrap; margin: 0 0 16px;">${escapeInstHtml(bContent)}</p>
+                </div>
+            `;
+        }
+    });
+
+    const previewContent = `
+        <div style="background-color: #0b0b0a; color: #ded7cf; padding: 40px 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+            <!-- HERO DA PÁGINA -->
+            <div style="text-align: center; margin-bottom: 35px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 30px;">
+                <div style="font-size: 0.78rem; color: #a8a096; margin-bottom: 12px; letter-spacing: 0.5px;">
+                    <span>Início</span> <span style="opacity: 0.6; margin: 0 6px;">/</span> <span>Boutique</span> <span style="opacity: 0.6; margin: 0 6px;">/</span> <span style="color: #CBD0D6;">${escapeInstHtml(titleVal)}</span>
+                </div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #CBD0D6; background: rgba(212,186,136,0.1); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(212,186,136,0.25); margin-bottom: 14px;">
+                    <span>✦</span> <span>DIVINIUM • ALTA JOALHERIA &amp; CONFIANÇA</span>
+                </div>
+                <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2.3rem; color: #ffffff; margin: 0 0 10px; letter-spacing: 0.5px; font-weight: 600;">
+                    ${escapeInstHtml(titleVal)}
+                </h1>
+                ${subtitleVal ? `<p style="font-size: 1rem; color: #a8a096; max-width: 650px; margin: 0 auto; line-height: 1.5;">${escapeInstHtml(subtitleVal)}</p>` : ''}
+            </div>
+
+            <!-- CARD EDITORIAL -->
+            <div style="max-width: 820px; margin: 0 auto; background: #131211; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 36px 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                ${introVal ? `<div style="font-size: 0.98rem; line-height: 1.8; color: #ded7cf; margin-bottom: 24px; white-space: pre-wrap;">${escapeInstHtml(introVal)}</div>` : ''}
+                
+                ${paramsHtml}
+                
+                ${blocksHtml}
+
+                <!-- FAIXA DE RODAPÉ DO CARD INSTITUCIONAL -->
+                <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                    <div style="font-size: 0.78rem; color: #a8a096; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #CBD0D6;">✦</span>
+                        <span>DIVINIUM JOIAS • Banho de Prata &amp; Gemas Naturais Raras</span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <span style="display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; background: transparent; color: #ded7cf; border: 1px solid rgba(255,255,255,0.15);">← Explorar Boutique</span>
+                        <span style="display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; background: #CBD0D6; color: #202020; font-weight: 700;">Falar com o Concierge</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const modalTitleEl = document.getElementById('instPreviewModalTitle');
+    if (modalTitleEl) modalTitleEl.innerText = 'Prévia ao Vivo: ' + titleVal;
+
+    const modalBodyEl = document.getElementById('instPreviewModalBody');
+    if (modalBodyEl) modalBodyEl.innerHTML = previewContent;
+
+    const saveBtn = document.getElementById('instPreviewSaveBtn');
+    if (saveBtn) {
+        saveBtn.setAttribute('data-slug', slug);
+        saveBtn.innerHTML = `<span>💾 Salvar Esta Página Agora</span>`;
+    }
+
+    const modal = document.getElementById('institutionalPreviewModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeInstPreview() {
+    const modal = document.getElementById('institutionalPreviewModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function saveFromInstPreview() {
+    const saveBtn = document.getElementById('instPreviewSaveBtn');
+    const slug = saveBtn ? saveBtn.getAttribute('data-slug') : '';
+    if (!slug) return;
+    closeInstPreview();
+    const triggerBtn = document.querySelector(`#inst-pane-${slug} .btn-admin-gold`);
+    saveSingleInstitutionalPage(slug, triggerBtn);
 }
 
 async function uploadHeroEditorBg(input) {

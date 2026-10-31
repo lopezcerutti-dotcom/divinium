@@ -1313,8 +1313,12 @@
                 <ul>
                     <li><a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank"><?= \App\Core\View::e(\App\Models\Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp')) ?></a></li>
                     <li><a href="mailto:<?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?></a></li>
-                    <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', 'Trocas e Devoluções (CDC 7 Dias)')) ?></a></li>
-                    <li><a href="/garantia-e-cuidados"><?= \App\Core\View::e(\App\Models\Setting::get('footer_warranty_text', 'Certificado & Cuidados')) ?></a></li>
+                    <?php if (\App\Models\Setting::get('page_trocas_enabled', '1') === '1'): ?>
+                    <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', \App\Models\Setting::get('page_trocas_title', 'Trocas e Devoluções (CDC 7 Dias)'))) ?></a></li>
+                    <?php endif; ?>
+                    <?php if (\App\Models\Setting::get('page_garantia_enabled', '1') === '1'): ?>
+                    <li><a href="/garantia-e-cuidados"><?= \App\Core\View::e(\App\Models\Setting::get('footer_warranty_text', \App\Models\Setting::get('page_garantia_title', 'Certificado & Cuidados'))) ?></a></li>
+                    <?php endif; ?>
                     <li><a href="/guia-de-medidas"><?= \App\Core\View::e(\App\Models\Setting::get('footer_size_guide_text', 'Guia de Medidas de Anéis')) ?></a></li>
                 </ul>
             </div>
@@ -1323,8 +1327,12 @@
             <div class="footer-col">
                 <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col3_title', 'Segurança & Privacidade')) ?></h4>
                 <ul>
-                    <li><a href="/politica-de-privacidade"><?= \App\Core\View::e(\App\Models\Setting::get('footer_privacy_text', 'Política de Privacidade (LGPD)')) ?></a></li>
-                    <li><a href="/termos-de-uso"><?= \App\Core\View::e(\App\Models\Setting::get('footer_terms_text', 'Termos de Uso')) ?></a></li>
+                    <?php if (\App\Models\Setting::get('page_privacidade_enabled', '1') === '1'): ?>
+                    <li><a href="/politica-de-privacidade"><?= \App\Core\View::e(\App\Models\Setting::get('footer_privacy_text', \App\Models\Setting::get('page_privacidade_title', 'Política de Privacidade (LGPD)'))) ?></a></li>
+                    <?php endif; ?>
+                    <?php if (\App\Models\Setting::get('page_termos_enabled', '1') === '1'): ?>
+                    <li><a href="/termos-de-uso"><?= \App\Core\View::e(\App\Models\Setting::get('footer_terms_text', \App\Models\Setting::get('page_termos_title', 'Termos de Uso'))) ?></a></li>
+                    <?php endif; ?>
                     <?php if (\App\Models\Setting::get('page_frete_enabled', '1') === '1'): ?>
                     <li><a href="/politica-de-frete-e-entrega"><?= \App\Core\View::e(\App\Models\Setting::get('footer_shipping_text', \App\Models\Setting::get('page_frete_title', 'Política de Frete e Entrega'))) ?></a></li>
                     <?php endif; ?>

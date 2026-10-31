@@ -1625,6 +1625,37 @@ class AdminController
     }
 
     /**
+     * Salvar alterações de uma página institucional específica sem afetar as demais
+     */
+    public function saveInstitutionalPage(): void
+    {
+        try {
+            $pageSlug = trim((string)($_POST['page_slug'] ?? $_POST['_page_slug'] ?? ''));
+            \App\Models\Setting::setMany($_POST);
+
+            $pageNames = [
+                'trocas' => 'Trocas e Devoluções',
+                'garantia' => 'Garantia e Cuidados com a Joia',
+                'privacidade' => 'Política de Privacidade (LGPD)',
+                'termos' => 'Termos de Uso do Site',
+                'frete' => 'Política de Frete e Entrega',
+            ];
+            $name = $pageNames[$pageSlug] ?? 'Institucional';
+
+            $this->respond([
+                'success' => true,
+                'message' => "Página '{$name}' salva com sucesso no banco de dados!"
+            ]);
+        } catch (\Throwable $e) {
+            error_log('Erro ao salvar página institucional: ' . $e->getMessage());
+            $this->respond([
+                'success' => false,
+                'error' => 'Erro ao salvar página institucional: ' . $e->getMessage()
+            ], 200);
+        }
+    }
+
+    /**
      * Editor Visual de Elementos da Boutique (/loja)
      */
     public function boutique(): void

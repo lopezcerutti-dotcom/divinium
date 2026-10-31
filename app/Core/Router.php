@@ -323,6 +323,7 @@ class Router
             $this->post($p . '/lancamentos/salvar-categoria', [\App\Controllers\AdminController::class, 'saveLancamentoCategoria'], $adminAuth);
             $this->get($p . '/landing-page', [\App\Controllers\AdminController::class, 'landingPage'], $adminAuth);
             $this->post($p . '/landing-page/salvar', [\App\Controllers\AdminController::class, 'saveLandingPage'], $adminAuth);
+            $this->post($p . '/institucionais/salvar', [\App\Controllers\AdminController::class, 'saveInstitutionalPage'], $adminAuth);
             $this->get($p . '/temas', [\App\Controllers\AdminController::class, 'themes'], $adminAuth);
             $this->post($p . '/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
             $this->post($p . '/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);

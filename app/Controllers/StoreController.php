@@ -932,31 +932,31 @@ class StoreController
         $pageMap = [
             'trocas-e-devolucoes' => [
                 'title' => \App\Models\Setting::get('page_trocas_title', \App\Models\Setting::get('page_returns_title', 'Política de Trocas e Devoluções')),
-                'desc' => 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.',
+                'desc' => \App\Models\Setting::get('page_trocas_subtitle', 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.'),
                 'content_key' => 'page_trocas_content',
-                'default_content' => "<h3>Compromisso de Excelência e Confiança DIVINIUM</h3><p>Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje realizar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.</p><h4>1. Direito de Arrependimento (CDC Art. 49)</h4><p>Você possui até <strong>7 (sete) dias corridos</strong> a contar da data de recebimento do pedido para solicitar a devolução com reembolso integral ou troca por outra gema mineral.</p><h4>2. Condições da Peça</h4><p>A joia deverá ser devolvida em sua embalagem de veludo original, acompanhada do Certificado de Garantia e sem sinais de uso indevido ou avarias mecânicas.</p><h4>3. Como Solicitar</h4><p>Entre em contato direto com o nosso <strong>Concierge VIP</strong> pelo WhatsApp oficial informado no rodapé ou pelo e-mail <strong>atendimento@divinium.com.br</strong> para receber o código postal de postagem reversa cortesia com seguro total de transporte.</p>"
+                'default_content' => ''
             ],
             'garantia-e-cuidados' => [
-                'title' => \App\Models\Setting::get('page_garantia_title', \App\Models\Setting::get('page_warranty_title', 'Certificado de Garantia & Cuidados')),
-                'desc' => 'Conheça o compromisso de qualidade do banho de prata, gemas naturais e as orientações para conservação.',
+                'title' => \App\Models\Setting::get('page_garantia_title', \App\Models\Setting::get('page_warranty_title', 'Certificado de Garantia & Cuidados com a Joia')),
+                'desc' => \App\Models\Setting::get('page_garantia_subtitle', 'Conheça o compromisso de qualidade do banho de prata nobre, gemas naturais e as orientações para conservação.'),
                 'content_key' => 'page_garantia_content',
-                'default_content' => "<h3>Qualidade & Nobreza dos Materiais</h3><p>A DIVINIUM assegura a excelência de cada joia autoral. Nossas peças recebem acabamento nobre com Banho de Prata de alta durabilidade e as mandalas abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.</p><h4>1. Garantia do Banho de Prata</h4><p>Garantimos a qualidade do banho de prata empregado em todas as nossas criações contra defeitos originários de manufatura.</p><h4>2. Cuidados com a sua Joia</h4><ul><li>Evite contato direto com produtos químicos abrasivos, alvejantes, cloro de piscina ou perfumes aplicados diretamente sobre as peças.</li><li>Para higienização, utilize apenas flanela mágica de polimento ou água morna com sabão neutro, secando com pano macio e suave.</li><li>Armazene suas joias individualmente na embalagem aveludada original DIVINIUM para prevenir atritos entre metais.</li></ul>"
+                'default_content' => ''
             ],
             'politica-de-privacidade' => [
-                'title' => \App\Models\Setting::get('page_privacidade_title', \App\Models\Setting::get('page_privacy_title', 'Política de Privacidade & Proteção de Dados (LGPD)')),
-                'desc' => 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).',
+                'title' => \App\Models\Setting::get('page_privacidade_title', \App\Models\Setting::get('page_privacy_title', 'Política de Privacidade e Proteção de Dados (LGPD)')),
+                'desc' => \App\Models\Setting::get('page_privacidade_subtitle', 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).'),
                 'content_key' => 'page_privacidade_content',
-                'default_content' => "<h3>Privacidade e Respeito aos Seus Dados</h3><p>A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD)</strong>.</p><h4>1. Coleta de Informações</h4><p>Coletamos apenas dados estritamente necessários para viabilizar o processamento seguro de seus pedidos, cálculo de frete, emissão de nota fiscal e comunicação sobre suas joias.</p><h4>2. Segurança e Sigilo</h4><p>Não compartilhamos, comercializamos ou alugamos dados cadastrais a terceiros. Todo o tráfego é criptografado por protocolo SSL/TLS de 256 bits.</p><h4>3. Seus Direitos</h4><p>Você pode a qualquer momento consultar, retificar ou solicitar a eliminação dos seus dados entrando em contato com nosso Encarregado de Proteção de Dados (DPO) através de dpo@divinium.com.br.</p>"
+                'default_content' => ''
             ],
             'termos-de-uso' => [
-                'title' => \App\Models\Setting::get('page_termos_title', \App\Models\Setting::get('page_terms_title', 'Termos de Uso & Condições Gerais')),
-                'desc' => 'Termos de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.',
+                'title' => \App\Models\Setting::get('page_termos_title', \App\Models\Setting::get('page_terms_title', 'Termos de Uso do Site & Condições Gerais')),
+                'desc' => \App\Models\Setting::get('page_termos_subtitle', 'Diretrizes de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.'),
                 'content_key' => 'page_termos_content',
-                'default_content' => "<h3>Termos de Uso do Site DIVINIUM</h3><p>Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.</p><h4>1. Propriedade Intelectual</h4><p>Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Lei de Propriedade Industrial (Lei nº 9.279/1996).</p><h4>2. Exatidão das Informações</h4><p>As fotografias reproduzem fielmente os modelos. Por se tratarem de gemas minerais autênticas extraídas da natureza, pequenas nuances de cor e grafismos naturais nas conchas e pedras comprovam a singularidade e exclusividade de cada joia.</p>"
+                'default_content' => ''
             ],
             'politica-de-frete-e-entrega' => [
                 'title' => \App\Models\Setting::get('page_frete_title', 'Política de Frete e Entrega'),
-                'desc' => \App\Models\Setting::get('page_frete_desc', 'Diretrizes oficiais sobre envio, prazos de expedição e entrega das joias DIVINIUM.'),
+                'desc' => \App\Models\Setting::get('page_frete_subtitle', \App\Models\Setting::get('page_frete_desc', 'Diretrizes oficiais sobre envio, prazos de expedição e entrega das joias DIVINIUM.')),
                 'content_key' => 'page_frete_content',
                 'default_content' => ''
             ],
@@ -974,7 +974,16 @@ class StoreController
             ]
         ];
 
-        if ($slug === 'politica-de-frete-e-entrega' && \App\Models\Setting::get('page_frete_enabled', '1') !== '1') {
+        // Verificação de ativação individual de cada página institucional
+        $pageToggles = [
+            'trocas-e-devolucoes' => 'page_trocas_enabled',
+            'garantia-e-cuidados' => 'page_garantia_enabled',
+            'politica-de-privacidade' => 'page_privacidade_enabled',
+            'termos-de-uso' => 'page_termos_enabled',
+            'politica-de-frete-e-entrega' => 'page_frete_enabled',
+        ];
+
+        if (isset($pageToggles[$slug]) && \App\Models\Setting::get($pageToggles[$slug], '1') !== '1') {
             header('Location: /');
             exit;
         }
@@ -995,10 +1004,25 @@ class StoreController
             }
         }
 
-        if ($slug === 'politica-de-frete-e-entrega') {
-            $bodyContent = $this->buildShippingPolicyHtml();
-        } else {
-            $bodyContent = \App\Models\Setting::get($page['content_key'], $page['default_content']);
+        switch ($slug) {
+            case 'trocas-e-devolucoes':
+                $bodyContent = $this->buildReturnsPolicyHtml();
+                break;
+            case 'garantia-e-cuidados':
+                $bodyContent = $this->buildWarrantyPolicyHtml();
+                break;
+            case 'politica-de-privacidade':
+                $bodyContent = $this->buildPrivacyPolicyHtml();
+                break;
+            case 'termos-de-uso':
+                $bodyContent = $this->buildTermsOfUseHtml();
+                break;
+            case 'politica-de-frete-e-entrega':
+                $bodyContent = $this->buildShippingPolicyHtml();
+                break;
+            default:
+                $bodyContent = \App\Models\Setting::get($page['content_key'], $page['default_content']);
+                break;
         }
 
         View::render('home/page', [
@@ -1012,11 +1036,268 @@ class StoreController
     }
 
     /**
-     * Monta o conteúdo estruturado da Política de Frete e Entrega
+     * 1. Monta o conteúdo estruturado da Política de Trocas e Devoluções
+     */
+    private function buildReturnsPolicyHtml(): string
+    {
+        $rawIntro = trim((string)\App\Models\Setting::get('page_trocas_content', \App\Models\Setting::get('page_trocas_intro', '')));
+        if ($rawIntro === '') {
+            $rawIntro = 'Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje solicitar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.';
+        }
+
+        $html = '';
+        if (str_contains($rawIntro, '<p>') || str_contains($rawIntro, '<h3>') || str_contains($rawIntro, '<h4>')) {
+            $html .= $rawIntro;
+        } else {
+            $html .= '<h3>Compromisso de Confiança & Devolução Descomplicada</h3>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($rawIntro)) . '</p>';
+        }
+
+        $sections = [
+            [
+                'title' => '1. Direito de Arrependimento e Prazo Legal',
+                'key' => 'page_trocas_arrependimento',
+                'default' => 'Você possui até 7 (sete) dias corridos a partir da data de recebimento do pedido para solicitar a devolução com reembolso integral ou troca, conforme o Artigo 49 do Código de Defesa do Consumidor.'
+            ],
+            [
+                'title' => '2. Procedimento para Solicitar Devolução',
+                'key' => 'page_trocas_procedimento',
+                'default' => 'Entre em contato com nosso Concierge VIP informando o número do pedido ou CPF. Forneceremos o código postal de postagem reversa cortesia dos Correios ou transportadora para envio seguro.'
+            ],
+            [
+                'title' => '3. Condições da Joia para Devolução',
+                'key' => 'page_trocas_condicoes',
+                'default' => 'A joia deverá ser devolvida em sua embalagem aveludada original, acompanhada do Certificado de Garantia e sem sinais de uso indevido, avarias mecânicas ou alterações.'
+            ],
+            [
+                'title' => '4. Procedimentos e Prazos de Reembolso',
+                'key' => 'page_trocas_reembolso',
+                'default' => 'Após a recepção e conferência de integridade em nossa central, o reembolso é efetuado de imediato via Pix ou estornado na fatura do cartão de crédito conforme os prazos da operadora.'
+            ],
+            [
+                'title' => '5. Canais Oficiais de Atendimento',
+                'key' => 'page_trocas_canais',
+                'default' => 'Nosso Concierge atende pelo WhatsApp oficial informado no rodapé e pelo e-mail atendimento@divinium.com.br, de segunda a sexta-feira, das 09h às 18h.'
+            ],
+        ];
+
+        foreach ($sections as $sec) {
+            $val = \App\Models\Setting::get($sec['key']);
+            if ($val === null) {
+                $text = $sec['default'];
+            } elseif (trim((string)$val) !== '') {
+                $text = trim((string)$val);
+            } else {
+                continue; // Ocultado se estiver vazio
+            }
+            $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
+        }
+
+        $html .= $this->renderCustomBlocksHtml((string)\App\Models\Setting::get('page_trocas_blocks_json', ''));
+        return $html;
+    }
+
+    /**
+     * 2. Monta o conteúdo estruturado do Certificado de Garantia & Cuidados com a Joia
+     */
+    private function buildWarrantyPolicyHtml(): string
+    {
+        $rawIntro = trim((string)\App\Models\Setting::get('page_garantia_content', \App\Models\Setting::get('page_garantia_intro', '')));
+        if ($rawIntro === '') {
+            $rawIntro = 'A DIVINIUM assegura a excelência e autenticidade de cada joia autoral. Nossas peças recebem acabamento nobre com Banho de Prata de alta durabilidade e abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.';
+        }
+
+        $html = '';
+        if (str_contains($rawIntro, '<p>') || str_contains($rawIntro, '<h3>') || str_contains($rawIntro, '<h4>')) {
+            $html .= $rawIntro;
+        } else {
+            $html .= '<h3>Qualidade & Nobreza dos Materiais</h3>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($rawIntro)) . '</p>';
+        }
+
+        $sections = [
+            [
+                'title' => '1. Prazo e Condições da Garantia',
+                'key' => 'page_garantia_prazo',
+                'default' => 'Todas as peças contam com garantia legal de 90 dias conforme o CDC e garantia de manufatura quanto ao acabamento do banho de prata nobre e autenticidade das pedras naturais.'
+            ],
+            [
+                'title' => '2. Itens Cobertos e Não Cobertos',
+                'key' => 'page_garantia_cobertura',
+                'default' => 'A garantia cobre defeitos originários de manufatura e fixação das pedras. Não cobre danos decorrentes de quedas, atritos abrasivos, contato com produtos químicos agressivos ou uso inadequado.'
+            ],
+            [
+                'title' => '3. Cuidados e Conservação das Peças',
+                'key' => 'page_garantia_cuidados',
+                'default' => 'Evite contato direto com produtos químicos de limpeza, alvejantes, cloro de piscina ou perfumes e cosméticos aplicados diretamente sobre as peças. Aplique hidratantes antes de colocar sua joia.'
+            ],
+            [
+                'title' => '4. Orientações de Limpeza e Armazenamento',
+                'key' => 'page_garantia_limpeza',
+                'default' => 'Para higienização, utilize apenas flanela mágica de polimento macia e seca ou água morna com sabão neutro. Armazene suas joias individualmente na embalagem aveludada original DIVINIUM.'
+            ],
+            [
+                'title' => '5. Procedimentos para Solicitar Assistência',
+                'key' => 'page_garantia_assistencia',
+                'default' => 'Para solicitar avaliação ou assistência técnica, envie mensagem ao Concierge VIP com fotos nítidas e número do pedido para orientações imediatas.'
+            ],
+        ];
+
+        foreach ($sections as $sec) {
+            $val = \App\Models\Setting::get($sec['key']);
+            if ($val === null) {
+                $text = $sec['default'];
+            } elseif (trim((string)$val) !== '') {
+                $text = trim((string)$val);
+            } else {
+                continue; // Ocultado se estiver vazio
+            }
+            $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
+        }
+
+        $html .= $this->renderCustomBlocksHtml((string)\App\Models\Setting::get('page_garantia_blocks_json', ''));
+        return $html;
+    }
+
+    /**
+     * 3. Monta o conteúdo estruturado da Política de Privacidade (LGPD)
+     */
+    private function buildPrivacyPolicyHtml(): string
+    {
+        $rawIntro = trim((string)\App\Models\Setting::get('page_privacidade_content', \App\Models\Setting::get('page_privacidade_intro', '')));
+        if ($rawIntro === '') {
+            $rawIntro = 'A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD).';
+        }
+
+        $html = '';
+        if (str_contains($rawIntro, '<p>') || str_contains($rawIntro, '<h3>') || str_contains($rawIntro, '<h4>')) {
+            $html .= $rawIntro;
+        } else {
+            $html .= '<h3>Privacidade e Respeito aos Seus Dados</h3>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($rawIntro)) . '</p>';
+        }
+
+        $sections = [
+            [
+                'title' => '1. Dados Coletados',
+                'key' => 'page_privacidade_coleta',
+                'default' => 'Coletamos apenas dados estritamente necessários para viabilizar o processamento seguro de seus pedidos, cálculo de frete, emissão obrigatória de Nota Fiscal e comunicação sobre suas joias.'
+            ],
+            [
+                'title' => '2. Finalidades do Tratamento',
+                'key' => 'page_privacidade_finalidades',
+                'default' => 'Os dados destinam-se exclusivamente à entrega das encomendas, faturamento fiscal, prevenção a fraudes no checkout e suporte personalizado através do nosso atendimento.'
+            ],
+            [
+                'title' => '3. Compartilhamento com Plataformas e Parceiros',
+                'key' => 'page_privacidade_compartilhamento',
+                'default' => 'Não comercializamos dados cadastrais a terceiros. O compartilhamento ocorre apenas com parceiros operacionais essenciais: gateway homologado ASAAS para pagamentos e transportadoras homologadas.'
+            ],
+            [
+                'title' => '4. Direitos dos Titulares de Dados (LGPD Art. 18)',
+                'key' => 'page_privacidade_direitos',
+                'default' => 'Você pode a qualquer momento consultar, retificar, solicitar portabilidade ou requerer a eliminação dos seus dados entrando em contato com nosso Encarregado de Proteção de Dados (DPO).'
+            ],
+            [
+                'title' => '5. Canal de Atendimento de Privacidade & DPO',
+                'key' => 'page_privacidade_canal',
+                'default' => 'Canal oficial do Encarregado de Dados: dpo@divinium.com.br. Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília).'
+            ],
+            [
+                'title' => '6. Cookies e Tecnologias de Rastreamento',
+                'key' => 'page_privacidade_cookies',
+                'default' => 'Utilizamos cookies essenciais para a segurança e retenção dos itens em sua sacola de compras, além de dados agregados de navegação para medição e aprimoramento da experiência digital.'
+            ],
+        ];
+
+        foreach ($sections as $sec) {
+            $val = \App\Models\Setting::get($sec['key']);
+            if ($val === null) {
+                $text = $sec['default'];
+            } elseif (trim((string)$val) !== '') {
+                $text = trim((string)$val);
+            } else {
+                continue; // Ocultado se estiver vazio
+            }
+            $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
+        }
+
+        $html .= $this->renderCustomBlocksHtml((string)\App\Models\Setting::get('page_privacidade_blocks_json', ''));
+        return $html;
+    }
+
+    /**
+     * 4. Monta o conteúdo estruturado dos Termos de Uso do Site
+     */
+    private function buildTermsOfUseHtml(): string
+    {
+        $rawIntro = trim((string)\App\Models\Setting::get('page_termos_content', \App\Models\Setting::get('page_termos_intro', '')));
+        if ($rawIntro === '') {
+            $rawIntro = 'Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.';
+        }
+
+        $html = '';
+        if (str_contains($rawIntro, '<p>') || str_contains($rawIntro, '<h3>') || str_contains($rawIntro, '<h4>')) {
+            $html .= $rawIntro;
+        } else {
+            $html .= '<h3>Termos de Uso do Site DIVINIUM</h3>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($rawIntro)) . '</p>';
+        }
+
+        $sections = [
+            [
+                'title' => '1. Condições de Utilização do Site',
+                'key' => 'page_termos_utilizacao',
+                'default' => 'O acesso e navegação no site destinam-se à apreciação e aquisição de joias autorais. O usuário concorda em utilizar a plataforma de boa-fé, com propósitos lícitos e informações legítimas.'
+            ],
+            [
+                'title' => '2. Cadastro e Segurança',
+                'key' => 'page_termos_cadastro',
+                'default' => 'O usuário é responsável pela veracidade dos dados cadastrais inseridos e pela confidencialidade de suas credenciais, comunicando imediatamente qualquer uso não autorizado.'
+            ],
+            [
+                'title' => '3. Propriedade Intelectual & Marcas',
+                'key' => 'page_termos_propriedade',
+                'default' => 'Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Propriedade Industrial (Lei nº 9.279/1996).'
+            ],
+            [
+                'title' => '4. Condições Comerciais e Pedidos',
+                'key' => 'page_termos_comerciais',
+                'default' => 'Preços, especificações e disponibilidade de produtos podem ser alterados periodicamente. Os pedidos estão sujeitos à confirmação do pagamento e validação cadastral de segurança.'
+            ],
+            [
+                'title' => '5. Responsabilidades e Limitações Legais',
+                'key' => 'page_termos_responsabilidades',
+                'default' => 'A DIVINIUM adota protocolos avançados de segurança. Aplica-se a legislação brasileira de proteção ao consumidor e do comércio eletrônico, com foro eleito nos termos da legislação aplicável.'
+            ],
+        ];
+
+        foreach ($sections as $sec) {
+            $val = \App\Models\Setting::get($sec['key']);
+            if ($val === null) {
+                $text = $sec['default'];
+            } elseif (trim((string)$val) !== '') {
+                $text = trim((string)$val);
+            } else {
+                continue; // Ocultado se estiver vazio
+            }
+            $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
+        }
+
+        $html .= $this->renderCustomBlocksHtml((string)\App\Models\Setting::get('page_termos_blocks_json', ''));
+        return $html;
+    }
+
+    /**
+     * 5. Monta o conteúdo estruturado da Política de Frete e Entrega
      */
     private function buildShippingPolicyHtml(): string
     {
-        $rawIntro = trim((string)\App\Models\Setting::get('page_frete_content', ''));
+        $rawIntro = trim((string)\App\Models\Setting::get('page_frete_content', \App\Models\Setting::get('page_frete_intro', '')));
         if ($rawIntro === '') {
             $rawIntro = 'Na DIVINIUM, cada joia autoral é cuidadosamente embalada e protegida com critérios rigorosos de segurança e discrição, assegurando que sua experiência seja nobre desde o envio até o recebimento.';
         }
@@ -1066,17 +1347,99 @@ class StoreController
                 'default' => 'Após o envio, as informações e o código de rastreamento são enviados para acompanhamento seguro de cada etapa até a entrega.'
             ],
             [
-                'title' => '8. Condições Especiais & Benefícios',
+                'title' => '8. Condições Especiais / Frete Cortesia',
                 'key' => 'page_frete_condicoes_especiais',
                 'default' => 'Eventuais condições de frete cortesia ou promoções especiais são aplicadas conforme campanhas vigentes divulgadas em nossos canais oficiais.'
+            ],
+            [
+                'title' => '9. Endereço Incorreto ou Incompleto',
+                'key' => 'page_frete_endereco_incompleto',
+                'default' => 'Certifique-se do preenchimento correto de todos os dados de entrega. Em caso de inconsistência comunicada pelo cliente após expedição, reenvios poderão incorrer em novos prazos e custos adicionais.'
+            ],
+            [
+                'title' => '10. Ausência do Destinatário',
+                'key' => 'page_frete_ausencia_destinatario',
+                'default' => 'As transportadoras parceiras realizam até 3 tentativas de entrega. Certifique-se de que haverá alguém autorizado no local para o recebimento e assinatura da encomenda.'
+            ],
+            [
+                'title' => '11. Atraso, Extravio ou Avaria durante o Transporte',
+                'key' => 'page_frete_extravio_avaria',
+                'default' => 'Todas as remessas contam com seguro de transporte. Em caso de sinistro, avaria ou extravio comprovado pela transportadora, garantimos a reposição imediata da joia ou estorno integral.'
             ],
         ];
 
         foreach ($sections as $sec) {
-            $val = trim((string)\App\Models\Setting::get($sec['key'], ''));
-            $text = $val !== '' ? \App\Core\View::e($val) : $sec['default'];
+            $val = \App\Models\Setting::get($sec['key']);
+            if ($val === null) {
+                $text = $sec['default'];
+            } elseif (trim((string)$val) !== '') {
+                $text = trim((string)$val);
+            } else {
+                continue; // Ocultado se estiver vazio
+            }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
-            $html .= '<p>' . nl2br($text) . '</p>';
+            $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
+        }
+
+        $html .= $this->renderCustomBlocksHtml((string)\App\Models\Setting::get('page_frete_blocks_json', ''));
+        return $html;
+    }
+
+    /**
+     * Renderiza blocos dinâmicos adicionais de conteúdo, avisos e links
+     */
+    private function renderCustomBlocksHtml(string $json): string
+    {
+        if (trim($json) === '') {
+            return '';
+        }
+
+        $blocks = json_decode($json, true);
+        if (!is_array($blocks) || empty($blocks)) {
+            return '';
+        }
+
+        $html = '';
+        foreach ($blocks as $block) {
+            if (!is_array($block)) continue;
+            $visible = isset($block['visible']) ? ((int)$block['visible'] === 1) : true;
+            if (!$visible) continue;
+
+            $title = trim((string)($block['title'] ?? ''));
+            $content = trim((string)($block['content'] ?? ''));
+            $type = (string)($block['type'] ?? 'standard');
+
+            if ($title === '' && $content === '') continue;
+
+            $safeTitle = \App\Core\View::e($title);
+            $safeContent = nl2br(\App\Core\View::e($content));
+
+            if ($type === 'callout' || $type === 'notice') {
+                $html .= '<div class="editorial-callout" style="background: rgba(202,161,92,0.06); border: 1px solid rgba(202,161,92,0.25); border-left: 3px solid #CBD0D6; border-radius: 8px; padding: 18px 22px; margin: 24px 0;">';
+                if ($title !== '') {
+                    $html .= '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="color: #CBD0D6; font-size: 1.1rem;">✦</span><strong style="color: #ffffff; font-size: 1.05rem; font-family: var(--font-serif, Georgia, serif); letter-spacing: 0.3px;">' . $safeTitle . '</strong></div>';
+                }
+                if ($content !== '') {
+                    $html .= '<div style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">' . $safeContent . '</div>';
+                }
+                $html .= '</div>';
+            } elseif ($type === 'links') {
+                $html .= '<div class="editorial-links-block" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 18px 20px; margin: 24px 0;">';
+                if ($title !== '') {
+                    $html .= '<h4 style="margin: 0 0 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">' . $safeTitle . '</h4>';
+                }
+                if ($content !== '') {
+                    $html .= '<div style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">' . $safeContent . '</div>';
+                }
+                $html .= '</div>';
+            } else {
+                if ($title !== '') {
+                    $html .= '<h4>' . $safeTitle . '</h4>';
+                }
+                if ($content !== '') {
+                    $html .= '<p>' . $safeContent . '</p>';
+                }
+            }
         }
 
         return $html;
