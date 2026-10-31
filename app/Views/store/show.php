@@ -301,6 +301,69 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <?php endif; ?>
 
                     <!-- ============================================================== -->
+                    <!-- COMPRA DIRETA NA BOUTIQUE: ADICIONAR À SACOLA & CHECKOUT -->
+                    <!-- ============================================================== -->
+                    <?php
+                    $directCartEnabled = Setting::get('checkout_direct_cart_enabled', '1') === '1';
+                    $showAddToCartBtn = Setting::get('store_add_to_cart_btn_visible', '1') === '1';
+                    $addToCartBtnText = Setting::get('store_add_to_cart_btn_text', 'Adicionar à Sacola');
+                    $showBuyNowBtn = Setting::get('store_buy_now_btn_visible', '1') === '1';
+                    $buyNowBtnText = Setting::get('store_buy_now_btn_text', 'Comprar Agora');
+                    $showQtySelector = Setting::get('store_qty_selector_visible', '1') === '1';
+                    ?>
+
+                    <?php if ($directCartEnabled && ($showAddToCartBtn || $showBuyNowBtn)): ?>
+                    <div class="product-direct-bag-box">
+                        <div class="direct-bag-controls-row">
+                            <?php if ($showQtySelector): ?>
+                            <div class="product-qty-stepper-wrap">
+                                <span class="qty-stepper-label">Qtd:</span>
+                                <div class="qty-stepper-luxury">
+                                    <button type="button" class="btn-qty-step" onclick="changeProductQty(-1)" aria-label="Diminuir quantidade">−</button>
+                                    <span class="qty-display-luxury" id="productQtyDisplay">1</span>
+                                    <button type="button" class="btn-qty-step" onclick="changeProductQty(1)" aria-label="Aumentar quantidade">+</button>
+                                    <input type="hidden" id="productQuantityInput" value="1">
+                                </div>
+                            </div>
+                            <?php else: ?>
+                            <input type="hidden" id="productQuantityInput" value="1">
+                            <?php endif; ?>
+
+                            <div class="direct-bag-buttons-grid">
+                                <?php if ($showAddToCartBtn): ?>
+                                <button type="button" class="btn-luxury-add-bag" id="btnAddToCartMain" onclick="addProductToBag(event)">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    </svg>
+                                    <span id="btnAddToCartText"><?= View::e($addToCartBtnText) ?></span>
+                                </button>
+                                <?php endif; ?>
+
+                                <?php if ($showBuyNowBtn): ?>
+                                <button type="button" class="btn-luxury-buy-direct" id="btnBuyNowMain" onclick="buyNowDirect(event)">
+                                    <span><?= View::e($buyNowBtnText) ?></span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="direct-bag-trust-sub">
+                            <span>🔒 Compra 100% Protegida</span>
+                            <span class="dot">•</span>
+                            <span>⚡ Pix com Desconto</span>
+                            <span class="dot">•</span>
+                            <span>✦ Joia Autoral com Certificado</span>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- ============================================================== -->
                     <!-- PAINEL CENTRALIZADO DE COMPRA (COMPARTILHADO PELO GRUPO DO PRODUTO) -->
                     <!-- ============================================================== -->
                     <?php 
@@ -764,30 +827,51 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <?php endif; ?>
 
                     <!-- SELO DE GARANTIA & EXCELÊNCIA DIVINIUM -->
-                    <?php if ($globalShowGuarantee): ?>
+                    <?php if ($globalShowGuarantee): 
+                        $guarTitle = Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM');
+                        $guarText = Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia contra defeitos no acabamento.');
+                        $p1Vis = Setting::get('store_guarantee_perk1_visible', '1') === '1';
+                        $p1Txt = Setting::get('store_guarantee_perk1_text', 'Envio com Seguro para todo Brasil');
+                        $p2Vis = Setting::get('store_guarantee_perk2_visible', '1') === '1';
+                        $p2Txt = Setting::get('store_guarantee_perk2_text', 'Estojo Rígido de Presente');
+                        $p3Vis = Setting::get('store_guarantee_perk3_visible', '1') === '1';
+                        $p3Txt = Setting::get('store_guarantee_perk3_text', 'Certificado de Autenticidade & Cuidados');
+                    ?>
                     <div class="product-guarantee-card">
                         <div class="guarantee-header">
                             <span class="guarantee-icon">🛡️</span>
                             <div>
-                                <h4 class="guarantee-title"><?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?></h4>
-                                <p class="guarantee-desc"><?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?></p>
+                                <?php if (!empty($guarTitle)): ?>
+                                <h4 class="guarantee-title"><?= View::e($guarTitle) ?></h4>
+                                <?php endif; ?>
+                                <?php if (!empty($guarText)): ?>
+                                <p class="guarantee-desc"><?= View::e($guarText) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
 
+                        <?php if ($p1Vis || $p2Vis || $p3Vis): ?>
                         <div class="guarantee-perks-grid">
+                            <?php if ($p1Vis && !empty($p1Txt)): ?>
                             <div class="perk-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                <span>Envio Assegurado p/ todo Brasil</span>
+                                <span><?= View::e($p1Txt) ?></span>
                             </div>
+                            <?php endif; ?>
+                            <?php if ($p2Vis && !empty($p2Txt)): ?>
                             <div class="perk-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                <span>Estojo Rígido de Presente</span>
+                                <span><?= View::e($p2Txt) ?></span>
                             </div>
+                            <?php endif; ?>
+                            <?php if ($p3Vis && !empty($p3Txt)): ?>
                             <div class="perk-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                <span>Garantia de Qualidade Banho de Prata</span>
+                                <span><?= View::e($p3Txt) ?></span>
                             </div>
+                            <?php endif; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
 
@@ -973,10 +1057,19 @@ function selectProductVariation(btn) {
     }
 }
 
-function buySelectedVariation(event, isDirectCheckout, targetUrl) {
-    if (event) {
-        event.preventDefault();
-    }
+function changeProductQty(delta) {
+    const input = document.getElementById('productQuantityInput');
+    const display = document.getElementById('productQtyDisplay');
+    let cur = parseInt(input ? input.value : '1', 10);
+    if (isNaN(cur) || cur < 1) cur = 1;
+    cur += delta;
+    if (cur < 1) cur = 1;
+    if (cur > 99) cur = 99;
+    if (input) input.value = cur;
+    if (display) display.textContent = cur;
+}
+
+function getSelectedProductData() {
     const activeChip = document.querySelector('.variation-chip.active') || document.querySelector('.variation-chip');
     const sku = activeChip ? activeChip.getAttribute('data-sku') : '<?= View::e($prodSku) ?>';
     const stone = activeChip ? activeChip.getAttribute('data-stone') : (document.getElementById('selectedStoneName')?.textContent || '<?= View::e($prodMineral) ?>');
@@ -984,16 +1077,57 @@ function buySelectedVariation(event, isDirectCheckout, targetUrl) {
     const imgUrl = activeChip ? activeChip.getAttribute('data-image') : (document.getElementById('productMainImage')?.getAttribute('src') || '<?= View::e($prodImageUrl) ?>');
     const modelName = <?= json_encode($prodName) ?>;
     const fullName = modelName + (stone ? ' - ' + stone : '');
+    const qtyInput = document.getElementById('productQuantityInput');
+    const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
 
+    return {
+        id: <?= $prodId ?>,
+        sku: sku,
+        name: fullName,
+        price: priceCents,
+        priceCents: priceCents,
+        price_cents: priceCents,
+        image: imgUrl,
+        image_url: imgUrl,
+        stone: stone,
+        stone_mineral: stone,
+        qty: qty,
+        quantity: qty
+    };
+}
+
+function addProductToBag(event) {
+    if (event) event.preventDefault();
+    const item = getSelectedProductData();
     if (typeof addToCart === 'function') {
-        addToCart({
-            id: <?= $prodId ?>,
-            sku: sku,
-            name: fullName,
-            price: priceCents,
-            image: imgUrl,
-            stone: stone
-        });
+        addToCart(item);
+    }
+    const txtEl = document.getElementById('btnAddToCartText');
+    if (txtEl) {
+        const orig = txtEl.textContent;
+        txtEl.textContent = '✓ Adicionado à Sacola!';
+        setTimeout(() => {
+            txtEl.textContent = orig;
+        }, 1800);
+    }
+}
+
+function buyNowDirect(event) {
+    if (event) event.preventDefault();
+    const item = getSelectedProductData();
+    if (typeof addToCart === 'function') {
+        addToCart(item);
+    }
+    window.location.href = '/checkout';
+}
+
+function buySelectedVariation(event, isDirectCheckout, targetUrl) {
+    if (event) {
+        event.preventDefault();
+    }
+    const item = getSelectedProductData();
+    if (typeof addToCart === 'function') {
+        addToCart(item);
     }
 
     if (isDirectCheckout) {

@@ -2,13 +2,45 @@
 /**
  * VIEW: CHECKOUT NOBRE DIVINIUM (/checkout)
  * Quiet luxury checkout experience com integração Pix, Asaas e Concierge VIP
+ * Totalmente integrado aos controles centralizados do Painel Administrativo.
  */
 use App\Models\Setting;
 use App\Core\View;
 
+// Configurações de Pagamento & Pix
 $pixKey = Setting::get('payment_pix_key', 'contato@divinium.com.br');
 $pixBeneficiary = Setting::get('payment_pix_name', 'DIVINIUM JOIAS AUTORAIS');
+$pixDiscountPercent = (float)Setting::get('payment_pix_discount_percent', '5');
+$pixDiscountVisible = Setting::get('payment_pix_discount_visible', '1') === '1';
+
+// Contatos & Suporte
 $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
+
+// Selo de Segurança & Cabeçalho
+$sslBadgeVisible = Setting::get('checkout_ssl_badge_visible', '1') === '1';
+$sslBadgeText = Setting::get('checkout_ssl_badge_text', 'Criptografia SSL de 256 bits • Ambiente Protegido');
+
+// Linha de Frete & Rótulo Padrão
+$shippingRowVisible = Setting::get('checkout_shipping_row_visible', '1') === '1';
+$shippingDefaultLabel = Setting::get('checkout_shipping_default_label', 'A calcular ou Cortesia');
+
+// Perks / Pilares do Checkout
+$perk1Visible = Setting::get('checkout_perk1_visible', '1') === '1';
+$perk1Text = Setting::get('checkout_perk1_text', 'Banho Nobre de Prata com Certificado e Garantia');
+$perk2Visible = Setting::get('checkout_perk2_visible', '1') === '1';
+$perk2Text = Setting::get('checkout_perk2_text', 'Direito de Arrependimento de 7 Dias (CDC)');
+$perk3Visible = Setting::get('checkout_perk3_visible', '1') === '1';
+$perk3Text = Setting::get('checkout_perk3_text', 'Embalagem Especial para Presente em Veludo');
+
+// Textos e Instruções Dinâmicas dos Meios de Pagamento
+$pixTitle = Setting::get('checkout_pix_instructions_title', 'Pagamento Imediato via Pix com ' . $pixDiscountPercent . '% OFF');
+$pixDesc = Setting::get('checkout_pix_instructions_text', 'Após clicar em "Confirmar Pedido & Gerar Pix", você receberá a chave e o QR Code oficial para pagamento instantâneo com envio prioritário.');
+
+$waTitle = Setting::get('checkout_wa_instructions_title', 'Finalização com Concierge Exclusivo');
+$waDesc = Setting::get('checkout_wa_instructions_text', 'Ao avançar, nossa equipe já receberá a lista exata das joias selecionadas e o endereço para gerar seu atendimento personalizado.');
+
+$cardTitle = Setting::get('checkout_card_instructions_title', 'Cartão de Crédito com Parcelamento Sem Juros');
+$cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcionado para o gateway seguro homologado da Divinium para inserção protegida dos dados do cartão em até 10x.');
 ?>
 
 <div class="checkout-page-container">
@@ -21,10 +53,12 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                 <span class="brand-name">DIVINIUM</span>
                 <span class="checkout-badge">CHECKOUT SEGURO</span>
             </div>
+            <?php if ($sslBadgeVisible): ?>
             <div class="checkout-security-status">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#737B85" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                <span>Criptografia SSL de 256 bits • Ambiente Protegido</span>
+                <span><?= View::e($sslBadgeText) ?></span>
             </div>
+            <?php endif; ?>
         </div>
 
         <div class="checkout-grid">
@@ -57,7 +91,7 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                                 <label for="clientCep">CEP de Entrega *</label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" id="clientCep" name="cep" class="form-input" placeholder="00000-000" maxlength="9" required>
-                                    <button type="button" class="btn-calc-cep" onclick="consultarCep()">Buscar</button>
+                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()">Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -67,6 +101,16 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                             <input type="text" id="clientAddress" name="address" class="form-input" placeholder="Rua, Número, Complemento, Bairro">
                         </div>
 
+                        <!-- CONTAINER DE CÁLCULO E ESCOLHA DE FRETE REAL -->
+                        <div id="shippingCalcContainer" class="shipping-calc-container" style="display: none;">
+                            <div class="shipping-calc-header">
+                                <span class="shipping-icon">🚚</span>
+                                <h4 class="shipping-title">Opções de Frete & Entrega</h4>
+                            </div>
+                            <div id="shippingCalcStatus" class="shipping-calc-status"></div>
+                            <div id="shippingOptionsList" class="shipping-options-list"></div>
+                        </div>
+
                         <!-- FORMAS DE PAGAMENTO NOBRES -->
                         <h2 class="card-step-title" style="margin-top: 36px;">
                             <span class="step-num">2</span>
@@ -74,13 +118,15 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                         </h2>
 
                         <div class="payment-methods-grid">
-                            <!-- Opção 1: Pix com 5% de Desconto -->
+                            <!-- Opção 1: Pix -->
                             <label class="payment-option active" id="optPix">
                                 <input type="radio" name="payment_method" value="pix" checked onchange="switchPaymentMethod('pix')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
                                         <span class="opt-name">⚡ Pix Instantâneo</span>
-                                        <span class="opt-discount-tag">5% DE DESCONTO</span>
+                                        <?php if ($pixDiscountVisible && $pixDiscountPercent > 0): ?>
+                                        <span class="opt-discount-tag"><?= $pixDiscountPercent ?>% DE DESCONTO</span>
+                                        <?php endif; ?>
                                     </div>
                                     <p class="opt-desc">Aprovação imediata. QR Code gerado instantaneamente na tela.</p>
                                 </div>
@@ -114,28 +160,33 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                         <!-- Painel Dinâmico de Instruções de Pagamento -->
                         <div id="paymentInstructionsBox" class="payment-instructions-card">
                             <div id="pixInstructions">
-                                <h4 style="color: var(--gold-accent); margin: 0 0 8px; font-size: 1rem;">Pagamento Imediato via Pix com 5% OFF</h4>
+                                <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;"><?= View::e($pixTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 14px;">
-                                    Após clicar em <strong>"Confirmar Pedido & Gerar Pix"</strong>, você receberá a chave e o QR Code oficial para pagamento instantâneo com envio prioritário.
+                                    <?= View::e($pixDesc) ?>
                                 </p>
                                 <div class="pix-key-preview">
-                                    <span>Chave Oficial Divinium:</span>
-                                    <code><?= View::e($pixKey) ?></code>
-                                    <small>(<?= View::e($pixBeneficiary) ?>)</small>
+                                    <div>
+                                        <span style="font-size: 0.76rem; color: var(--text-secondary); display: block;">Chave Oficial Divinium:</span>
+                                        <code id="pixKeyValueDisplay"><?= View::e($pixKey) ?></code>
+                                        <small style="display: block; color: var(--text-secondary); margin-top: 2px;">Titular: <?= View::e($pixBeneficiary) ?></small>
+                                    </div>
+                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')">
+                                        <span id="copyPixBtnText">📋 Copiar Chave</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <div id="waInstructions" style="display: none;">
-                                <h4 style="color: var(--text-primary, #202020); margin: 0 0 8px; font-size: 1rem;">Finalização com Concierge Exclusivo</h4>
+                                <h4 style="color: var(--text-primary, #202020); margin: 0 0 8px; font-size: 1rem;"><?= View::e($waTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
-                                    Ao avançar, nossa equipe já receberá a lista exata das joias selecionadas e o endereço para gerar seu link de pagamento com seguro cortesia.
+                                    <?= View::e($waDesc) ?>
                                 </p>
                             </div>
 
                             <div id="cardInstructions" style="display: none;">
-                                <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;">Cartão de Crédito com Parcelamento Sem Juros</h4>
+                                <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;"><?= View::e($cardTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
-                                    Você será direcionado para o gateway seguro homologado da Divinium para inserção protegida dos dados do cartão em até 10x.
+                                    <?= View::e($cardDesc) ?>
                                 </p>
                             </div>
                         </div>
@@ -163,14 +214,18 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                             <span>Subtotal:</span>
                             <span id="summarySubtotal">R$ 0,00</span>
                         </div>
+                        <?php if ($pixDiscountVisible && $pixDiscountPercent > 0): ?>
                         <div class="summary-row" id="summaryPixRow">
-                            <span style="color: var(--gold-accent);">Desconto Pix (5%):</span>
-                            <span id="summaryPixDiscount" style="color: var(--gold-accent);">- R$ 0,00</span>
+                            <span style="color: var(--gold-accent, #737B85);">Desconto Pix (<?= $pixDiscountPercent ?>%):</span>
+                            <span id="summaryPixDiscount" style="color: var(--gold-accent, #737B85);">- R$ 0,00</span>
                         </div>
-                        <div class="summary-row">
+                        <?php endif; ?>
+                        <?php if ($shippingRowVisible): ?>
+                        <div class="summary-row" id="summaryShippingRow">
                             <span>Frete:</span>
-                            <span style="color: var(--gold-accent, #737B85); font-weight: 600;">CORTESIA COM SEGURO</span>
+                            <span id="summaryShippingVal" style="color: var(--text-primary); font-weight: 600;"><?= View::e($shippingDefaultLabel) ?></span>
                         </div>
+                        <?php endif; ?>
                         <div class="summary-row total-row">
                             <span>Total Estimado:</span>
                             <span id="summaryGrandTotal" class="total-val">R$ 0,00</span>
@@ -178,18 +233,24 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
                     </div>
 
                     <div class="checkout-perks-list">
+                        <?php if ($perk1Visible && !empty($perk1Text)): ?>
                         <div class="perk-item">
                             <span class="perk-dot">✦</span>
-                            <span>Banho de Prata com Certificado de Qualidade</span>
+                            <span><?= View::e($perk1Text) ?></span>
                         </div>
+                        <?php endif; ?>
+                        <?php if ($perk2Visible && !empty($perk2Text)): ?>
                         <div class="perk-item">
                             <span class="perk-dot">✦</span>
-                            <span>Direito de Arrependimento de 7 Dias (CDC)</span>
+                            <span><?= View::e($perk2Text) ?></span>
                         </div>
+                        <?php endif; ?>
+                        <?php if ($perk3Visible && !empty($perk3Text)): ?>
                         <div class="perk-item">
                             <span class="perk-dot">✦</span>
-                            <span>Embalagem Especial para Presente em Veludo</span>
+                            <span><?= View::e($perk3Text) ?></span>
                         </div>
+                        <?php endif; ?>
                     </div>
 
                     <a href="/loja" class="btn-return-store">← Escolher mais joias na boutique</a>
@@ -330,6 +391,76 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     background: var(--gold-accent, #A7ADB4);
     color: #25272A;
 }
+
+/* Frete em tempo real */
+.shipping-calc-container {
+    background: rgba(167, 173, 180, 0.08);
+    border: 1px solid rgba(167, 173, 180, 0.25);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 22px;
+}
+.shipping-calc-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.shipping-icon {
+    font-size: 1.1rem;
+}
+.shipping-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary, #25272A);
+    margin: 0;
+}
+.shipping-calc-status {
+    font-size: 0.8rem;
+    color: var(--text-secondary, #737B85);
+    margin-bottom: 8px;
+}
+.shipping-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.shipping-option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.shipping-option-item:hover, .shipping-option-item.selected {
+    border-color: var(--gold-accent, #737B85);
+    background: rgba(167, 173, 180, 0.06);
+}
+.shipping-opt-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.shipping-opt-name {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-primary, #25272A);
+}
+.shipping-opt-time {
+    font-size: 0.74rem;
+    color: var(--text-secondary, #737B85);
+    margin-left: 6px;
+}
+.shipping-opt-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary, #25272A);
+}
+
 .payment-methods-grid {
     display: flex;
     flex-direction: column;
@@ -406,18 +537,39 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 .pix-key-preview {
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 10px 14px;
-    border-radius: 6px;
+    padding: 12px 14px;
+    border-radius: 8px;
     font-size: 0.8rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
     color: var(--text-primary, #25272A);
 }
 .pix-key-preview code {
     color: var(--text-primary, #25272A);
     font-weight: 700;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+.btn-copy-pix {
+    background: var(--gold-accent, #A7ADB4);
+    color: #25272A;
+    border: 1px solid var(--gold-hover, #737B85);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.btn-copy-pix:hover {
+    background: var(--gold-hover, #737B85);
+    color: #FFFFFF;
 }
 .btn-checkout-submit {
     width: 100%;
@@ -436,11 +588,20 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     cursor: pointer;
     transition: all 0.25s ease;
 }
-.btn-checkout-submit:hover {
+.btn-checkout-submit:hover:not(:disabled) {
     background: var(--gold-hover, #737B85);
     color: #FFFFFF;
     transform: translateY(-1px);
     box-shadow: 0 8px 20px rgba(115, 123, 133, 0.25);
+}
+.btn-checkout-submit:disabled, .btn-checkout-submit.disabled {
+    background: #CBD0D6;
+    border-color: #CBD0D6;
+    color: #737B85;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
 }
 .summary-title {
     font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
@@ -452,14 +613,14 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 }
 .checkout-items-list {
     margin-bottom: 20px;
-    max-height: 320px;
+    max-height: 380px;
     overflow-y: auto;
 }
 .checkout-item-row {
     display: flex;
-    gap: 14px;
+    gap: 12px;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.06));
 }
 .checkout-item-img {
@@ -469,25 +630,82 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
     object-fit: cover;
     background: #f0f0ee;
     border: 1px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
 }
 .checkout-item-info {
     flex: 1;
+    min-width: 0;
 }
 .checkout-item-title {
     font-size: 0.85rem;
     color: var(--text-primary, #25272A);
     font-weight: 600;
     margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .checkout-item-meta {
     font-size: 0.74rem;
     color: var(--text-secondary, #737B85);
-    margin: 0;
+    margin: 0 0 4px;
+}
+.checkout-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.checkout-item-stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #FFFFFF;
+}
+.checkout-item-stepper button {
+    border: none;
+    background: none;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+.checkout-item-stepper button:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+.checkout-item-stepper span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+    padding: 0 2px;
+}
+.checkout-item-del-btn {
+    border: none;
+    background: none;
+    color: #999;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s;
+}
+.checkout-item-del-btn:hover {
+    color: #c93b3b;
 }
 .checkout-item-price {
     font-size: 0.88rem;
     font-weight: 700;
     color: var(--text-primary, #25272A);
+    white-space: nowrap;
+    text-align: right;
 }
 .summary-totals-block {
     background: rgba(0, 0, 0, 0.02);
@@ -556,6 +774,13 @@ $waNumber = Setting::get('hero_whatsapp_number', '5511999999999');
 <script>
 let currentPaymentMethod = 'pix';
 let cartSubtotal = 0;
+let selectedShipping = {
+    price: 0,
+    name: '<?= View::e($shippingDefaultLabel) ?>',
+    selected: false
+};
+const pixDiscountPercent = <?= json_encode($pixDiscountPercent) ?>;
+const pixDiscountVisible = <?= json_encode($pixDiscountVisible) ?>;
 
 function switchPaymentMethod(method) {
     currentPaymentMethod = method;
@@ -570,7 +795,7 @@ function switchPaymentMethod(method) {
     if (method === 'pix') {
         document.getElementById('optPix').classList.add('active');
         document.getElementById('pixInstructions').style.display = 'block';
-        submitBtn.innerHTML = '<span>Confirmar Pedido & Gerar Pix (-5%)</span> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+        submitBtn.innerHTML = `<span>Confirmar Pedido & Gerar Pix ${pixDiscountVisible && pixDiscountPercent > 0 ? '(-' + pixDiscountPercent + '%)' : ''}</span> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
     } else if (method === 'whatsapp') {
         document.getElementById('optWa').classList.add('active');
         document.getElementById('waInstructions').style.display = 'block';
@@ -587,32 +812,65 @@ function updateTotals() {
     const subtotalEl = document.getElementById('summarySubtotal');
     const pixRow = document.getElementById('summaryPixRow');
     const pixDiscEl = document.getElementById('summaryPixDiscount');
+    const shippingValEl = document.getElementById('summaryShippingVal');
     const grandTotalEl = document.getElementById('summaryGrandTotal');
+    const submitBtn = document.getElementById('btnSubmitCheckout');
 
     subtotalEl.textContent = 'R$ ' + cartSubtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    if (currentPaymentMethod === 'pix') {
-        const discount = cartSubtotal * 0.05;
-        const total = cartSubtotal * 0.95;
-        pixRow.style.display = 'flex';
-        pixDiscEl.textContent = '- R$ ' + discount.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        grandTotalEl.textContent = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    let discount = 0;
+    if (currentPaymentMethod === 'pix' && pixDiscountVisible && pixDiscountPercent > 0) {
+        discount = cartSubtotal * (pixDiscountPercent / 100);
+        if (pixRow) {
+            pixRow.style.display = 'flex';
+            if (pixDiscEl) pixDiscEl.textContent = '- R$ ' + discount.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
     } else {
-        pixRow.style.display = 'none';
-        grandTotalEl.textContent = 'R$ ' + cartSubtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        if (pixRow) pixRow.style.display = 'none';
+    }
+
+    if (shippingValEl) {
+        if (selectedShipping.selected && selectedShipping.price > 0) {
+            shippingValEl.textContent = selectedShipping.name + ': R$ ' + selectedShipping.price.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        } else if (selectedShipping.selected && selectedShipping.price === 0) {
+            shippingValEl.textContent = selectedShipping.name + ' (Grátis)';
+        } else {
+            shippingValEl.textContent = selectedShipping.name;
+        }
+    }
+
+    const grandTotal = Math.max(0, (cartSubtotal - discount) + (selectedShipping.price || 0));
+    grandTotalEl.textContent = 'R$ ' + grandTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    if (cartSubtotal <= 0) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('disabled');
+        submitBtn.title = 'Sua sacola está vazia. Adicione ao menos uma joia para prosseguir.';
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('disabled');
+        submitBtn.title = '';
+    }
+}
+
+function getStoredCartItems() {
+    try {
+        if (window.diviniumCart && typeof window.diviniumCart.getItems === 'function') {
+            return window.diviniumCart.getItems();
+        }
+        const saved = localStorage.getItem('divinium_cart');
+        return saved ? JSON.parse(saved) : [];
+    } catch(e) {
+        return [];
     }
 }
 
 function loadCartFromStorage() {
     const listContainer = document.getElementById('checkoutItemsList');
-    let items = [];
-    try {
-        const saved = localStorage.getItem('divinium_cart');
-        if (saved) items = JSON.parse(saved);
-    } catch (e) {}
+    const items = getStoredCartItems();
 
     if (!items || items.length === 0) {
-        listContainer.innerHTML = '<div style="padding: 20px 0; color: #888; font-size: 0.85rem; text-align: center;">Sua sacola está vazia no momento.<br><a href="/loja" style="color:var(--gold-accent, #737B85); text-decoration:underline; font-weight:600; display:inline-block; margin-top:8px;">Descobrir Joias</a></div>';
+        listContainer.innerHTML = '<div style="padding: 24px 0; color: #888; font-size: 0.85rem; text-align: center;">Sua sacola está vazia no momento.<br><a href="/loja" style="color:var(--gold-accent, #737B85); text-decoration:underline; font-weight:600; display:inline-block; margin-top:10px;">← Descobrir Joias na Boutique</a></div>';
         cartSubtotal = 0;
         updateTotals();
         return;
@@ -621,18 +879,31 @@ function loadCartFromStorage() {
     listContainer.innerHTML = '';
     cartSubtotal = 0;
 
-    items.forEach(it => {
-        const pCents = it.price_cents || (parseFloat(it.price || 0) * 100);
-        const itemTotal = (pCents * (it.quantity || 1)) / 100;
+    items.forEach((it, idx) => {
+        const pCents = it.priceCents || it.price_cents || (parseFloat(it.price || 0) * 100);
+        const qty = parseInt(it.qty || it.quantity || 1, 10);
+        const itemTotal = (pCents * qty) / 100;
         cartSubtotal += itemTotal;
+
+        const itemKey = it.itemKey || it.sku || it.id || ('idx_' + idx);
+        const img = it.image || it.image_url || '/assets/images/products/an-rd-20-capa.jpg';
+        const stone = it.stone || it.stone_mineral || '';
 
         const row = document.createElement('div');
         row.className = 'checkout-item-row';
         row.innerHTML = `
-            <img src="${it.image_url || '/assets/images/products/an-rd-20-capa.jpg'}" class="checkout-item-img" alt="${it.name}">
+            <img src="${img}" class="checkout-item-img" alt="${it.name}">
             <div class="checkout-item-info">
-                <h4 class="checkout-item-title">${it.name}</h4>
-                <p class="checkout-item-meta">${it.quantity || 1}x • ${it.stone_mineral || 'Gema Autoral'}</p>
+                <h4 class="checkout-item-title" title="${it.name}">${it.name}</h4>
+                <p class="checkout-item-meta">${stone ? stone : 'Gema Autoral'}</p>
+                <div class="checkout-item-controls">
+                    <div class="checkout-item-stepper">
+                        <button type="button" onclick="changeCheckoutQty('${itemKey}', -1)" aria-label="Diminuir">-</button>
+                        <span>${qty}</span>
+                        <button type="button" onclick="changeCheckoutQty('${itemKey}', 1)" aria-label="Aumentar">+</button>
+                    </div>
+                    <button type="button" class="checkout-item-del-btn" onclick="removeCheckoutItem('${itemKey}')" title="Remover">&times;</button>
+                </div>
             </div>
             <span class="checkout-item-price">R$ ${itemTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
         `;
@@ -642,6 +913,54 @@ function loadCartFromStorage() {
     updateTotals();
 }
 
+function changeCheckoutQty(itemKey, delta) {
+    if (window.diviniumCart && typeof window.diviniumCart.changeQty === 'function') {
+        window.diviniumCart.changeQty(itemKey, delta);
+        loadCartFromStorage();
+        return;
+    }
+
+    let items = getStoredCartItems();
+    const idx = items.findIndex(it => (it.itemKey || it.sku || it.id) === itemKey);
+    if (idx !== -1) {
+        let q = (items[idx].qty || items[idx].quantity || 1) + delta;
+        if (q <= 0) {
+            items.splice(idx, 1);
+        } else {
+            items[idx].qty = q;
+            items[idx].quantity = q;
+        }
+        localStorage.setItem('divinium_cart', JSON.stringify(items));
+        loadCartFromStorage();
+    }
+}
+
+function removeCheckoutItem(itemKey) {
+    if (window.diviniumCart && typeof window.diviniumCart.remove === 'function') {
+        window.diviniumCart.remove(itemKey);
+        loadCartFromStorage();
+        return;
+    }
+
+    let items = getStoredCartItems();
+    items = items.filter(it => (it.itemKey || it.sku || it.id) !== itemKey);
+    localStorage.setItem('divinium_cart', JSON.stringify(items));
+    loadCartFromStorage();
+}
+
+function copyPixKey(key) {
+    navigator.clipboard.writeText(key).then(() => {
+        const btnText = document.getElementById('copyPixBtnText');
+        if (btnText) {
+            const orig = btnText.innerHTML;
+            btnText.innerHTML = '✓ Chave Copiada!';
+            setTimeout(() => { btnText.innerHTML = orig; }, 3000);
+        }
+    }).catch(() => {
+        alert('Chave Pix: ' + key);
+    });
+}
+
 function consultarCep() {
     const cepInput = document.getElementById('clientCep');
     const cep = cepInput.value.replace(/\D/g, '');
@@ -649,6 +968,13 @@ function consultarCep() {
         alert('Por favor, informe um CEP válido com 8 dígitos.');
         return;
     }
+
+    const btn = document.getElementById('btnConsultarCep');
+    const origBtnText = btn.textContent;
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    // 1. Auto-preencher endereço via ViaCEP
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => res.json())
         .then(data => {
@@ -656,10 +982,87 @@ function consultarCep() {
                 const addr = document.getElementById('clientAddress');
                 addr.value = `${data.logradouro}, , ${data.bairro} - ${data.localidade}/${data.uf}`;
                 addr.focus();
-            } else {
-                alert('CEP não localizado.');
             }
         }).catch(() => {});
+
+    // 2. Consultar frete real no endpoint seguro DIVINIUM
+    const shippingBox = document.getElementById('shippingCalcContainer');
+    const shippingStatus = document.getElementById('shippingCalcStatus');
+    const shippingList = document.getElementById('shippingOptionsList');
+
+    shippingBox.style.display = 'block';
+    shippingStatus.innerHTML = '<span style="color: var(--gold-accent, #737B85);">Buscando opções reais de frete para o CEP...</span>';
+    shippingList.innerHTML = '';
+
+    fetch('/api/frete/calcular', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cep: cep })
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.textContent = origBtnText;
+        btn.disabled = false;
+
+        if (data.ok && data.quotes && data.quotes.length > 0) {
+            shippingStatus.innerHTML = '<strong>' + data.quotes.length + ' opções de frete real encontradas:</strong>';
+            shippingList.innerHTML = '';
+
+            data.quotes.forEach((q, idx) => {
+                const optEl = document.createElement('div');
+                optEl.className = 'shipping-option-item' + (idx === 0 ? ' selected' : '');
+                optEl.innerHTML = `
+                    <div class="shipping-opt-left">
+                        <input type="radio" name="selected_shipping_radio" id="ship_opt_${idx}" value="${q.price}" ${idx === 0 ? 'checked' : ''}>
+                        <label for="ship_opt_${idx}">
+                            <span class="shipping-opt-name">${q.name}</span>
+                            <span class="shipping-opt-time">${q.delivery_time ? '(' + q.delivery_time + ' dias úteis)' : ''}</span>
+                        </label>
+                    </div>
+                    <span class="shipping-opt-price">R$ ${q.price.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                `;
+                optEl.onclick = () => {
+                    document.querySelectorAll('.shipping-option-item').forEach(el => el.classList.remove('selected'));
+                    optEl.classList.add('selected');
+                    optEl.querySelector('input').checked = true;
+                    selectedShipping = {
+                        price: parseFloat(q.price),
+                        name: q.name,
+                        selected: true
+                    };
+                    updateTotals();
+                };
+                shippingList.appendChild(optEl);
+            });
+
+            // Seleciona a primeira cotação por padrão
+            selectedShipping = {
+                price: parseFloat(data.quotes[0].price),
+                name: data.quotes[0].name,
+                selected: true
+            };
+            updateTotals();
+        } else {
+            // Nenhum serviço de cálculo externo ativo no momento: transparência absoluta (sem inventar cotação fictícia)
+            shippingStatus.innerHTML = `
+                <div style="background: rgba(0,0,0,0.03); padding: 10px 14px; border-radius: 6px; font-size: 0.82rem; color: var(--text-secondary);">
+                    <span>${data.advice || '<?= View::e($shippingDefaultLabel) ?>'}</span>
+                </div>
+            `;
+            selectedShipping = {
+                price: 0,
+                name: '<?= View::e($shippingDefaultLabel) ?>',
+                selected: false
+            };
+            updateTotals();
+        }
+    })
+    .catch(() => {
+        btn.textContent = origBtnText;
+        btn.disabled = false;
+        shippingStatus.innerHTML = `<span style="font-size: 0.82rem; color: var(--text-secondary);"><?= View::e($shippingDefaultLabel) ?></span>`;
+        updateTotals();
+    });
 }
 
 function handleCheckoutSubmit(e) {
@@ -668,34 +1071,51 @@ function handleCheckoutSubmit(e) {
     const name = form.name.value;
     const email = form.email.value;
     const phone = form.phone.value;
+    const cep = form.cep.value;
     const address = form.address.value;
 
-    let items = [];
-    try {
-        items = JSON.parse(localStorage.getItem('divinium_cart') || '[]');
-    } catch(e) {}
+    const items = getStoredCartItems();
+
+    if (!items || items.length === 0 || cartSubtotal <= 0) {
+        alert('Sua sacola está vazia no momento. Adicione ao menos uma joia para prosseguir com o pedido.');
+        return;
+    }
+
+    let discount = 0;
+    if (currentPaymentMethod === 'pix' && pixDiscountVisible && pixDiscountPercent > 0) {
+        discount = cartSubtotal * (pixDiscountPercent / 100);
+    }
+    const finalTotal = Math.max(0, (cartSubtotal - discount) + (selectedShipping.price || 0));
 
     if (currentPaymentMethod === 'whatsapp') {
-        let msg = `Olá! Gostaria de concluir meu pedido na DIVINIUM:\n\n*Cliente:* ${name}\n*E-mail:* ${email}\n*Telefone:* ${phone}\n*Endereço:* ${address}\n\n*Itens Selecionados:*\n`;
+        let msg = `Olá! Gostaria de concluir meu pedido na DIVINIUM:\n\n*Cliente:* ${name}\n*E-mail:* ${email}\n*Telefone:* ${phone}\n*CEP:* ${cep}\n*Endereço:* ${address}\n\n*Itens Selecionados:*\n`;
         items.forEach(it => {
-            msg += `• ${it.quantity || 1}x ${it.name} (${it.stone_mineral || ''})\n`;
+            const qty = it.qty || it.quantity || 1;
+            const stone = it.stone || it.stone_mineral || '';
+            msg += `• ${qty}x ${it.name} ${stone ? '(' + stone + ')' : ''}\n`;
         });
-        msg += `\n*Total Estimado:* R$ ${cartSubtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\nPor favor, confirmem a disponibilidade para envio!`;
+        if (selectedShipping.selected && selectedShipping.price > 0) {
+            msg += `\n*Frete Escolhido:* ${selectedShipping.name} (R$ ${selectedShipping.price.toFixed(2)})`;
+        }
+        msg += `\n*Total Estimado:* R$ ${finalTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\nPor favor, confirmem a disponibilidade para envio!`;
         const waUrl = `https://wa.me/<?= View::e($waNumber) ?>?text=` + encodeURIComponent(msg);
         window.open(waUrl, '_blank');
         return;
     }
 
     if (currentPaymentMethod === 'pix') {
-        const pixTotal = cartSubtotal * 0.95;
-        alert(`Pedido registrado com sucesso!\n\nValor com 5% de Desconto Pix: R$ ${pixTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\nChave Pix Oficial: <?= View::e($pixKey) ?>\nBeneficiário: <?= View::e($pixBeneficiary) ?>\n\nEnvie o comprovante para nosso Concierge VIP no WhatsApp.`);
-        let msg = `Olá! Acabei de gerar o Pix do meu pedido (${name} - R$ ${pixTotal.toFixed(2)}). Segue comprovante para envio prioritário!`;
+        alert(`Pedido registrado com sucesso!\n\nValor Final: R$ ${finalTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\nChave Pix Oficial: <?= View::e($pixKey) ?>\nBeneficiário: <?= View::e($pixBeneficiary) ?>\n\nEnvie o comprovante para nosso Concierge VIP no WhatsApp.`);
+        let msg = `Olá! Acabei de gerar o Pix do meu pedido (${name} - R$ ${finalTotal.toFixed(2)}). Segue comprovante para envio prioritário!`;
         window.open(`https://wa.me/<?= View::e($waNumber) ?>?text=` + encodeURIComponent(msg), '_blank');
         return;
     }
 
-    alert('Direcionando para o gateway de pagamento seguro...');
+    alert('Direcionando para o gateway de pagamento homologado ASAAS...');
 }
 
-document.addEventListener('DOMContentLoaded', loadCartFromStorage);
+document.addEventListener('DOMContentLoaded', () => {
+    loadCartFromStorage();
+    window.addEventListener('cart:updated', loadCartFromStorage);
+});
 </script>
+

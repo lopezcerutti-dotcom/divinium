@@ -486,6 +486,39 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <!-- Seções Informativas da Página de Detalhes -->
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
                     <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                        🛍️ Compra Direta na Boutique DIVINIUM (Adicionar à Sacola & Comprar Agora)
+                    </h4>
+                    <span class="field-hint">Personalize e controle a visibilidade dos botões diretos de compra na página do produto.</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_add_to_cart_btn_text">Botão 'Adicionar à Sacola'</label>
+                        <?= $renderToggle('store_add_to_cart_btn_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_add_to_cart_btn_text" name="store_add_to_cart_btn_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_add_to_cart_btn_text', 'Adicionar à Sacola')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_buy_now_btn_text">Botão 'Comprar Agora'</label>
+                        <?= $renderToggle('store_buy_now_btn_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_buy_now_btn_text" name="store_buy_now_btn_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_buy_now_btn_text', 'Comprar Agora')) ?>">
+                </div>
+
+                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="field-label-row">
+                        <label>Seletor de Quantidade de Joias ([- 1 +])</label>
+                        <?= $renderToggle('store_qty_selector_visible', '1') ?>
+                    </div>
+                    <span class="field-hint">Permite ao cliente escolher quantas unidades da joia deseja adicionar à sacola.</span>
+                </div>
+
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         👁️ Visibilidade de Seções na Página de Detalhes
                     </h4>
                     <span class="field-hint">Ative ou desative seções complementares da página da joia.</span>
@@ -519,7 +552,35 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
                     <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia vitalícia contra defeitos no acabamento.')) ?>">
+                           value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de autenticidade, estojo de presente aveludado e garantia assegurada.')) ?>">
+                </div>
+
+                <!-- 3 Pilares do Card de Garantia na Página do Produto -->
+                <div class="form-group full-width">
+                    <div class="field-label-row">
+                        <label for="store_guarantee_perk1_text">Pilar 1 da Joia (Ex: Banho & Certificado)</label>
+                        <?= $renderToggle('store_guarantee_perk1_visible') ?>
+                    </div>
+                    <input type="text" id="store_guarantee_perk1_text" name="store_guarantee_perk1_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_guarantee_perk1_text', 'Banho Nobre de Prata com Certificado e Garantia')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="field-label-row">
+                        <label for="store_guarantee_perk2_text">Pilar 2 da Joia (Ex: Gemas Minerais)</label>
+                        <?= $renderToggle('store_guarantee_perk2_visible') ?>
+                    </div>
+                    <input type="text" id="store_guarantee_perk2_text" name="store_guarantee_perk2_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_guarantee_perk2_text', 'Gemas Minerais e Conchas 100% Autênticas')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="field-label-row">
+                        <label for="store_guarantee_perk3_text">Pilar 3 da Joia (Ex: Estojo Aveludado)</label>
+                        <?= $renderToggle('store_guarantee_perk3_visible') ?>
+                    </div>
+                    <input type="text" id="store_guarantee_perk3_text" name="store_guarantee_perk3_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_guarantee_perk3_text', 'Acompanha Estojo Aveludado para Presente')) ?>">
                 </div>
 
                 <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">

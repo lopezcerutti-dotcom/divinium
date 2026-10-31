@@ -6552,9 +6552,161 @@ body.theme-rose .btn-store-back {
 .btn-channel-chip[style*="background"] {
     transition: filter 0.2s ease, transform 0.2s ease;
 }
-.btn-channel-chip[style*="background"]:hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
+/* ==============================================================
+   ESTILOS DE COMPRA DIRETA & SACOLA DIVINIUM
+   ============================================================== */
+.product-direct-bag-box {
+    margin: 20px 0 24px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.direct-bag-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.product-qty-stepper-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-stepper-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary, #A7ADB4);
+}
+
+.qty-stepper-luxury {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.btn-qty-step {
+    background: transparent;
+    border: none;
+    color: #ded7cf;
+    width: 36px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+}
+
+.btn-qty-step:hover {
+    background: rgba(202, 161, 92, 0.2);
+    color: #CBD0D6;
+}
+
+.qty-display-luxury {
+    min-width: 32px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #ffffff;
+    user-select: none;
+}
+
+.direct-bag-buttons-grid {
+    display: flex;
+    flex: 1;
+    gap: 10px;
+    min-width: 280px;
+}
+
+.btn-luxury-add-bag {
+    flex: 1;
+    padding: 12px 18px;
+    background: rgba(202, 161, 92, 0.08);
+    border: 1.5px solid #CBD0D6;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-luxury-add-bag:hover {
+    background: rgba(202, 161, 92, 0.22);
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.btn-luxury-buy-direct {
+    flex: 1;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #CBD0D6 0%, #A7ADB4 100%);
+    border: 1.5px solid #737B85;
+    color: #1a1918;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-luxury-buy-direct:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(203, 208, 214, 0.3);
+}
+
+.direct-bag-trust-sub {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #8e8880;
+    flex-wrap: wrap;
+}
+
+.direct-bag-trust-sub .dot {
+    opacity: 0.4;
+}
+
+@media (max-width: 600px) {
+    .direct-bag-controls-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .product-qty-stepper-wrap {
+        justify-content: space-between;
+    }
+    .direct-bag-buttons-grid {
+        flex-direction: column;
+        width: 100%;
+    }
 }
 
 

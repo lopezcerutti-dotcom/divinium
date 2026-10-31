@@ -1290,11 +1290,15 @@
         <div class="container footer-top">
             <div class="footer-col brand-col">
                 <span class="footer-logo"><?= \App\Core\View::e(\App\Models\Setting::get('header_logo_text', 'DIVINIUM')) ?></span>
+                <?php if (\App\Models\Setting::get('footer_tagline_visible', '1') === '1'): ?>
                 <p class="brand-tagline"><?= \App\Core\View::e(\App\Models\Setting::get('footer_tagline', 'Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.')) ?></p>
+                <?php endif; ?>
+                <?php if (\App\Models\Setting::get('footer_socials_visible', '1') === '1'): ?>
                 <div class="footer-socials">
                     <a href="<?= \App\Core\View::e(\App\Models\Setting::get('footer_instagram', 'https://instagram.com')) ?>" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
                     <a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp VIP</a>
                 </div>
+                <?php endif; ?>
             </div>
 
             <div class="footer-col">
@@ -1311,8 +1315,12 @@
             <div class="footer-col">
                 <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col2_title', 'Atendimento & Concierge')) ?></h4>
                 <ul>
+                    <?php if (\App\Models\Setting::get('footer_whatsapp_visible', '1') === '1'): ?>
                     <li><a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank"><?= \App\Core\View::e(\App\Models\Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp')) ?></a></li>
+                    <?php endif; ?>
+                    <?php if (\App\Models\Setting::get('footer_email_visible', '1') === '1'): ?>
                     <li><a href="mailto:<?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?></a></li>
+                    <?php endif; ?>
                     <?php if (\App\Models\Setting::get('page_trocas_enabled', '1') === '1'): ?>
                     <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', \App\Models\Setting::get('page_trocas_title', 'Trocas e Devoluções (CDC 7 Dias)'))) ?></a></li>
                     <?php endif; ?>
@@ -1337,12 +1345,15 @@
                     <li><a href="/politica-de-frete-e-entrega"><?= \App\Core\View::e(\App\Models\Setting::get('footer_shipping_text', \App\Models\Setting::get('page_frete_title', 'Política de Frete e Entrega'))) ?></a></li>
                     <?php endif; ?>
                     <li><a href="/dpo"><?= \App\Core\View::e(\App\Models\Setting::get('footer_dpo_text', 'Encarregado de Dados (DPO)')) ?></a></li>
+                    <?php if (\App\Models\Setting::get('footer_operating_hours_visible', '1') === '1'): ?>
                     <li><span><?= \App\Core\View::e(\App\Models\Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?></span></li>
+                    <?php endif; ?>
                 </ul>
             </div>
             <?php endif; ?>
         </div>
 
+        <?php if (\App\Models\Setting::get('footer_pay_badges_visible', '1') === '1'): ?>
         <div class="container footer-middle">
             <div class="payment-methods-row">
                 <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge1', 'PIX (Aprovação Imediata)')) ?></span>
@@ -1351,11 +1362,16 @@
                 <span class="payment-badge"><?= \App\Core\View::e(\App\Models\Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?></span>
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="container footer-bottom">
             <div class="legal-info">
+                <?php if (\App\Models\Setting::get('footer_legal_info_visible', '1') === '1'): ?>
                 <p><?= \App\Core\View::e(\App\Models\Setting::get('footer_legal_info', 'DIVINIUM JOIAS LTDA. • CNPJ: 00.000.000/0001-00 • São Paulo/SP - Brasil')) ?></p>
+                <?php endif; ?>
+                <?php if (\App\Models\Setting::get('footer_consumer_rights_visible', '1') === '1'): ?>
                 <p><?= \App\Core\View::e(\App\Models\Setting::get('footer_consumer_rights', 'Conforme o Decreto nº 7.962/2013 e Lei 8.078/1990 (Código de Defesa do Consumidor). Direito de arrependimento em até 7 dias corridos após o recebimento.')) ?></p>
+                <?php endif; ?>
             </div>
             <div class="copyright">
                 <p>&copy; <?= date('Y') ?> <?= \App\Core\View::e(\App\Models\Setting::get('footer_copyright_brand', 'Divinium. Todos os direitos reservados.')) ?></p>

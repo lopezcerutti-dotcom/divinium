@@ -914,6 +914,195 @@ class StoreController
     }
 
     /**
+     * Consulta e Cálculo Real de Frete (/api/frete/calcular)
+     * Compatível com SuperFrete, Frenet e Bling ERP
+     */
+    public function calculateShipping(): void
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        $raw = file_get_contents('php://input');
+        $input = json_decode($raw ?: '', true) ?: $_POST;
+
+        $cepDestino = preg_replace('/\D/', '', (string)($input['cep'] ?? ''));
+        if (strlen($cepDestino) !== 8) {
+            echo json_encode(['success' => false, 'error' => 'Por favor, informe um CEP válido com 8 dígitos.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $provider = \App\Models\Setting::get('shipping_calc_provider', 'none');
+        $originCep = preg_replace('/\D/', '', (string)\App\Models\Setting::get('shipping_origin_cep', ''));
+        $apiToken = trim((string)\App\Models\Setting::get('shipping_api_token', ''));
+
+        // Se nenhum integrador com token e CEP de origem estiver configurado, não inventar cotações fictícias
+        if ($provider === 'none' || $apiToken === '' || $originCep === '') {
+            $noticeText = trim((string)\App\Models\Setting::get('shipping_notice_text', ''));
+            echo json_encode([
+                'success' => true,
+                'configured' => false,
+                'provider' => $provider,
+                'message' => $noticeText !== '' ? $noticeText : 'Envio seguro. Os custos e modalidades reais serão alinhados com o Concierge VIP ou calculados conforme tabela oficial da transportadora.',
+                'options' => []
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // 1. INTEGRAÇÃO SUPERFRETE (API REST)
+        if ($provider === 'superfrete') {
+            $env = \App\Models\Setting::get('shipping_environment', 'production');
+            $endpoint = ($env === 'sandbox') 
+                ? 'https://sandbox.superfrete.com/api/v0/calculator' 
+                : 'https://api.superfrete.com/api/v0/calculator';
+
+            $weight = (float)\App\Models\Setting::get('shipping_default_weight', '0.2');
+            $height = (int)\App\Models\Setting::get('shipping_default_height', '5');
+            $width = (int)\App\Models\Setting::get('shipping_default_width', '16');
+            $length = (int)\App\Models\Setting::get('shipping_default_length', '11');
+
+            $payload = [
+                'from' => ['postal_code' => $originCep],
+                'to' => ['postal_code' => $cepDestino],
+                'services' => '1,2,17', // PAC (1), SEDEX (2), Mini Envios (17)
+                'options' => [
+                    'own_hand' => false,
+                    'receipt' => false,
+                    'insurance_value' => 0,
+                    'use_insurance_value' => false
+                ],
+                'package' => [
+                    'weight' => $weight,
+                    'height' => $height,
+                    'width' => $width,
+                    'length' => $length
+                ]
+            ];
+
+            $ch = curl_init($endpoint);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                    'User-Agent: DIVINIUM-Jewelry-Commerce',
+                    'Authorization: Bearer ' . $apiToken
+                ],
+                CURLOPT_TIMEOUT => 8
+            ]);
+
+            $res = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $data = json_decode((string)$res, true);
+            if ($httpCode === 200 && is_array($data)) {
+                $options = [];
+                foreach ($data as $opt) {
+                    if (!empty($opt['price']) && empty($opt['error'])) {
+                        $pVal = (float)$opt['price'];
+                        $days = (int)($opt['delivery_time'] ?? 0);
+                        $options[] = [
+                            'id' => 'superfrete_' . ($opt['id'] ?? $opt['name']),
+                            'name' => (string)($opt['name'] ?? 'Correios'),
+                            'price' => $pVal,
+                            'price_formatted' => 'R$ ' . number_format($pVal, 2, ',', '.'),
+                            'delivery_time' => $days,
+                            'delivery_label' => $days > 0 ? ($days . ' dias úteis') : 'Prazo sob consulta'
+                        ];
+                    }
+                }
+                echo json_encode([
+                    'success' => true,
+                    'configured' => true,
+                    'provider' => 'superfrete',
+                    'options' => $options
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            echo json_encode([
+                'success' => false,
+                'error' => 'Falha na cotação SuperFrete. Verifique o token e os CEPs informados.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // 2. INTEGRAÇÃO FRENET (API REST)
+        if ($provider === 'frenet') {
+            $endpoint = 'https://api.frenet.com.br/shipping/quote';
+            $weight = (float)\App\Models\Setting::get('shipping_default_weight', '0.2');
+            $height = (int)\App\Models\Setting::get('shipping_default_height', '5');
+            $width = (int)\App\Models\Setting::get('shipping_default_width', '16');
+            $length = (int)\App\Models\Setting::get('shipping_default_length', '11');
+
+            $payload = [
+                'SellerCEP' => $originCep,
+                'RecipientCEP' => $cepDestino,
+                'ShipmentInvoiceValue' => 100.0,
+                'ShippingItemArray' => [
+                    [
+                        'Height' => $height,
+                        'Length' => $length,
+                        'Width' => $width,
+                        'Weight' => $weight,
+                        'Quantity' => 1
+                    ]
+                ]
+            ];
+
+            $ch = curl_init($endpoint);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'token: ' . $apiToken
+                ],
+                CURLOPT_TIMEOUT => 8
+            ]);
+
+            $res = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $data = json_decode((string)$res, true);
+            $services = $data['ShippingSevicesArray'] ?? [];
+            $options = [];
+            foreach ($services as $srv) {
+                if (empty($srv['Error']) && isset($srv['ShippingPrice'])) {
+                    $pVal = (float)$srv['ShippingPrice'];
+                    $days = (int)($srv['DeliveryTime'] ?? 0);
+                    $options[] = [
+                        'id' => 'frenet_' . ($srv['ServiceCode'] ?? $srv['ServiceDescription']),
+                        'name' => (string)$srv['ServiceDescription'],
+                        'price' => $pVal,
+                        'price_formatted' => 'R$ ' . number_format($pVal, 2, ',', '.'),
+                        'delivery_time' => $days,
+                        'delivery_label' => $days > 0 ? ($days . ' dias úteis') : 'Prazo sob consulta'
+                    ];
+                }
+            }
+
+            echo json_encode([
+                'success' => true,
+                'configured' => true,
+                'provider' => 'frenet',
+                'options' => $options
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'configured' => false,
+            'message' => 'Provedor selecionado sem comunicação direta de cotação.',
+            'options' => []
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    /**
      * Páginas Institucionais & Políticas da Joalheria
      *
      * @param array<string, string> $params

@@ -3442,59 +3442,102 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <!-- Informações Oficiais da Empresa -->
                 <div class="form-group full-width" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
                     <h4 style="color: #CBD0D6; margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        📋 Dados Jurídicos & Comerciais (Exibidos no Rodapé e Faturas)
+                        📋 Dados Jurídicos, Comerciais & Contatos do Rodapé (Com Exibir/Ocultar)
                     </h4>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="footer_legal_info">Razão Social & CNPJ</label>
+                <div class="form-group full-width <?= Setting::get('footer_legal_info_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_legal_info">Razão Social & CNPJ</label>
+                        <?= $renderToggle('footer_legal_info_visible') ?>
+                    </div>
                     <input type="text" id="footer_legal_info" name="footer_legal_info" class="form-input"
                            value="<?= View::e(Setting::get('footer_legal_info', 'DIVINIUM JOIAS LTDA. • CNPJ: 00.000.000/0001-00 • São Paulo/SP - Brasil')) ?>">
+                    <span class="field-hint">Exibido na base do rodapé público para conformidade legal.</span>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="footer_consumer_rights">Texto de Conformidade com o CDC (Decreto 7.962/2013)</label>
+                <div class="form-group full-width <?= Setting::get('footer_consumer_rights_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_consumer_rights">Texto de Conformidade com o CDC (Decreto 7.962/2013)</label>
+                        <?= $renderToggle('footer_consumer_rights_visible') ?>
+                    </div>
                     <textarea id="footer_consumer_rights" name="footer_consumer_rights" class="form-textarea" rows="2"><?= View::e(Setting::get('footer_consumer_rights', 'Conforme o Decreto nº 7.962/2013 e Lei 8.078/1990 (Código de Defesa do Consumidor). Direito de arrependimento em até 7 dias corridos após o recebimento.')) ?></textarea>
+                    <span class="field-hint">Menção ao direito de arrependimento e conformidade com o comércio eletrônico.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="footer_email">E-mail Oficial de Atendimento</label>
+                <div class="form-group full-width <?= Setting::get('footer_tagline_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_tagline">Slogan / Descrição Conceitual do Rodapé</label>
+                        <?= $renderToggle('footer_tagline_visible') ?>
+                    </div>
+                    <textarea id="footer_tagline" name="footer_tagline" class="form-textarea" rows="2"><?= View::e(Setting::get('footer_tagline', 'Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.')) ?></textarea>
+                </div>
+
+                <div class="form-group <?= Setting::get('footer_email_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_email">E-mail Oficial de Atendimento</label>
+                        <?= $renderToggle('footer_email_visible') ?>
+                    </div>
                     <input type="email" id="footer_email" name="footer_email" class="form-input"
                            value="<?= View::e(Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>">
+                    <span class="field-hint">E-mail público para contato e suporte de pedidos no rodapé.</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="footer_operating_hours">Horário de Funcionamento</label>
+                <div class="form-group <?= Setting::get('footer_whatsapp_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_whatsapp_label">Rótulo do Link do WhatsApp</label>
+                        <?= $renderToggle('footer_whatsapp_visible') ?>
+                    </div>
+                    <input type="text" id="footer_whatsapp_label" name="footer_whatsapp_label" class="form-input"
+                           value="<?= View::e(Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp')) ?>">
+                </div>
+
+                <div class="form-group <?= Setting::get('footer_operating_hours_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_operating_hours">Horário de Funcionamento</label>
+                        <?= $renderToggle('footer_operating_hours_visible') ?>
+                    </div>
                     <input type="text" id="footer_operating_hours" name="footer_operating_hours" class="form-input"
                            value="<?= View::e(Setting::get('footer_operating_hours', 'Segunda a Sexta: 09h às 18h')) ?>">
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="footer_instagram">Link Oficial do Instagram</label>
+                <div class="form-group <?= Setting::get('footer_socials_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                    <div class="field-label-row">
+                        <label for="footer_instagram">Link Oficial do Instagram</label>
+                        <?= $renderToggle('footer_socials_visible') ?>
+                    </div>
                     <input type="text" id="footer_instagram" name="footer_instagram" class="form-input"
                            value="<?= View::e(Setting::get('footer_instagram', 'https://instagram.com/divinium')) ?>">
                 </div>
 
                 <!-- Selos de Meios de Pagamento -->
-                <div class="form-group">
+                <div class="form-group full-width" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+                    <div class="field-label-row">
+                        <label style="font-size: 0.9rem; font-weight: 600; color: #CBD0D6;">Selos de Meios de Pagamento do Rodapé</label>
+                        <?= $renderToggle('footer_pay_badges_visible') ?>
+                    </div>
+                    <span class="field-hint">Exibe ou oculta a faixa central de badges de pagamento na loja pública.</span>
+                </div>
+
+                <div class="form-group <?= Setting::get('footer_pay_badges_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="footer_pay_badge1">Selo de Pagamento 1</label>
                     <input type="text" id="footer_pay_badge1" name="footer_pay_badge1" class="form-input"
                            value="<?= View::e(Setting::get('footer_pay_badge1', 'PIX (Aprovação Imediata)')) ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('footer_pay_badges_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="footer_pay_badge2">Selo de Pagamento 2</label>
                     <input type="text" id="footer_pay_badge2" name="footer_pay_badge2" class="form-input"
                            value="<?= View::e(Setting::get('footer_pay_badge2', 'Cartão de Crédito em até 10x')) ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('footer_pay_badges_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="footer_pay_badge3">Selo de Pagamento 3</label>
                     <input type="text" id="footer_pay_badge3" name="footer_pay_badge3" class="form-input"
                            value="<?= View::e(Setting::get('footer_pay_badge3', 'Boleto Bancário')) ?>">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group <?= Setting::get('footer_pay_badges_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="footer_pay_badge4">Selo de Pagamento 4</label>
                     <input type="text" id="footer_pay_badge4" name="footer_pay_badge4" class="form-input"
                            value="<?= View::e(Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?>">
@@ -3507,9 +3550,9 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <div class="field-label-row" style="background: rgba(212,186,136,0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(212,186,136,0.2);">
                         <div>
                             <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
-                                <span>⚡</span> Checkout Direto, Pagamento Pix & Sacola de Compras (/checkout)
+                                <span>⚡</span> Checkout Nobre, Pagamento Pix & Sacola de Compras (/checkout)
                             </h4>
-                            <span class="field-hint" style="margin: 0;">Ative ou desative toda a sacola de compras, gaveta lateral, checkout direto e pagamentos via Pix.</span>
+                            <span class="field-hint" style="margin: 0;">Ative ou personalize todas as informações, chaves de pagamento, selos e pilares do checkout.</span>
                         </div>
                         <?= $renderToggle('checkout_direct_cart_enabled') ?>
                     </div>
@@ -3518,10 +3561,11 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 <div id="checkoutConfigFields" class="sub-section-fields-container <?= Setting::get('checkout_direct_cart_enabled', '1') !== '1' ? 'is-dimmed' : '' ?>" style="transition: all 0.3s ease; <?= Setting::get('checkout_direct_cart_enabled', '1') !== '1' ? 'opacity: 0.35; pointer-events: none;' : '' ?>">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="payment_pix_key">Chave Pix Oficial (E-mail, CNPJ, Telefone ou Aleatória)</label>
+                            <label for="payment_pix_key">Chave Pix Oficial do Checkout (E-mail, CNPJ, Telefone ou Aleatória)</label>
                             <input type="text" id="payment_pix_key" name="payment_pix_key" class="form-input"
                                    value="<?= View::e(Setting::get('payment_pix_key', 'contato@divinium.com.br')) ?>"
-                                   placeholder="ex: contato@divinium.com.br ou CNPJ">
+                                   placeholder="ex: contato@divinium.com.br">
+                            <span class="field-hint">Esta é a chave exibida no checkout com opção de cópia em 1 clique.</span>
                         </div>
 
                         <div class="form-group">
@@ -3529,6 +3573,78 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <input type="text" id="payment_pix_name" name="payment_pix_name" class="form-input"
                                    value="<?= View::e(Setting::get('payment_pix_name', 'DIVINIUM JOIAS AUTORAIS')) ?>"
                                    placeholder="DIVINIUM JOIAS AUTORAIS">
+                            <span class="field-hint">Nome que o cliente verá ao ler o Pix no aplicativo do banco.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="field-label-row">
+                                <label for="payment_pix_discount_percent">% de Desconto no Pix</label>
+                                <?= $renderToggle('payment_pix_discount_visible') ?>
+                            </div>
+                            <input type="number" step="0.5" min="0" max="50" id="payment_pix_discount_percent" name="payment_pix_discount_percent" class="form-input"
+                                   value="<?= View::e(Setting::get('payment_pix_discount_percent', '5')) ?>">
+                            <span class="field-hint">Percentual deduzido automaticamente ao escolher Pix no checkout.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="field-label-row">
+                                <label for="checkout_ssl_badge_text">Selo SSL do Topo do Checkout</label>
+                                <?= $renderToggle('checkout_ssl_badge_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_ssl_badge_text" name="checkout_ssl_badge_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_ssl_badge_text', 'Criptografia SSL de 256 bits • Ambiente Protegido')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="field-label-row">
+                                <label for="checkout_shipping_default_label">Rótulo Padrão da Linha de Frete</label>
+                                <?= $renderToggle('checkout_shipping_row_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_shipping_default_label" name="checkout_shipping_default_label" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_shipping_default_label', 'A calcular ou Cortesia')) ?>">
+                            <span class="field-hint">Exibido na linha de frete do resumo do checkout antes ou na ausência de cálculo ao vivo.</span>
+                        </div>
+
+                        <!-- 3 Perks / Pilares do Resumo de Pedido -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                ✦ Pilares de Confiança no Resumo do Checkout (3 Itens Editáveis e Ocultáveis)
+                            </h5>
+                            <span class="field-hint">Substitua expressões não confirmadas (ex: "Certificado de Qualidade" ou "Garantia Vitalícia") pelos termos que desejar ou oculte qualquer um deles.</span>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <div class="field-label-row">
+                                <label for="checkout_perk1_text">Pilar 1 (Ex: Banho & Certificado)</label>
+                                <?= $renderToggle('checkout_perk1_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_perk1_text" name="checkout_perk1_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_perk1_text', 'Banho Nobre de Prata com Certificado e Garantia')) ?>">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <div class="field-label-row">
+                                <label for="checkout_perk2_text">Pilar 2 (Ex: Arrependimento CDC)</label>
+                                <?= $renderToggle('checkout_perk2_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_perk2_text" name="checkout_perk2_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_perk2_text', 'Direito de Arrependimento de 7 Dias (CDC)')) ?>">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <div class="field-label-row">
+                                <label for="checkout_perk3_text">Pilar 3 (Ex: Embalagem em Veludo)</label>
+                                <?= $renderToggle('checkout_perk3_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_perk3_text" name="checkout_perk3_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_perk3_text', 'Embalagem Especial para Presente em Veludo')) ?>">
+                        </div>
+
+                        <!-- Configurações da Gaveta Lateral (Cart Drawer) -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                🛍️ Textos da Gaveta Lateral da Sacola
+                            </h5>
                         </div>
 
                         <div class="form-group">
@@ -3561,6 +3677,93 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <label for="cart_security_badge">Texto de Segurança do Rodapé da Sacola</label>
                             <input type="text" id="cart_security_badge" name="cart_security_badge" class="form-input"
                                    value="<?= View::e(Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- BLOCO: LOGÍSTICA & CÁLCULO DE FRETE REAL EM TEMPO REAL -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
+                    <div class="field-label-row" style="background: rgba(167, 173, 180, 0.08); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.25);">
+                        <div>
+                            <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                <span>🚚</span> Logística & Cálculo de Frete Real
+                            </h4>
+                            <span class="field-hint" style="margin: 0;">Configure o cálculo de frete real por CEP no checkout. Não inventa cotações fictícias.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;">
+                        <h5 style="color: #CBD0D6; margin: 0 0 6px; font-size: 0.88rem;">ℹ️ Análise Técnica de Provedores de Frete:</h5>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 0.82rem; color: #ded7cf; line-height: 1.55;">
+                            <li><strong>SuperFrete (Recomendado para Correios):</strong> 100% compatível com a vitrine e checkout direto. Gera cotação instantânea de PAC, SEDEX e Mini Envios com até 80% de desconto sem exigir contrato prévio do lojista com os Correios. Utiliza apenas um Token Bearer simples.</li>
+                            <li><strong>Frenet (Recomendado para Multi-Transportadoras):</strong> Cota Correios e transportadoras privadas como Jadlog, Azul Cargo Express e Loggi simultaneamente. Exige Token ativo da Frenet.</li>
+                            <li><strong>Bling ERP v3:</strong> Atua como ERP de retaguarda (emissão de NFe e faturamento de pedidos). Requer autorização OAuth completa e contratos de logística atrelados às contas cadastradas. O envio de pedidos ao Bling ocorre após a conclusão da compra.</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="shipping_calc_provider">Provedor Ativo para Cálculo de Frete</label>
+                            <select id="shipping_calc_provider" name="shipping_calc_provider" class="form-input">
+                                <option value="none" <?= Setting::get('shipping_calc_provider', 'none') === 'none' ? 'selected' : '' ?>>Desativado (Frete Cortesia ou Sob Consulta no Concierge)</option>
+                                <option value="superfrete" <?= Setting::get('shipping_calc_provider') === 'superfrete' ? 'selected' : '' ?>>SuperFrete (Correios PAC & SEDEX em tempo real)</option>
+                                <option value="frenet" <?= Setting::get('shipping_calc_provider') === 'frenet' ? 'selected' : '' ?>>Frenet (Multi-transportadoras: Jadlog, Azul Cargo, Correios)</option>
+                                <option value="bling" <?= Setting::get('shipping_calc_provider') === 'bling' ? 'selected' : '' ?>>Bling ERP v3 (Integração de Pedidos e Expedição)</option>
+                            </select>
+                            <span class="field-hint">Selecione o serviço para calcular valores reais no checkout ao digitar o CEP.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_origin_cep">CEP de Origem da Expedição (8 dígitos)</label>
+                            <input type="text" id="shipping_origin_cep" name="shipping_origin_cep" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_origin_cep', '01001000')) ?>"
+                                   placeholder="01001000" maxlength="9">
+                            <span class="field-hint">CEP da sede ou atelier de onde as joias saem para envio.</span>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="shipping_api_token">Token / Chave de API do Provedor de Frete</label>
+                            <input type="password" id="shipping_api_token" name="shipping_api_token" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_api_token', '')) ?>"
+                                   placeholder="Cole seu Bearer Token do SuperFrete ou Token da Frenet">
+                            <span class="field-hint">Chave de autenticação fornecida no painel do SuperFrete ou Frenet. Deixe em branco se for utilizar Envio Cortesia.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_environment">Ambiente da API</label>
+                            <select id="shipping_environment" name="shipping_environment" class="form-input">
+                                <option value="production" <?= Setting::get('shipping_environment', 'production') === 'production' ? 'selected' : '' ?>>Produção (Valores reais e postagem oficial)</option>
+                                <option value="sandbox" <?= Setting::get('shipping_environment') === 'sandbox' ? 'selected' : '' ?>>Sandbox / Testes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_default_weight">Peso Padrão do Pacote (em kg)</label>
+                            <input type="number" step="0.05" min="0.1" max="30" id="shipping_default_weight" name="shipping_default_weight" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_default_weight', '0.3')) ?>">
+                            <span class="field-hint">Peso estimado com estojo aveludado e caixa de segurança (ex: 0.3 kg).</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_default_length">Comprimento da Embalagem (cm)</label>
+                            <input type="number" min="15" max="100" id="shipping_default_length" name="shipping_default_length" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_default_length', '16')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_default_width">Largura da Embalagem (cm)</label>
+                            <input type="number" min="10" max="100" id="shipping_default_width" name="shipping_default_width" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_default_width', '11')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shipping_default_height">Altura da Embalagem (cm)</label>
+                            <input type="number" min="2" max="100" id="shipping_default_height" name="shipping_default_height" class="form-input"
+                                   value="<?= View::e(Setting::get('shipping_default_height', '6')) ?>">
                         </div>
                     </div>
                 </div>
