@@ -1797,22 +1797,38 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            placeholder="5511999999999">
                 </div>
 
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 6px; padding-top: 12px;">
+                    <div class="field-label-row">
+                        <label style="color: #CBD0D6; font-weight: 600;">Faixa de Selos de Confiança do Hero</label>
+                        <?= $renderToggle('hero_trust_strip_visible', '1') ?>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="hero_trust_badge_1">Selo de Confiança 1</label>
+                    <div class="field-label-row">
+                        <label for="hero_trust_badge_1">Selo de Confiança 1</label>
+                        <?= $renderToggle('hero_trust_badge_1_visible', '1') ?>
+                    </div>
                     <input type="text" id="hero_trust_badge_1" name="hero_trust_badge_1" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Banho de Prata')) ?>"
                            placeholder="Banho de Prata">
                 </div>
 
                 <div class="form-group">
-                    <label for="hero_trust_badge_2">Selo de Confiança 2</label>
+                    <div class="field-label-row">
+                        <label for="hero_trust_badge_2">Selo de Confiança 2</label>
+                        <?= $renderToggle('hero_trust_badge_2_visible', '1') ?>
+                    </div>
                     <input type="text" id="hero_trust_badge_2" name="hero_trust_badge_2" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_2', 'Gemas 100% Naturais')) ?>"
                            placeholder="Gemas 100% Naturais">
                 </div>
 
                 <div class="form-group">
-                    <label for="hero_trust_badge_3">Selo de Confiança 3</label>
+                    <div class="field-label-row">
+                        <label for="hero_trust_badge_3">Selo de Confiança 3</label>
+                        <?= $renderToggle('hero_trust_badge_3_visible', '1') ?>
+                    </div>
                     <input type="text" id="hero_trust_badge_3" name="hero_trust_badge_3" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('hero_trust_badge_3', 'Certificado de Garantia')) ?>"
                            placeholder="Certificado de Garantia">
@@ -3677,6 +3693,198 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             <label for="cart_security_badge">Texto de Segurança do Rodapé da Sacola</label>
                             <input type="text" id="cart_security_badge" name="cart_security_badge" class="form-input"
                                    value="<?= View::e(Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?>">
+                        </div>
+
+                        <!-- TÍTULOS E CABEÇALHO DO CHECKOUT -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                ✦ Títulos, Etapas & Cabeçalho do Checkout
+                            </h5>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_brand_name">Nome da Marca no Topo</label>
+                            <input type="text" id="checkout_brand_name" name="checkout_brand_name" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_brand_name', 'DIVINIUM')) ?>"
+                                   placeholder="DIVINIUM">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="field-label-row">
+                                <label for="checkout_brand_badge_text">Etiqueta de Segurança no Topo</label>
+                                <?= $renderToggle('checkout_brand_badge_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_brand_badge_text" name="checkout_brand_badge_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_brand_badge_text', 'CHECKOUT SEGURO')) ?>"
+                                   placeholder="CHECKOUT SEGURO">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_step1_title">Título do Passo 1</label>
+                            <input type="text" id="checkout_step1_title" name="checkout_step1_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_step1_title', 'Identificação & Entrega')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_step2_title">Título do Passo 2</label>
+                            <input type="text" id="checkout_step2_title" name="checkout_step2_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_step2_title', 'Forma de Pagamento Preferencial')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_shipping_title">Título do Bloco de Frete</label>
+                            <input type="text" id="checkout_shipping_title" name="checkout_shipping_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_shipping_title', 'Opções de Frete & Entrega')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_summary_title">Título do Card de Resumo</label>
+                            <input type="text" id="checkout_summary_title" name="checkout_summary_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_summary_title', 'Resumo da Sua Sacola')) ?>">
+                        </div>
+
+                        <!-- RÓTULOS DOS CAMPOS DO FORMULÁRIO -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                ✍️ Rótulos dos Campos de Identificação & Endereço
+                            </h5>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_name">Rótulo: Nome Completo</label>
+                            <input type="text" id="checkout_lbl_name" name="checkout_lbl_name" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_name', 'Nome Completo *')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_email">Rótulo: E-mail</label>
+                            <input type="text" id="checkout_lbl_email" name="checkout_lbl_email" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_email', 'E-mail para Confirmação *')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_phone">Rótulo: Telefone / WhatsApp</label>
+                            <input type="text" id="checkout_lbl_phone" name="checkout_lbl_phone" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_phone', 'WhatsApp / Telefone *')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_cep">Rótulo: CEP</label>
+                            <input type="text" id="checkout_lbl_cep" name="checkout_lbl_cep" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_cep', 'CEP de Entrega *')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_address">Rótulo: Endereço</label>
+                            <input type="text" id="checkout_lbl_address" name="checkout_lbl_address" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_address', 'Endereço Completo & Bairro')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_btn_search_cep">Texto do Botão Buscar CEP</label>
+                            <input type="text" id="checkout_btn_search_cep" name="checkout_btn_search_cep" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_btn_search_cep', 'Buscar')) ?>">
+                        </div>
+
+                        <!-- OPÇÕES DE PAGAMENTO (NOMES, BADGES & DESCRIÇÕES) -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                💳 Formas de Pagamento (Nomes, Badges & Descrições)
+                            </h5>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_pix_title">Nome da Opção Pix</label>
+                            <input type="text" id="checkout_opt_pix_title" name="checkout_opt_pix_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_pix_title', '⚡ Pix Instantâneo')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_pix_desc">Descrição da Opção Pix</label>
+                            <input type="text" id="checkout_opt_pix_desc" name="checkout_opt_pix_desc" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_pix_desc', 'Aprovação imediata. QR Code gerado instantaneamente na tela.')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_wa_title">Nome da Opção Concierge WhatsApp</label>
+                            <input type="text" id="checkout_opt_wa_title" name="checkout_opt_wa_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_wa_title', '💬 Concierge VIP (WhatsApp)')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_wa_badge">Badge do Concierge WhatsApp</label>
+                            <input type="text" id="checkout_opt_wa_badge" name="checkout_opt_wa_badge" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO')) ?>">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="checkout_opt_wa_desc">Descrição do Concierge WhatsApp</label>
+                            <input type="text" id="checkout_opt_wa_desc" name="checkout_opt_wa_desc" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_card_title">Nome da Opção Cartão</label>
+                            <input type="text" id="checkout_opt_card_title" name="checkout_opt_card_title" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_opt_card_badge">Badge da Opção Cartão</label>
+                            <input type="text" id="checkout_opt_card_badge" name="checkout_opt_card_badge" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="checkout_opt_card_desc">Descrição da Opção Cartão</label>
+                            <input type="text" id="checkout_opt_card_desc" name="checkout_opt_card_desc" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
+                        </div>
+
+                        <!-- RÓTULOS DO RESUMO & BOTÕES -->
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
+                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                                📊 Resumo do Pedido & Botão de Confirmação
+                            </h5>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_subtotal">Rótulo: Subtotal</label>
+                            <input type="text" id="checkout_lbl_subtotal" name="checkout_lbl_subtotal" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_subtotal', 'Subtotal:')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_pix_discount">Rótulo: Desconto Pix</label>
+                            <input type="text" id="checkout_lbl_pix_discount" name="checkout_lbl_pix_discount" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_pix_discount', 'Desconto Pix')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_shipping">Rótulo: Frete</label>
+                            <input type="text" id="checkout_lbl_shipping" name="checkout_lbl_shipping" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_shipping', 'Frete:')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_lbl_total">Rótulo: Total Estimado</label>
+                            <input type="text" id="checkout_lbl_total" name="checkout_lbl_total" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_lbl_total', 'Total Estimado:')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_btn_submit_text">Texto do Botão Principal de Conclusão</label>
+                            <input type="text" id="checkout_btn_submit_text" name="checkout_btn_submit_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar')) ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="field-label-row">
+                                <label for="checkout_return_store_text">Link 'Escolher mais joias'</label>
+                                <?= $renderToggle('checkout_return_store_visible') ?>
+                            </div>
+                            <input type="text" id="checkout_return_store_text" name="checkout_return_store_text" class="form-input"
+                                   value="<?= View::e(Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique')) ?>">
                         </div>
                     </div>
                 </div>

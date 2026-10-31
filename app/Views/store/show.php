@@ -259,10 +259,12 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <div class="product-variations-section" id="seletor-variacoes">
                         <div class="variations-header">
                             <div class="variations-title">
-                                <span>Pedra Mineral:</span>
+                                <span><?= View::e(Setting::get('store_variations_label', 'Pedra Mineral:')) ?></span>
                                 <strong class="selected-stone-name" id="selectedStoneName"><?= View::e($prodMineral ?: 'Selecione a pedra') ?></strong>
                             </div>
-                            <span class="variations-count-badge">✦ <?= count($variations) ?> Opções de Gemas</span>
+                            <?php if (Setting::get('store_variations_badge_visible', '1') === '1'): ?>
+                            <span class="variations-count-badge">✦ <?= count($variations) ?> <?= View::e(Setting::get('store_variations_badge_suffix', 'Opções de Gemas')) ?></span>
+                            <?php endif; ?>
                         </div>
 
                         <div class="variations-chips-grid" id="variationsGrid" role="radiogroup" aria-label="Selecione a pedra mineral">
@@ -353,13 +355,26 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
                         </div>
 
+                        <?php if (Setting::get('store_bag_trust_row_visible', '1') === '1'): ?>
                         <div class="direct-bag-trust-sub">
-                            <span>🔒 Compra 100% Protegida</span>
-                            <span class="dot">•</span>
-                            <span>⚡ Pix com Desconto</span>
-                            <span class="dot">•</span>
-                            <span>✦ Joia Autoral com Certificado</span>
+                            <?php
+                            $t1Vis = Setting::get('store_bag_trust1_visible', '1') === '1';
+                            $t1Txt = Setting::get('store_bag_trust1_text', '🔒 Compra 100% Protegida');
+                            $t2Vis = Setting::get('store_bag_trust2_visible', '1') === '1';
+                            $t2Txt = Setting::get('store_bag_trust2_text', '⚡ Pix com Desconto');
+                            $t3Vis = Setting::get('store_bag_trust3_visible', '1') === '1';
+                            $t3Txt = Setting::get('store_bag_trust3_text', '✦ Joia Autoral com Certificado');
+                            $trustItems = [];
+                            if ($t1Vis && !empty($t1Txt)) $trustItems[] = $t1Txt;
+                            if ($t2Vis && !empty($t2Txt)) $trustItems[] = $t2Txt;
+                            if ($t3Vis && !empty($t3Txt)) $trustItems[] = $t3Txt;
+                            ?>
+                            <?php foreach ($trustItems as $idx => $tItem): ?>
+                                <?php if ($idx > 0): ?><span class="dot">•</span><?php endif; ?>
+                                <span><?= View::e($tItem) ?></span>
+                            <?php endforeach; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
 
@@ -666,14 +681,14 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                             <?= View::getPlatformLogoSvg('whatsapp', 22) ?>
                                         </span>
                                         <div class="channel-meta-text">
-                                            <span class="channel-action-name">Consultar Disponibilidade com Consultor VIP</span>
-                                            <span class="channel-protection-sub">Atendimento Direto DIVINIUM</span>
+                                            <span class="channel-action-name"><?= View::e(Setting::get('store_wa_fallback_title', 'Consultar Disponibilidade com Consultor VIP')) ?></span>
+                                            <span class="channel-protection-sub"><?= View::e(Setting::get('store_wa_fallback_sub', 'Atendimento Direto DIVINIUM')) ?></span>
                                         </div>
                                     </div>
 
                                     <div class="channel-btn-right">
                                         <div class="channel-price-wrap">
-                                            <span class="channel-price-label">Referência</span>
+                                            <span class="channel-price-label"><?= View::e(Setting::get('store_wa_fallback_price_label', 'Referência')) ?></span>
                                             <span class="channel-price-val">R$ <?= $basePriceFormatted ?></span>
                                         </div>
                                         <span class="channel-arrow-circle">
@@ -699,14 +714,16 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <!-- DESCRIÇÃO COMPLETA DA JOIA -->
                     <?php if ($showProdDesc): ?>
                     <div class="product-description-card">
-                        <h3 class="section-subheading">A Essência da Peça</h3>
+                        <?php if (Setting::get('store_desc_card_title_visible', '1') === '1'): ?>
+                        <h3 class="section-subheading"><?= View::e(Setting::get('store_desc_card_title', 'A Essência da Peça')) ?></h3>
+                        <?php endif; ?>
                         <div class="product-storytelling-text">
                             <?php if (!empty($product['description'])): ?>
                                 <?= nl2br(View::e($product['description'])) ?>
                             <?php elseif (!empty($product['short_description'])): ?>
                                 <?= nl2br(View::e($product['short_description'])) ?>
                             <?php else: ?>
-                                <p>Joia autoral manufaturada com banho de prata com lapidação mineral precisa e acabamento artesanal espelhado. Uma expressão sublime do luxo silencioso, criada para transcender tendências e permanecer na sua história.</p>
+                                <p><?= View::e(Setting::get('store_desc_default_text', 'Joia autoral manufaturada com banho de prata com lapidação mineral precisa e acabamento artesanal espelhado. Uma expressão sublime do luxo silencioso, criada para transcender tendências e permanecer na sua história.')) ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -830,6 +847,8 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <?php if ($globalShowGuarantee): 
                         $guarTitle = Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM');
                         $guarText = Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de banho de prata, estojo de presente aveludado e garantia contra defeitos no acabamento.');
+                        $guarIconVis = Setting::get('store_guarantee_icon_visible', '1') === '1';
+                        $guarIcon = Setting::get('store_guarantee_icon', '🛡️');
                         $p1Vis = Setting::get('store_guarantee_perk1_visible', '1') === '1';
                         $p1Txt = Setting::get('store_guarantee_perk1_text', 'Envio com Seguro para todo Brasil');
                         $p2Vis = Setting::get('store_guarantee_perk2_visible', '1') === '1';
@@ -839,7 +858,9 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     ?>
                     <div class="product-guarantee-card">
                         <div class="guarantee-header">
-                            <span class="guarantee-icon">🛡️</span>
+                            <?php if ($guarIconVis && !empty($guarIcon)): ?>
+                            <span class="guarantee-icon"><?= View::e($guarIcon) ?></span>
+                            <?php endif; ?>
                             <div>
                                 <?php if (!empty($guarTitle)): ?>
                                 <h4 class="guarantee-title"><?= View::e($guarTitle) ?></h4>
@@ -854,7 +875,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <div class="guarantee-perks-grid">
                             <?php if ($p1Vis && !empty($p1Txt)): ?>
                             <div class="perk-item">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                 <span><?= View::e($p1Txt) ?></span>
                             </div>
                             <?php endif; ?>
@@ -881,13 +902,25 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
     </section>
 
     <!-- 3. SEÇÃO DE JOIAS RELACIONADAS DA MESMA COLEÇÃO -->
-    <?php if ($globalShowRelated && !empty($relatedProducts)): ?>
+    <?php if ($globalShowRelated && !empty($relatedProducts)): 
+        $relEyebrowVis = Setting::get('store_related_eyebrow_visible', '1') === '1';
+        $relEyebrow = Setting::get('store_related_eyebrow', 'DESCUBRA MAIS');
+        $relTitleVis = Setting::get('store_related_title_visible', '1') === '1';
+        $relTitle = Setting::get('store_related_title', 'Outras Peças da Coleção');
+        $relBtnText = Setting::get('store_related_btn_text', 'Conhecer Peça ↗');
+    ?>
     <section class="product-related-section">
         <div class="container">
+            <?php if ($relEyebrowVis || $relTitleVis): ?>
             <div class="related-section-header">
-                <span class="related-eyebrow">DESCUBRA MAIS</span>
-                <h2 class="related-title">Outras Peças da Coleção</h2>
+                <?php if ($relEyebrowVis && !empty($relEyebrow)): ?>
+                <span class="related-eyebrow"><?= View::e($relEyebrow) ?></span>
+                <?php endif; ?>
+                <?php if ($relTitleVis && !empty($relTitle)): ?>
+                <h2 class="related-title"><?= View::e($relTitle) ?></h2>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
 
             <div class="related-products-grid">
                 <?php foreach ($relatedProducts as $relProd): 
@@ -911,7 +944,7 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                 <span>R$ <?= $relPrice ?></span>
                             </div>
                             <a href="/produto/<?= View::e($relSlug) ?>" class="btn-related-view">
-                                Conhecer Peça ↗
+                                <?= View::e($relBtnText) ?>
                             </a>
                         </div>
                     </article>

@@ -32,6 +32,50 @@ $perk2Text = Setting::get('checkout_perk2_text', 'Direito de Arrependimento de 7
 $perk3Visible = Setting::get('checkout_perk3_visible', '1') === '1';
 $perk3Text = Setting::get('checkout_perk3_text', 'Embalagem Especial para Presente em Veludo');
 
+// Cabeçalho e Títulos do Checkout
+$brandName = Setting::get('checkout_brand_name', 'DIVINIUM');
+$brandBadgeVisible = Setting::get('checkout_brand_badge_visible', '1') === '1';
+$brandBadgeText = Setting::get('checkout_brand_badge_text', 'CHECKOUT SEGURO');
+
+// Passos & Seções
+$step1Title = Setting::get('checkout_step1_title', 'Identificação & Entrega');
+$step2Title = Setting::get('checkout_step2_title', 'Forma de Pagamento Preferencial');
+$shippingTitle = Setting::get('checkout_shipping_title', 'Opções de Frete & Entrega');
+$summaryTitle = Setting::get('checkout_summary_title', 'Resumo da Sua Sacola');
+
+// Rótulos de Formulário
+$lblClientName = Setting::get('checkout_lbl_name', 'Nome Completo *');
+$lblClientEmail = Setting::get('checkout_lbl_email', 'E-mail para Confirmação *');
+$lblClientPhone = Setting::get('checkout_lbl_phone', 'WhatsApp / Telefone *');
+$lblClientCep = Setting::get('checkout_lbl_cep', 'CEP de Entrega *');
+$lblClientAddress = Setting::get('checkout_lbl_address', 'Endereço Completo & Bairro');
+$btnSearchCep = Setting::get('checkout_btn_search_cep', 'Buscar');
+
+// Opções de Pagamento (Nomes, Tags & Descrições)
+$optPixTitle = Setting::get('checkout_opt_pix_title', '⚡ Pix Instantâneo');
+$optPixBadge = Setting::get('checkout_opt_pix_badge', 'DE DESCONTO');
+$optPixDesc = Setting::get('checkout_opt_pix_desc', 'Aprovação imediata. QR Code gerado instantaneamente na tela.');
+$btnCopyPix = Setting::get('checkout_btn_copy_pix', '📋 Copiar Chave');
+
+$optWaTitle = Setting::get('checkout_opt_wa_title', '💬 Concierge VIP (WhatsApp)');
+$optWaBadge = Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO');
+$optWaDesc = Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.');
+
+$optCardTitle = Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito');
+$optCardBadge = Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
+$optCardDesc = Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
+
+// Botão de Envio
+$btnSubmitText = Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar');
+
+// Rótulos do Resumo
+$lblSubtotal = Setting::get('checkout_lbl_subtotal', 'Subtotal:');
+$lblPixDiscount = Setting::get('checkout_lbl_pix_discount', 'Desconto Pix');
+$lblShipping = Setting::get('checkout_lbl_shipping', 'Frete:');
+$lblTotal = Setting::get('checkout_lbl_total', 'Total Estimado:');
+$returnStoreVisible = Setting::get('checkout_return_store_visible', '1') === '1';
+$returnStoreText = Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique');
+
 // Textos e Instruções Dinâmicas dos Meios de Pagamento
 $pixTitle = Setting::get('checkout_pix_instructions_title', 'Pagamento Imediato via Pix com ' . $pixDiscountPercent . '% OFF');
 $pixDesc = Setting::get('checkout_pix_instructions_text', 'Após clicar em "Confirmar Pedido & Gerar Pix", você receberá a chave e o QR Code oficial para pagamento instantâneo com envio prioritário.');
@@ -50,8 +94,10 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
         <div class="checkout-header">
             <div class="checkout-brand">
                 <span class="sparkle">✦</span>
-                <span class="brand-name">DIVINIUM</span>
-                <span class="checkout-badge">CHECKOUT SEGURO</span>
+                <span class="brand-name"><?= View::e($brandName) ?></span>
+                <?php if ($brandBadgeVisible && !empty($brandBadgeText)): ?>
+                <span class="checkout-badge"><?= View::e($brandBadgeText) ?></span>
+                <?php endif; ?>
             </div>
             <?php if ($sslBadgeVisible): ?>
             <div class="checkout-security-status">
@@ -67,37 +113,37 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                 <div class="checkout-card">
                     <h2 class="card-step-title">
                         <span class="step-num">1</span>
-                        <span>Identificação & Entrega</span>
+                        <span><?= View::e($step1Title) ?></span>
                     </h2>
 
                     <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)">
                         <div class="form-row-2">
                             <div class="form-group">
-                                <label for="clientName">Nome Completo *</label>
+                                <label for="clientName"><?= View::e($lblClientName) ?></label>
                                 <input type="text" id="clientName" name="name" class="form-input" placeholder="Ex: Maria Clara Silveira" required>
                             </div>
                             <div class="form-group">
-                                <label for="clientEmail">E-mail para Confirmação *</label>
+                                <label for="clientEmail"><?= View::e($lblClientEmail) ?></label>
                                 <input type="email" id="clientEmail" name="email" class="form-input" placeholder="seu@email.com" required>
                             </div>
                         </div>
 
                         <div class="form-row-2">
                             <div class="form-group">
-                                <label for="clientPhone">WhatsApp / Telefone *</label>
+                                <label for="clientPhone"><?= View::e($lblClientPhone) ?></label>
                                 <input type="tel" id="clientPhone" name="phone" class="form-input" placeholder="(11) 99999-9999" required>
                             </div>
                             <div class="form-group">
-                                <label for="clientCep">CEP de Entrega *</label>
+                                <label for="clientCep"><?= View::e($lblClientCep) ?></label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" id="clientCep" name="cep" class="form-input" placeholder="00000-000" maxlength="9" required>
-                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()">Buscar</button>
+                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()"><?= View::e($btnSearchCep) ?></button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="clientAddress">Endereço Completo & Bairro</label>
+                            <label for="clientAddress"><?= View::e($lblClientAddress) ?></label>
                             <input type="text" id="clientAddress" name="address" class="form-input" placeholder="Rua, Número, Complemento, Bairro">
                         </div>
 
@@ -105,7 +151,7 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                         <div id="shippingCalcContainer" class="shipping-calc-container" style="display: none;">
                             <div class="shipping-calc-header">
                                 <span class="shipping-icon">🚚</span>
-                                <h4 class="shipping-title">Opções de Frete & Entrega</h4>
+                                <h4 class="shipping-title"><?= View::e($shippingTitle) ?></h4>
                             </div>
                             <div id="shippingCalcStatus" class="shipping-calc-status"></div>
                             <div id="shippingOptionsList" class="shipping-options-list"></div>
@@ -114,7 +160,7 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                         <!-- FORMAS DE PAGAMENTO NOBRES -->
                         <h2 class="card-step-title" style="margin-top: 36px;">
                             <span class="step-num">2</span>
-                            <span>Forma de Pagamento Preferencial</span>
+                            <span><?= View::e($step2Title) ?></span>
                         </h2>
 
                         <div class="payment-methods-grid">
@@ -123,12 +169,12 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                                 <input type="radio" name="payment_method" value="pix" checked onchange="switchPaymentMethod('pix')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
-                                        <span class="opt-name">⚡ Pix Instantâneo</span>
+                                        <span class="opt-name"><?= View::e($optPixTitle) ?></span>
                                         <?php if ($pixDiscountVisible && $pixDiscountPercent > 0): ?>
-                                        <span class="opt-discount-tag"><?= $pixDiscountPercent ?>% DE DESCONTO</span>
+                                        <span class="opt-discount-tag"><?= $pixDiscountPercent ?>% <?= View::e($optPixBadge) ?></span>
                                         <?php endif; ?>
                                     </div>
-                                    <p class="opt-desc">Aprovação imediata. QR Code gerado instantaneamente na tela.</p>
+                                    <p class="opt-desc"><?= View::e($optPixDesc) ?></p>
                                 </div>
                             </label>
 
@@ -137,10 +183,10 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                                 <input type="radio" name="payment_method" value="whatsapp" onchange="switchPaymentMethod('whatsapp')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
-                                        <span class="opt-name">💬 Concierge VIP (WhatsApp)</span>
-                                        <span class="opt-tag-nob">ATENDIMENTO HUMANO</span>
+                                        <span class="opt-name"><?= View::e($optWaTitle) ?></span>
+                                        <span class="opt-tag-nob"><?= View::e($optWaBadge) ?></span>
                                     </div>
-                                    <p class="opt-desc">Conclua o pedido diretamente com um especialista e tire todas as dúvidas.</p>
+                                    <p class="opt-desc"><?= View::e($optWaDesc) ?></p>
                                 </div>
                             </label>
 
@@ -149,10 +195,10 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                                 <input type="radio" name="payment_method" value="card" onchange="switchPaymentMethod('card')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
-                                        <span class="opt-name">💳 Cartão de Crédito</span>
-                                        <span class="opt-tag-sub">ATÉ 10X SEM JUROS</span>
+                                        <span class="opt-name"><?= View::e($optCardTitle) ?></span>
+                                        <span class="opt-tag-sub"><?= View::e($optCardBadge) ?></span>
                                     </div>
-                                    <p class="opt-desc">Pagamento processado em ambiente 100% criptografado homologado ASAAS.</p>
+                                    <p class="opt-desc"><?= View::e($optCardDesc) ?></p>
                                 </div>
                             </label>
                         </div>
@@ -171,7 +217,7 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                                         <small style="display: block; color: var(--text-secondary); margin-top: 2px;">Titular: <?= View::e($pixBeneficiary) ?></small>
                                     </div>
                                     <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')">
-                                        <span id="copyPixBtnText">📋 Copiar Chave</span>
+                                        <span id="copyPixBtnText"><?= View::e($btnCopyPix) ?></span>
                                     </button>
                                 </div>
                             </div>
@@ -192,7 +238,7 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                         </div>
 
                         <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout">
-                            <span>Confirmar Pedido & Continuar</span>
+                            <span><?= View::e($btnSubmitText) ?></span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </button>
                     </form>
@@ -202,7 +248,7 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
             <!-- COLUNA DIREITA: RESUMO DO PEDIDO & SACOLA -->
             <div class="checkout-col-summary">
                 <div class="checkout-card summary-card">
-                    <h3 class="summary-title">Resumo da Sua Sacola</h3>
+                    <h3 class="summary-title"><?= View::e($summaryTitle) ?></h3>
                     
                     <div id="checkoutItemsList" class="checkout-items-list">
                         <!-- Carregado via JS -->
@@ -211,23 +257,23 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
 
                     <div class="summary-totals-block">
                         <div class="summary-row">
-                            <span>Subtotal:</span>
+                            <span><?= View::e($lblSubtotal) ?></span>
                             <span id="summarySubtotal">R$ 0,00</span>
                         </div>
                         <?php if ($pixDiscountVisible && $pixDiscountPercent > 0): ?>
                         <div class="summary-row" id="summaryPixRow">
-                            <span style="color: var(--gold-accent, #737B85);">Desconto Pix (<?= $pixDiscountPercent ?>%):</span>
+                            <span style="color: var(--gold-accent, #737B85);"><?= View::e($lblPixDiscount) ?> (<?= $pixDiscountPercent ?>%):</span>
                             <span id="summaryPixDiscount" style="color: var(--gold-accent, #737B85);">- R$ 0,00</span>
                         </div>
                         <?php endif; ?>
                         <?php if ($shippingRowVisible): ?>
                         <div class="summary-row" id="summaryShippingRow">
-                            <span>Frete:</span>
+                            <span><?= View::e($lblShipping) ?></span>
                             <span id="summaryShippingVal" style="color: var(--text-primary); font-weight: 600;"><?= View::e($shippingDefaultLabel) ?></span>
                         </div>
                         <?php endif; ?>
                         <div class="summary-row total-row">
-                            <span>Total Estimado:</span>
+                            <span><?= View::e($lblTotal) ?></span>
                             <span id="summaryGrandTotal" class="total-val">R$ 0,00</span>
                         </div>
                     </div>
@@ -253,7 +299,9 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
                         <?php endif; ?>
                     </div>
 
-                    <a href="/loja" class="btn-return-store">← Escolher mais joias na boutique</a>
+                    <?php if ($returnStoreVisible): ?>
+                    <a href="/loja" class="btn-return-store"><?= View::e($returnStoreText) ?></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

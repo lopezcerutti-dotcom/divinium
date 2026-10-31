@@ -60,20 +60,37 @@ ob_start();
             </div>
 
             <!-- Selos de Confiança e Exclusividade -->
+            <?php 
+                $trustStripVis = Setting::get('hero_trust_strip_visible', '1') === '1';
+                $t1Vis = Setting::get('hero_trust_badge_1_visible', '1') === '1';
+                $t1Txt = Setting::get('hero_trust_badge_1', 'Banho de Prata');
+                $t2Vis = Setting::get('hero_trust_badge_2_visible', '1') === '1';
+                $t2Txt = Setting::get('hero_trust_badge_2', 'Gemas 100% Naturais');
+                $t3Vis = Setting::get('hero_trust_badge_3_visible', '1') === '1';
+                $t3Txt = Setting::get('hero_trust_badge_3', 'Certificado de Garantia');
+            ?>
+            <?php if ($trustStripVis && ($t1Vis || $t2Vis || $t3Vis)): ?>
             <div class="hero-trust-strip">
+                <?php if ($t1Vis && !empty($t1Txt)): ?>
                 <div class="trust-badge">
                     <span class="trust-dot">✦</span>
-                    <span><?= \App\Core\View::e(Setting::get('hero_trust_badge_1', 'Banho de Prata')) ?></span>
+                    <span><?= \App\Core\View::e($t1Txt) ?></span>
                 </div>
+                <?php endif; ?>
+                <?php if ($t2Vis && !empty($t2Txt)): ?>
                 <div class="trust-badge">
                     <span class="trust-dot">✦</span>
-                    <span><?= \App\Core\View::e(Setting::get('hero_trust_badge_2', 'Gemas 100% Naturais')) ?></span>
+                    <span><?= \App\Core\View::e($t2Txt) ?></span>
                 </div>
+                <?php endif; ?>
+                <?php if ($t3Vis && !empty($t3Txt)): ?>
                 <div class="trust-badge">
                     <span class="trust-dot">✦</span>
-                    <span><?= \App\Core\View::e(Setting::get('hero_trust_badge_3', 'Certificado de Garantia')) ?></span>
+                    <span><?= \App\Core\View::e($t3Txt) ?></span>
                 </div>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Coluna Direita: CARROSSEL EDITORIAL DE IMAGENS PRINCIPAIS (ALTA JOALHERIA) -->
@@ -264,6 +281,7 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(37, 37, 37, 0.85)');
             <?php endif; ?>
 
             <!-- Miniatura com macro da gema -->
+            <?php if (Setting::get('about_micro_feature_visible', '1') === '1'): ?>
             <div class="about-micro-feature" style="background-color: var(--about-card-bg); border-color: var(--about-card-border);">
                 <div class="micro-thumb">
                     <img src="<?= \App\Core\View::e(Setting::get('about_micro_img', '/assets/images/about/macro-texture.jpg')) ?>" 
@@ -276,6 +294,7 @@ $aboutCaptionBg = Setting::get('about_caption_bg', 'rgba(37, 37, 37, 0.85)');
                     <span style="color: var(--about-text);"><?= \App\Core\View::e(Setting::get('about_micro_desc', 'Fragmentos minerais nobres preservados com resina de alta transparência.')) ?></span>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Coluna de Imagem Editorial em Destaque -->
@@ -400,11 +419,13 @@ foreach ($activeCollections as $c) {
                                             <span class="price">R$ <?= $pPriceFormatted ?></span>
                                             <span class="installment">6x de R$ <?= $pInstallment ?> sem juros | R$ <?= $pPix ?> no Pix</span>
                                         </div>
+                                        <?php if (Setting::get('home_add_to_cart_btn_visible', '1') === '1'): ?>
                                         <div style="display: flex; gap: 8px; margin-top: auto;">
                                             <button type="button" class="btn-add-cart" onclick="addToCart('prod-<?= (int)($prod['id'] ?? 1) ?>', '<?= View::e(addslashes($prod['name'] ?? 'Joia')) ?>', <?= $pPriceCents ?>)">
-                                                Adicionar à Sacola
+                                                <?= View::e(Setting::get('home_add_to_cart_btn_text', 'Adicionar à Sacola')) ?>
                                             </button>
                                         </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

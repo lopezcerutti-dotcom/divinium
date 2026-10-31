@@ -517,6 +517,114 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <span class="field-hint">Permite ao cliente escolher quantas unidades da joia deseja adicionar à sacola.</span>
                 </div>
 
+                <!-- 3 Selos de Confiança Abaixo dos Botões de Compra Direta -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
+                    <div class="field-label-row">
+                        <h5 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase;">
+                            🔒 Selos de Confiança Abaixo dos Botões de Sacola
+                        </h5>
+                        <?= $renderToggle('store_bag_trust_row_visible', '1') ?>
+                    </div>
+                    <span class="field-hint">Linha de confiança discreta exibida logo abaixo dos botões Adicionar à Sacola e Comprar Agora.</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_bag_trust1_text">Selo 1 da Sacola</label>
+                        <?= $renderToggle('store_bag_trust1_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_bag_trust1_text" name="store_bag_trust1_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_bag_trust1_text', '🔒 Compra 100% Protegida')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_bag_trust2_text">Selo 2 da Sacola</label>
+                        <?= $renderToggle('store_bag_trust2_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_bag_trust2_text" name="store_bag_trust2_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_bag_trust2_text', '⚡ Pix com Desconto')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="field-label-row">
+                        <label for="store_bag_trust3_text">Selo 3 da Sacola</label>
+                        <?= $renderToggle('store_bag_trust3_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_bag_trust3_text" name="store_bag_trust3_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_bag_trust3_text', '✦ Joia Autoral com Certificado')) ?>">
+                </div>
+
+                <!-- Seletor de Variações de Pedras Minerais -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                        ✦ Seletor de Pedras Minerais & Variações
+                    </h5>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_variations_label">Rótulo das Variações</label>
+                    <input type="text" id="store_variations_label" name="store_variations_label" class="form-input" 
+                           value="<?= View::e(Setting::get('store_variations_label', 'Pedra Mineral:')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_variations_badge_suffix">Sufixo do Distintivo de Opções</label>
+                        <?= $renderToggle('store_variations_badge_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_variations_badge_suffix" name="store_variations_badge_suffix" class="form-input" 
+                           value="<?= View::e(Setting::get('store_variations_badge_suffix', 'Opções de Gemas')) ?>">
+                    <span class="field-hint">Ex: 'Opções de Gemas', 'Cores Disponíveis'.</span>
+                </div>
+
+                <!-- Descrição & Storytelling da Joia -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                        📖 Descrição & Essência da Peça (Storytelling)
+                    </h5>
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_desc_card_title">Título da Seção de Descrição</label>
+                        <?= $renderToggle('store_desc_card_title_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_desc_card_title" name="store_desc_card_title" class="form-input" 
+                           value="<?= View::e(Setting::get('store_desc_card_title', 'A Essência da Peça')) ?>">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="store_desc_default_text">Texto Padrão de Descrição (Fallback)</label>
+                    <textarea id="store_desc_default_text" name="store_desc_default_text" class="form-textarea" rows="2"><?= View::e(Setting::get('store_desc_default_text', 'Joia autoral manufaturada com banho de prata com lapidação mineral precisa e acabamento artesanal espelhado. Uma expressão sublime do luxo silencioso, criada para transcender tendências e permanecer na sua história.')) ?></textarea>
+                    <span class="field-hint">Exibido caso o produto não possua descrição individual cadastrada.</span>
+                </div>
+
+                <!-- Fallback Atendimento WhatsApp VIP -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
+                    <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
+                        💬 Botão de Atendimento Concierge VIP (Fallback de Compra)
+                    </h5>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_wa_fallback_title">Texto Principal do Botão Concierge</label>
+                    <input type="text" id="store_wa_fallback_title" name="store_wa_fallback_title" class="form-input" 
+                           value="<?= View::e(Setting::get('store_wa_fallback_title', 'Consultar Disponibilidade com Consultor VIP')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_wa_fallback_sub">Subtítulo de Confiança</label>
+                    <input type="text" id="store_wa_fallback_sub" name="store_wa_fallback_sub" class="form-input" 
+                           value="<?= View::e(Setting::get('store_wa_fallback_sub', 'Atendimento Direto DIVINIUM')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_wa_fallback_price_label">Rótulo do Preço</label>
+                    <input type="text" id="store_wa_fallback_price_label" name="store_wa_fallback_price_label" class="form-input" 
+                           value="<?= View::e(Setting::get('store_wa_fallback_price_label', 'Referência')) ?>">
+                </div>
+
                 <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
                     <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                         👁️ Visibilidade de Seções na Página de Detalhes
@@ -540,6 +648,15 @@ $renderToggle = function(string $key, string $default = '1'): string {
                     <span class="field-hint">Exibe o selo de Banho de Prata com garantia e estojo de presente.</span>
                 </div>
 
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_guarantee_icon">Ícone do Selo de Garantia</label>
+                        <?= $renderToggle('store_guarantee_icon_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_guarantee_icon" name="store_guarantee_icon" class="form-input" 
+                           value="<?= View::e(Setting::get('store_guarantee_icon', '🛡️')) ?>" placeholder="🛡️">
+                </div>
+
                 <div class="form-group <?= Setting::get('store_detail_guarantee_title_visible', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <div class="field-label-row">
                         <label for="store_detail_guarantee_title">Título da Garantia</label>
@@ -549,7 +666,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('store_detail_guarantee_title', 'Autenticidade & Garantia DIVINIUM')) ?>">
                 </div>
 
-                <div class="form-group <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
+                <div class="form-group full-width <?= Setting::get('store_detail_show_guarantee', '1') !== '1' ? 'is-dimmed' : '' ?>">
                     <label for="store_detail_guarantee_text">Texto Explicativo da Garantia</label>
                     <input type="text" id="store_detail_guarantee_text" name="store_detail_guarantee_text" class="form-input" 
                            value="<?= View::e(Setting::get('store_detail_guarantee_text', 'Cada joia é acompanhada de certificado numerado de autenticidade, estojo de presente aveludado e garantia assegurada.')) ?>">
@@ -583,12 +700,38 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('store_guarantee_perk3_text', 'Acompanha Estojo Aveludado para Presente')) ?>">
                 </div>
 
-                <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                <!-- Joias Relacionadas da Mesma Coleção -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
                     <div class="field-label-row">
-                        <label>Joias Relacionadas da Mesma Coleção</label>
+                        <h5 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase;">
+                            ✨ Joias Relacionadas da Mesma Coleção
+                        </h5>
                         <?= $renderToggle('store_detail_show_related', '1') ?>
                     </div>
-                    <span class="field-hint">Exibe carrossel/grade com outras joias da mesma categoria ao final da página.</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_related_eyebrow">Sobretítulo (Eyebrow)</label>
+                        <?= $renderToggle('store_related_eyebrow_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_related_eyebrow" name="store_related_eyebrow" class="form-input" 
+                           value="<?= View::e(Setting::get('store_related_eyebrow', 'DESCUBRA MAIS')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <div class="field-label-row">
+                        <label for="store_related_title">Título da Seção de Relacionadas</label>
+                        <?= $renderToggle('store_related_title_visible', '1') ?>
+                    </div>
+                    <input type="text" id="store_related_title" name="store_related_title" class="form-input" 
+                           value="<?= View::e(Setting::get('store_related_title', 'Outras Peças da Coleção')) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="store_related_btn_text">Texto do Botão 'Conhecer Peça'</label>
+                    <input type="text" id="store_related_btn_text" name="store_related_btn_text" class="form-input" 
+                           value="<?= View::e(Setting::get('store_related_btn_text', 'Conhecer Peça ↗')) ?>">
                 </div>
 
                 <div class="form-group" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">

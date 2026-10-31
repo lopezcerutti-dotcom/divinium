@@ -433,7 +433,67 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 6: GRID DE TIPOGRAFIA E FORMAS -->
+        <!-- SEÇÃO 6: PREÇOS, DESCONTOS, ETIQUETAS & FORMULÁRIOS -->
+        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
+            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 6. Preços, Descontos, Badges & Campos de Formulário:</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
+            <!-- Cor dos Preços -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_price" style="font-size: 0.78rem;">Destaque de Preços (--price-color):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_price" value="<?= \App\Core\View::e($customSettings['custom_color_price'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_price').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_price" name="custom_color_price" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_price'] ?? '#202020') ?>" oninput="document.getElementById('picker_price').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <!-- Cor dos Descontos -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_discount" style="font-size: 0.78rem;">Destaque de Desconto / Pix (--discount-color):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_discount" value="<?= \App\Core\View::e($customSettings['custom_color_discount'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_discount').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_discount" name="custom_color_discount" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_discount'] ?? '#737B85') ?>" oninput="document.getElementById('picker_discount').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <!-- Fundo dos Badges -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_badge_bg" style="font-size: 0.78rem;">Fundo das Etiquetas & Badges (--badge-bg):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_badge_bg" value="<?= \App\Core\View::e($customSettings['custom_color_badge_bg'] ?? '#F0F0EF') ?>" onchange="document.getElementById('custom_color_badge_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_badge_bg" name="custom_color_badge_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_badge_bg'] ?? '#F0F0EF') ?>" oninput="document.getElementById('picker_badge_bg').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <!-- Texto dos Badges -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_badge_text" style="font-size: 0.78rem;">Texto das Etiquetas & Badges (--badge-text):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_badge_text" value="<?= \App\Core\View::e($customSettings['custom_color_badge_text'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_badge_text').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_badge_text" name="custom_color_badge_text" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_badge_text'] ?? '#202020') ?>" oninput="document.getElementById('picker_badge_text').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <!-- Fundo dos Campos -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_input_bg" style="font-size: 0.78rem;">Fundo dos Campos / Inputs (--input-bg):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_input_bg" value="<?= \App\Core\View::e($customSettings['custom_color_input_bg'] ?? '#FFFFFF') ?>" onchange="document.getElementById('custom_color_input_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_input_bg" name="custom_color_input_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_input_bg'] ?? '#FFFFFF') ?>" oninput="document.getElementById('picker_input_bg').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+
+            <!-- Borda dos Campos -->
+            <div class="form-group" style="margin: 0;">
+                <label for="custom_color_input_border" style="font-size: 0.78rem;">Borda dos Campos / Inputs (--input-border):</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="color" id="picker_input_border" value="<?= \App\Core\View::e($customSettings['custom_color_input_border'] ?? '#CBD0D6') ?>" onchange="document.getElementById('custom_color_input_border').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
+                    <input type="text" id="custom_color_input_border" name="custom_color_input_border" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_input_border'] ?? '#CBD0D6') ?>" oninput="document.getElementById('picker_input_border').value = this.value; updateCustomPreview();">
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO 7: GRID DE TIPOGRAFIA E FORMAS -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px;">
             <div class="form-group" style="margin: 0;">
                 <label for="custom_font_serif">Tipografia dos Títulos Principais</label>

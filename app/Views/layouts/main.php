@@ -336,6 +336,28 @@
         $effColorWarning = \App\Models\Setting::get('custom_color_warning', '#D97706');
         $effColorError = \App\Models\Setting::get('custom_color_error', '#DC2626');
 
+        // Destaque de Preços e Descontos
+        $rawPrice = \App\Models\Setting::get('custom_color_price');
+        $rawDiscount = \App\Models\Setting::get('custom_color_discount');
+        $effPriceColor = !empty($rawPrice) ? $rawPrice : $activeThemeDef['title'];
+        $effDiscountColor = !empty($rawDiscount) ? $rawDiscount : '#737B85';
+
+        // Etiquetas e Badges
+        $rawBadgeBg = \App\Models\Setting::get('custom_color_badge_bg');
+        $rawBadgeText = \App\Models\Setting::get('custom_color_badge_text');
+        $rawBadgeBorder = \App\Models\Setting::get('custom_color_badge_border');
+        $effBadgeBg = !empty($rawBadgeBg) ? $rawBadgeBg : 'rgba(167, 173, 180, 0.18)';
+        $effBadgeText = !empty($rawBadgeText) ? $rawBadgeText : $activeThemeDef['text'];
+        $effBadgeBorder = !empty($rawBadgeBorder) ? $rawBadgeBorder : 'rgba(167, 173, 180, 0.35)';
+
+        // Campos de Formulário & Inputs
+        $rawInputBg = \App\Models\Setting::get('custom_color_input_bg');
+        $rawInputBorder = \App\Models\Setting::get('custom_color_input_border');
+        $rawInputText = \App\Models\Setting::get('custom_color_input_text');
+        $effInputBg = !empty($rawInputBg) ? $rawInputBg : '#FFFFFF';
+        $effInputBorder = !empty($rawInputBorder) ? $rawInputBorder : 'rgba(115, 123, 133, 0.28)';
+        $effInputText = !empty($rawInputText) ? $rawInputText : $activeThemeDef['text'];
+
         // Header, Footer & Top Banner
         $rawHeaderBg = \App\Models\Setting::get('header_bg_color');
         $rawHeaderText = \App\Models\Setting::get('header_text_color');
@@ -502,6 +524,16 @@
             --footer-text: <?= $effFooterText ?> !important;
             --top-banner-bg: <?= $effTopBannerBg ?> !important;
             --top-banner-text: <?= $effTopBannerText ?> !important;
+
+            /* 10. PREÇOS, DESCONTOS, BADGES & FORMULÁRIOS */
+            --price-color: <?= $effPriceColor ?> !important;
+            --discount-color: <?= $effDiscountColor ?> !important;
+            --badge-bg: <?= $effBadgeBg ?> !important;
+            --badge-text: <?= $effBadgeText ?> !important;
+            --badge-border: <?= $effBadgeBorder ?> !important;
+            --input-bg: <?= $effInputBg ?> !important;
+            --input-border: <?= $effInputBorder ?> !important;
+            --input-text: <?= $effInputText ?> !important;
         }
 
         /* -------------------------------------------------------------------------
@@ -665,6 +697,38 @@
         body.luxury-theme .institutional-card {
             background-color: var(--surface-card) !important;
             border-color: var(--border-color) !important;
+        }
+
+        /* BADGES & ETIQUETAS */
+        body.luxury-theme .badge-tag,
+        body.luxury-theme .product-badge,
+        body.luxury-theme .checkout-badge,
+        body.luxury-theme .variations-count-badge {
+            background: var(--badge-bg) !important;
+            background-color: var(--badge-bg) !important;
+            color: var(--badge-text) !important;
+            border-color: var(--badge-border) !important;
+        }
+
+        /* CAMPOS DE FORMULÁRIO */
+        body.luxury-theme .form-input,
+        body.luxury-theme .form-textarea,
+        body.luxury-theme .form-select {
+            background-color: var(--input-bg) !important;
+            border-color: var(--input-border) !important;
+            color: var(--input-text) !important;
+        }
+
+        /* DESTAQUE DE PREÇO & DESCONTO */
+        body.luxury-theme .product-price-box .price,
+        body.luxury-theme .related-card-price span,
+        body.luxury-theme .channel-price-val,
+        body.luxury-theme #summaryGrandTotal {
+            color: var(--price-color) !important;
+        }
+        body.luxury-theme .opt-discount-tag,
+        body.luxury-theme #summaryPixRow span {
+            color: var(--discount-color) !important;
         }
 
         /* CABEÇALHO, RODAPÉ & TOP BANNER */
