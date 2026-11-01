@@ -71,25 +71,6 @@
         </div>
     </div>
 
-    <!-- MÓDULO 2: GESTÃO DE TEMAS -->
-    <div class="exec-module-card" style="border-left: 3px solid #A7ADB4;">
-        <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
-                ✦
-            </div>
-        </div>
-        <div class="exec-card-body">
-            <h3>Gestão de Temas & Identidade</h3>
-            <p>Personalize as cores da Identidade Visual DIVINIUM com controles individuais e pré-visualização ao vivo.</p>
-        </div>
-        <div class="exec-card-footer">
-            <span style="font-size: 0.78rem; color: #8e8880;">Design System dinâmico</span>
-            <a href="/admin/temas" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
-                <span>Gerenciar Paletas ↗</span>
-            </a>
-        </div>
-    </div>
-
     <!-- MÓDULO 3: EDITOR DA LANDING PAGE -->
     <div class="exec-module-card" style="border-left: 3px solid #A7ADB4;">
         <div class="exec-card-top">
