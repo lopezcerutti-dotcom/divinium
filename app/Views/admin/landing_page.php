@@ -4316,6 +4316,50 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                 'default_radius' => '8px',
                                 'default_shadow' => 'none'
                             ]) ?>
+
+                            <!-- ============================================================== -->
+                            <!-- BOTÕES DA PÁGINA DO PRODUTO (/produto/{slug}) -->
+                            <!-- ============================================================== -->
+                            <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; margin-top: 14px;">
+                                <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                    <span>💎</span> Botões da Página do Produto (/produto/{slug})
+                                </h4>
+                                <span class="field-hint">Personalize e controle a visibilidade e paleta dos botões 'Adicionar à Sacola' e 'Comprar Agora' na página do produto. O módulo completo com seletor de quantidade e pilares de confiança também está disponível em <a href="/admin/boutique" style="color: #CBD0D6; text-decoration: underline;">Personalizar Boutique</a>.</span>
+                            </div>
+
+                            <?= $renderButtonEditor('store_add_to_cart', [
+                                'title' => 'Botão: Adicionar à Sacola (Página do Produto)',
+                                'subtitle' => 'Adiciona a joia na sacola de compras mantendo o cliente na página.',
+                                'default_text' => Setting::get('store_add_to_cart_btn_text', Setting::get('store_add_to_cart_text', 'Adicionar à Sacola')),
+                                'default_url' => 'javascript:addProductToBag(event)',
+                                'action_only' => true,
+                                'action_hint' => 'Ação do sistema: inclusão na sacola (preservada).',
+                                'default_visible' => Setting::get('store_add_to_cart_btn_visible', Setting::get('store_add_to_cart_visible', '1')),
+                                'default_bg' => Setting::get('store_add_to_cart_bg_color', Setting::get('store_add_to_cart_bg', 'rgba(202, 161, 92, 0.08)')),
+                                'default_color' => Setting::get('store_add_to_cart_text_color', Setting::get('store_add_to_cart_color', '#ffffff')),
+                                'default_border' => Setting::get('store_add_to_cart_border_color', Setting::get('store_add_to_cart_border', '#CBD0D6')),
+                                'default_icon' => '🛍️',
+                                'default_icon_color' => Setting::get('store_add_to_cart_icon_color', '#CBD0D6'),
+                                'default_radius' => '8px',
+                                'default_shadow' => 'none'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('store_buy_now', [
+                                'title' => 'Botão: Comprar Agora (Checkout Direto na Página do Produto)',
+                                'subtitle' => 'Adiciona a joia e direciona o cliente direto ao checkout seguro.',
+                                'default_text' => Setting::get('store_buy_now_btn_text', Setting::get('store_buy_now_text', 'Comprar Agora')),
+                                'default_url' => '/checkout',
+                                'action_only' => true,
+                                'action_hint' => 'Ação do sistema: redirecionamento direto para /checkout (preservada).',
+                                'default_visible' => Setting::get('store_buy_now_btn_visible', Setting::get('store_buy_now_visible', '1')),
+                                'default_bg' => Setting::get('store_buy_now_bg_color', Setting::get('store_buy_now_bg', '#CBD0D6')),
+                                'default_color' => Setting::get('store_buy_now_text_color', Setting::get('store_buy_now_color', '#1a1918')),
+                                'default_border' => Setting::get('store_buy_now_border_color', Setting::get('store_buy_now_border', '#737B85')),
+                                'default_icon' => '⚡',
+                                'default_icon_color' => Setting::get('store_buy_now_icon_color', '#1a1918'),
+                                'default_radius' => '8px',
+                                'default_shadow' => 'none'
+                            ]) ?>
                         </div>
                     </div>
                 </div>

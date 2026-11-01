@@ -23,6 +23,25 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <span class="toggle-text">' . $label . '</span>
     </label>';
 };
+
+/**
+ * Helper reutilizável para renderizar seletor de cores sincronizado (Color Picker + Campo de Texto Hex)
+ */
+$renderColorField = function(string $key, string $default, string $label, string $hint = ''): string {
+    $val = Setting::get($key, $default);
+    $pickerVal = (is_string($val) && str_starts_with($val, '#') && strlen($val) === 7) ? $val : ((is_string($default) && str_starts_with($default, '#') && strlen($default) === 7) ? $default : '#202020');
+    $html = '<div class="form-group">';
+    $html .= '<label for="' . $key . '" style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">' . View::e($label) . '</label>';
+    $html .= '<div style="display: flex; gap: 8px; align-items: center;">';
+    $html .= '<input type="color" id="picker_' . $key . '" value="' . View::e($pickerVal) . '" oninput="syncColorInput(this, \'' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview();" style="width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $key . '" id="' . $key . '" class="form-input" value="' . View::e($val) . '" placeholder="' . View::e($default) . '" style="font-size: 0.82rem; padding: 7px 10px; flex: 1;" oninput="syncPickerInput(this, \'picker_' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview();">';
+    $html .= '</div>';
+    if (!empty($hint)) {
+        $html .= '<span class="field-hint" style="font-size: 0.72rem; color: #a7adb4; margin-top: 2px;">' . View::e($hint) . '</span>';
+    }
+    $html .= '</div>';
+    return $html;
+};
 ?>
 
 <div class="landing-editor-container">
@@ -484,75 +503,322 @@ $renderToggle = function(string $key, string $default = '1'): string {
                 </div>
 
                 <!-- Seções Informativas da Página de Detalhes -->
-                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 10px; padding-top: 16px;">
-                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
-                        🛍️ Compra Direta na Boutique DIVINIUM (Adicionar à Sacola & Comprar Agora)
+                <!-- ============================================================== -->
+                <!-- CONTROLE COMPLETO DOS ELEMENTOS DA PÁGINA DO PRODUTO (/produto/{slug}) -->
+                <!-- ============================================================== -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 14px; padding-top: 18px;">
+                    <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.92rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                        <span>🛍️</span> Controles dos Elementos de Compra & Pilares de Confiança
                     </h4>
-                    <span class="field-hint">Personalize e controle a visibilidade dos botões diretos de compra na página do produto.</span>
+                    <p style="margin: 0 0 16px; font-size: 0.82rem; color: #a7adb4;">
+                        Ative, desative e personalize textos, rótulos, ícones e paletas de cores individuais para o seletor de quantidade, os botões de conversão e os 3 pilares de confiança da página da joia.
+                    </p>
                 </div>
 
-                <div class="form-group">
-                    <div class="field-label-row">
-                        <label for="store_add_to_cart_btn_text">Botão 'Adicionar à Sacola'</label>
-                        <?= $renderToggle('store_add_to_cart_btn_visible', '1') ?>
+                <!-- CARD 1: QUANTIDADE DE JOIAS -->
+                <?php
+                $qtyVisible = Setting::get('store_qty_selector_visible', '1');
+                $isQtyDimmed = ($qtyVisible !== '1' && $qtyVisible !== 1) ? 'is-dimmed' : '';
+                ?>
+                <div class="form-group full-width <?= $isQtyDimmed ?>" id="card_ctrl_store_qty" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.92rem; display: flex; align-items: center; gap: 8px;">
+                                <span>🔢</span> 1. Quantidade de Joias (Seletor [- 1 +])
+                            </strong>
+                            <span style="font-size: 0.74rem; color: #a7adb4; display: block; margin-top: 2px;">Rótulo e seletor numérico de unidades que o cliente adiciona à sacola.</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.74rem; color: #a7adb4;">Exibição:</span>
+                            <?= $renderToggle('store_qty_selector_visible', '1') ?>
+                        </div>
                     </div>
-                    <input type="text" id="store_add_to_cart_btn_text" name="store_add_to_cart_btn_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_add_to_cart_btn_text', 'Adicionar à Sacola')) ?>">
+
+                    <!-- Live Mini Preview -->
+                    <div style="margin-bottom: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 0.75rem; color: #8e8880; font-weight: 600; text-transform: uppercase;">Prévia em Tempo Real:</span>
+                        <div id="prev_qty_wrap" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <span id="prev_qty_label" style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: <?= View::e(Setting::get('store_qty_text_color', '#A7ADB4')) ?>;"><?= View::e(Setting::get('store_qty_label', 'Qtd:')) ?></span>
+                            <div id="prev_qty_box" style="display: inline-flex; align-items: center; background: <?= View::e(Setting::get('store_qty_bg_color', 'rgba(0, 0, 0, 0.35)')) ?>; border: 1px solid <?= View::e(Setting::get('store_qty_border_color', 'rgba(255, 255, 255, 0.18)')) ?>; border-radius: 8px; overflow: hidden;">
+                                <span style="width: 32px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: <?= View::e(Setting::get('store_qty_text_color', '#ded7cf')) ?>;">−</span>
+                                <span style="min-width: 28px; text-align: center; font-weight: 800; font-size: 0.9rem; color: <?= View::e(Setting::get('store_qty_text_color', '#ffffff')) ?>;">1</span>
+                                <span style="width: 32px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: <?= View::e(Setting::get('store_qty_text_color', '#ded7cf')) ?>;">+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div class="form-group">
+                            <label for="store_qty_label" style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Rótulo do Campo</label>
+                            <input type="text" id="store_qty_label" name="store_qty_label" class="form-input" 
+                                   value="<?= View::e(Setting::get('store_qty_label', 'Qtd:')) ?>" 
+                                   placeholder="Qtd:" oninput="updateProductElementPreview()">
+                            <span class="field-hint" style="font-size: 0.72rem; color: #a7adb4;">Texto ao lado do contador (ex: 'Qtd:', 'Unidades:').</span>
+                        </div>
+                        <?= $renderColorField('store_qty_text_color', '#ffffff', 'Cor do Texto / Rótulo', 'Cor dos números, símbolos e rótulo') ?>
+                        <?= $renderColorField('store_qty_bg_color', '#14171a', 'Cor de Fundo do Seletor', 'Fundo da caixa de quantidade') ?>
+                        <?= $renderColorField('store_qty_border_color', '#3d444d', 'Cor da Borda do Seletor', 'Borda externa da caixa') ?>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="field-label-row">
-                        <label for="store_buy_now_btn_text">Botão 'Comprar Agora'</label>
-                        <?= $renderToggle('store_buy_now_btn_visible', '1') ?>
+                <!-- CARD 2: BOTÃO 'ADICIONAR À SACOLA' -->
+                <?php
+                $cartBtnVis = Setting::get('store_add_to_cart_btn_visible', Setting::get('store_add_to_cart_visible', '1'));
+                $isCartDimmed = ($cartBtnVis !== '1' && $cartBtnVis !== 1) ? 'is-dimmed' : '';
+                $cartBg = Setting::get('store_add_to_cart_bg_color', Setting::get('store_add_to_cart_bg', 'rgba(202, 161, 92, 0.08)'));
+                $cartColor = Setting::get('store_add_to_cart_text_color', Setting::get('store_add_to_cart_color', '#ffffff'));
+                $cartBorder = Setting::get('store_add_to_cart_border_color', Setting::get('store_add_to_cart_border', '#CBD0D6'));
+                $cartIconColor = Setting::get('store_add_to_cart_icon_color', '#CBD0D6');
+                $cartText = Setting::get('store_add_to_cart_btn_text', Setting::get('store_add_to_cart_text', 'Adicionar à Sacola'));
+                ?>
+                <div class="form-group full-width <?= $isCartDimmed ?>" id="card_ctrl_store_add_to_cart" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.92rem; display: flex; align-items: center; gap: 8px;">
+                                <span>🛍️</span> 2. Botão 'Adicionar à Sacola'
+                            </strong>
+                            <span style="font-size: 0.74rem; color: #a7adb4; display: block; margin-top: 2px;">Insere o produto e quantidade na gaveta da sacola sem sair da página.</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.74rem; color: #a7adb4;">Exibição:</span>
+                            <?= $renderToggle('store_add_to_cart_btn_visible', '1') ?>
+                        </div>
                     </div>
-                    <input type="text" id="store_buy_now_btn_text" name="store_buy_now_btn_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_buy_now_btn_text', 'Comprar Agora')) ?>">
+
+                    <!-- Live Mini Preview -->
+                    <div style="margin-bottom: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 0.75rem; color: #8e8880; font-weight: 600; text-transform: uppercase;">Prévia em Tempo Real:</span>
+                        <div id="prev_add_to_cart_btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-size: 0.86rem; font-weight: 700; background: <?= View::e($cartBg) ?>; color: <?= View::e($cartColor) ?>; border: 1.5px solid <?= View::e($cartBorder) ?>;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($cartIconColor) ?>" stroke-width="2" id="prev_add_to_cart_svg">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                            <span id="prev_add_to_cart_text"><?= View::e($cartText) ?></span>
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div class="form-group">
+                            <label for="store_add_to_cart_btn_text" style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Botão</label>
+                            <input type="text" id="store_add_to_cart_btn_text" name="store_add_to_cart_btn_text" class="form-input" 
+                                   value="<?= View::e($cartText) ?>" placeholder="Adicionar à Sacola" oninput="updateProductElementPreview()">
+                        </div>
+                        <?= $renderColorField('store_add_to_cart_bg_color', '#22262b', 'Cor de Fundo', 'Fundo do botão adicionar') ?>
+                        <?= $renderColorField('store_add_to_cart_text_color', '#ffffff', 'Cor da Letra (Texto)', 'Cor do texto do botão') ?>
+                        <?= $renderColorField('store_add_to_cart_icon_color', '#CBD0D6', 'Cor do Ícone', 'Cor do ícone da sacola') ?>
+                        <?= $renderColorField('store_add_to_cart_border_color', '#CBD0D6', 'Cor da Borda', 'Borda do botão') ?>
+                    </div>
                 </div>
 
-                <div class="form-group full-width" style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="field-label-row">
-                        <label>Seletor de Quantidade de Joias ([- 1 +])</label>
-                        <?= $renderToggle('store_qty_selector_visible', '1') ?>
+                <!-- CARD 3: BOTÃO 'COMPRAR AGORA' -->
+                <?php
+                $buyNowVis = Setting::get('store_buy_now_btn_visible', Setting::get('store_buy_now_visible', '1'));
+                $isBuyNowDimmed = ($buyNowVis !== '1' && $buyNowVis !== 1) ? 'is-dimmed' : '';
+                $buyNowBg = Setting::get('store_buy_now_bg_color', Setting::get('store_buy_now_bg', '#CBD0D6'));
+                $buyNowColor = Setting::get('store_buy_now_text_color', Setting::get('store_buy_now_color', '#1a1918'));
+                $buyNowBorder = Setting::get('store_buy_now_border_color', Setting::get('store_buy_now_border', '#737B85'));
+                $buyNowIconColor = Setting::get('store_buy_now_icon_color', '#1a1918');
+                $buyNowText = Setting::get('store_buy_now_btn_text', Setting::get('store_buy_now_text', 'Comprar Agora'));
+                ?>
+                <div class="form-group full-width <?= $isBuyNowDimmed ?>" id="card_ctrl_store_buy_now" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.92rem; display: flex; align-items: center; gap: 8px;">
+                                <span>⚡</span> 3. Botão 'Comprar Agora' (Compra Direta)
+                            </strong>
+                            <span style="font-size: 0.74rem; color: #a7adb4; display: block; margin-top: 2px;">Adiciona o item e direciona o cliente direto ao checkout seguro (/checkout).</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.74rem; color: #a7adb4;">Exibição:</span>
+                            <?= $renderToggle('store_buy_now_btn_visible', '1') ?>
+                        </div>
                     </div>
-                    <span class="field-hint">Permite ao cliente escolher quantas unidades da joia deseja adicionar à sacola.</span>
+
+                    <!-- Live Mini Preview -->
+                    <div style="margin-bottom: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 0.75rem; color: #8e8880; font-weight: 600; text-transform: uppercase;">Prévia em Tempo Real:</span>
+                        <div id="prev_buy_now_btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-size: 0.86rem; font-weight: 800; background: <?= View::e($buyNowBg) ?>; color: <?= View::e($buyNowColor) ?>; border: 1.5px solid <?= View::e($buyNowBorder) ?>;">
+                            <span id="prev_buy_now_text"><?= View::e($buyNowText) ?></span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($buyNowIconColor) ?>" stroke-width="2.2" id="prev_buy_now_svg">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div class="form-group">
+                            <label for="store_buy_now_btn_text" style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Botão</label>
+                            <input type="text" id="store_buy_now_btn_text" name="store_buy_now_btn_text" class="form-input" 
+                                   value="<?= View::e($buyNowText) ?>" placeholder="Comprar Agora" oninput="updateProductElementPreview()">
+                        </div>
+                        <?= $renderColorField('store_buy_now_bg_color', '#CBD0D6', 'Cor de Fundo', 'Fundo do botão comprar') ?>
+                        <?= $renderColorField('store_buy_now_text_color', '#1a1918', 'Cor da Letra (Texto)', 'Cor do texto do botão') ?>
+                        <?= $renderColorField('store_buy_now_icon_color', '#1a1918', 'Cor do Ícone', 'Cor da seta do botão') ?>
+                        <?= $renderColorField('store_buy_now_border_color', '#737B85', 'Cor da Borda', 'Borda do botão') ?>
+                    </div>
                 </div>
 
-                <!-- 3 Selos de Confiança Abaixo dos Botões de Compra Direta -->
-                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 14px;">
-                    <div class="field-label-row">
-                        <h5 style="color: #CBD0D6; margin: 0; font-size: 0.88rem; text-transform: uppercase;">
-                            🔒 Selos de Confiança Abaixo dos Botões de Sacola
-                        </h5>
-                        <?= $renderToggle('store_bag_trust_row_visible', '1') ?>
+                <!-- CARD 4: PILARES DE CONFIANÇA (3 PILARES INDEPENDENTES) -->
+                <?php
+                $trustRowVis = Setting::get('store_bag_trust_row_visible', '1');
+                $isTrustRowDimmed = ($trustRowVis !== '1' && $trustRowVis !== 1) ? 'is-dimmed' : '';
+                ?>
+                <div class="form-group full-width <?= $isTrustRowDimmed ?>" id="card_ctrl_store_trust" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">
+                        <div>
+                            <strong style="color: #ffffff; font-size: 0.92rem; display: flex; align-items: center; gap: 8px;">
+                                <span>🛡️</span> 4. Pilares de Confiança Abaixo dos Botões de Compra
+                            </strong>
+                            <span style="font-size: 0.74rem; color: #a7adb4; display: block; margin-top: 2px;">
+                                Configurações independentes para cada um dos 3 pilares: texto, ícone, cores de texto, ícone, fundo e borda.
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.74rem; color: #a7adb4;">Linha Geral:</span>
+                            <?= $renderToggle('store_bag_trust_row_visible', '1') ?>
+                        </div>
                     </div>
-                    <span class="field-hint">Linha de confiança discreta exibida logo abaixo dos botões Adicionar à Sacola e Comprar Agora.</span>
-                </div>
 
-                <div class="form-group">
-                    <div class="field-label-row">
-                        <label for="store_bag_trust1_text">Selo 1 da Sacola</label>
-                        <?= $renderToggle('store_bag_trust1_visible', '1') ?>
+                    <!-- Live Mini Preview da Linha de Pilares -->
+                    <div style="margin-bottom: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <span style="font-size: 0.75rem; color: #8e8880; font-weight: 600; text-transform: uppercase;">Prévia dos 3 Pilares:</span>
+                        <div id="prev_trust_sub_row" style="display: flex; align-items: center; gap: 10px; font-size: 0.74rem; flex-wrap: wrap;">
+                            <span id="prev_trust1_badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border-radius: 4px;">
+                                <span id="prev_trust1_icon"><?= View::e(Setting::get('store_bag_trust1_icon', '🛡️')) ?></span>
+                                <span id="prev_trust1_text"><?= View::e(Setting::get('store_bag_trust1_text', 'Compra 100% Protegida')) ?></span>
+                            </span>
+                            <span class="dot" style="opacity: 0.4;">•</span>
+                            <span id="prev_trust2_badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border-radius: 4px;">
+                                <span id="prev_trust2_icon"><?= View::e(Setting::get('store_bag_trust2_icon', '⚡')) ?></span>
+                                <span id="prev_trust2_text"><?= View::e(Setting::get('store_bag_trust2_text', 'Pix com Desconto')) ?></span>
+                            </span>
+                            <span class="dot" style="opacity: 0.4;">•</span>
+                            <span id="prev_trust3_badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border-radius: 4px;">
+                                <span id="prev_trust3_icon"><?= View::e(Setting::get('store_bag_trust3_icon', '💎')) ?></span>
+                                <span id="prev_trust3_text"><?= View::e(Setting::get('store_bag_trust3_text', 'Joia Autoral com Certificado')) ?></span>
+                            </span>
+                        </div>
                     </div>
-                    <input type="text" id="store_bag_trust1_text" name="store_bag_trust1_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_bag_trust1_text', '🔒 Compra 100% Protegida')) ?>">
-                </div>
 
-                <div class="form-group">
-                    <div class="field-label-row">
-                        <label for="store_bag_trust2_text">Selo 2 da Sacola</label>
-                        <?= $renderToggle('store_bag_trust2_visible', '1') ?>
-                    </div>
-                    <input type="text" id="store_bag_trust2_text" name="store_bag_trust2_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_bag_trust2_text', '⚡ Pix com Desconto')) ?>">
-                </div>
+                    <!-- Sub-cards para cada um dos 3 pilares -->
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        
+                        <!-- PILAR 1 -->
+                        <?php
+                        $t1Vis = Setting::get('store_bag_trust1_visible', '1');
+                        $isT1Dim = ($t1Vis !== '1' && $t1Vis !== 1) ? 'is-dimmed' : '';
+                        $t1Icon = Setting::get('store_bag_trust1_icon', '🛡️');
+                        $t1Raw = Setting::get('store_bag_trust1_text', 'Compra 100% Protegida');
+                        $t1Text = ($t1Raw === '🔒 Compra 100% Protegida') ? 'Compra 100% Protegida' : $t1Raw;
+                        ?>
+                        <div class="pilar-editor-subcard <?= $isT1Dim ?>" id="card_sub_trust1" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
+                                <strong style="color: #CBD0D6; font-size: 0.85rem;">🛡️ Pilar 1: Compra Protegida</strong>
+                                <?= $renderToggle('store_bag_trust1_visible', '1') ?>
+                            </div>
+                            <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                                <div class="form-group">
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Ícone (Emoji / Símbolo)</label>
+                                    <div style="display: flex; gap: 6px;">
+                                        <input type="text" id="store_bag_trust1_icon" name="store_bag_trust1_icon" class="form-input" value="<?= View::e($t1Icon) ?>" placeholder="🛡️" style="width: 70px; text-align: center; font-size: 1rem;" oninput="updateProductElementPreview()">
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(1, '🛡️')">🛡️</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(1, '🔒')">🔒</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(1, '✓')">✓</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="store_bag_trust1_text" style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Pilar 1</label>
+                                    <input type="text" id="store_bag_trust1_text" name="store_bag_trust1_text" class="form-input" value="<?= View::e($t1Text) ?>" placeholder="Compra 100% Protegida" oninput="updateProductElementPreview()">
+                                </div>
+                                <?= $renderColorField('store_bag_trust1_text_color', '#a0988c', 'Cor do Texto', 'Cor da legenda') ?>
+                                <?= $renderColorField('store_bag_trust1_icon_color', '#CBD0D6', 'Cor do Ícone', 'Cor do símbolo') ?>
+                                <?= $renderColorField('store_bag_trust1_bg_color', 'transparent', 'Cor de Fundo', 'Fundo (ou transparent)') ?>
+                                <?= $renderColorField('store_bag_trust1_border_color', 'transparent', 'Cor da Borda', 'Borda (ou transparent)') ?>
+                            </div>
+                        </div>
 
-                <div class="form-group full-width">
-                    <div class="field-label-row">
-                        <label for="store_bag_trust3_text">Selo 3 da Sacola</label>
-                        <?= $renderToggle('store_bag_trust3_visible', '1') ?>
+                        <!-- PILAR 2 -->
+                        <?php
+                        $t2Vis = Setting::get('store_bag_trust2_visible', '1');
+                        $isT2Dim = ($t2Vis !== '1' && $t2Vis !== 1) ? 'is-dimmed' : '';
+                        $t2Icon = Setting::get('store_bag_trust2_icon', '⚡');
+                        $t2Raw = Setting::get('store_bag_trust2_text', 'Pix com Desconto');
+                        $t2Text = ($t2Raw === '⚡ Pix com Desconto') ? 'Pix com Desconto' : $t2Raw;
+                        ?>
+                        <div class="pilar-editor-subcard <?= $isT2Dim ?>" id="card_sub_trust2" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
+                                <strong style="color: #CBD0D6; font-size: 0.85rem;">⚡ Pilar 2: Pix com Desconto</strong>
+                                <?= $renderToggle('store_bag_trust2_visible', '1') ?>
+                            </div>
+                            <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                                <div class="form-group">
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Ícone (Emoji / Símbolo)</label>
+                                    <div style="display: flex; gap: 6px;">
+                                        <input type="text" id="store_bag_trust2_icon" name="store_bag_trust2_icon" class="form-input" value="<?= View::e($t2Icon) ?>" placeholder="⚡" style="width: 70px; text-align: center; font-size: 1rem;" oninput="updateProductElementPreview()">
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(2, '⚡')">⚡</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(2, '✦')">✦</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(2, '%')">%</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="store_bag_trust2_text" style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Pilar 2</label>
+                                    <input type="text" id="store_bag_trust2_text" name="store_bag_trust2_text" class="form-input" value="<?= View::e($t2Text) ?>" placeholder="Pix com Desconto" oninput="updateProductElementPreview()">
+                                </div>
+                                <?= $renderColorField('store_bag_trust2_text_color', '#a0988c', 'Cor do Texto', 'Cor da legenda') ?>
+                                <?= $renderColorField('store_bag_trust2_icon_color', '#CBD0D6', 'Cor do Ícone', 'Cor do símbolo') ?>
+                                <?= $renderColorField('store_bag_trust2_bg_color', 'transparent', 'Cor de Fundo', 'Fundo (ou transparent)') ?>
+                                <?= $renderColorField('store_bag_trust2_border_color', 'transparent', 'Cor da Borda', 'Borda (ou transparent)') ?>
+                            </div>
+                        </div>
+
+                        <!-- PILAR 3 -->
+                        <?php
+                        $t3Vis = Setting::get('store_bag_trust3_visible', '1');
+                        $isT3Dim = ($t3Vis !== '1' && $t3Vis !== 1) ? 'is-dimmed' : '';
+                        $t3Icon = Setting::get('store_bag_trust3_icon', '💎');
+                        $t3Raw = Setting::get('store_bag_trust3_text', 'Joia Autoral com Certificado');
+                        $t3Text = ($t3Raw === '✦ Joia Autoral com Certificado') ? 'Joia Autoral com Certificado' : $t3Raw;
+                        ?>
+                        <div class="pilar-editor-subcard <?= $isT3Dim ?>" id="card_sub_trust3" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
+                                <strong style="color: #CBD0D6; font-size: 0.85rem;">💎 Pilar 3: Autenticidade & Joia Autoral</strong>
+                                <?= $renderToggle('store_bag_trust3_visible', '1') ?>
+                            </div>
+                            <div style="margin-bottom: 10px; background: rgba(202, 161, 92, 0.08); border-left: 3px solid #CBD0D6; padding: 6px 10px; border-radius: 4px;">
+                                <span style="font-size: 0.72rem; color: #ded7cf; line-height: 1.3; display: block;">
+                                    ⚖️ <strong>Transparência & Conformidade:</strong> O texto e o ícone deste pilar são totalmente editáveis e ocultáveis. Se sua joia não inclui certificado físico na entrega, personalize o texto ou desative o pilar.
+                                </span>
+                            </div>
+                            <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                                <div class="form-group">
+                                    <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Ícone (Emoji / Símbolo)</label>
+                                    <div style="display: flex; gap: 6px;">
+                                        <input type="text" id="store_bag_trust3_icon" name="store_bag_trust3_icon" class="form-input" value="<?= View::e($t3Icon) ?>" placeholder="💎" style="width: 70px; text-align: center; font-size: 1rem;" oninput="updateProductElementPreview()">
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(3, '💎')">💎</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(3, '✦')">✦</button>
+                                            <button type="button" class="btn-admin-cancel" style="padding: 4px 6px; font-size: 0.85rem;" onclick="setTrustIcon(3, '👑')">👑</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="store_bag_trust3_text" style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Pilar 3</label>
+                                    <input type="text" id="store_bag_trust3_text" name="store_bag_trust3_text" class="form-input" value="<?= View::e($t3Text) ?>" placeholder="Joia Autoral com Certificado" oninput="updateProductElementPreview()">
+                                </div>
+                                <?= $renderColorField('store_bag_trust3_text_color', '#a0988c', 'Cor do Texto', 'Cor da legenda') ?>
+                                <?= $renderColorField('store_bag_trust3_icon_color', '#CBD0D6', 'Cor do Ícone', 'Cor do símbolo') ?>
+                                <?= $renderColorField('store_bag_trust3_bg_color', 'transparent', 'Cor de Fundo', 'Fundo (ou transparent)') ?>
+                                <?= $renderColorField('store_bag_trust3_border_color', 'transparent', 'Cor da Borda', 'Borda (ou transparent)') ?>
+                            </div>
+                        </div>
+
                     </div>
-                    <input type="text" id="store_bag_trust3_text" name="store_bag_trust3_text" class="form-input" 
-                           value="<?= View::e(Setting::get('store_bag_trust3_text', '✦ Joia Autoral com Certificado')) ?>">
                 </div>
 
                 <!-- Seletor de Variações de Pedras Minerais -->
@@ -1114,7 +1380,7 @@ function switchBoutiqueSection(sectionId, btn) {
 function handleToggleSwitch(chk) {
     const parentLabel = chk.closest('.element-toggle-switch');
     const textSpan = parentLabel ? parentLabel.querySelector('.toggle-text') : null;
-    const formGroup = chk.closest('.form-group');
+    const formGroup = chk.closest('.form-group') || chk.closest('.pilar-editor-subcard');
 
     if (chk.checked) {
         if (parentLabel) {
@@ -1132,6 +1398,115 @@ function handleToggleSwitch(chk) {
         if (formGroup) formGroup.classList.add('is-dimmed');
     }
 }
+
+function syncColorInput(picker, targetId) {
+    const target = document.getElementById(targetId);
+    if (target) {
+        target.value = picker.value;
+    }
+}
+
+function syncPickerInput(textInput, pickerId) {
+    const picker = document.getElementById(pickerId);
+    if (picker && /^#[0-9A-Fa-f]{6}$/.test(textInput.value.trim())) {
+        picker.value = textInput.value.trim();
+    }
+}
+
+function setTrustIcon(pilarNum, icon) {
+    const el = document.getElementById('store_bag_trust' + pilarNum + '_icon');
+    if (el) {
+        el.value = icon;
+        updateProductElementPreview();
+    }
+}
+
+function updateProductElementPreview() {
+    // 1. Qty
+    const qLbl = document.getElementById('store_qty_label')?.value || 'Qtd:';
+    const qColor = document.getElementById('store_qty_text_color')?.value || '#ffffff';
+    const qBg = document.getElementById('store_qty_bg_color')?.value || 'rgba(0, 0, 0, 0.35)';
+    const qBorder = document.getElementById('store_qty_border_color')?.value || 'rgba(255, 255, 255, 0.18)';
+    
+    const prevQLbl = document.getElementById('prev_qty_label');
+    if (prevQLbl) {
+        prevQLbl.textContent = qLbl;
+        prevQLbl.style.color = qColor;
+    }
+    const prevQBox = document.getElementById('prev_qty_box');
+    if (prevQBox) {
+        prevQBox.style.background = qBg;
+        prevQBox.style.borderColor = qBorder;
+        prevQBox.querySelectorAll('span').forEach(s => s.style.color = qColor);
+    }
+
+    // 2. Add to Cart
+    const cTxt = document.getElementById('store_add_to_cart_btn_text')?.value || 'Adicionar à Sacola';
+    const cBg = document.getElementById('store_add_to_cart_bg_color')?.value || 'rgba(202, 161, 92, 0.08)';
+    const cColor = document.getElementById('store_add_to_cart_text_color')?.value || '#ffffff';
+    const cIcoColor = document.getElementById('store_add_to_cart_icon_color')?.value || '#CBD0D6';
+    const cBorder = document.getElementById('store_add_to_cart_border_color')?.value || '#CBD0D6';
+
+    const prevCartBtn = document.getElementById('prev_add_to_cart_btn');
+    if (prevCartBtn) {
+        prevCartBtn.style.background = cBg;
+        prevCartBtn.style.color = cColor;
+        prevCartBtn.style.borderColor = cBorder;
+    }
+    const prevCartTxt = document.getElementById('prev_add_to_cart_text');
+    if (prevCartTxt) prevCartTxt.textContent = cTxt;
+    const prevCartSvg = document.getElementById('prev_add_to_cart_svg');
+    if (prevCartSvg) prevCartSvg.setAttribute('stroke', cIcoColor);
+
+    // 3. Buy Now
+    const bTxt = document.getElementById('store_buy_now_btn_text')?.value || 'Comprar Agora';
+    const bBg = document.getElementById('store_buy_now_bg_color')?.value || '#CBD0D6';
+    const bColor = document.getElementById('store_buy_now_text_color')?.value || '#1a1918';
+    const bIcoColor = document.getElementById('store_buy_now_icon_color')?.value || '#1a1918';
+    const bBorder = document.getElementById('store_buy_now_border_color')?.value || '#737B85';
+
+    const prevBuyBtn = document.getElementById('prev_buy_now_btn');
+    if (prevBuyBtn) {
+        prevBuyBtn.style.background = bBg;
+        prevBuyBtn.style.color = bColor;
+        prevBuyBtn.style.borderColor = bBorder;
+    }
+    const prevBuyTxt = document.getElementById('prev_buy_now_text');
+    if (prevBuyTxt) prevBuyTxt.textContent = bTxt;
+    const prevBuySvg = document.getElementById('prev_buy_now_svg');
+    if (prevBuySvg) prevBuySvg.setAttribute('stroke', bIcoColor);
+
+    // 4. Trust Pillars
+    for (let i = 1; i <= 3; i++) {
+        const ico = document.getElementById('store_bag_trust' + i + '_icon')?.value || '';
+        const txt = document.getElementById('store_bag_trust' + i + '_text')?.value || '';
+        const tColor = document.getElementById('store_bag_trust' + i + '_text_color')?.value || '#a0988c';
+        const iColor = document.getElementById('store_bag_trust' + i + '_icon_color')?.value || '#CBD0D6';
+        const bg = document.getElementById('store_bag_trust' + i + '_bg_color')?.value || 'transparent';
+        const border = document.getElementById('store_bag_trust' + i + '_border_color')?.value || 'transparent';
+
+        const badge = document.getElementById('prev_trust' + i + '_badge');
+        const icoEl = document.getElementById('prev_trust' + i + '_icon');
+        const txtEl = document.getElementById('prev_trust' + i + '_text');
+
+        if (badge) {
+            badge.style.background = (bg !== 'transparent') ? bg : '';
+            badge.style.border = (border !== 'transparent') ? '1px solid ' + border : '';
+        }
+        if (icoEl) {
+            icoEl.textContent = ico;
+            icoEl.style.color = iColor;
+        }
+        if (txtEl) {
+            txtEl.textContent = txt;
+            txtEl.style.color = tColor;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateProductElementPreview();
+});
 
 async function handleBoutiqueSubmit(e) {
     e.preventDefault();

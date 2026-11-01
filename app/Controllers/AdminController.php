@@ -1609,6 +1609,39 @@ class AdminController
     public function saveLandingPage(): void
     {
         try {
+            // Sincroniza chaves de botões da página de produto se alteradas na landing page
+            if (isset($_POST['store_add_to_cart_text'])) {
+                $_POST['store_add_to_cart_btn_text'] = $_POST['store_add_to_cart_text'];
+            }
+            if (isset($_POST['store_add_to_cart_visible'])) {
+                $_POST['store_add_to_cart_btn_visible'] = $_POST['store_add_to_cart_visible'];
+            }
+            if (isset($_POST['store_add_to_cart_bg'])) {
+                $_POST['store_add_to_cart_bg_color'] = $_POST['store_add_to_cart_bg'];
+            }
+            if (isset($_POST['store_add_to_cart_color'])) {
+                $_POST['store_add_to_cart_text_color'] = $_POST['store_add_to_cart_color'];
+            }
+            if (isset($_POST['store_add_to_cart_border'])) {
+                $_POST['store_add_to_cart_border_color'] = $_POST['store_add_to_cart_border'];
+            }
+
+            if (isset($_POST['store_buy_now_text'])) {
+                $_POST['store_buy_now_btn_text'] = $_POST['store_buy_now_text'];
+            }
+            if (isset($_POST['store_buy_now_visible'])) {
+                $_POST['store_buy_now_btn_visible'] = $_POST['store_buy_now_visible'];
+            }
+            if (isset($_POST['store_buy_now_bg'])) {
+                $_POST['store_buy_now_bg_color'] = $_POST['store_buy_now_bg'];
+            }
+            if (isset($_POST['store_buy_now_color'])) {
+                $_POST['store_buy_now_text_color'] = $_POST['store_buy_now_color'];
+            }
+            if (isset($_POST['store_buy_now_border'])) {
+                $_POST['store_buy_now_border_color'] = $_POST['store_buy_now_border'];
+            }
+
             \App\Models\Setting::setMany($_POST);
 
             $this->respond([
@@ -1679,6 +1712,39 @@ class AdminController
     public function saveBoutique(): void
     {
         try {
+            // Sincroniza chaves de botões da página de produto para manter compatibilidade
+            if (isset($_POST['store_add_to_cart_btn_text'])) {
+                $_POST['store_add_to_cart_text'] = $_POST['store_add_to_cart_btn_text'];
+            }
+            if (isset($_POST['store_add_to_cart_btn_visible'])) {
+                $_POST['store_add_to_cart_visible'] = $_POST['store_add_to_cart_btn_visible'];
+            }
+            if (isset($_POST['store_add_to_cart_bg_color'])) {
+                $_POST['store_add_to_cart_bg'] = $_POST['store_add_to_cart_bg_color'];
+            }
+            if (isset($_POST['store_add_to_cart_text_color'])) {
+                $_POST['store_add_to_cart_color'] = $_POST['store_add_to_cart_text_color'];
+            }
+            if (isset($_POST['store_add_to_cart_border_color'])) {
+                $_POST['store_add_to_cart_border'] = $_POST['store_add_to_cart_border_color'];
+            }
+
+            if (isset($_POST['store_buy_now_btn_text'])) {
+                $_POST['store_buy_now_text'] = $_POST['store_buy_now_btn_text'];
+            }
+            if (isset($_POST['store_buy_now_btn_visible'])) {
+                $_POST['store_buy_now_visible'] = $_POST['store_buy_now_btn_visible'];
+            }
+            if (isset($_POST['store_buy_now_bg_color'])) {
+                $_POST['store_buy_now_bg'] = $_POST['store_buy_now_bg_color'];
+            }
+            if (isset($_POST['store_buy_now_text_color'])) {
+                $_POST['store_buy_now_color'] = $_POST['store_buy_now_text_color'];
+            }
+            if (isset($_POST['store_buy_now_border_color'])) {
+                $_POST['store_buy_now_border'] = $_POST['store_buy_now_border_color'];
+            }
+
             \App\Models\Setting::setMany($_POST);
 
             $this->respond([

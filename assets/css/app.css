@@ -6693,6 +6693,28 @@ body.theme-rose .btn-store-back {
 
 .direct-bag-trust-sub .dot {
     opacity: 0.4;
+    user-select: none;
+}
+
+.direct-bag-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.74rem;
+    line-height: 1.3;
+    transition: all 0.2s ease;
+}
+
+.direct-bag-trust-item .trust-item-icon {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.direct-bag-trust-item .trust-item-text {
+    font-size: 0.74rem;
+    line-height: 1.2;
 }
 
 @media (max-width: 600px) {
