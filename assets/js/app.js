@@ -537,54 +537,9 @@ function setupShopeeClickTracking() {
     });
 }
 
-// 6. MODAL DE LOGIN ADMINISTRATIVO
+// 6. ACESSO ADMINISTRATIVO (EXCLUSIVO POR ROTA ADMINISTRATIVA PRÓPRIA)
 function setupAdminLoginModal() {
-    const trigger = document.getElementById('loginModalTrigger');
-    const overlay = document.getElementById('loginModalOverlay');
-    const closeBtn = document.getElementById('closeLoginModal');
-
-    function openModal() {
-        if (overlay) {
-            overlay.classList.add('active');
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-            const emailInput = document.getElementById('adminEmail');
-            if (emailInput) setTimeout(() => emailInput.focus(), 100);
-        }
-    }
-
-    function closeModal() {
-        if (overlay) {
-            overlay.classList.remove('active');
-            overlay.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
-        }
-    }
-
-    if (trigger) {
-        trigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal();
-        });
-    }
-
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    if (overlay) {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeModal();
-        });
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay && overlay.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    if (window.location.search.includes('login=')) {
-        openModal();
-    }
+    // O acesso administrativo ocorre exclusivamente via /admin/login
 }
 
 async function handleAdminLogin(e) {

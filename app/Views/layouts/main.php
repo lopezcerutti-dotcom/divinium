@@ -1156,7 +1156,6 @@
                 </button>
                 <?php endif; ?>
 
-                <button type="button" class="login-pill-btn" id="loginModalTrigger" aria-label="Acessar Painel Administrativo"><?= \App\Core\View::e(\App\Models\Setting::get('header_login_label', 'Entrar')) ?></button>
             </div>
 
         </div>
@@ -1299,12 +1298,6 @@
                     </a>
                 <?php endif; ?>
 
-                <?php if (\App\Models\Setting::get('mobile_nav_login_visible', '1') === '1'): ?>
-                    <button type="button" class="mobile-nav-login-btn" id="mobileLoginBtn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span><?= \App\Core\View::e(\App\Models\Setting::get('mobile_nav_login_text', 'Entrar no Painel Administrativo')) ?></span>
-                    </button>
-                <?php endif; ?>
 
                 <?php if (\App\Models\Setting::get('mobile_nav_perk_visible', '1') === '1'): ?>
                     <div class="mobile-nav-perk">
@@ -1583,52 +1576,6 @@
             <div class="cookie-actions">
                 <button class="cookie-btn-accept" id="acceptCookiesBtn"><?= \App\Core\View::e(\App\Models\Setting::get('cookie_banner_btn', 'Prosseguir')) ?></button>
             </div>
-        </div>
-    </div>
-
-    <!-- 7. MODAL DE ACESSO AO PAINEL ADMINISTRATIVO -->
-    <div class="login-modal-overlay" id="loginModalOverlay" aria-hidden="true">
-        <div class="login-modal-box" role="dialog" aria-labelledby="loginModalTitle" aria-modal="true">
-            <button class="login-modal-close" id="closeLoginModal" aria-label="Fechar">&times;</button>
-            
-            <div class="login-modal-brand">
-                <span class="brand-sparkle">✦</span>
-                <span class="brand-title">DIVINIUM</span>
-                <span class="brand-sub">PAINEL DO ADMINISTRADOR</span>
-            </div>
-
-            <div class="login-modal-header">
-                <h3 id="loginModalTitle"><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_title', 'Acesso aos Bastidores')) ?></h3>
-                <p><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_subtitle', 'Controle de produtos, categorias, minerais e gestão do site.')) ?></p>
-            </div>
-
-            <!-- Alerta de Erro Dinâmico -->
-            <div class="login-error-alert" id="loginErrorAlert" style="display: none;"></div>
-
-            <form id="adminLoginForm" action="/admin/login" method="POST" onsubmit="handleAdminLogin(event)">
-                <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
-
-                <div class="modal-form-group">
-                    <label for="adminEmail">E-mail de Acesso</label>
-                    <div class="input-icon-wrap">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        <input type="email" id="adminEmail" name="email" class="modal-input" placeholder="seu@email.com" required autocomplete="username">
-                    </div>
-                </div>
-
-                <div class="modal-form-group">
-                    <label for="adminPassword">Senha de Segurança</label>
-                    <div class="input-icon-wrap">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <input type="password" id="adminPassword" name="password" class="modal-input" placeholder="Sua senha de acesso" required autocomplete="current-password">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-modal-submit" id="adminLoginSubmitBtn">
-                    <span><?= \App\Core\View::e(\App\Models\Setting::get('login_modal_btn', 'Acessar Painel de Controle')) ?></span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-            </form>
         </div>
     </div>
 

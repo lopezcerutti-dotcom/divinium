@@ -30,8 +30,14 @@ class AdminAuthMiddleware
                 exit;
             }
 
-            $_SESSION['login_error'] = 'Você precisa estar logado para acessar o painel de controle.';
-            header('Location: /?login=required');
+            $loginRoute = '/admin/login';
+            $customPrefix = trim((string) \App\Core\Env::get('ADMIN_PREFIX', ''), '/');
+            if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', '/' . $customPrefix)) {
+                $loginRoute = '/' . $customPrefix . '/login';
+            }
+
+            $_SESSION['login_error'] = 'Autenticação necessária para acessar o painel administrativo.';
+            header('Location: ' . $loginRoute);
             exit;
         }
     }

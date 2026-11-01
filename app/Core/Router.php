@@ -291,6 +291,7 @@ class Router
             $p = '/' . $pref;
 
             // Autenticação
+            $this->get($p . '/login', [\App\Controllers\AuthController::class, 'showLoginForm']);
             $this->post($p . '/login', [\App\Controllers\AuthController::class, 'login']);
             $this->get($p . '/logout', [\App\Controllers\AuthController::class, 'logout']);
             $this->post($p . '/logout', [\App\Controllers\AuthController::class, 'logout']);

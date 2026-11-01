@@ -16,27 +16,26 @@ define('STORAGE_PATH', BASE_PATH . '/storage');
 define('LOGS_PATH', BASE_PATH . '/logs');
 define('PUBLIC_PATH', BASE_PATH . '/public_html');
 
-// 2. AUTOLOAD PSR-4 (COMPOSER OU FALLBACK NATIVO)
+// 2. AUTOLOAD PSR-4 (SEMPRE REGISTRADO COM PRIORIDADE PARA GARANTIR CLASSES ATUALIZADAS)
+spl_autoload_register(function (string $class): void {
+    $prefix = 'App\\';
+    $baseDir = APP_PATH . '/';
+
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
+
+    $relativeClass = substr($class, $len);
+    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+
+    if (file_exists($file)) {
+        require $file;
+    }
+}, true, true);
+
 if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
     require_once BASE_PATH . '/vendor/autoload.php';
-} else {
-    // Autoloader fallback para execução antes do 'composer install'
-    spl_autoload_register(function (string $class): void {
-        $prefix = 'App\\';
-        $baseDir = APP_PATH . '/';
-
-        $len = strlen($prefix);
-        if (strncmp($prefix, $class, $len) !== 0) {
-            return;
-        }
-
-        $relativeClass = substr($class, $len);
-        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-
-        if (file_exists($file)) {
-            require $file;
-        }
-    });
 }
 
 // 3. CARREGAMENTO DO ARQUIVO DE AMBIENTE (.env, env.php OU FALLBACK SEGURO)
@@ -102,7 +101,7 @@ $safeDefaults = [
     'ASAAS_ENVIRONMENT' => 'sandbox',
     'ASAAS_API_KEY' => '$aact_placeholder_configure_sua_chave_asaas_aqui',
     'ASAAS_WEBHOOK_SECRET' => 'whsec_placeholder_configure_seu_token_webhook_aqui',
-    'SESSION_LIFETIME' => '7200',
+    'SESSION_LIFETIME' => '86400',
     'SESSION_SECURE_COOKIE' => 'true',
     'SESSION_HTTP_ONLY' => 'true',
     'SESSION_SAME_SITE' => 'Lax'
@@ -111,6 +110,41 @@ $safeDefaults = [
 foreach ($safeDefaults as $key => $val) {
     if (Env::get($key) === null || Env::get($key) === '') {
         Env::set($key, (string) $val);
+    }
+}
+
+// Auto-provisionamento físico do arquivo .env no servidor caso tenha sido omitido pelo Git (.gitignore)
+$envContentLines = [];
+foreach ($safeDefaults as $k => $defaultVal) {
+    $currentVal = (string) Env::get($k, $defaultVal);
+    if (str_contains($currentVal, ' ')) {
+        $envContentLines[] = $k . '="' . str_replace('"', '\"', $currentVal) . '"';
+    } else {
+        $envContentLines[] = $k . '=' . $currentVal;
+    }
+}
+$generatedEnvBody = implode("\n", $envContentLines) . "\n";
+
+if (!file_exists(BASE_PATH . '/.env')) {
+    @file_put_contents(BASE_PATH . '/.env', $generatedEnvBody, LOCK_EX);
+}
+$parentEnvPath = dirname(BASE_PATH) . '/.env';
+if (is_dir(dirname(BASE_PATH)) && !file_exists($parentEnvPath)) {
+    @file_put_contents($parentEnvPath, $generatedEnvBody, LOCK_EX);
+}
+
+// Sincronizar eventual pasta app/ legada fora de public_html para eliminar código antigo de 17/10
+$parentLegacyBootstrap = dirname(BASE_PATH) . '/app/bootstrap.php';
+if (file_exists($parentLegacyBootstrap)) {
+    $realCurrent = @realpath(__FILE__);
+    $realLegacy  = @realpath($parentLegacyBootstrap);
+    if ($realCurrent && $realLegacy && $realCurrent !== $realLegacy) {
+        if (@filesize($realCurrent) !== @filesize($realLegacy)) {
+            @copy($realCurrent, $realLegacy);
+            if (function_exists('opcache_invalidate')) {
+                @opcache_invalidate($realLegacy, true);
+            }
+        }
     }
 }
 

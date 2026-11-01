@@ -35,21 +35,24 @@ register_shutdown_function(function (): void {
     }
 });
 
-// Ponto de entrada: Carrega o bootstrap (suporta app/ fora ou dentro de public_html)
-$possibleBootstraps = [
-    __DIR__ . '/app/bootstrap.php',
-    dirname(__DIR__) . '/app/bootstrap.php',
-    __DIR__ . '/../app/bootstrap.php',
-    dirname(__FILE__, 2) . '/app/bootstrap.php',
-];
+// Ponto de entrada: Carrega o bootstrap da raiz atual e sincroniza cópia legada externa se existir no servidor
+$primaryBootstrap = __DIR__ . '/app/bootstrap.php';
+$legacyParentBootstrap = dirname(__DIR__) . '/app/bootstrap.php';
 
-$bootstrapFile = null;
-foreach ($possibleBootstraps as $candidate) {
-    if (file_exists($candidate)) {
-        $bootstrapFile = $candidate;
-        break;
+if (file_exists($primaryBootstrap) && file_exists($legacyParentBootstrap)) {
+    $realPrimary = @realpath($primaryBootstrap);
+    $realParent = @realpath($legacyParentBootstrap);
+    if ($realPrimary && $realParent && $realPrimary !== $realParent) {
+        if (@filesize($primaryBootstrap) !== @filesize($legacyParentBootstrap)) {
+            @copy($primaryBootstrap, $legacyParentBootstrap);
+            if (function_exists('opcache_invalidate')) {
+                @opcache_invalidate($legacyParentBootstrap, true);
+            }
+        }
     }
 }
+
+$bootstrapFile = file_exists($primaryBootstrap) ? $primaryBootstrap : (file_exists($legacyParentBootstrap) ? $legacyParentBootstrap : null);
 
 if ($bootstrapFile === null) {
     header('Content-Type: text/html; charset=UTF-8');

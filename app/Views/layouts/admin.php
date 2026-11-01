@@ -210,6 +210,38 @@
                 init.headers = {};
             }
 
+            if (init.body instanceof FormData) {
+                let hasFile = false;
+                init.body.forEach(v => {
+                    if ((typeof File !== "undefined" && v instanceof File) || (typeof Blob !== "undefined" && v instanceof Blob)) {
+                        hasFile = true;
+                    }
+                });
+                if (!hasFile) {
+                    const payload = {};
+                    init.body.forEach((v, k) => {
+                        if (k.endsWith("[]")) {
+                            const cleanKey = k.slice(0, -2);
+                            if (!Array.isArray(payload[cleanKey])) payload[cleanKey] = [];
+                            payload[cleanKey].push(v);
+                        } else {
+                            payload[k] = v;
+                        }
+                    });
+                    if (csrfToken && !payload["_csrf_token"]) {
+                        payload["_csrf_token"] = csrfToken;
+                    }
+                    init.body = JSON.stringify(payload);
+                    if (init.headers instanceof Headers) {
+                        init.headers.set("Content-Type", "application/json");
+                        if (!init.headers.has("Accept")) init.headers.set("Accept", "application/json");
+                    } else if (!Array.isArray(init.headers) && typeof init.headers === "object") {
+                        init.headers["Content-Type"] = "application/json";
+                        if (!init.headers["Accept"]) init.headers["Accept"] = "application/json";
+                    }
+                }
+            }
+
             if (init.headers instanceof Headers) {
                 if (!init.headers.has('X-Requested-With')) init.headers.set('X-Requested-With', 'XMLHttpRequest');
                 if (csrfToken && !init.headers.has('X-CSRF-TOKEN')) init.headers.set('X-CSRF-TOKEN', csrfToken);

@@ -10,7 +10,36 @@ use App\Core\View;
 class AuthController
 {
     /**
-     * Processa login administrativo (suporta POST normal e requisições AJAX do modal)
+     * Exibe a página exclusiva de login administrativo
+     */
+    public function showLoginForm(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $targetAdmin = '/admin';
+        $customPrefix = trim((string) \App\Core\Env::get('ADMIN_PREFIX', 'admin'), '/');
+        if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', '/' . $customPrefix)) {
+            $targetAdmin = '/' . $customPrefix;
+        }
+
+        if (!empty($_SESSION['admin_user'])) {
+            header('Location: ' . $targetAdmin);
+            exit;
+        }
+
+        $loginError = (string) ($_SESSION['login_error'] ?? '');
+        unset($_SESSION['login_error']);
+
+        View::render('admin/login', [
+            'loginAction' => $targetAdmin . '/login',
+            'loginError'  => $loginError,
+        ], '');
+    }
+
+    /**
+     * Processa login administrativo (suporta POST normal e requisições AJAX)
      */
     public function login(): void
     {
@@ -18,10 +47,29 @@ class AuthController
             session_start();
         }
 
-        $email = trim((string) ($_POST['email'] ?? ''));
-        $password = (string) ($_POST['password'] ?? '');
-        $isJson = isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')
-            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+        $payload = $_POST;
+        if (empty($payload)) {
+            $raw = file_get_contents('php://input');
+            if ($raw) {
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $payload = $decoded;
+                }
+            }
+        }
+
+        $email = trim((string) ($payload['email'] ?? ''));
+        $password = (string) ($payload['password'] ?? '');
+        $isJson = (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
+            || (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json'));
+
+        $targetAdmin = '/admin';
+        $customPrefix = trim((string) \App\Core\Env::get('ADMIN_PREFIX', 'admin'), '/');
+        if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', '/' . $customPrefix)) {
+            $targetAdmin = '/' . $customPrefix;
+        }
+        $loginRoute = $targetAdmin . '/login';
 
         if ($email === '' || $password === '') {
             $errorMsg = 'Por favor, informe seu e-mail e senha.';
@@ -32,7 +80,7 @@ class AuthController
                 return;
             }
             $_SESSION['login_error'] = $errorMsg;
-            header('Location: /?login=error');
+            header('Location: ' . $loginRoute);
             exit;
         }
 
@@ -86,12 +134,6 @@ class AuthController
                     'logged_at' => time()
                 ];
 
-                $targetAdmin = '/admin';
-                $customPrefix = trim((string)\App\Core\Env::get('ADMIN_PREFIX', 'admin'), '/');
-                if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', $customPrefix)) {
-                    $targetAdmin = '/' . $customPrefix;
-                }
-
                 if ($isJson) {
                     header('Content-Type: application/json; charset=UTF-8');
                     echo json_encode([
@@ -115,7 +157,7 @@ class AuthController
             }
 
             $_SESSION['login_error'] = $errorMsg;
-            header('Location: /?login=error');
+            header('Location: ' . $loginRoute);
             exit;
 
         } catch (\Throwable $e) {
@@ -128,7 +170,7 @@ class AuthController
             }
 
             $_SESSION['login_error'] = $errorMsg;
-            header('Location: /?login=error');
+            header('Location: ' . $loginRoute);
             exit;
         }
     }
@@ -142,10 +184,16 @@ class AuthController
             session_start();
         }
 
+        $targetAdmin = '/admin';
+        $customPrefix = trim((string) \App\Core\Env::get('ADMIN_PREFIX', 'admin'), '/');
+        if ($customPrefix !== '' && $customPrefix !== 'admin' && str_contains($_SERVER['REQUEST_URI'] ?? '', '/' . $customPrefix)) {
+            $targetAdmin = '/' . $customPrefix;
+        }
+
         unset($_SESSION['admin_user']);
         session_destroy();
 
-        header('Location: /?logout=success');
+        header('Location: ' . $targetAdmin . '/login');
         exit;
     }
 }
