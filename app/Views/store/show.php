@@ -307,12 +307,125 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     <!-- ============================================================== -->
                     <?php
                     $directCartEnabled = Setting::get('checkout_direct_cart_enabled', '1') === '1';
-                    $showAddToCartBtn = Setting::get('store_add_to_cart_btn_visible', Setting::get('store_add_to_cart_visible', '1')) === '1';
-                    $addToCartBtnText = Setting::get('store_add_to_cart_btn_text', Setting::get('store_add_to_cart_text', 'Adicionar à Sacola'));
-                    $showBuyNowBtn = Setting::get('store_buy_now_btn_visible', Setting::get('store_buy_now_visible', '1')) === '1';
-                    $buyNowBtnText = Setting::get('store_buy_now_btn_text', Setting::get('store_buy_now_text', 'Comprar Agora'));
+
+                    // 1. Quantidade de Joias
                     $showQtySelector = Setting::get('store_qty_selector_visible', '1') === '1';
                     $qtyLabel = Setting::get('store_qty_label', 'Qtd:');
+                    $qtyTextColor = Setting::get('store_qty_text_color', '');
+                    $qtyBgColor = Setting::get('store_qty_bg_color', '');
+                    $qtyBorderColor = Setting::get('store_qty_border_color', '');
+
+                    $qtyBoxStyles = [];
+                    if (!empty($qtyBgColor) && $qtyBgColor !== 'transparent') {
+                        $qtyBoxStyles[] = 'background: ' . $qtyBgColor . ' !important';
+                    }
+                    if (!empty($qtyBorderColor) && $qtyBorderColor !== 'transparent') {
+                        $qtyBoxStyles[] = 'border-color: ' . $qtyBorderColor . ' !important';
+                    }
+                    $qtyBoxStyleAttr = !empty($qtyBoxStyles) ? implode('; ', $qtyBoxStyles) : '';
+                    $qtyTextStyleAttr = !empty($qtyTextColor) ? 'color: ' . $qtyTextColor . ' !important;' : '';
+
+                    // 2. Botão "Adicionar à Sacola"
+                    $showAddToCartBtn = Setting::get('store_add_to_cart_btn_visible', Setting::get('store_add_to_cart_visible', '1')) === '1';
+                    $addToCartBtnText = Setting::get('store_add_to_cart_btn_text', Setting::get('store_add_to_cart_text', 'Adicionar à Sacola'));
+                    $addToCartBg = Setting::get('store_add_to_cart_bg_color', Setting::get('store_add_to_cart_bg', ''));
+                    $addToCartText = Setting::get('store_add_to_cart_text_color', Setting::get('store_add_to_cart_color', ''));
+                    $addToCartBorder = Setting::get('store_add_to_cart_border_color', Setting::get('store_add_to_cart_border', ''));
+                    $addToCartIcon = Setting::get('store_add_to_cart_icon_color', '');
+
+                    $addToCartStyles = [];
+                    if (!empty($addToCartBg) && $addToCartBg !== 'transparent') {
+                        $addToCartStyles[] = 'background: ' . $addToCartBg . ' !important';
+                    }
+                    if (!empty($addToCartText)) {
+                        $addToCartStyles[] = 'color: ' . $addToCartText . ' !important';
+                    }
+                    if (!empty($addToCartBorder) && $addToCartBorder !== 'transparent') {
+                        $addToCartStyles[] = 'border-color: ' . $addToCartBorder . ' !important';
+                    }
+                    $addToCartStyleAttr = !empty($addToCartStyles) ? implode('; ', $addToCartStyles) : '';
+                    $addToCartIconColorAttr = !empty($addToCartIcon) ? $addToCartIcon : (!empty($addToCartText) ? $addToCartText : '#CBD0D6');
+
+                    // 3. Botão "Comprar Agora"
+                    $showBuyNowBtn = Setting::get('store_buy_now_btn_visible', Setting::get('store_buy_now_visible', '1')) === '1';
+                    $buyNowBtnText = Setting::get('store_buy_now_btn_text', Setting::get('store_buy_now_text', 'Comprar Agora'));
+                    $buyNowBg = Setting::get('store_buy_now_bg_color', Setting::get('store_buy_now_bg', ''));
+                    $buyNowText = Setting::get('store_buy_now_text_color', Setting::get('store_buy_now_color', ''));
+                    $buyNowBorder = Setting::get('store_buy_now_border_color', Setting::get('store_buy_now_border', ''));
+                    $buyNowIcon = Setting::get('store_buy_now_icon_color', '');
+
+                    $buyNowStyles = [];
+                    if (!empty($buyNowBg) && $buyNowBg !== 'transparent') {
+                        $buyNowStyles[] = 'background: ' . $buyNowBg . ' !important';
+                    }
+                    if (!empty($buyNowText)) {
+                        $buyNowStyles[] = 'color: ' . $buyNowText . ' !important';
+                    }
+                    if (!empty($buyNowBorder) && $buyNowBorder !== 'transparent') {
+                        $buyNowStyles[] = 'border-color: ' . $buyNowBorder . ' !important';
+                    }
+                    $buyNowStyleAttr = !empty($buyNowStyles) ? implode('; ', $buyNowStyles) : '';
+                    $buyNowIconColorAttr = !empty($buyNowIcon) ? $buyNowIcon : (!empty($buyNowText) ? $buyNowText : '#1a1918');
+
+                    // 4. Pilares de Confiança (3 Pilares Independentes)
+                    $trustRowVisible = Setting::get('store_bag_trust_row_visible', '1') === '1';
+                    $activeTrustPillars = [];
+                    if ($trustRowVisible) {
+                        $trustDefaults = [
+                            1 => ['icon' => '🛡️', 'text' => 'Compra 100% Protegida', 'legacy' => '🔒 Compra 100% Protegida'],
+                            2 => ['icon' => '⚡', 'text' => 'Pix com Desconto', 'legacy' => '⚡ Pix com Desconto'],
+                            3 => ['icon' => '💎', 'text' => 'Joia Autoral com Certificado', 'legacy' => '✦ Joia Autoral com Certificado'],
+                        ];
+                        for ($pi = 1; $pi <= 3; $pi++) {
+                            $pVis = Setting::get("store_bag_trust{$pi}_visible", '1') === '1';
+                            if (!$pVis) continue;
+
+                            $def = $trustDefaults[$pi];
+                            $pIcon = Setting::get("store_bag_trust{$pi}_icon", $def['icon']);
+                            $rawText = Setting::get("store_bag_trust{$pi}_text", $def['text']);
+                            $pText = $rawText;
+
+                            if ($rawText === $def['legacy']) {
+                                $pText = $def['text'];
+                            } elseif (preg_match('/^([\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}✦🔒🛡️⚡💎])\s*(.+)$/u', $rawText, $matches)) {
+                                if (empty($pIcon) || $pIcon === $def['icon']) {
+                                    $pIcon = $matches[1];
+                                }
+                                $pText = $matches[2];
+                            }
+
+                            if (empty($pText)) continue;
+
+                            $pTextColor = Setting::get("store_bag_trust{$pi}_text_color", '');
+                            $pIconColor = Setting::get("store_bag_trust{$pi}_icon_color", '');
+                            $pBgColor = Setting::get("store_bag_trust{$pi}_bg_color", '');
+                            $pBorderColor = Setting::get("store_bag_trust{$pi}_border_color", '');
+
+                            $itemStyles = [];
+                            $hasCustomBox = false;
+                            if (!empty($pBgColor) && $pBgColor !== 'transparent') {
+                                $itemStyles[] = 'background: ' . $pBgColor . ' !important';
+                                $hasCustomBox = true;
+                            }
+                            if (!empty($pBorderColor) && $pBorderColor !== 'transparent') {
+                                $itemStyles[] = 'border: 1px solid ' . $pBorderColor . ' !important';
+                                $hasCustomBox = true;
+                            }
+                            if ($hasCustomBox) {
+                                $itemStyles[] = 'padding: 3px 8px; border-radius: 4px;';
+                            }
+
+                            $activeTrustPillars[] = [
+                                'id' => $pi,
+                                'icon' => $pIcon,
+                                'text' => $pText,
+                                'item_style' => implode('; ', $itemStyles),
+                                'icon_style' => !empty($pIconColor) ? 'color: ' . $pIconColor . ' !important;' : '',
+                                'text_style' => !empty($pTextColor) ? 'color: ' . $pTextColor . ' !important;' : '',
+                                'has_box' => $hasCustomBox,
+                            ];
+                        }
+                    }
                     ?>
 
                     <?php if ($directCartEnabled && ($showAddToCartBtn || $showBuyNowBtn)): ?>
@@ -320,11 +433,11 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                         <div class="direct-bag-controls-row">
                             <?php if ($showQtySelector): ?>
                             <div class="product-qty-stepper-wrap">
-                                <span class="qty-stepper-label"><?= View::e($qtyLabel) ?></span>
-                                <div class="qty-stepper-luxury">
-                                    <button type="button" class="btn-qty-step" onclick="changeProductQty(-1)" aria-label="Diminuir quantidade">−</button>
-                                    <span class="qty-display-luxury" id="productQtyDisplay">1</span>
-                                    <button type="button" class="btn-qty-step" onclick="changeProductQty(1)" aria-label="Aumentar quantidade">+</button>
+                                <span class="qty-stepper-label" style="<?= View::e($qtyTextStyleAttr) ?>"><?= View::e($qtyLabel) ?></span>
+                                <div class="qty-stepper-luxury" style="<?= View::e($qtyBoxStyleAttr) ?>">
+                                    <button type="button" class="btn-qty-step" style="<?= View::e($qtyTextStyleAttr) ?>" onclick="changeProductQty(-1)" aria-label="Diminuir quantidade">−</button>
+                                    <span class="qty-display-luxury" id="productQtyDisplay" style="<?= View::e($qtyTextStyleAttr) ?>">1</span>
+                                    <button type="button" class="btn-qty-step" style="<?= View::e($qtyTextStyleAttr) ?>" onclick="changeProductQty(1)" aria-label="Aumentar quantidade">+</button>
                                     <input type="hidden" id="productQuantityInput" value="1">
                                 </div>
                             </div>
@@ -334,20 +447,20 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
 
                             <div class="direct-bag-buttons-grid">
                                 <?php if ($showAddToCartBtn): ?>
-                                <button type="button" class="btn-luxury-add-bag" id="btnAddToCartMain" onclick="addProductToBag(event)">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <button type="button" class="btn-luxury-add-bag" id="btnAddToCartMain" onclick="addProductToBag(event)" style="<?= View::e($addToCartStyleAttr) ?>">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($addToCartIconColorAttr) ?>" stroke-width="2" style="color: <?= View::e($addToCartIconColorAttr) ?>;">
                                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                                         <line x1="3" y1="6" x2="21" y2="6"></line>
                                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                                     </svg>
-                                    <span id="btnAddToCartText"><?= View::e($addToCartBtnText) ?></span>
+                                    <span id="btnAddToCartText" style="<?= !empty($addToCartText) ? 'color: ' . View::e($addToCartText) . ' !important;' : '' ?>"><?= View::e($addToCartBtnText) ?></span>
                                 </button>
                                 <?php endif; ?>
 
                                 <?php if ($showBuyNowBtn): ?>
-                                <button type="button" class="btn-luxury-buy-direct" id="btnBuyNowMain" onclick="buyNowDirect(event)">
-                                    <span><?= View::e($buyNowBtnText) ?></span>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <button type="button" class="btn-luxury-buy-direct" id="btnBuyNowMain" onclick="buyNowDirect(event)" style="<?= View::e($buyNowStyleAttr) ?>">
+                                    <span style="<?= !empty($buyNowText) ? 'color: ' . View::e($buyNowText) . ' !important;' : '' ?>"><?= View::e($buyNowBtnText) ?></span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($buyNowIconColorAttr) ?>" stroke-width="2.2" style="color: <?= View::e($buyNowIconColorAttr) ?>;">
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                         <polyline points="12 5 19 12 12 19"></polyline>
                                     </svg>
@@ -356,23 +469,16 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             </div>
                         </div>
 
-                        <?php if (Setting::get('store_bag_trust_row_visible', '1') === '1'): ?>
+                        <?php if ($trustRowVisible && !empty($activeTrustPillars)): ?>
                         <div class="direct-bag-trust-sub" id="productTrustRow">
-                            <?php
-                            $t1Vis = Setting::get('store_bag_trust1_visible', '1') === '1';
-                            $t1Txt = Setting::get('store_bag_trust1_text', '🔒 Compra 100% Protegida');
-                            $t2Vis = Setting::get('store_bag_trust2_visible', '1') === '1';
-                            $t2Txt = Setting::get('store_bag_trust2_text', '⚡ Pix com Desconto');
-                            $t3Vis = Setting::get('store_bag_trust3_visible', '1') === '1';
-                            $t3Txt = Setting::get('store_bag_trust3_text', '✦ Joia Autoral com Certificado');
-                            $trustItems = [];
-                            if ($t1Vis && !empty($t1Txt)) $trustItems[] = $t1Txt;
-                            if ($t2Vis && !empty($t2Txt)) $trustItems[] = $t2Txt;
-                            if ($t3Vis && !empty($t3Txt)) $trustItems[] = $t3Txt;
-                            ?>
-                            <?php foreach ($trustItems as $idx => $tItem): ?>
-                                <?php if ($idx > 0): ?><span class="dot">•</span><?php endif; ?>
-                                <span><?= View::e($tItem) ?></span>
+                            <?php foreach ($activeTrustPillars as $idx => $pillar): ?>
+                                <?php if ($idx > 0 && !$pillar['has_box']): ?><span class="dot">•</span><?php endif; ?>
+                                <span class="direct-bag-trust-item" style="<?= View::e($pillar['item_style']) ?>">
+                                    <?php if (!empty($pillar['icon']) && $pillar['icon'] !== 'none'): ?>
+                                        <span class="trust-item-icon" style="<?= View::e($pillar['icon_style']) ?>"><?= View::e($pillar['icon']) ?></span>
+                                    <?php endif; ?>
+                                    <span class="trust-item-text" style="<?= View::e($pillar['text_style']) ?>"><?= View::e($pillar['text']) ?></span>
+                                </span>
                             <?php endforeach; ?>
                         </div>
                         <?php endif; ?>

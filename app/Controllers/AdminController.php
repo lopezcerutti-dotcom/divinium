@@ -1641,15 +1641,6 @@ class AdminController
             if (isset($_POST['store_buy_now_border'])) {
                 $_POST['store_buy_now_border_color'] = $_POST['store_buy_now_border'];
             }
-            if (isset($_POST['shipping_api_token']) && trim((string)$_POST['shipping_api_token']) === '') {
-                $existingToken = \App\Models\Setting::get('shipping_api_token', '');
-                $provider = $_POST['shipping_calc_provider'] ?? \App\Models\Setting::get('shipping_calc_provider', 'none');
-                if ($existingToken !== '' && $provider !== 'none') {
-                    unset($_POST['shipping_api_token']);
-                }
-            }
-            if (false) {
-            }
 
             \App\Models\Setting::setMany($_POST);
 
@@ -1673,13 +1664,6 @@ class AdminController
     {
         try {
             $pageSlug = trim((string)($_POST['page_slug'] ?? $_POST['_page_slug'] ?? ''));
-            if (isset($_POST['shipping_api_token']) && trim((string)$_POST['shipping_api_token']) === '') {
-                $existingToken = \App\Models\Setting::get('shipping_api_token', '');
-                $provider = $_POST['shipping_calc_provider'] ?? \App\Models\Setting::get('shipping_calc_provider', 'none');
-                if ($existingToken !== '' && $provider !== 'none') {
-                    unset($_POST['shipping_api_token']);
-                }
-            }
             \App\Models\Setting::setMany($_POST);
 
             $pageNames = [
@@ -1688,8 +1672,6 @@ class AdminController
                 'privacidade' => 'Política de Privacidade (LGPD)',
                 'termos' => 'Termos de Uso do Site',
                 'frete' => 'Política de Frete e Entrega',
-                'medidas' => 'Guia de Medidas & Tamanhos de Anéis',
-                'dpo' => 'Canal do Encarregado de Dados (DPO)',
             ];
             $name = $pageNames[$pageSlug] ?? 'Institucional';
 

@@ -64,9 +64,9 @@ $optWaBadge = Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO');
 $optWaDesc = Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.');
 
 $optCardEnabled = Setting::get('checkout_opt_card_enabled', '1') === '1';
-$optCardTitle = Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito');
-$optCardBadge = Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
-$optCardDesc = Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
+$optCardTitle = Setting::getRaw('checkout_opt_card_title', '💳 Cartão de Crédito');
+$optCardBadge = Setting::getRaw('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
+$optCardDesc = Setting::getRaw('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
 
 // Métodos Habilitados & Método Padrão Inicial
 $enabledPaymentMethods = [];
@@ -96,19 +96,91 @@ $waDesc = Setting::get('checkout_wa_instructions_text', 'Ao avançar, nossa equi
 $cardTitle = Setting::get('checkout_card_instructions_title', 'Cartão de Crédito com Parcelamento Sem Juros');
 $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcionado para o gateway seguro homologado da Divinium para inserção protegida dos dados do cartão em até 10x.');
 
-// Controles de Textos e Visibilidade dos Botões do Checkout (Padrão 22a9aa6)
+// Controles Individuais Avançados dos Botões do Checkout
 $btnCepVisible = Setting::get('checkout_btn_cep_visible', '1') === '1';
 $btnCepText = Setting::get('checkout_btn_cep_text', Setting::get('checkout_btn_search_cep', 'Buscar'));
+$btnCepBg = Setting::get('checkout_btn_cep_bg', '#202020');
+$btnCepColor = Setting::get('checkout_btn_cep_color', '#FFFFFF');
+$btnCepBorder = Setting::get('checkout_btn_cep_border', '#202020');
+$btnCepIcon = Setting::get('checkout_btn_cep_icon', 'search');
+$btnCepIconColor = Setting::get('checkout_btn_cep_icon_color', '#FFFFFF');
+$btnCepRadius = Setting::get('checkout_btn_cep_radius', '4px');
+$btnCepShadow = Setting::get('checkout_btn_cep_shadow', 'none');
 
 $btnPixVisible = Setting::get('checkout_btn_pix_visible', '1') === '1';
 $btnPixText = Setting::get('checkout_btn_pix_text', Setting::get('checkout_btn_copy_pix', 'Copiar Chave'));
+$btnPixBg = Setting::get('checkout_btn_pix_bg', '#FFFFFF');
+$btnPixColor = Setting::get('checkout_btn_pix_color', '#202020');
+$btnPixBorder = Setting::get('checkout_btn_pix_border', '#CBD0D6');
+$btnPixIcon = Setting::get('checkout_btn_pix_icon', 'copy');
+$btnPixIconColor = Setting::get('checkout_btn_pix_icon_color', '#202020');
+$btnPixRadius = Setting::get('checkout_btn_pix_radius', '4px');
+$btnPixShadow = Setting::get('checkout_btn_pix_shadow', 'subtle');
 
 $btnSubmitVisible = Setting::get('checkout_btn_submit_visible', '1') === '1';
 $btnSubmitText = Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar');
+$btnSubmitBg = Setting::get('checkout_btn_submit_bg', '#202020');
+$btnSubmitColor = Setting::get('checkout_btn_submit_color', '#FFFFFF');
+$btnSubmitBorder = Setting::get('checkout_btn_submit_border', '#202020');
+$btnSubmitIcon = Setting::get('checkout_btn_submit_icon', 'arrow-right');
+$btnSubmitIconColor = Setting::get('checkout_btn_submit_icon_color', '#FFFFFF');
+$btnSubmitRadius = Setting::get('checkout_btn_submit_radius', '4px');
+$btnSubmitShadow = Setting::get('checkout_btn_submit_shadow', 'noble');
 
 $returnStoreVisible = Setting::get('checkout_return_store_visible', '1') === '1';
 $returnStoreText = Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique');
 $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
+$returnStoreBg = Setting::get('checkout_return_store_bg', 'transparent');
+$returnStoreColor = Setting::get('checkout_return_store_color', '#737B85');
+$returnStoreBorder = Setting::get('checkout_return_store_border', '#CBD0D6');
+$returnStoreIcon = Setting::get('checkout_return_store_icon', 'none');
+$returnStoreIconColor = Setting::get('checkout_return_store_icon_color', '#737B85');
+$returnStoreRadius = Setting::get('checkout_return_store_radius', '4px');
+$returnStoreShadow = Setting::get('checkout_return_store_shadow', 'none');
+
+$checkoutShadowMap = [
+    'none' => 'none',
+    'subtle' => '0 2px 8px rgba(0,0,0,0.06)',
+    'noble' => '0 4px 16px rgba(0,0,0,0.12)',
+    'glow' => '0 0 18px rgba(203, 208, 214, 0.45)',
+    'flat' => 'none',
+];
+
+$renderCheckoutBtnIcon = function($iconKey, $iconColor) {
+    if (!$iconKey || $iconKey === 'none') return '';
+    $style = 'color: ' . View::e($iconColor) . '; display: inline-flex; align-items: center; justify-content: center;';
+    switch ($iconKey) {
+        case 'search':
+        case '🔍':
+            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+        case 'copy':
+        case '📋':
+            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+        case 'arrow-right':
+        case '→':
+            return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-left: 6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+        case 'arrow-left':
+        case '←':
+            return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 6px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
+        case 'bag':
+        case '🛍️':
+            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
+        case 'whatsapp':
+        case '💬':
+            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">💬</span>';
+        case 'instagram':
+        case '📷':
+            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">📷</span>';
+        case 'mail':
+        case '✉️':
+            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">✉️</span>';
+        case 'sparkle':
+        case '✦':
+            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">✦</span>';
+        default:
+            return '<span style="' . $style . ' margin-right: 5px;">' . View::e($iconKey) . '</span>';
+    }
+};
 ?>
 
 <div class="checkout-page-container">
@@ -161,11 +233,10 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
                                 <label for="clientCep"><?= View::e($lblClientCep) ?></label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" id="clientCep" name="cep" class="form-input" placeholder="00000-000" maxlength="9" required>
-                                    <?php if ($btnCepVisible): ?>
-                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()">
+                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()" style="background: <?= View::e($btnCepBg) ?> !important; color: <?= View::e($btnCepColor) ?> !important; border: 1px solid <?= View::e($btnCepBorder) ?> !important; border-radius: <?= View::e($btnCepRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnCepShadow] ?? 'none') ?> !important; <?= !$btnCepVisible ? 'display: none !important;' : 'display: inline-flex; align-items: center; justify-content: center; gap: 4px;' ?> cursor: pointer; transition: all 0.2s ease;">
+                                        <?= $renderCheckoutBtnIcon($btnCepIcon, $btnCepIconColor) ?>
                                         <span id="btnConsultarCepText"><?= View::e($btnCepText) ?></span>
                                     </button>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -265,11 +336,10 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
                                         <code id="pixKeyValueDisplay"><?= View::e($pixKey) ?></code>
                                         <small style="display: block; color: var(--text-secondary); margin-top: 2px;">Titular: <?= View::e($pixBeneficiary) ?></small>
                                     </div>
-                                    <?php if ($btnPixVisible): ?>
-                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')">
+                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')" style="background: <?= View::e($btnPixBg) ?> !important; color: <?= View::e($btnPixColor) ?> !important; border: 1px solid <?= View::e($btnPixBorder) ?> !important; border-radius: <?= View::e($btnPixRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnPixShadow] ?? 'none') ?> !important; <?= !$btnPixVisible ? 'display: none !important;' : 'display: inline-flex; align-items: center; justify-content: center; gap: 4px;' ?> cursor: pointer; transition: all 0.2s ease;">
+                                        <?= $renderCheckoutBtnIcon($btnPixIcon, $btnPixIconColor) ?>
                                         <span id="copyPixBtnText"><?= View::e($btnPixText) ?></span>
                                     </button>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                             <?php endif; ?>
@@ -293,12 +363,10 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
                             <?php endif; ?>
                         </div>
 
-                        <?php if ($btnSubmitVisible): ?>
-                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout">
+                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout" style="background: <?= View::e($btnSubmitBg) ?> !important; color: <?= View::e($btnSubmitColor) ?> !important; border: 1px solid <?= View::e($btnSubmitBorder) ?> !important; border-radius: <?= View::e($btnSubmitRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnSubmitShadow] ?? 'none') ?> !important; <?= !$btnSubmitVisible ? 'display: none !important;' : 'display: flex; justify-content: center; align-items: center; gap: 8px;' ?> cursor: pointer; transition: all 0.25s ease;">
+                            <?= $renderCheckoutBtnIcon($btnSubmitIcon, $btnSubmitIconColor) ?>
                             <span id="btnSubmitCheckoutText"><?= View::e($btnSubmitText) ?></span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </button>
-                        <?php endif; ?>
                     </form>
                 </div>
             </div>
@@ -358,7 +426,10 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
                     </div>
 
                     <?php if ($returnStoreVisible): ?>
-                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store"><?= View::e($returnStoreText) ?></a>
+                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store" style="background: <?= View::e($returnStoreBg) ?> !important; color: <?= View::e($returnStoreColor) ?> !important; border: 1px solid <?= View::e($returnStoreBorder) ?> !important; border-radius: <?= View::e($returnStoreRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$returnStoreShadow] ?? 'none') ?> !important; padding: 10px 16px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin: 0 auto; width: 100%; box-sizing: border-box; transition: all 0.2s ease;">
+                        <?= $renderCheckoutBtnIcon($returnStoreIcon, $returnStoreIconColor) ?>
+                        <span><?= View::e($returnStoreText) ?></span>
+                    </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -494,8 +565,8 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
     transition: all 0.2s;
 }
 .btn-calc-cep:hover {
-    background: var(--gold-accent, #A7ADB4);
-    color: #25272A;
+    filter: brightness(1.15);
+    transform: translateY(-1px);
 }
 
 /* Frete em tempo real */
@@ -674,8 +745,8 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
     white-space: nowrap;
 }
 .btn-copy-pix:hover {
-    background: var(--gold-hover, #737B85);
-    color: #FFFFFF;
+    filter: brightness(1.15);
+    transform: translateY(-1px);
 }
 .btn-checkout-submit {
     width: 100%;
@@ -695,10 +766,8 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
     transition: all 0.25s ease;
 }
 .btn-checkout-submit:hover:not(:disabled) {
-    background: var(--gold-hover, #737B85);
-    color: #FFFFFF;
+    filter: brightness(1.15);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(115, 123, 133, 0.25);
 }
 .btn-checkout-submit:disabled, .btn-checkout-submit.disabled {
     background: #CBD0D6;
@@ -864,8 +933,8 @@ $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
     transition: color 0.2s;
 }
 .btn-return-store:hover {
-    color: var(--text-primary, #25272A);
-    text-decoration: underline;
+    filter: brightness(1.15);
+    transform: translateY(-1px);
 }
 @media (max-width: 900px) {
     .checkout-grid {

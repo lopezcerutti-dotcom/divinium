@@ -414,36 +414,36 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                    <button type="button" class="btn-admin-cancel" style="background: #F8F8F7; border: 1px solid #A7ADB4; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
+                    <button type="button" class="btn-admin-cancel" style="background: #141312; border: 1px solid rgba(202,161,92,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #202020;"></span>
-                            <strong style="color: #202020; font-size: 0.84rem;">Pérola & Prata Noir (Padrão)</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #CBD0D6; border: 1px solid #fff;"></span>
+                            <strong style="color: #CBD0D6; font-size: 0.84rem;">Noir Ateliê Ouro</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #686868;">Fundo #F8F8F7 • Prata #A7ADB4</span>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #252525 • Ouro #A7ADB4</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #FFFFFF; border: 1px solid #CBD0D6; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
+                    <button type="button" class="btn-admin-cancel" style="background: #1e1e1d; border: 1px solid rgba(255,255,255,0.2); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #737B85;"></span>
-                            <strong style="color: #202020; font-size: 0.84rem;">Branco Puro & Platina</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #CBD0D6;"></span>
+                            <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Banho de Prata</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #686868;">Fundo #FFFFFF • Prata #A7ADB4</span>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #FBF9F5 • Prata #FFFFFF</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #F0F0EF; border: 1px solid #737B85; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('rose')">
+                    <button type="button" class="btn-admin-cancel" style="background: #18120e; border: 1px solid rgba(212,139,96,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('rose')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #737B85; border: 1px solid #202020;"></span>
-                            <strong style="color: #202020; font-size: 0.84rem;">Platina & Grafite Suave</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #d48b60; border: 1px solid #fff;"></span>
+                            <strong style="color: #d48b60; font-size: 0.84rem;">Terracota & Aço</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #686868;">Fundo #F0F0EF • Prata #A7ADB4</span>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #120D0A • Terracota #D48B60</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #252525; border: 1px solid rgba(167,173,180,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('emerald')">
+                    <button type="button" class="btn-admin-cancel" style="background: #091710; border: 1px solid rgba(56,161,105,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('emerald')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #fff;"></span>
-                            <strong style="color: #FFFFFF; font-size: 0.84rem;">Noir Grafite & Prata</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #38a169; border: 1px solid #fff;"></span>
+                            <strong style="color: #38a169; font-size: 0.84rem;">Esmeralda Imperial</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #A7ADB4;">Fundo #252525 • Prata #A7ADB4</span>
+                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #06130D • Esmeralda #38A169</span>
                     </button>
                 </div>
             </div>
@@ -458,14 +458,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
             <div class="form-grid" style="margin-bottom: 24px;">
                 <!-- Fundo Base Global -->
                 <div class="form-group">
-                    <label for="lp_custom_color_bg">Fundo Base Global (Branco Perolado)</label>
+                    <label for="lp_custom_color_bg">Fundo Base Global (Dark Noir)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_bg" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
                                oninput="document.getElementById('lp_custom_color_bg').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_bg" name="custom_color_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_bg').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Aplica-se ao fundo de todas as páginas da loja (Home, Boutique, Produto, Checkout, etc.)</span>
@@ -476,19 +476,19 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_surface">Superfície dos Cards & Caixas</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_surface" 
-                               value="<?= View::e(Setting::get('custom_color_surface', '#FFFFFF')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
                                oninput="document.getElementById('lp_custom_color_surface').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_surface" name="custom_color_surface" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_surface', '#FFFFFF')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_surface').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Aplica-se às caixas de produtos, formulários e fichas técnicas.</span>
                 </div>
 
-                <!-- Cor Primária Prata Fosca -->
+                <!-- Cor Primária Ouro -->
                 <div class="form-group">
-                    <label for="lp_custom_color_primary">Cor Primária (Prata Fosca / Botões Principais)</label>
+                    <label for="lp_custom_color_primary">Cor Primária (Ouro / Botões Principais)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_primary" 
                                value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
@@ -498,7 +498,7 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_primary').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Define o tom dos botões de compra e detalhes nobres em prata fosca.</span>
+                    <span class="field-hint">Define o tom dos botões de compra, títulos e detalhes nobres.</span>
                 </div>
 
                 <!-- Cor de Realce -->
@@ -506,14 +506,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_accent">Cor de Realce (Hover & Acentos)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_accent" 
-                               value="<?= View::e(Setting::get('custom_color_accent', '#737B85')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
                                oninput="document.getElementById('lp_custom_color_accent').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_accent" name="custom_color_accent" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_accent', '#737B85')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_accent').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Cinza-prata escuro ao passar o cursor do mouse sobre links e botões.</span>
+                    <span class="field-hint">Brilho dourado ao passar o cursor do mouse sobre links e botões.</span>
                 </div>
 
                 <!-- Texto Principal -->
@@ -521,14 +521,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_text">Texto Principal (Leitura & Títulos)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_text" 
-                               value="<?= View::e(Setting::get('custom_color_text', '#202020')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
                                oninput="document.getElementById('lp_custom_color_text').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_text" name="custom_color_text" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_text', '#202020')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Cor dos títulos e corpo de texto principal (#202020).</span>
+                    <span class="field-hint">Cor dos títulos e corpo de texto principal.</span>
                 </div>
 
                 <!-- Texto Suave -->
@@ -536,14 +536,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_text_muted">Texto Suave (Secundário / Legendas)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_text_muted" 
-                               value="<?= View::e(Setting::get('custom_color_text_muted', '#686868')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
                                oninput="document.getElementById('lp_custom_color_text_muted').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_text_muted', '#686868')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text_muted').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Legendas, subtítulos e especificações técnicas (#686868).</span>
+                    <span class="field-hint">Legendas, especificações técnicas e notas de rodapé.</span>
                 </div>
             </div>
 
@@ -645,18 +645,18 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             <label for="lp_site_bg_color" style="font-size: 0.8rem; font-weight: 700; color: #CBD0D6; margin: 0; text-transform: uppercase; letter-spacing: 0.04em;">
                                 🎨 Cor de Fundo Base do Site:
                             </label>
-                            <button type="button" class="btn-admin-cancel" style="padding: 2px 8px; font-size: 0.7rem;" onclick="document.getElementById('lp_site_bg_color').value = ''; document.getElementById('picker_site_bg_color').value = '#F8F8F7'; updateThemeColorsLivePreview();">
+                            <button type="button" class="btn-admin-cancel" style="padding: 2px 8px; font-size: 0.7rem;" onclick="document.getElementById('lp_site_bg_color').value = ''; document.getElementById('picker_site_bg_color').value = '#252525'; updateThemeColorsLivePreview();">
                                 ✕ Limpar / Herdar Padrão
                             </button>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <input type="color" id="picker_site_bg_color" 
-                                   value="<?= View::e(Setting::get('site_bg_color', '') ?: Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
+                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
                                    oninput="document.getElementById('lp_site_bg_color').value = this.value; updateThemeColorsLivePreview();"
                                    style="width: 48px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="lp_site_bg_color" name="site_bg_color" class="form-input" 
-                                   value="<?= View::e(Setting::get('site_bg_color', '')) ?>" 
-                                   placeholder="Vazio = herda #F8F8F7 (Branco Perolado)"
+                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
+                                   placeholder="Ex: #F8F8F7 ou #252525"
                                    oninput="if(this.value.startsWith('#') && (this.value.length === 4 || this.value.length === 7)) document.getElementById('picker_site_bg_color').value = this.value; updateThemeColorsLivePreview();">
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
@@ -2195,27 +2195,27 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_text_color">Cor dos Parágrafos / Textos</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_text_color_picker" 
-                               value="<?= Setting::get('about_text_color', '#E2E4E7') ?>" 
+                               value="<?= Setting::get('about_text_color', '#ded7cf') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_text_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_text_color" name="about_text_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_text_color', '#E2E4E7')) ?>" 
-                               placeholder="#E2E4E7"
+                               value="<?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>" 
+                               placeholder="#ded7cf"
                                oninput="if(this.value.length===7){document.getElementById('about_text_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor dos parágrafos descritivos da história.</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="about_accent_color">Cor de Destaque / Prata (Citação & Detalhes)</label>
+                    <label for="about_accent_color">Cor de Destaque / Ouro (Citação & Detalhes)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_accent_color_picker" 
-                               value="<?= Setting::get('about_accent_color', '#A7ADB4') ?>" 
+                               value="<?= Setting::get('about_accent_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_accent_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_accent_color" name="about_accent_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_accent_color', '#A7ADB4')) ?>" 
-                               placeholder="#A7ADB4"
+                               value="<?= View::e(Setting::get('about_accent_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_accent_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor da citação poética em itálico e toques nobres.</span>
@@ -2225,12 +2225,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_tag_color">Cor da Tag / Selo Superior</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_tag_color_picker" 
-                               value="<?= Setting::get('about_tag_color', '#A7ADB4') ?>" 
+                               value="<?= Setting::get('about_tag_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_tag_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_tag_color" name="about_tag_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_tag_color', '#A7ADB4')) ?>" 
-                               placeholder="#A7ADB4"
+                               value="<?= View::e(Setting::get('about_tag_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_tag_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do selo 'MANIFESTO DIVINIUM' acima do título.</span>
@@ -2240,12 +2240,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_btn_color">Cor do Botão de Ação (Borda & Texto)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_btn_color_picker" 
-                               value="<?= Setting::get('about_btn_color', '#A7ADB4') ?>" 
+                               value="<?= Setting::get('about_btn_color', '#CBD0D6') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_btn_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_btn_color" name="about_btn_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_btn_color', '#A7ADB4')) ?>" 
-                               placeholder="#A7ADB4"
+                               value="<?= View::e(Setting::get('about_btn_color', '#CBD0D6')) ?>" 
+                               placeholder="#CBD0D6"
                                oninput="if(this.value.length===7){document.getElementById('about_btn_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do botão 'Conheça Nossa História'.</span>
@@ -2255,12 +2255,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_card_bg">Fundo do Card da Miniatura Macro</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_card_bg_picker" 
-                               value="<?= Setting::get('about_card_bg', '#202020') ?>" 
+                               value="<?= Setting::get('about_card_bg', '#161513') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_card_bg').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_card_bg" name="about_card_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('about_card_bg', '#202020')) ?>" 
-                               placeholder="#202020"
+                               value="<?= View::e(Setting::get('about_card_bg', '#161513')) ?>" 
+                               placeholder="#161513"
                                oninput="if(this.value.length===7){document.getElementById('about_card_bg_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor de fundo do card de textura mineral.</span>
@@ -2270,19 +2270,19 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_card_border">Borda do Card da Miniatura Macro</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="text" id="about_card_border" name="about_card_border" class="form-input" 
-                               value="<?= View::e(Setting::get('about_card_border', 'rgba(167, 173, 180, 0.25)')) ?>" 
-                               placeholder="rgba(167, 173, 180, 0.25)"
+                               value="<?= View::e(Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)')) ?>" 
+                               placeholder="rgba(212, 186, 136, 0.25)"
                                oninput="updateAboutLivePreview();">
                     </div>
-                    <span class="field-hint">Ex: rgba(167, 173, 180, 0.25) ou #333333.</span>
+                    <span class="field-hint">Ex: rgba(212, 186, 136, 0.25) ou #332d24.</span>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="about_caption_bg">Fundo da Legenda Editorial da Foto</label>
                     <div style="display: flex; gap: 8px; align-items: center; max-width: 450px;">
                         <input type="text" id="about_caption_bg" name="about_caption_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('about_caption_bg', 'rgba(37, 37, 37, 0.85)')) ?>" 
-                               placeholder="rgba(37, 37, 37, 0.85)"
+                               value="<?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>" 
+                               placeholder="rgba(18, 17, 16, 0.85)"
                                oninput="updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Fundo translúcido da barra inferior da foto editorial lateral.</span>
@@ -3726,7 +3726,7 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                         <?= $renderToggle('footer_socials_visible') ?>
                     </div>
                     <input type="text" id="footer_instagram" name="footer_instagram" class="form-input"
-                           value="<?= View::e(Setting::get('footer_instagram', 'https://instagram.com/diviniumjoias')) ?>">
+                           value="<?= View::e(Setting::get('footer_instagram', 'https://instagram.com/divinium')) ?>">
                 </div>
 
                 <!-- Selos de Meios de Pagamento -->
@@ -4169,20 +4169,20 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                     <label for="checkout_opt_card_title" style="font-size: 0.78rem; color: #CBD0D6;">Nome da Opção Cartão</label>
                                     <input type="text" id="checkout_opt_card_title" name="checkout_opt_card_title" class="form-input"
                                            placeholder="Ex: 💳 Cartão de Crédito"
-                                           value="<?= View::e(Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
+                                           value="<?= View::e(Setting::getRaw('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
                                 </div>
                                 <div>
                                     <label for="checkout_opt_card_badge" style="font-size: 0.78rem; color: #CBD0D6;">Badge da Opção Cartão</label>
                                     <input type="text" id="checkout_opt_card_badge" name="checkout_opt_card_badge" class="form-input"
                                            placeholder="Ex: ATÉ 10X SEM JUROS"
-                                           value="<?= View::e(Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
+                                           value="<?= View::e(Setting::getRaw('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
                                 </div>
                             </div>
                             <div>
                                 <label for="checkout_opt_card_desc" style="font-size: 0.78rem; color: #CBD0D6;">Descrição da Opção Cartão</label>
                                 <input type="text" id="checkout_opt_card_desc" name="checkout_opt_card_desc" class="form-input"
                                        placeholder="Ex: Pagamento processado em ambiente 100% criptografado homologado ASAAS."
-                                       value="<?= View::e(Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
+                                       value="<?= View::e(Setting::getRaw('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
                             </div>
                         </div>
 
@@ -4478,47 +4478,40 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             'slug' => 'trocas-e-devolucoes',
                             'enabled_key' => 'page_trocas_enabled',
                             'title_key' => 'page_trocas_title',
-                            'legacy_title_key' => 'page_returns_title',
                             'default_title' => 'Política de Trocas e Devoluções',
                             'subtitle_key' => 'page_trocas_subtitle',
                             'default_subtitle' => 'Conforme o Código de Defesa do Consumidor (Art. 49), garantimos seu direito de arrependimento em até 7 dias corridos.',
                             'content_key' => 'page_trocas_content',
-                            'legacy_content_keys' => ['page_trocas_intro', 'policy_returns_content'],
                             'default_content' => 'Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje solicitar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.',
                             'blocks_key' => 'page_trocas_blocks_json',
                             'fields' => [
                                 [
                                     'key' => 'page_trocas_arrependimento',
                                     'label' => 'Direito de Arrependimento e Prazo Legal Aplicável (CDC Art. 49)',
-                                    'default' => 'Você possui até 7 (sete) dias corridos a partir da data de recebimento do pedido para solicitar a devolução com reembolso integral ou troca, conforme o Artigo 49 do Código de Defesa do Consumidor.',
                                     'placeholder' => 'Ex: Você possui até 7 (sete) dias corridos a partir da data de recebimento do pedido para manifestar seu direito de arrependimento com devolução sem custos e ressarcimento integral...',
                                     'hint' => 'Prazo legal garantido pelo Código de Defesa do Consumidor. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_trocas_procedimento',
                                     'label' => 'Procedimento para Solicitar Devolução',
-                                    'default' => 'Entre em contato com nosso Concierge VIP informando o número do pedido ou CPF. Forneceremos o código postal de postagem reversa cortesia dos Correios ou transportadora para envio seguro.',
                                     'placeholder' => 'Ex: Entre em contato com nosso Concierge VIP informando o número do pedido ou CPF para receber a autorização de postagem reversa cortesia dos Correios ou transportadora...',
                                     'hint' => 'Passo a passo simples e orientações para postagem. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_trocas_condicoes',
                                     'label' => 'Condições da Joia para Devolução',
-                                    'default' => 'A joia deverá ser devolvida em sua embalagem aveludada original, acompanhada do Certificado de Garantia e sem sinais de uso indevido, avarias mecânicas ou alterações.',
                                     'placeholder' => 'Ex: A joia deverá ser devolvida em sua embalagem aveludada original, acompanhada do Certificado de Garantia e sem sinais de uso indevido ou avarias mecânicas...',
                                     'hint' => 'Exigências de integridade da peça, certificado e embalagem. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_trocas_reembolso',
                                     'label' => 'Procedimentos e Prazos de Reembolso',
-                                    'default' => 'Após a recepção e conferência de integridade em nossa central, o reembolso é efetuado de imediato via Pix ou estornado na fatura do cartão de crédito conforme os prazos da operadora.',
                                     'placeholder' => 'Ex: O estorno é realizado de imediato via Pix ou processado na fatura do cartão conforme prazos da operadora após conferência em nossa central...',
                                     'hint' => 'Condições de ressarcimento por meio de pagamento. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_trocas_canais',
                                     'label' => 'Canais Oficiais de Atendimento',
-                                    'default' => 'Nosso Concierge atende pelo WhatsApp oficial informado no rodapé e pelo e-mail atendimento@divinium.com.br, de segunda a sexta-feira, das 09h às 18h.',
                                     'placeholder' => 'Ex: Concierge VIP WhatsApp oficial informado no rodapé e e-mail: atendimento@divinium.com.br (Segunda a Sexta, das 09h às 18h)...',
                                     'hint' => 'Contatos oficiais para assistência de trocas e devoluções. Deixe em branco para ocultar.'
                                 ],
@@ -4529,47 +4522,40 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             'slug' => 'garantia-e-cuidados',
                             'enabled_key' => 'page_garantia_enabled',
                             'title_key' => 'page_garantia_title',
-                            'legacy_title_key' => 'page_warranty_title',
                             'default_title' => 'Certificado de Garantia & Cuidados com a Joia',
                             'subtitle_key' => 'page_garantia_subtitle',
                             'default_subtitle' => 'Conheça o compromisso de qualidade do banho de prata nobre, gemas naturais e as orientações para conservação.',
                             'content_key' => 'page_garantia_content',
-                            'legacy_content_keys' => ['page_garantia_intro', 'policy_warranty_content'],
-                            'default_content' => 'A DIVINIUM assegura a excelência e autenticidade de cada joia autoral. Nossas peças recebem acabamento nobre com Banho de Prata de alta durabilidade e abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.',
+                            'default_content' => 'A DIVINIUM assegura a nobreza e excelência de cada peça autoral. Nossas criações recebem acabamento nobre em Banho de Prata de alta durabilidade e abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina.',
                             'blocks_key' => 'page_garantia_blocks_json',
                             'fields' => [
                                 [
                                     'key' => 'page_garantia_prazo',
                                     'label' => 'Prazo e Condições da Garantia',
-                                    'default' => 'Todas as peças contam com garantia legal de 90 dias conforme o CDC e garantia de manufatura quanto ao acabamento do banho de prata nobre e autenticidade das pedras naturais.',
                                     'placeholder' => 'Ex: Todas as peças contam com garantia legal de 90 dias conforme o CDC e garantia de manufatura quanto ao acabamento do banho de prata nobre...',
                                     'hint' => 'Prazos legais e contratuais oferecidos pela marca. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_garantia_cobertura',
                                     'label' => 'Itens Cobertos e Não Cobertos',
-                                    'default' => 'A garantia cobre defeitos originários de manufatura e fixação das pedras. Não cobre danos decorrentes de quedas, atritos abrasivos, contato com produtos químicos agressivos ou uso inadequado.',
                                     'placeholder' => 'Ex: Cobertura: falhas de manufatura e fixação das pedras. Não coberto: quedas, atritos mecânicos abrasivos ou contato com químicas agressivas...',
                                     'hint' => 'Especificação clara de coberturas e exclusões. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_garantia_cuidados',
                                     'label' => 'Cuidados e Conservação das Peças',
-                                    'default' => 'Evite contato direto com produtos químicos de limpeza, alvejantes, cloro de piscina ou perfumes e cosméticos aplicados diretamente sobre as peças. Aplique hidratantes antes de colocar sua joia.',
                                     'placeholder' => 'Ex: Evite contato com cloro de piscina, alvejantes, produtos de limpeza ou perfumes borrifados diretamente sobre a peça...',
                                     'hint' => 'Orientações práticas de preservação e uso cotidiano. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_garantia_limpeza',
                                     'label' => 'Orientações de Limpeza e Armazenamento',
-                                    'default' => 'Para higienização, utilize apenas flanela mágica de polimento macia e seca ou água morna com sabão neutro. Armazene suas joias individualmente na embalagem aveludada original DIVINIUM.',
                                     'placeholder' => 'Ex: Higienize delicadamente com flanela mágica de polimento ou água morna com sabão neutro. Guarde individualmente no estojo aveludado original...',
                                     'hint' => 'Método de limpeza e estojo protetor. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_garantia_assistencia',
                                     'label' => 'Procedimentos para Solicitar Assistência Técnica',
-                                    'default' => 'Para solicitar avaliação ou assistência técnica, envie mensagem ao Concierge VIP com fotos nítidas e número do pedido para orientações imediatas.',
                                     'placeholder' => 'Ex: Entre em contato com nosso Concierge VIP com o número do pedido e fotos da peça para avaliação e orientações imediatas...',
                                     'hint' => 'Caminho para o cliente acionar suporte de manutenção. Deixe em branco para ocultar.'
                                 ],
@@ -4580,54 +4566,46 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             'slug' => 'politica-de-privacidade',
                             'enabled_key' => 'page_privacidade_enabled',
                             'title_key' => 'page_privacidade_title',
-                            'legacy_title_key' => 'page_privacy_title',
                             'default_title' => 'Política de Privacidade e Proteção de Dados (LGPD)',
                             'subtitle_key' => 'page_privacidade_subtitle',
                             'default_subtitle' => 'Nosso compromisso de total transparência e segurança no tratamento de seus dados pessoais (Lei nº 13.709/2018).',
                             'content_key' => 'page_privacidade_content',
-                            'legacy_content_keys' => ['page_privacidade_intro', 'policy_privacy_content'],
-                            'default_content' => 'A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD).',
+                            'default_content' => 'A sua privacidade é sagrada para a DIVINIUM JOIAS. Em total conformidade com a LGPD (Lei nº 13.709/2018), coletamos apenas os dados necessários para o processamento seguro de seus pedidos e comunicações autorizadas.',
                             'blocks_key' => 'page_privacidade_blocks_json',
                             'fields' => [
                                 [
                                     'key' => 'page_privacidade_coleta',
                                     'label' => 'Dados Coletados',
-                                    'default' => 'Coletamos apenas dados estritamente necessários para viabilizar o processamento seguro de seus pedidos, cálculo de frete, emissão obrigatória de Nota Fiscal e comunicação sobre suas joias.',
                                     'placeholder' => 'Ex: Coletamos apenas dados cadastrais necessários para emissão de nota fiscal, faturamento e endereço para entrega segura de seus pedidos...',
                                     'hint' => 'Discriminação dos dados tratados. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_privacidade_finalidades',
                                     'label' => 'Finalidades do Tratamento',
-                                    'default' => 'Os dados destinam-se exclusivamente à entrega das encomendas, faturamento fiscal, prevenção a fraudes no checkout e suporte personalizado através do nosso atendimento.',
                                     'placeholder' => 'Ex: Processamento de pedidos, entrega logística, emissão de NF-e, prevenção a fraudes no checkout e suporte personalizado...',
                                     'hint' => 'Propósitos específicos de uso das informações. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_privacidade_compartilhamento',
                                     'label' => 'Compartilhamento com Plataformas e Parceiros',
-                                    'default' => 'Não comercializamos dados cadastrais a terceiros. O compartilhamento ocorre apenas com parceiros operacionais essenciais: gateway homologado ASAAS para pagamentos e transportadoras homologadas.',
                                     'placeholder' => 'Ex: Compartilhamento restrito apenas com parceiros operacionais indispensáveis (gateway ASAAS e transportadoras homologadas)...',
                                     'hint' => 'Parceiros de pagamento e logística. Não venda de dados. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_privacidade_direitos',
                                     'label' => 'Direitos dos Titulares de Dados (LGPD Art. 18)',
-                                    'default' => 'Você pode a qualquer momento consultar, retificar, solicitar portabilidade ou requerer a eliminação dos seus dados entrando em contato com nosso Encarregado de Proteção de Dados (DPO).',
                                     'placeholder' => 'Ex: Confirmação de tratamento, acesso aos dados, correção de inconsistências, eliminação ou revogação de consentimento...',
                                     'hint' => 'Direitos expressos previstos na legislação. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_privacidade_canal',
                                     'label' => 'Canal de Atendimento de Privacidade & DPO',
-                                    'default' => 'Canal oficial do Encarregado de Dados: dpo@divinium.com.br. Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília).',
                                     'placeholder' => 'Ex: Encarregado oficial de dados (DPO): dpo@divinium.com.br (Atendimento de segunda a sexta, das 09h às 18h)...',
                                     'hint' => 'Canal formal do Encarregado de Dados. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_privacidade_cookies',
                                     'label' => 'Cookies e Tecnologias de Rastreamento',
-                                    'default' => 'Utilizamos cookies essenciais para a segurança e retenção dos itens em sua sacola de compras, além de dados agregados de navegação para medição e aprimoramento da experiência digital.',
                                     'placeholder' => 'Ex: Cookies operacionais para retenção da sacola e segurança da sessão, além de medição analítica anônima...',
                                     'hint' => 'Declaração de cookies de sessão e métricas. Deixe em branco para ocultar.'
                                 ],
@@ -4638,47 +4616,40 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             'slug' => 'termos-de-uso',
                             'enabled_key' => 'page_termos_enabled',
                             'title_key' => 'page_termos_title',
-                            'legacy_title_key' => 'page_terms_title',
                             'default_title' => 'Termos de Uso do Site & Condições Gerais',
                             'subtitle_key' => 'page_termos_subtitle',
                             'default_subtitle' => 'Diretrizes de navegação, propriedade intelectual e aquisição de joias autorais DIVINIUM.',
                             'content_key' => 'page_termos_content',
-                            'legacy_content_keys' => ['page_termos_intro', 'terms_of_use_content'],
-                            'default_content' => 'Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.',
+                            'default_content' => 'Ao navegar e efetuar compras no ambiente digital oficial da DIVINIUM, você concorda plenamente com os termos operacionais de navegação, propriedade intelectual e aquisição de joias.',
                             'blocks_key' => 'page_termos_blocks_json',
                             'fields' => [
                                 [
                                     'key' => 'page_termos_utilizacao',
                                     'label' => 'Condições de Utilização do Site',
-                                    'default' => 'O acesso e navegação no site destinam-se à apreciação e aquisição de joias autorais. O usuário concorda em utilizar a plataforma de boa-fé, com propósitos lícitos e informações legítimas.',
                                     'placeholder' => 'Ex: O usuário compromete-se a utilizar o portal de boa-fé, com finalidades lícitas e fornecimento de dados legítimos...',
                                     'hint' => 'Diretrizes de conduta e acesso. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_termos_cadastro',
                                     'label' => 'Cadastro e Segurança',
-                                    'default' => 'O usuário é responsável pela veracidade dos dados cadastrais inseridos e pela confidencialidade de suas credenciais, comunicando imediatamente qualquer uso não autorizado.',
                                     'placeholder' => 'Ex: Responsabilidade pela exatidão das informações fornecidas e sigilo das credenciais de acesso à conta...',
                                     'hint' => 'Responsabilidade cadastral do usuário. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_termos_propriedade',
                                     'label' => 'Propriedade Intelectual & Marcas',
-                                    'default' => 'Todo o design autoral das joias, fotografias, logotipos, textos, marcas e identidade visual são propriedade exclusiva da DIVINIUM JOIAS, protegidos pela Lei de Direitos Autorais (Lei nº 9.610/1998) e Propriedade Industrial (Lei nº 9.279/1996).',
                                     'placeholder' => 'Ex: Design autoral, fotografias, logomarcas, identidade visual e textos são protegidos pelas Leis 9.610/98 e 9.279/96...',
                                     'hint' => 'Proteção autoral das joias e da marca. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_termos_comerciais',
                                     'label' => 'Condições Comerciais e Pedidos',
-                                    'default' => 'Preços, especificações e disponibilidade de produtos podem ser alterados periodicamente. Os pedidos estão sujeitos à confirmação do pagamento e validação cadastral de segurança.',
                                     'placeholder' => 'Ex: Preços, disponibilidades de estoque e prazos de postagem sujeitos a validação após aprovação do pagamento...',
                                     'hint' => 'Políticas comerciais de compra. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_termos_responsabilidades',
                                     'label' => 'Responsabilidades e Limitações Legais',
-                                    'default' => 'A DIVINIUM adota protocolos avançados de segurança. Aplica-se a legislação brasileira de proteção ao consumidor e do comércio eletrônico, com foro eleito nos termos da legislação aplicável.',
                                     'placeholder' => 'Ex: Aplica-se a legislação brasileira de proteção ao consumidor e do comércio eletrônico, com foro eleito nos termos da lei...',
                                     'hint' => 'Limitações legais e foro competente. Deixe em branco para ocultar.'
                                 ],
@@ -4691,122 +4662,83 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             'title_key' => 'page_frete_title',
                             'default_title' => 'Política de Frete e Entrega',
                             'subtitle_key' => 'page_frete_subtitle',
-                            'legacy_subtitle_key' => 'page_frete_desc',
                             'default_subtitle' => 'Diretrizes oficiais sobre envio, prazos de expedição e entrega das joias DIVINIUM.',
                             'content_key' => 'page_frete_content',
-                            'legacy_content_keys' => ['page_frete_intro'],
                             'default_content' => 'Na DIVINIUM, cada joia autoral é cuidadosamente embalada e protegida com critérios rigorosos de segurança e discrição, assegurando que sua experiência seja nobre desde o envio até o recebimento.',
                             'blocks_key' => 'page_frete_blocks_json',
                             'fields' => [
                                 [
                                     'key' => 'page_frete_origem',
                                     'label' => 'Origem de Envio',
-                                    'default' => 'Os pedidos são expedidos diretamente de nossa central de curadoria e logística especializada.',
                                     'placeholder' => 'Ex: Central de Expedição e Curadoria DIVINIUM',
                                     'hint' => 'Local de expedição. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_regioes',
                                     'label' => 'Regiões Atendidas',
-                                    'default' => 'Atendemos todo o território nacional com cobertura de entrega para as localidades contempladas no checkout.',
                                     'placeholder' => 'Ex: Atendimento a todo o território nacional com cobertura de entrega',
                                     'hint' => 'Cobertura de entrega. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_modalidades',
                                     'label' => 'Modalidades de Transporte',
-                                    'default' => 'O transporte é realizado por serviços logísticos parceiros e transportadoras homologadas com seguro de carga integrado.',
                                     'placeholder' => 'Ex: Transportadoras parceiras homologadas com seguro de carga integrado',
                                     'hint' => 'Empresas e modalidades de envio. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_calculo',
                                     'label' => 'Cálculo do Frete',
-                                    'default' => 'O valor do frete é calculado automaticamente no carrinho ou na etapa de finalização de compra, com base no CEP informado, peso e cubagem do pacote.',
                                     'placeholder' => 'Ex: Calculado automaticamente pelo CEP no checkout com base em peso e cubagem',
                                     'hint' => 'Critérios de cálculo logístico. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_prazo_preparacao',
                                     'label' => 'Prazo de Preparação / Manuseio',
-                                    'default' => 'Após a confirmação do pagamento, as joias passam por criteriosa revisão de qualidade, higienização e embalagem nobre antes de serem despachadas.',
                                     'placeholder' => 'Ex: Curadoria, polimento final e embalagem nobre protegida após aprovação',
                                     'hint' => 'Tempo de manuseio e embalagem. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_prazo_entrega',
                                     'label' => 'Prazo Estimado de Entrega',
-                                    'default' => 'O prazo estimado de entrega é informado na consulta de frete do produto ou checkout e passa a ser contado a partir da postagem da remessa.',
                                     'placeholder' => 'Ex: Informado na consulta de CEP no produto ou na etapa de finalização',
                                     'hint' => 'Contagem do prazo logístico. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_rastreamento',
                                     'label' => 'Rastreamento do Pedido',
-                                    'default' => 'Após o envio, as informações e o código de rastreamento são enviados para acompanhamento seguro de cada etapa até a entrega.',
                                     'placeholder' => 'Ex: Código de rastreamento enviado por e-mail e WhatsApp logo após a postagem',
                                     'hint' => 'Como o cliente acompanha a remessa. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_condicoes_especiais',
                                     'label' => 'Condições Especiais / Frete Cortesia',
-                                    'default' => 'Eventuais condições de frete cortesia ou promoções especiais são aplicadas conforme campanhas vigentes divulgadas em nossos canais oficiais.',
                                     'placeholder' => 'Ex: Conforme campanhas ativas e valores mínimos divulgados na vitrine',
                                     'hint' => 'Campanhas de frete grátis ou benefícios VIP. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_endereco_incompleto',
                                     'label' => 'Endereço Incorreto ou Incompleto',
-                                    'default' => 'Certifique-se do preenchimento correto de todos os dados de entrega. Em caso de inconsistência comunicada pelo cliente após expedição, reenvios poderão incorrer em novos prazos e custos adicionais.',
                                     'placeholder' => 'Ex: Certifique-se do preenchimento exato dos dados. Reenvios por divergência informada pelo cliente poderão incorrer em novo prazo e custos de reexpedição...',
                                     'hint' => 'Procedimento em caso de divergência de endereço informada pelo cliente. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_ausencia_destinatario',
                                     'label' => 'Ausência do Destinatário',
-                                    'default' => 'As transportadoras parceiras realizam até 3 tentativas de entrega. Certifique-se de que haverá alguém autorizado no local para o recebimento e assinatura da encomenda.',
                                     'placeholder' => 'Ex: As transportadoras parceiras realizam até 3 tentativas de entrega. Certifique-se de que haverá alguém autorizado no local para assinar o recebimento...',
                                     'hint' => 'Tentativas de entrega das transportadoras e retirada. Deixe em branco para ocultar.'
                                 ],
                                 [
                                     'key' => 'page_frete_extravio_avaria',
                                     'label' => 'Atraso, Extravio ou Avaria durante o Transporte',
-                                    'default' => 'Todas as remessas contam com seguro de transporte. Em caso de sinistro, avaria ou extravio comprovado pela transportadora, garantimos a reposição imediata da joia ou estorno integral.',
                                     'placeholder' => 'Ex: Todas as remessas contam com seguro de transporte. Em caso de sinistro, avaria ou extravio comprovado pela transportadora, garantimos a reposição imediata da joia ou estorno integral...',
                                     'hint' => 'Garantia de segurança e seguro de transporte. Deixe em branco para ocultar.'
                                 ],
                             ]
-                        ],
-                        'medidas' => [
-                            'name' => '6. Guia de Medidas',
-                            'slug' => 'guia-de-medidas',
-                            'enabled_key' => 'page_size_guide_enabled',
-                            'title_key' => 'page_size_guide_title',
-                            'default_title' => 'Guia de Medidas & Tamanhos de Anéis',
-                            'subtitle_key' => 'page_size_guide_subtitle',
-                            'default_subtitle' => 'Aprenda a identificar a medida exata do seu aro para um ajuste perfeito e confortável.',
-                            'content_key' => 'policy_size_guide_content',
-                            'default_content' => "<h3>Como Descobrir o Tamanho do Seu Anel</h3><p>Para assegurar que seu anel DIVINIUM se encaixe perfeitamente com toda a elegância e conforto, utilize o método prático do diâmetro interno.</p><h4>Método do Diâmetro Interno</h4><ol><li>Selecione um anel ou aliança que sirva perfeitamente no dedo desejado.</li><li>Com uma régua milimetrada, meça a distância interna (linha reta de borda a borda interna), desconsiderando a espessura do aro.</li><li>Consulte a tabela de equivalências:<ul><li>15,5 mm = Aro 12</li><li>16,2 mm = Aro 14</li><li>16,8 mm = Aro 16</li><li>17,5 mm = Aro 18</li><li>18,2 mm = Aro 20</li><li>18,8 mm = Aro 22</li><li>19,5 mm = Aro 24</li></ul></li></ol><p>Em caso de dúvidas entre dois números, recomendamos a escolha do tamanho maior para máximo conforto durante todas as estações do ano.</p>",
-                            'blocks_key' => 'page_medidas_blocks_json',
-                            'fields' => []
-                        ],
-                        'dpo' => [
-                            'name' => '7. Canal DPO (LGPD)',
-                            'slug' => 'dpo',
-                            'enabled_key' => 'page_dpo_enabled',
-                            'title_key' => 'page_dpo_title',
-                            'default_title' => 'Encarregado de Proteção de Dados (DPO)',
-                            'subtitle_key' => 'page_dpo_subtitle',
-                            'default_subtitle' => 'Canal direto de atendimento para solicitações e direitos previstos pela LGPD.',
-                            'content_key' => 'policy_dpo_content',
-                            'default_content' => "<h3>Canal do Encarregado de Dados (DPO)</h3><p>Em atendimento ao Artigo 41 da Lei Federal nº 13.709/2018 (LGPD), a DIVINIUM disponibiliza este canal oficial de comunicação direto entre os titulares de dados, a empresa e a Autoridade Nacional de Proteção de Dados (ANPD).</p><h4>Encarregado Oficial:</h4><p><strong>Comitê de Privacidade & Governança de Dados</strong><br>E-mail: <strong>dpo@divinium.com.br</strong><br>Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília)</p><p>As solicitações de consulta, retificação ou exclusão de dados serão respondidas dentro dos prazos legais estipulados pela legislação vigente.</p>",
-                            'blocks_key' => 'page_dpo_blocks_json',
-                            'fields' => []
                         ]
                     ];
                     ?>
 
-                    <!-- NAVEGAÇÃO ENTRE AS PÁGINAS (SUB-TABS EM DESTAQUE) -->
+                    <!-- NAVEGAÇÃO ENTRE AS 5 PÁGINAS (SUB-TABS EM DESTAQUE) -->
                     <div class="institutional-nav-pills" style="margin-top: 10px;">
                         <?php $tabIndex = 0; foreach ($instPagesConfig as $pKey => $pCfg): $tabIndex++; ?>
                         <button type="button" class="btn-inst-pill <?= $pKey === 'trocas' ? 'active' : '' ?>" onclick="switchInstPageTab('<?= $pKey ?>', this)">
@@ -4815,24 +4747,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- PAINÉIS INDIVIDUAIS DE CADA UMA DAS PÁGINAS -->
+                    <!-- PAINÉIS INDIVIDUAIS DE CADA UMA DAS 5 PÁGINAS -->
                     <?php foreach ($instPagesConfig as $pKey => $pCfg): 
                         $isPageActive = Setting::get($pCfg['enabled_key'], '1') === '1';
-                        $fallbackTitle = !empty($pCfg['legacy_title_key']) ? Setting::get($pCfg['legacy_title_key'], $pCfg['default_title']) : $pCfg['default_title'];
-                        $pageTitleVal = Setting::get($pCfg['title_key'], $fallbackTitle);
-                        $fallbackSub = !empty($pCfg['legacy_subtitle_key']) ? Setting::get($pCfg['legacy_subtitle_key'], $pCfg['default_subtitle']) : $pCfg['default_subtitle'];
-                        $pageSubtitleVal = Setting::get($pCfg['subtitle_key'], $fallbackSub);
-                        $fallbackContent = $pCfg['default_content'];
-                        if (!empty($pCfg['legacy_content_keys'])) {
-                            foreach ($pCfg['legacy_content_keys'] as $legKey) {
-                                $legVal = Setting::get($legKey, '');
-                                if ($legVal !== '') {
-                                    $fallbackContent = $legVal;
-                                    break;
-                                }
-                            }
-                        }
-                        $pageContentVal = Setting::get($pCfg['content_key'], $fallbackContent);
+                        $pageTitleVal = Setting::get($pCfg['title_key'], $pCfg['default_title']);
+                        $pageSubtitleVal = Setting::get($pCfg['subtitle_key'], $pCfg['default_subtitle']);
+                        $pageContentVal = Setting::get($pCfg['content_key'], $pCfg['default_content']);
                         $blocksJson = Setting::get($pCfg['blocks_key'], '[]');
                         $blocksList = json_decode($blocksJson, true);
                         if (!is_array($blocksList)) $blocksList = [];
@@ -4884,7 +4804,6 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             </div>
                         </div>
 
-                        <?php if (!empty($pCfg['fields'])): ?>
                         <!-- PARÂMETROS ESTRUTURADOS ESPECÍFICOS POR TEMA -->
                         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
@@ -4898,7 +4817,7 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
 
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px;">
                                 <?php foreach ($pCfg['fields'] as $fld): 
-                                    $fVal = Setting::get($fld['key'], $fld['default'] ?? '');
+                                    $fVal = Setting::get($fld['key'], '');
                                 ?>
                                 <div class="inst-param-card" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px 14px;">
                                     <label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 4px;">
@@ -4912,7 +4831,6 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <?php endif; ?>
 
                         <!-- 🎯 BOTÕES DE AÇÃO & CONTATO ESPECÍFICOS DESTA PÁGINA INSTITUCIONAL -->
                         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
@@ -5998,22 +5916,6 @@ async function saveSingleInstitutionalPage(slug, btn) {
             formData.append(el.name, el.value);
         }
     });
-
-    // Inclui também os campos comerciais, de checkout, Pix e cálculo de frete da aba Institucional & CDC
-    const secInst = document.getElementById('sec-institutional');
-    if (secInst) {
-        const sharedInputs = secInst.querySelectorAll('input, textarea, select');
-        sharedInputs.forEach(el => {
-            if (!el.name || el.closest('.inst-page-panel')) return;
-            if (el.type === 'checkbox') {
-                formData.set(el.name, el.checked ? '1' : '0');
-            } else if (el.type === 'radio') {
-                if (el.checked) formData.set(el.name, el.value);
-            } else {
-                formData.set(el.name, el.value);
-            }
-        });
-    }
 
     try {
         const response = await fetch('/admin/institucionais/salvar', {
@@ -7281,36 +7183,36 @@ function checkInitialEditorTab() {
 function applyThemePalette(themeName) {
     const palettes = {
         'gold': {
-            bg: '#F8F8F7',
-            surface: '#FFFFFF',
+            bg: '#252525',
+            surface: '#141312',
             primary: '#A7ADB4',
-            accent: '#737B85',
-            text: '#202020',
-            textMuted: '#686868'
+            accent: '#E0C080',
+            text: '#F4EFEA',
+            textMuted: '#9E978E'
         },
         'silver': {
-            bg: '#FFFFFF',
+            bg: '#FBF9F5',
             surface: '#FFFFFF',
-            primary: '#A7ADB4',
-            accent: '#737B85',
-            text: '#202020',
-            textMuted: '#686868'
+            primary: '#1A1918',
+            accent: '#8A8782',
+            text: '#1A1918',
+            textMuted: '#6B665F'
         },
         'rose': {
-            bg: '#F0F0EF',
-            surface: '#FFFFFF',
-            primary: '#A7ADB4',
-            accent: '#737B85',
-            text: '#202020',
-            textMuted: '#686868'
+            bg: '#120D0A',
+            surface: '#1C1510',
+            primary: '#D48B60',
+            accent: '#E5A882',
+            text: '#F9F4F0',
+            textMuted: '#A89990'
         },
         'emerald': {
-            bg: '#252525',
-            surface: '#1A1C1E',
-            primary: '#A7ADB4',
-            accent: '#CBD0D6',
-            text: '#FFFFFF',
-            textMuted: '#CBD0D6'
+            bg: '#06130D',
+            surface: '#0D2018',
+            primary: '#38A169',
+            accent: '#68D391',
+            text: '#EBF8F2',
+            textMuted: '#8BA698'
         }
     };
 
@@ -7335,10 +7237,10 @@ function applyThemePalette(themeName) {
 }
 
 function updateThemeColorsLivePreview() {
-    const bgVal = document.getElementById('lp_site_bg_color')?.value || document.getElementById('lp_custom_color_bg')?.value || '#F8F8F7';
-    const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#FFFFFF';
-    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#A7ADB4';
-    const textVal = document.getElementById('lp_custom_color_text')?.value || '#202020';
+    const bgVal = document.getElementById('lp_site_bg_color')?.value || document.getElementById('lp_custom_color_bg')?.value || '#252525';
+    const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#141312';
+    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#CBD0D6';
+    const textVal = document.getElementById('lp_custom_color_text')?.value || '#ffffff';
     const imgVal = document.getElementById('lp_site_bg_image')?.value?.trim() || '';
     const overlayVal = parseFloat(document.getElementById('lp_site_bg_overlay')?.value || '0.75');
     const repeatVal = document.getElementById('lp_site_bg_repeat')?.value || 'cover';
@@ -7487,43 +7389,9 @@ async function uploadSiteBgFromLanding(fileInput) {
     }
 }
 
-function initDuplicateInputSync() {
-    const form = document.getElementById('landingPageForm');
-    if (!form) return;
-
-    const syncSiblingFields = (sourceEl) => {
-        if (!sourceEl || !sourceEl.name) return;
-        const allSameName = form.querySelectorAll(`[name="${CSS.escape(sourceEl.name)}"]`);
-        if (allSameName.length <= 1) return;
-        allSameName.forEach(targetEl => {
-            if (targetEl === sourceEl) return;
-            if (sourceEl.type === 'checkbox') {
-                if (targetEl.type === 'checkbox') {
-                    targetEl.checked = sourceEl.checked;
-                } else if (targetEl.type === 'hidden') {
-                    targetEl.value = sourceEl.checked ? '1' : '0';
-                }
-            } else if (sourceEl.type === 'radio') {
-                if (targetEl.type === 'radio' && targetEl.value === sourceEl.value) {
-                    targetEl.checked = sourceEl.checked;
-                }
-            } else if (targetEl.type !== 'checkbox' && targetEl.type !== 'radio') {
-                targetEl.value = sourceEl.value;
-            }
-        });
-    };
-
-    form.addEventListener('input', (e) => syncSiblingFields(e.target));
-    form.addEventListener('change', (e) => syncSiblingFields(e.target));
-}
-
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        checkInitialEditorTab();
-        initDuplicateInputSync();
-    });
+    document.addEventListener('DOMContentLoaded', checkInitialEditorTab);
 } else {
     checkInitialEditorTab();
-    initDuplicateInputSync();
 }
 </script>
