@@ -914,6 +914,61 @@ class StoreController
     }
 
     /**
+     * Validação e Processamento de Pagamento no Checkout
+     * Respeita rigorosamente o status de ativação das modalidades no painel.
+     */
+    public function processCheckout(): void
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        $raw = file_get_contents('php://input');
+        $input = json_decode($raw ?: '', true) ?: $_POST;
+        $paymentMethod = trim((string)($input['payment_method'] ?? ''));
+
+        if ($paymentMethod === 'card' && \App\Models\Setting::get('checkout_opt_card_enabled', '1') !== '1') {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'A modalidade de pagamento por Cartão de Crédito está desativada no momento. Por favor, escolha outra opção.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($paymentMethod === 'pix' && \App\Models\Setting::get('checkout_opt_pix_enabled', '1') !== '1') {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'A modalidade de pagamento via Pix está desativada no momento.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($paymentMethod === 'whatsapp' && \App\Models\Setting::get('checkout_opt_wa_enabled', '1') !== '1') {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'A modalidade de atendimento Concierge VIP está desativada no momento.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($paymentMethod === '') {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Nenhuma forma de pagamento selecionada.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Forma de pagamento validada com sucesso.',
+            'payment_method' => $paymentMethod
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    /**
      * Consulta e Cálculo Real de Frete (/api/frete/calcular)
      * Compatível com SuperFrete, Frenet e Bling ERP
      */

@@ -64,9 +64,9 @@ $optWaBadge = Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO');
 $optWaDesc = Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.');
 
 $optCardEnabled = Setting::get('checkout_opt_card_enabled', '1') === '1';
-$optCardTitle = Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito');
-$optCardBadge = Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
-$optCardDesc = Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
+$optCardTitle = Setting::getRaw('checkout_opt_card_title', '💳 Cartão de Crédito');
+$optCardBadge = Setting::getRaw('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
+$optCardDesc = Setting::getRaw('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
 
 // Métodos Habilitados & Método Padrão Inicial
 $enabledPaymentMethods = [];
@@ -299,10 +299,16 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                 <input type="radio" name="payment_method" value="card" <?= $defaultPaymentMethod === 'card' ? 'checked' : '' ?> onchange="switchPaymentMethod('card')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
-                                        <span class="opt-name"><?= View::e($optCardTitle) ?></span>
-                                        <span class="opt-tag-sub"><?= View::e($optCardBadge) ?></span>
+                                        <?php if (trim((string) $optCardTitle) !== ''): ?>
+                                            <span class="opt-name"><?= View::e($optCardTitle) ?></span>
+                                        <?php endif; ?>
+                                        <?php if (trim((string) $optCardBadge) !== ''): ?>
+                                            <span class="opt-tag-sub"><?= View::e($optCardBadge) ?></span>
+                                        <?php endif; ?>
                                     </div>
-                                    <p class="opt-desc"><?= View::e($optCardDesc) ?></p>
+                                    <?php if (trim((string) $optCardDesc) !== ''): ?>
+                                        <p class="opt-desc"><?= View::e($optCardDesc) ?></p>
+                                    <?php endif; ?>
                                 </div>
                             </label>
                             <?php endif; ?>
@@ -1304,7 +1310,14 @@ function handleCheckoutSubmit(e) {
         return;
     }
 
-    alert('Direcionando para o gateway de pagamento homologado ASAAS...');
+    if (currentPaymentMethod === 'card') {
+        if (!enabledPaymentMethods.includes('card')) {
+            alert('A modalidade de pagamento por Cartão de Crédito está desativada no momento. Por favor, escolha outra opção para continuar.');
+            return;
+        }
+        alert('Direcionando para o gateway de pagamento homologado ASAAS...');
+        return;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

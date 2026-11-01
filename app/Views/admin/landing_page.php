@@ -6,15 +6,15 @@
 use App\Models\Setting;
 use App\Core\View;
 
-$renderToggle = function(string $key, string $default = '1'): string {
+$renderToggle = function(string $key, string $default = '1', string $labelActive = 'Exibindo', string $labelInactive = 'Oculto'): string {
     $val = Setting::get($key, $default);
     $isVisible = ($val === '1' || $val === 1 || $val === true);
     $class = $isVisible ? 'is-visible' : 'is-hidden';
-    $label = $isVisible ? 'Exibindo' : 'Oculto';
+    $label = $isVisible ? $labelActive : $labelInactive;
     $checked = $isVisible ? 'checked' : '';
     return '
-    <label class="element-toggle-switch ' . $class . '" title="Exibir ou ocultar este elemento na loja pública">
-        <input type="hidden" name="' . $key . '" value="0">
+    <label class="element-toggle-switch ' . $class . '" title="Exibir ou ocultar este elemento na loja pública" data-active-label="' . htmlspecialchars($labelActive, ENT_QUOTES) . '" data-inactive-label="' . htmlspecialchars($labelInactive, ENT_QUOTES) . '">
+        <input type="hidden" name="' . $key . '" value="' . ($isVisible ? '1' : '0') . '">
         <input type="checkbox" name="' . $key . '" value="1" ' . $checked . ' onchange="handleToggleSwitch(this)">
         <span class="toggle-text">' . $label . '</span>
     </label>';
@@ -4152,7 +4152,8 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                         </div>
 
                         <!-- 3. MODALIDADE CARTÃO DE CRÉDITO -->
-                        <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <?php $cardOptEnabled = Setting::get('checkout_opt_card_enabled', '1') === '1'; ?>
+                        <div class="form-group full-width <?= !$cardOptEnabled ? 'is-dimmed' : '' ?>" id="cardOptionGroup" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px; transition: opacity 0.25s ease;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <span style="font-size: 1.1rem;">💳</span>
@@ -4160,25 +4161,28 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <span style="font-size: 0.75rem; color: #a7adb4;">Status no Checkout:</span>
-                                    <?= $renderToggle('checkout_opt_card_enabled', '1') ?>
+                                    <?= $renderToggle('checkout_opt_card_enabled', '1', 'Ativado', 'Desativado') ?>
                                 </div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 10px;">
                                 <div>
                                     <label for="checkout_opt_card_title" style="font-size: 0.78rem; color: #CBD0D6;">Nome da Opção Cartão</label>
                                     <input type="text" id="checkout_opt_card_title" name="checkout_opt_card_title" class="form-input"
-                                           value="<?= View::e(Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
+                                           placeholder="Ex: 💳 Cartão de Crédito"
+                                           value="<?= View::e(Setting::getRaw('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
                                 </div>
                                 <div>
                                     <label for="checkout_opt_card_badge" style="font-size: 0.78rem; color: #CBD0D6;">Badge da Opção Cartão</label>
                                     <input type="text" id="checkout_opt_card_badge" name="checkout_opt_card_badge" class="form-input"
-                                           value="<?= View::e(Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
+                                           placeholder="Ex: ATÉ 10X SEM JUROS"
+                                           value="<?= View::e(Setting::getRaw('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
                                 </div>
                             </div>
                             <div>
                                 <label for="checkout_opt_card_desc" style="font-size: 0.78rem; color: #CBD0D6;">Descrição da Opção Cartão</label>
                                 <input type="text" id="checkout_opt_card_desc" name="checkout_opt_card_desc" class="form-input"
-                                       value="<?= View::e(Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
+                                       placeholder="Ex: Pagamento processado em ambiente 100% criptografado homologado ASAAS."
+                                       value="<?= View::e(Setting::getRaw('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
                             </div>
                         </div>
 
@@ -5441,21 +5445,27 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
 function handleToggleSwitch(chk) {
     const parentLabel = chk.closest('.element-toggle-switch');
     const textSpan = parentLabel ? parentLabel.querySelector('.toggle-text') : null;
+    const hiddenInput = parentLabel ? parentLabel.querySelector('input[type="hidden"]') : null;
     const formGroup = chk.closest('.form-group');
+
+    const activeLabel = (parentLabel && parentLabel.dataset.activeLabel) ? parentLabel.dataset.activeLabel : 'Exibindo';
+    const inactiveLabel = (parentLabel && parentLabel.dataset.inactiveLabel) ? parentLabel.dataset.inactiveLabel : 'Oculto';
 
     if (chk.checked) {
         if (parentLabel) {
             parentLabel.classList.add('is-visible');
             parentLabel.classList.remove('is-hidden');
         }
-        if (textSpan) textSpan.textContent = 'Exibindo';
+        if (hiddenInput) hiddenInput.value = '1';
+        if (textSpan) textSpan.textContent = activeLabel;
         if (formGroup) formGroup.classList.remove('is-dimmed');
     } else {
         if (parentLabel) {
             parentLabel.classList.remove('is-visible');
             parentLabel.classList.add('is-hidden');
         }
-        if (textSpan) textSpan.textContent = 'Oculto';
+        if (hiddenInput) hiddenInput.value = '0';
+        if (textSpan) textSpan.textContent = inactiveLabel;
         if (formGroup) formGroup.classList.add('is-dimmed');
     }
 

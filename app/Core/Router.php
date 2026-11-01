@@ -237,6 +237,8 @@ class Router
 
         // Rota de Checkout Seguro
         $this->get('/checkout', [\App\Controllers\StoreController::class, 'checkout']);
+        $this->post('/checkout', [\App\Controllers\StoreController::class, 'processCheckout']);
+        $this->post('/api/checkout/process', [\App\Controllers\StoreController::class, 'processCheckout']);
         $this->post('/api/frete/calcular', [\App\Controllers\StoreController::class, 'calculateShipping']);
 
         // Rotas das Páginas Institucionais & Políticas

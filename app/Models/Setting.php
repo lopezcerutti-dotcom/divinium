@@ -142,20 +142,48 @@ class Setting
     }
 
     /**
-     * Retorna o valor de uma configuração pelo seu identificador (ou valor padrão).
+     * Verifica se uma configuração existe na base de dados (mesmo que com valor vazio).
      */
-    public static function get(string $key, ?string $default = null): ?string
+    public static function has(string $key): bool
     {
         if (self::$cache === null) {
             self::loadAll();
         }
 
-        $val = self::$cache[$key] ?? null;
-        if ($val === null || trim($val) === '') {
-            return self::sanitizeLegacySetting($key, $default);
+        return array_key_exists($key, self::$cache ?? []);
+    }
+
+    /**
+     * Retorna o valor de uma configuração pelo seu identificador (ou valor padrão).
+     * 
+     * @param string $key Identificador da configuração
+     * @param string|null $default Valor padrão caso a chave não esteja gravada
+     * @param bool $allowEmpty Se true, preserva string vazia caso gravada explicitamente no banco
+     */
+    public static function get(string $key, ?string $default = null, bool $allowEmpty = false): ?string
+    {
+        if (self::$cache === null) {
+            self::loadAll();
         }
 
-        return self::sanitizeLegacySetting($key, $val);
+        if (array_key_exists($key, self::$cache ?? [])) {
+            $val = self::$cache[$key];
+            if ($val !== null) {
+                if ($allowEmpty || trim((string) $val) !== '') {
+                    return self::sanitizeLegacySetting($key, (string) $val);
+                }
+            }
+        }
+
+        return self::sanitizeLegacySetting($key, $default);
+    }
+
+    /**
+     * Retorna o valor exato gravado (mesmo vazio), ou o default caso a chave nunca tenha sido salva.
+     */
+    public static function getRaw(string $key, ?string $default = null): ?string
+    {
+        return self::get($key, $default, true);
     }
 
     /**
