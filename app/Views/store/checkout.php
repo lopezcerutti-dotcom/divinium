@@ -99,43 +99,43 @@ $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcio
 // Controles Individuais Avançados dos Botões do Checkout
 $btnCepVisible = Setting::get('checkout_btn_cep_visible', '1') === '1';
 $btnCepText = Setting::get('checkout_btn_cep_text', Setting::get('checkout_btn_search_cep', 'Buscar'));
-$btnCepBg = Setting::get('checkout_btn_cep_bg', '#202020');
-$btnCepColor = Setting::get('checkout_btn_cep_color', '#FFFFFF');
-$btnCepBorder = Setting::get('checkout_btn_cep_border', '#202020');
+$btnCepBg = Setting::get('checkout_btn_cep_bg', '');
+$btnCepColor = Setting::get('checkout_btn_cep_color', '');
+$btnCepBorder = Setting::get('checkout_btn_cep_border', '');
 $btnCepIcon = Setting::get('checkout_btn_cep_icon', 'search');
-$btnCepIconColor = Setting::get('checkout_btn_cep_icon_color', '#FFFFFF');
-$btnCepRadius = Setting::get('checkout_btn_cep_radius', '4px');
+$btnCepIconColor = Setting::get('checkout_btn_cep_icon_color', '#737B85');
+$btnCepRadius = Setting::get('checkout_btn_cep_radius', '');
 $btnCepShadow = Setting::get('checkout_btn_cep_shadow', 'none');
 
 $btnPixVisible = Setting::get('checkout_btn_pix_visible', '1') === '1';
 $btnPixText = Setting::get('checkout_btn_pix_text', Setting::get('checkout_btn_copy_pix', 'Copiar Chave'));
-$btnPixBg = Setting::get('checkout_btn_pix_bg', '#FFFFFF');
-$btnPixColor = Setting::get('checkout_btn_pix_color', '#202020');
-$btnPixBorder = Setting::get('checkout_btn_pix_border', '#CBD0D6');
+$btnPixBg = Setting::get('checkout_btn_pix_bg', '');
+$btnPixColor = Setting::get('checkout_btn_pix_color', '');
+$btnPixBorder = Setting::get('checkout_btn_pix_border', '');
 $btnPixIcon = Setting::get('checkout_btn_pix_icon', 'copy');
 $btnPixIconColor = Setting::get('checkout_btn_pix_icon_color', '#202020');
-$btnPixRadius = Setting::get('checkout_btn_pix_radius', '4px');
+$btnPixRadius = Setting::get('checkout_btn_pix_radius', '');
 $btnPixShadow = Setting::get('checkout_btn_pix_shadow', 'subtle');
 
 $btnSubmitVisible = Setting::get('checkout_btn_submit_visible', '1') === '1';
 $btnSubmitText = Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar');
-$btnSubmitBg = Setting::get('checkout_btn_submit_bg', '#202020');
-$btnSubmitColor = Setting::get('checkout_btn_submit_color', '#FFFFFF');
-$btnSubmitBorder = Setting::get('checkout_btn_submit_border', '#202020');
+$btnSubmitBg = Setting::get('checkout_btn_submit_bg', '');
+$btnSubmitColor = Setting::get('checkout_btn_submit_color', '');
+$btnSubmitBorder = Setting::get('checkout_btn_submit_border', '');
 $btnSubmitIcon = Setting::get('checkout_btn_submit_icon', 'arrow-right');
-$btnSubmitIconColor = Setting::get('checkout_btn_submit_icon_color', '#FFFFFF');
-$btnSubmitRadius = Setting::get('checkout_btn_submit_radius', '4px');
+$btnSubmitIconColor = Setting::get('checkout_btn_submit_icon_color', '#202020');
+$btnSubmitRadius = Setting::get('checkout_btn_submit_radius', '');
 $btnSubmitShadow = Setting::get('checkout_btn_submit_shadow', 'noble');
 
 $returnStoreVisible = Setting::get('checkout_return_store_visible', '1') === '1';
 $returnStoreText = Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique');
 $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
-$returnStoreBg = Setting::get('checkout_return_store_bg', 'transparent');
-$returnStoreColor = Setting::get('checkout_return_store_color', '#737B85');
-$returnStoreBorder = Setting::get('checkout_return_store_border', '#CBD0D6');
+$returnStoreBg = Setting::get('checkout_return_store_bg', '');
+$returnStoreColor = Setting::get('checkout_return_store_color', '');
+$returnStoreBorder = Setting::get('checkout_return_store_border', '');
 $returnStoreIcon = Setting::get('checkout_return_store_icon', 'none');
 $returnStoreIconColor = Setting::get('checkout_return_store_icon_color', '#737B85');
-$returnStoreRadius = Setting::get('checkout_return_store_radius', '4px');
+$returnStoreRadius = Setting::get('checkout_return_store_radius', '');
 $returnStoreShadow = Setting::get('checkout_return_store_shadow', 'none');
 
 $checkoutShadowMap = [
@@ -181,6 +181,33 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
             return '<span style="' . $style . ' margin-right: 5px;">' . View::e($iconKey) . '</span>';
     }
 };
+
+$btnCepInline = [];
+if (!empty($btnCepBg) && $btnCepBg !== '#202020') $btnCepInline[] = 'background: ' . View::e($btnCepBg) . ' !important';
+if (!empty($btnCepColor) && $btnCepColor !== '#FFFFFF') $btnCepInline[] = 'color: ' . View::e($btnCepColor) . ' !important';
+if (!empty($btnCepBorder) && $btnCepBorder !== '#202020') $btnCepInline[] = 'border-color: ' . View::e($btnCepBorder) . ' !important';
+if (!empty($btnCepRadius)) $btnCepInline[] = 'border-radius: ' . View::e($btnCepRadius) . ' !important';
+if (!empty($btnCepShadow) && $btnCepShadow !== 'none') $btnCepInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$btnCepShadow] ?? 'none') . ' !important';
+if (!$btnCepVisible) $btnCepInline[] = 'display: none !important';
+$btnCepStyleAttr = !empty($btnCepInline) ? implode('; ', $btnCepInline) . ';' : '';
+
+$btnSubmitInline = [];
+if (!empty($btnSubmitBg) && $btnSubmitBg !== '#202020') $btnSubmitInline[] = 'background: ' . View::e($btnSubmitBg) . ' !important';
+if (!empty($btnSubmitColor) && $btnSubmitColor !== '#FFFFFF') $btnSubmitInline[] = 'color: ' . View::e($btnSubmitColor) . ' !important';
+if (!empty($btnSubmitBorder) && $btnSubmitBorder !== '#202020') $btnSubmitInline[] = 'border-color: ' . View::e($btnSubmitBorder) . ' !important';
+if (!empty($btnSubmitRadius)) $btnSubmitInline[] = 'border-radius: ' . View::e($btnSubmitRadius) . ' !important';
+if (!empty($btnSubmitShadow) && $btnSubmitShadow !== 'none' && $btnSubmitShadow !== 'noble') $btnSubmitInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$btnSubmitShadow] ?? 'none') . ' !important';
+if (!$btnSubmitVisible) $btnSubmitInline[] = 'display: none !important';
+$btnSubmitStyleAttr = !empty($btnSubmitInline) ? implode('; ', $btnSubmitInline) . ';' : '';
+
+$returnStoreInline = [];
+if (!empty($returnStoreBg) && $returnStoreBg !== 'transparent') $returnStoreInline[] = 'background: ' . View::e($returnStoreBg) . ' !important';
+if (!empty($returnStoreColor)) $returnStoreInline[] = 'color: ' . View::e($returnStoreColor) . ' !important';
+if (!empty($returnStoreBorder) && $returnStoreBorder !== 'transparent') $returnStoreInline[] = 'border-color: ' . View::e($returnStoreBorder) . ' !important';
+if (!empty($returnStoreRadius)) $returnStoreInline[] = 'border-radius: ' . View::e($returnStoreRadius) . ' !important';
+if (!empty($returnStoreShadow) && $returnStoreShadow !== 'none') $returnStoreInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$returnStoreShadow] ?? 'none') . ' !important';
+if (!$returnStoreVisible) $returnStoreInline[] = 'display: none !important';
+$returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreInline) . ';' : '';
 ?>
 
 <div class="checkout-page-container">
@@ -233,7 +260,7 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                 <label for="clientCep"><?= View::e($lblClientCep) ?></label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" id="clientCep" name="cep" class="form-input" placeholder="00000-000" maxlength="9" required>
-                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()" style="background: <?= View::e($btnCepBg) ?> !important; color: <?= View::e($btnCepColor) ?> !important; border: 1px solid <?= View::e($btnCepBorder) ?> !important; border-radius: <?= View::e($btnCepRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnCepShadow] ?? 'none') ?> !important; <?= !$btnCepVisible ? 'display: none !important;' : 'display: inline-flex; align-items: center; justify-content: center; gap: 4px;' ?> cursor: pointer; transition: all 0.2s ease;">
+                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()" style="<?= $btnCepStyleAttr ?>">
                                         <?= $renderCheckoutBtnIcon($btnCepIcon, $btnCepIconColor) ?>
                                         <span id="btnConsultarCepText"><?= View::e($btnCepText) ?></span>
                                     </button>
@@ -363,7 +390,7 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                             <?php endif; ?>
                         </div>
 
-                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout" style="background: <?= View::e($btnSubmitBg) ?> !important; color: <?= View::e($btnSubmitColor) ?> !important; border: 1px solid <?= View::e($btnSubmitBorder) ?> !important; border-radius: <?= View::e($btnSubmitRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnSubmitShadow] ?? 'none') ?> !important; <?= !$btnSubmitVisible ? 'display: none !important;' : 'display: flex; justify-content: center; align-items: center; gap: 8px;' ?> cursor: pointer; transition: all 0.25s ease;">
+                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout" style="<?= $btnSubmitStyleAttr ?>">
                             <?= $renderCheckoutBtnIcon($btnSubmitIcon, $btnSubmitIconColor) ?>
                             <span id="btnSubmitCheckoutText"><?= View::e($btnSubmitText) ?></span>
                         </button>
@@ -426,7 +453,7 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                     </div>
 
                     <?php if ($returnStoreVisible): ?>
-                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store" style="background: <?= View::e($returnStoreBg) ?> !important; color: <?= View::e($returnStoreColor) ?> !important; border: 1px solid <?= View::e($returnStoreBorder) ?> !important; border-radius: <?= View::e($returnStoreRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$returnStoreShadow] ?? 'none') ?> !important; padding: 10px 16px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin: 0 auto; width: 100%; box-sizing: border-box; transition: all 0.2s ease;">
+                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store" style="<?= $returnStoreStyleAttr ?>">
                         <?= $renderCheckoutBtnIcon($returnStoreIcon, $returnStoreIconColor) ?>
                         <span><?= View::e($returnStoreText) ?></span>
                     </a>

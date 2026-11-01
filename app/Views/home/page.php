@@ -94,6 +94,9 @@ $concIconColor = Setting::get($concPrefix . '_icon_color', '#202020');
 $concRadius = Setting::get($concPrefix . '_radius', '8px');
 $concShadow = Setting::get($concPrefix . '_shadow', 'none');
 
+$hasCustomBack = $useCustomFooter && (Setting::get($backPrefix . '_is_custom', '0') === '1' || (Setting::get($backPrefix . '_bg', '') !== '' && Setting::get($backPrefix . '_bg') !== 'transparent'));
+$hasCustomConc = $useCustomFooter && (Setting::get($concPrefix . '_is_custom', '0') === '1' || (Setting::get($concPrefix . '_bg', '') !== '' && Setting::get($concPrefix . '_bg') !== '#CBD0D6'));
+
 $instShadowMap = [
     'none' => 'none',
     'subtle' => '0 2px 8px rgba(0,0,0,0.12)',
@@ -161,17 +164,29 @@ $renderInstIcon = function($iconKey, $iconColor) {
                     </div>
                     <div class="strip-right">
                         <?php if ($backVisible): ?>
+                        <?php if ($hasCustomBack): ?>
                         <a href="<?= View::e($backUrl) ?>" class="btn-back-store" style="background: <?= View::e($backBg) ?> !important; color: <?= View::e($backColor) ?> !important; border: 1px solid <?= View::e($backBorder) ?> !important; border-radius: <?= View::e($backRadius) ?> !important; box-shadow: <?= View::e($instShadowMap[$backShadow] ?? 'none') ?> !important; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
                             <?= $renderInstIcon($backIcon, $backIconColor) ?>
                             <span><?= View::e($backText) ?></span>
                         </a>
+                        <?php else: ?>
+                        <a href="<?= View::e($backUrl) ?>" class="btn-back-store">
+                            <span><?= View::e($backText) ?></span>
+                        </a>
+                        <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if ($concVisible): ?>
+                        <?php if ($hasCustomConc): ?>
                         <a href="<?= View::e($concUrl) ?>" target="_blank" rel="noopener" class="btn-concierge-help" style="background: <?= View::e($concBg) ?> !important; color: <?= View::e($concColor) ?> !important; border: 1px solid <?= View::e($concBorder) ?> !important; border-radius: <?= View::e($concRadius) ?> !important; box-shadow: <?= View::e($instShadowMap[$concShadow] ?? 'none') ?> !important; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
                             <?= $renderInstIcon($concIcon, $concIconColor) ?>
                             <span><?= View::e($concText) ?></span>
                         </a>
+                        <?php else: ?>
+                        <a href="<?= View::e($concUrl) ?>" target="_blank" rel="noopener" class="btn-concierge-help">
+                            <span><?= View::e($concText) ?></span>
+                        </a>
+                        <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>

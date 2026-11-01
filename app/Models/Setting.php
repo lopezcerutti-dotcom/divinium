@@ -75,7 +75,7 @@ class Setting
         $legacyGoldsAndGreens = [
             '#CAA15C', '#D4BA88', '#EBD5A0', '#C5A880', '#D4AF37', '#B89758',
             '#C2A36E', '#DFB76C', '#E5C07B', '#F5E8C7', '#FFF8EC',
-            '#38A169', '#68D391', '#4ADE80', '#22C55E', '#15803D',
+            '#38A169', '#68D391', '#4ADE80', '#22C55E', '#15803D', '#75A013', '#75A012',
             '#D48B60', '#C8B9AE', '#B3A49A', '#9C7A58'
         ];
 
@@ -83,13 +83,23 @@ class Setting
             if (str_contains($key, 'accent') || str_contains($key, 'hover')) {
                 return '#737B85';
             }
+            if ($key === 'custom_color_link') {
+                return '#202020';
+            }
             return '#A7ADB4';
         }
 
-        // Fundos globais ou de páginas que estavam em dark noir antigo ou marfim anterior
+        // Fundos globais ou de páginas que estavam em dark noir antigo, preto ou marfim anterior
         if (in_array($key, ['custom_color_bg', 'site_bg_color', 'home_bg_color', 'store_bg_color', 'product_bg_color', 'checkout_bg_color', 'institutional_bg_color'], true)) {
-            if (in_array($upper, ['#0D0C0B', '#120D0A', '#06130D', '#141312', '#F7F7F5', '#FAF8F5'], true)) {
+            if (in_array($upper, ['#0D0C0B', '#120D0A', '#06130D', '#141312', '#252525', '#000000', '#F7F7F5', '#FAF8F5'], true)) {
                 return '#F8F8F7';
+            }
+        }
+
+        // Superfícies e Cards que foram forçados para escuro
+        if (in_array($key, ['custom_color_surface', 'custom_color_surface_box', 'surface_card', 'home_card_bg', 'store_card_bg'], true)) {
+            if (in_array($upper, ['#141312', '#14161A', '#252525', '#000000', '#1E1E1D'], true)) {
+                return '#FFFFFF';
             }
         }
 
@@ -100,8 +110,13 @@ class Setting
             }
         }
 
-        // Textos que estavam com cores antigas
-        if ($key === 'custom_color_text' && in_array($upper, ['#25272A', '#302C29', '#FFFFFF', '#EDE7DF'], true)) {
+        // Títulos Principais
+        if ($key === 'custom_color_title' && in_array($upper, ['#000000', '#F4EFEA', '#FFFFFF'], true)) {
+            return '#202020';
+        }
+
+        // Textos que estavam com cores antigas ou contaminadas
+        if ($key === 'custom_color_text' && in_array($upper, ['#25272A', '#302C29', '#FFFFFF', '#EDE7DF', '#F4EFEA', '#000000'], true)) {
             return '#202020';
         }
 
@@ -109,16 +124,46 @@ class Setting
             return '#686868';
         }
 
+        // Links
+        if ($key === 'custom_color_link' && in_array($upper, ['#75A013', '#75A012', '#38A169', '#22C55E', '#15803D'], true)) {
+            return '#202020';
+        }
+        if ($key === 'custom_color_link_hover' && in_array($upper, ['#898792'], true)) {
+            return '#737B85';
+        }
+
+        // Botões Primários
+        if ($key === 'custom_color_btn_primary_bg' && in_array($upper, ['#E0E0E0', '#000000', '#252525'], true)) {
+            return '#A7ADB4';
+        }
+        if ($key === 'custom_color_btn_primary_text' && in_array($upper, ['#000000'], true)) {
+            return '#202020';
+        }
+
+        // Bordas
+        if ($key === 'custom_color_border' && in_array($upper, ['#000000', '#141312'], true)) {
+            return 'rgba(115, 123, 133, 0.28)';
+        }
+
+        // Ícones
+        if ($key === 'custom_color_icon_decor' && in_array($upper, ['#898792'], true)) {
+            return '#A7ADB4';
+        }
+        if ($key === 'custom_color_icon_nav' && in_array($upper, ['#898792'], true)) {
+            return '#202020';
+        }
+
         // Fundo de rodapé e top banner para o novo preto grafite
-        if (in_array($key, ['footer_bg_color', 'top_banner_bg_color'], true)) {
-            if (in_array($upper, ['#1E2023', '#1A1C1E', '#0D0C0B', '#1C1E21', '#24201D'], true)) {
-                return '#252525';
-            }
+        if ($key === 'footer_bg_color' && in_array($upper, ['#1E2023', '#1A1C1E', '#0D0C0B', '#1C1E21', '#24201D', '#000000'], true)) {
+            return '#252525';
+        }
+        if ($key === 'top_banner_bg_color' && in_array($upper, ['#1E2023', '#1A1C1E', '#0D0C0B', '#1C1E21', '#24201D', '#F0EFED', '#FFFFFF'], true)) {
+            return '#252525';
         }
 
         // Texto de rodapé e top banner sobre o fundo escuro
         if (in_array($key, ['footer_text_color', 'top_banner_text_color'], true)) {
-            if (in_array($upper, ['#CBD0D6', '#D5CBC3', '#EDE7DF'], true)) {
+            if (in_array($upper, ['#CBD0D6', '#D5CBC3', '#EDE7DF', '#000000', '#202020'], true)) {
                 return '#FFFFFF';
             }
         }

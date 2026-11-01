@@ -334,13 +334,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     $addToCartIcon = Setting::get('store_add_to_cart_icon_color', '');
 
                     $addToCartStyles = [];
-                    if (!empty($addToCartBg) && $addToCartBg !== 'transparent') {
+                    if (!empty($addToCartBg) && $addToCartBg !== 'transparent' && $addToCartBg !== 'rgba(202, 161, 92, 0.08)' && $addToCartBg !== '#22262b') {
                         $addToCartStyles[] = 'background: ' . $addToCartBg . ' !important';
                     }
-                    if (!empty($addToCartText)) {
+                    if (!empty($addToCartText) && $addToCartText !== '#ffffff') {
                         $addToCartStyles[] = 'color: ' . $addToCartText . ' !important';
                     }
-                    if (!empty($addToCartBorder) && $addToCartBorder !== 'transparent') {
+                    if (!empty($addToCartBorder) && $addToCartBorder !== 'transparent' && $addToCartBorder !== '#CBD0D6') {
                         $addToCartStyles[] = 'border-color: ' . $addToCartBorder . ' !important';
                     }
                     $addToCartStyleAttr = !empty($addToCartStyles) ? implode('; ', $addToCartStyles) : '';
@@ -355,13 +355,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                     $buyNowIcon = Setting::get('store_buy_now_icon_color', '');
 
                     $buyNowStyles = [];
-                    if (!empty($buyNowBg) && $buyNowBg !== 'transparent') {
+                    if (!empty($buyNowBg) && $buyNowBg !== 'transparent' && $buyNowBg !== '#A7ADB4' && $buyNowBg !== '#CBD0D6' && $buyNowBg !== '#22262b' && $buyNowBg !== '#1a1918') {
                         $buyNowStyles[] = 'background: ' . $buyNowBg . ' !important';
                     }
-                    if (!empty($buyNowText)) {
+                    if (!empty($buyNowText) && $buyNowText !== '#1a1918' && $buyNowText !== '#202020') {
                         $buyNowStyles[] = 'color: ' . $buyNowText . ' !important';
                     }
-                    if (!empty($buyNowBorder) && $buyNowBorder !== 'transparent') {
+                    if (!empty($buyNowBorder) && $buyNowBorder !== 'transparent' && $buyNowBorder !== '#737B85') {
                         $buyNowStyles[] = 'border-color: ' . $buyNowBorder . ' !important';
                     }
                     $buyNowStyleAttr = !empty($buyNowStyles) ? implode('; ', $buyNowStyles) : '';
@@ -453,13 +453,13 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                                         <line x1="3" y1="6" x2="21" y2="6"></line>
                                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                                     </svg>
-                                    <span id="btnAddToCartText" style="<?= !empty($addToCartText) ? 'color: ' . View::e($addToCartText) . ' !important;' : '' ?>"><?= View::e($addToCartBtnText) ?></span>
+                                    <span id="btnAddToCartText" style="<?= (!empty($addToCartText) && $addToCartText !== '#ffffff') ? 'color: ' . View::e($addToCartText) . ' !important;' : '' ?>"><?= View::e($addToCartBtnText) ?></span>
                                 </button>
                                 <?php endif; ?>
 
                                 <?php if ($showBuyNowBtn): ?>
                                 <button type="button" class="btn-luxury-buy-direct" id="btnBuyNowMain" onclick="buyNowDirect(event)" style="<?= View::e($buyNowStyleAttr) ?>">
-                                    <span style="<?= !empty($buyNowText) ? 'color: ' . View::e($buyNowText) . ' !important;' : '' ?>"><?= View::e($buyNowBtnText) ?></span>
+                                    <span style="<?= (!empty($buyNowText) && $buyNowText !== '#1a1918' && $buyNowText !== '#202020') ? 'color: ' . View::e($buyNowText) . ' !important;' : '' ?>"><?= View::e($buyNowBtnText) ?></span>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($buyNowIconColorAttr) ?>" stroke-width="2.2" style="color: <?= View::e($buyNowIconColorAttr) ?>;">
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                         <polyline points="12 5 19 12 12 19"></polyline>

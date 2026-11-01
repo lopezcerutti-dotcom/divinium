@@ -230,12 +230,14 @@
         // -------------------------------------------------------------------------
         // 2. CORES INDEPENDENTES POR FUNÇÃO (NUNCA ACOPLADAS)
         // -------------------------------------------------------------------------
+        $isCustomTheme = ($rawServerTheme === 'theme-custom');
+
         // Fundos & Superfícies
-        $rawBg = \App\Models\Setting::get('custom_color_bg');
-        $rawSiteBg = \App\Models\Setting::get('site_bg_color');
-        $rawBgAlt = \App\Models\Setting::get('custom_color_bg_alt');
-        $rawSurface = \App\Models\Setting::get('custom_color_surface');
-        $rawSurfaceBox = \App\Models\Setting::get('custom_color_surface_box');
+        $rawBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_bg') : null;
+        $rawSiteBg = $isCustomTheme ? \App\Models\Setting::get('site_bg_color') : null;
+        $rawBgAlt = $isCustomTheme ? \App\Models\Setting::get('custom_color_bg_alt') : null;
+        $rawSurface = $isCustomTheme ? \App\Models\Setting::get('custom_color_surface') : null;
+        $rawSurfaceBox = $isCustomTheme ? \App\Models\Setting::get('custom_color_surface_box') : null;
 
         $effBgMain = !empty($rawSiteBg) ? $rawSiteBg : (!empty($rawBg) ? $rawBg : $activeThemeDef['bg']);
         $effBgAlt = !empty($rawBgAlt) ? $rawBgAlt : $activeThemeDef['bg_alt'];
@@ -275,10 +277,10 @@
         $gRgb = $hexToRgb($glowColor, [167, 173, 180]);
 
         // Tipografia Independente
-        $rawTitle = \App\Models\Setting::get('custom_color_title');
-        $rawSubtitle = \App\Models\Setting::get('custom_color_subtitle');
-        $rawText = \App\Models\Setting::get('custom_color_text');
-        $rawTextMuted = \App\Models\Setting::get('custom_color_text_muted');
+        $rawTitle = $isCustomTheme ? \App\Models\Setting::get('custom_color_title') : null;
+        $rawSubtitle = $isCustomTheme ? \App\Models\Setting::get('custom_color_subtitle') : null;
+        $rawText = $isCustomTheme ? \App\Models\Setting::get('custom_color_text') : null;
+        $rawTextMuted = $isCustomTheme ? \App\Models\Setting::get('custom_color_text_muted') : null;
 
         $effTitleColor = !empty($rawTitle) ? $rawTitle : (!empty($rawText) ? $rawText : $activeThemeDef['title']);
         $effSubtitleColor = !empty($rawSubtitle) ? $rawSubtitle : (!empty($rawTextMuted) ? $rawTextMuted : $activeThemeDef['subtitle']);
@@ -286,28 +288,28 @@
         $effTextMuted = !empty($rawTextMuted) ? $rawTextMuted : $activeThemeDef['text_muted'];
 
         // Ícones Independentes
-        $rawIconDecor = \App\Models\Setting::get('custom_color_icon_decor');
-        $rawIconNav = \App\Models\Setting::get('custom_color_icon_nav');
-        $rawLegacyPrimary = \App\Models\Setting::get('custom_color_primary');
+        $rawIconDecor = $isCustomTheme ? \App\Models\Setting::get('custom_color_icon_decor') : null;
+        $rawIconNav = $isCustomTheme ? \App\Models\Setting::get('custom_color_icon_nav') : null;
+        $rawLegacyPrimary = $isCustomTheme ? \App\Models\Setting::get('custom_color_primary') : null;
 
         $effIconDecor = !empty($rawIconDecor) ? $rawIconDecor : (!empty($rawLegacyPrimary) ? $rawLegacyPrimary : $activeThemeDef['icon_decor']);
         $effIconNav = !empty($rawIconNav) ? $rawIconNav : $activeThemeDef['icon_nav'];
 
         // Links Independentes
-        $rawLink = \App\Models\Setting::get('custom_color_link');
-        $rawLinkHover = \App\Models\Setting::get('custom_color_link_hover');
-        $rawLegacyAccent = \App\Models\Setting::get('custom_color_accent');
+        $rawLink = $isCustomTheme ? \App\Models\Setting::get('custom_color_link') : null;
+        $rawLinkHover = $isCustomTheme ? \App\Models\Setting::get('custom_color_link_hover') : null;
+        $rawLegacyAccent = $isCustomTheme ? \App\Models\Setting::get('custom_color_accent') : null;
 
         $effLinkColor = !empty($rawLink) ? $rawLink : $activeThemeDef['link'];
         $effLinkHover = !empty($rawLinkHover) ? $rawLinkHover : (!empty($rawLegacyAccent) ? $rawLegacyAccent : $activeThemeDef['link_hover']);
 
         // Botões Independentes
-        $rawBtnPrimaryBg = \App\Models\Setting::get('custom_color_btn_primary_bg');
-        $rawBtnPrimaryText = \App\Models\Setting::get('custom_color_btn_primary_text');
-        $rawBtnPrimaryBorder = \App\Models\Setting::get('custom_color_btn_primary_border');
-        $rawBtnSecondaryBg = \App\Models\Setting::get('custom_color_btn_secondary_bg');
-        $rawBtnSecondaryText = \App\Models\Setting::get('custom_color_btn_secondary_text');
-        $rawBtnSecondaryBorder = \App\Models\Setting::get('custom_color_btn_secondary_border');
+        $rawBtnPrimaryBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_bg') : null;
+        $rawBtnPrimaryText = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_text') : null;
+        $rawBtnPrimaryBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_border') : null;
+        $rawBtnSecondaryBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_bg') : null;
+        $rawBtnSecondaryText = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_text') : null;
+        $rawBtnSecondaryBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_border') : null;
 
         $effBtnPrimaryBg = !empty($rawBtnPrimaryBg) ? $rawBtnPrimaryBg : (!empty($rawLegacyPrimary) ? $rawLegacyPrimary : $activeThemeDef['btn_primary_bg']);
         $effBtnPrimaryText = !empty($rawBtnPrimaryText) ? $rawBtnPrimaryText : $calcContrastColor($effBtnPrimaryBg);
@@ -318,59 +320,59 @@
         $effBtnSecondaryBorder = !empty($rawBtnSecondaryBorder) ? $rawBtnSecondaryBorder : $activeThemeDef['btn_secondary_border'];
 
         // Bordas & Divisores
-        $rawBorder = \App\Models\Setting::get('custom_color_border');
-        $rawBorderSubtle = \App\Models\Setting::get('custom_color_border_subtle');
+        $rawBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_border') : null;
+        $rawBorderSubtle = $isCustomTheme ? \App\Models\Setting::get('custom_color_border_subtle') : null;
         $effBorderColor = !empty($rawBorder) ? $rawBorder : $activeThemeDef['border'];
         $effBorderSubtle = !empty($rawBorderSubtle) ? $rawBorderSubtle : $activeThemeDef['border_subtle'];
 
         // Estados Interativos
-        $rawHoverBg = \App\Models\Setting::get('custom_color_hover_bg');
-        $rawFocusRing = \App\Models\Setting::get('custom_color_focus_ring');
-        $rawDisabled = \App\Models\Setting::get('custom_color_disabled');
+        $rawHoverBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_hover_bg') : null;
+        $rawFocusRing = $isCustomTheme ? \App\Models\Setting::get('custom_color_focus_ring') : null;
+        $rawDisabled = $isCustomTheme ? \App\Models\Setting::get('custom_color_disabled') : null;
         $effHoverBg = !empty($rawHoverBg) ? $rawHoverBg : $activeThemeDef['hover_bg'];
         $effFocusRing = !empty($rawFocusRing) ? $rawFocusRing : $activeThemeDef['focus_ring'];
         $effDisabledColor = !empty($rawDisabled) ? $rawDisabled : $activeThemeDef['disabled'];
 
         // Mensagens & Status
-        $effColorSuccess = \App\Models\Setting::get('custom_color_success', '#2E7D32');
-        $effColorWarning = \App\Models\Setting::get('custom_color_warning', '#D97706');
-        $effColorError = \App\Models\Setting::get('custom_color_error', '#DC2626');
+        $effColorSuccess = $isCustomTheme ? \App\Models\Setting::get('custom_color_success', '#2E7D32') : '#2E7D32';
+        $effColorWarning = $isCustomTheme ? \App\Models\Setting::get('custom_color_warning', '#D97706') : '#D97706';
+        $effColorError = $isCustomTheme ? \App\Models\Setting::get('custom_color_error', '#DC2626') : '#DC2626';
 
         // Destaque de Preços e Descontos
-        $rawPrice = \App\Models\Setting::get('custom_color_price');
-        $rawDiscount = \App\Models\Setting::get('custom_color_discount');
+        $rawPrice = $isCustomTheme ? \App\Models\Setting::get('custom_color_price') : null;
+        $rawDiscount = $isCustomTheme ? \App\Models\Setting::get('custom_color_discount') : null;
         $effPriceColor = !empty($rawPrice) ? $rawPrice : $activeThemeDef['title'];
         $effDiscountColor = !empty($rawDiscount) ? $rawDiscount : '#737B85';
 
         // Etiquetas e Badges
-        $rawBadgeBg = \App\Models\Setting::get('custom_color_badge_bg');
-        $rawBadgeText = \App\Models\Setting::get('custom_color_badge_text');
-        $rawBadgeBorder = \App\Models\Setting::get('custom_color_badge_border');
+        $rawBadgeBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_bg') : null;
+        $rawBadgeText = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_text') : null;
+        $rawBadgeBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_border') : null;
         $effBadgeBg = !empty($rawBadgeBg) ? $rawBadgeBg : 'rgba(167, 173, 180, 0.18)';
         $effBadgeText = !empty($rawBadgeText) ? $rawBadgeText : $activeThemeDef['text'];
         $effBadgeBorder = !empty($rawBadgeBorder) ? $rawBadgeBorder : 'rgba(167, 173, 180, 0.35)';
 
         // Campos de Formulário & Inputs
-        $rawInputBg = \App\Models\Setting::get('custom_color_input_bg');
-        $rawInputBorder = \App\Models\Setting::get('custom_color_input_border');
-        $rawInputText = \App\Models\Setting::get('custom_color_input_text');
+        $rawInputBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_bg') : null;
+        $rawInputBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_border') : null;
+        $rawInputText = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_text') : null;
         $effInputBg = !empty($rawInputBg) ? $rawInputBg : '#FFFFFF';
         $effInputBorder = !empty($rawInputBorder) ? $rawInputBorder : 'rgba(115, 123, 133, 0.28)';
         $effInputText = !empty($rawInputText) ? $rawInputText : $activeThemeDef['text'];
 
         // Header, Footer & Top Banner
-        $rawHeaderBg = \App\Models\Setting::get('header_bg_color');
-        $rawHeaderText = \App\Models\Setting::get('header_text_color');
+        $rawHeaderBg = $isCustomTheme ? \App\Models\Setting::get('header_bg_color') : null;
+        $rawHeaderText = $isCustomTheme ? \App\Models\Setting::get('header_text_color') : null;
         $effHeaderBg = !empty($rawHeaderBg) ? $rawHeaderBg : $activeThemeDef['header_bg'];
         $effHeaderText = !empty($rawHeaderText) ? $rawHeaderText : $activeThemeDef['header_text'];
 
-        $rawFooterBg = \App\Models\Setting::get('footer_bg_color');
-        $rawFooterText = \App\Models\Setting::get('footer_text_color');
+        $rawFooterBg = $isCustomTheme ? \App\Models\Setting::get('footer_bg_color') : null;
+        $rawFooterText = $isCustomTheme ? \App\Models\Setting::get('footer_text_color') : null;
         $effFooterBg = !empty($rawFooterBg) ? $rawFooterBg : $activeThemeDef['footer_bg'];
         $effFooterText = !empty($rawFooterText) ? $rawFooterText : $activeThemeDef['footer_text'];
 
-        $rawTopBannerBg = \App\Models\Setting::get('top_banner_bg_color');
-        $rawTopBannerText = \App\Models\Setting::get('top_banner_text_color');
+        $rawTopBannerBg = $isCustomTheme ? \App\Models\Setting::get('top_banner_bg_color') : null;
+        $rawTopBannerText = $isCustomTheme ? \App\Models\Setting::get('top_banner_text_color') : null;
         $effTopBannerBg = !empty($rawTopBannerBg) ? $rawTopBannerBg : '#252525';
         $effTopBannerText = !empty($rawTopBannerText) ? $rawTopBannerText : '#FFFFFF';
 
@@ -699,6 +701,7 @@
             border-color: var(--border-color) !important;
         }
 
+        <?php if ($isCustomTheme): ?>
         /* BADGES & ETIQUETAS */
         body.luxury-theme .badge-tag,
         body.luxury-theme .product-badge,
@@ -730,6 +733,7 @@
         body.luxury-theme #summaryPixRow span {
             color: var(--discount-color) !important;
         }
+        <?php endif; ?>
 
         /* CABEÇALHO, RODAPÉ & TOP BANNER */
         body.luxury-theme .main-header {
@@ -1425,7 +1429,7 @@
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="empty-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 <p><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?></p>
                 <?php if ($cartDiscoverVisible): ?>
-                <a href="<?= \App\Core\View::e($cartDiscoverUrl) ?>" class="btn-discover" onclick="closeDrawer()" style="background: <?= \App\Core\View::e($cartDiscoverBg) ?> !important; color: <?= \App\Core\View::e($cartDiscoverColor) ?> !important; border: 1px solid <?= \App\Core\View::e($cartDiscoverBorder) ?> !important; border-radius: <?= \App\Core\View::e($cartDiscoverRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$cartDiscoverShadow] ?? 'none') ?> !important; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: all 0.2s ease;">
+                <a href="<?= \App\Core\View::e($cartDiscoverUrl) ?>" class="btn-discover" onclick="closeDrawer()">
                     <?= $renderLayoutIcon($cartDiscoverIcon, $cartDiscoverIconColor) ?>
                     <span><?= \App\Core\View::e($cartDiscoverText) ?></span>
                 </a>
@@ -1441,7 +1445,7 @@
                 <small><?= \App\Core\View::e(\App\Models\Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?></small>
             </div>
             <?php if ($cartCheckoutVisible): ?>
-            <a href="<?= \App\Core\View::e($cartCheckoutUrl) ?>" class="btn-checkout-primary" style="background: <?= \App\Core\View::e($cartCheckoutBg) ?> !important; color: <?= \App\Core\View::e($cartCheckoutColor) ?> !important; border: 1px solid <?= \App\Core\View::e($cartCheckoutBorder) ?> !important; border-radius: <?= \App\Core\View::e($cartCheckoutRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$cartCheckoutShadow] ?? 'none') ?> !important; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: all 0.2s ease;">
+            <a href="<?= \App\Core\View::e($cartCheckoutUrl) ?>" class="btn-checkout-primary">
                 <?= $renderLayoutIcon($cartCheckoutIcon, $cartCheckoutIconColor) ?>
                 <span><?= \App\Core\View::e($cartCheckoutText) ?></span>
             </a>
@@ -1464,18 +1468,12 @@
                 <p class="brand-tagline"><?= \App\Core\View::e(\App\Models\Setting::get('footer_tagline', 'Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.')) ?></p>
                 <?php endif; ?>
                 <?php if (\App\Models\Setting::get('footer_socials_visible', '1') === '1'): ?>
-                <div class="footer-socials" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <div class="footer-socials">
                     <?php if ($footerInstaVisible): ?>
-                    <a href="<?= \App\Core\View::e($footerInstaUrl) ?>" target="_blank" rel="noopener" aria-label="Instagram" class="footer-btn-insta" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: <?= \App\Core\View::e($footerInstaBg) ?> !important; color: <?= \App\Core\View::e($footerInstaColor) ?> !important; border: 1px solid <?= \App\Core\View::e($footerInstaBorder) ?> !important; border-radius: <?= \App\Core\View::e($footerInstaRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$footerInstaShadow] ?? 'none') ?> !important; text-decoration: none; font-size: 0.82rem; transition: all 0.2s ease;">
-                        <?= $renderLayoutIcon($footerInstaIcon, $footerInstaIconColor) ?>
-                        <span><?= \App\Core\View::e($footerInstaText) ?></span>
-                    </a>
+                    <a href="<?= \App\Core\View::e($footerInstaUrl) ?>" target="_blank" rel="noopener" aria-label="Instagram"><?= \App\Core\View::e($footerInstaText) ?></a>
                     <?php endif; ?>
                     <?php if ($footerWaVisible): ?>
-                    <a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank" rel="noopener" aria-label="WhatsApp" class="footer-btn-wa" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: <?= \App\Core\View::e($footerWaBg) ?> !important; color: <?= \App\Core\View::e($footerWaColor) ?> !important; border: 1px solid <?= \App\Core\View::e($footerWaBorder) ?> !important; border-radius: <?= \App\Core\View::e($footerWaRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$footerWaShadow] ?? 'none') ?> !important; text-decoration: none; font-size: 0.82rem; transition: all 0.2s ease;">
-                        <?= $renderLayoutIcon($footerWaIcon, $footerWaIconColor) ?>
-                        <span><?= \App\Core\View::e($footerWaText) ?></span>
-                    </a>
+                    <a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><?= \App\Core\View::e($footerWaText) ?></a>
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>
@@ -1496,20 +1494,10 @@
                 <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col2_title', 'Atendimento & Concierge')) ?></h4>
                 <ul>
                     <?php if ($footerWaVisible): ?>
-                    <li>
-                        <a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank" class="footer-link-wa" style="display: inline-flex; align-items: center; gap: 6px;">
-                            <?= $renderLayoutIcon($footerWaIcon, $footerWaIconColor) ?>
-                            <span><?= \App\Core\View::e($footerWaText) ?></span>
-                        </a>
-                    </li>
+                    <li><a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank"><?= \App\Core\View::e($footerWaText) ?></a></li>
                     <?php endif; ?>
                     <?php if ($footerEmailVisible): ?>
-                    <li>
-                        <a href="<?= \App\Core\View::e($footerEmailUrl) ?>" class="footer-link-email" style="display: inline-flex; align-items: center; gap: 6px;">
-                            <?= $renderLayoutIcon($footerEmailIcon, $footerEmailIconColor) ?>
-                            <span><?= \App\Core\View::e($footerEmailText) ?></span>
-                        </a>
-                    </li>
+                    <li><a href="<?= \App\Core\View::e($footerEmailUrl) ?>"><?= \App\Core\View::e($footerEmailText) ?></a></li>
                     <?php endif; ?>
                     <?php if (\App\Models\Setting::get('page_trocas_enabled', '1') === '1'): ?>
                     <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', \App\Models\Setting::get('page_trocas_title', 'Trocas e Devoluções (CDC 7 Dias)'))) ?></a></li>
