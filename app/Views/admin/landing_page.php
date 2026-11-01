@@ -19,6 +19,209 @@ $renderToggle = function(string $key, string $default = '1'): string {
         <span class="toggle-text">' . $label . '</span>
     </label>';
 };
+
+/**
+ * Helper para renderizar o editor completo e elegante de um botão:
+ * - Texto do botão
+ * - Link ou ação de destino
+ * - Visibilidade individual (Ativar / Desativar)
+ * - Cor de fundo (seletor de cores)
+ * - Cor da letra (independente)
+ * - Cor da borda
+ * - Ícone (escolha ou remoção)
+ * - Cor do ícone
+ * - Arredondamento (border-radius)
+ * - Sombra e efeitos visuais
+ */
+$renderButtonEditor = function(string $btnKey, array $options = []) use ($renderToggle): string {
+    $title = $options['title'] ?? 'Configurações do Botão';
+    $subtitle = $options['subtitle'] ?? '';
+    $defaultText = $options['default_text'] ?? 'Clique Aqui';
+    $defaultUrl = $options['default_url'] ?? '';
+    $defaultVisible = $options['default_visible'] ?? '1';
+    $defaultBg = $options['default_bg'] ?? '#202020';
+    $defaultColor = $options['default_color'] ?? '#FFFFFF';
+    $defaultBorder = $options['default_border'] ?? '#404040';
+    $defaultIcon = $options['default_icon'] ?? '';
+    $defaultIconColor = $options['default_icon_color'] ?? '#CBD0D6';
+    $defaultRadius = $options['default_radius'] ?? '8px';
+    $defaultShadow = $options['default_shadow'] ?? 'none';
+    $isActionOnly = !empty($options['action_only']);
+    $actionHint = $options['action_hint'] ?? '';
+
+    $curText = Setting::get($btnKey . '_text', $defaultText);
+    $curUrl = Setting::get($btnKey . '_url', $defaultUrl);
+    $curVisible = Setting::get($btnKey . '_visible', $defaultVisible);
+    $curBg = Setting::get($btnKey . '_bg', $defaultBg);
+    $curColor = Setting::get($btnKey . '_color', $defaultColor);
+    $curBorder = Setting::get($btnKey . '_border', $defaultBorder);
+    $curIcon = Setting::get($btnKey . '_icon', $defaultIcon);
+    $curIconColor = Setting::get($btnKey . '_icon_color', $defaultIconColor);
+    $curRadius = Setting::get($btnKey . '_radius', $defaultRadius);
+    $curShadow = Setting::get($btnKey . '_shadow', $defaultShadow);
+
+    $isDimmed = ($curVisible !== '1' && $curVisible !== 1) ? 'is-dimmed' : '';
+
+    $icons = [
+        '' => 'Sem Ícone',
+        '✦' => '✦ Estrela Nobre (Divinium)',
+        '💬' => '💬 Balão WhatsApp / Conversa',
+        '🔒' => '🔒 Cadeado Seguro (Checkout)',
+        '🛍️' => '🛍️ Sacola de Compras',
+        '🔍' => '🔍 Lupa de Busca (CEP)',
+        '📋' => '📋 Prancheta / Copiar Chave Pix',
+        '🚚' => '🚚 Caminhão / Frete',
+        '💎' => '💎 Diamante / Joia Nobre',
+        '🛡️' => '🛡️ Escudo de Garantia',
+        '📞' => '📞 Telefone Concierge',
+        '✉️' => '✉️ E-mail Atendimento',
+        '↗' => '↗ Link Externo',
+        '←' => '← Seta Voltar',
+        '→' => '→ Seta Avançar',
+        '✓' => '✓ Checkmark / Confirmação',
+    ];
+
+    $radiusOptions = [
+        '0px' => '0px (Reto Clássico)',
+        '4px' => '4px (Borda Sutil)',
+        '8px' => '8px (Elegante Padrão)',
+        '12px' => '12px (Borda Suave)',
+        '24px' => '24px (Pill / Totalmente Arredondado)',
+    ];
+
+    $shadowOptions = [
+        'none' => 'Nenhuma (Flat)',
+        '0 2px 8px rgba(0,0,0,0.18)' => 'Sombra Sutil e Discreta',
+        '0 8px 24px rgba(0,0,0,0.35)' => 'Sombra Nobre e Profunda',
+        '0 0 16px rgba(203,208,214,0.35)' => 'Brilho Suave Prateado',
+    ];
+
+    $html = '<div class="btn-custom-editor-card ' . $isDimmed . '" id="btn_card_' . $btnKey . '" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; transition: all 0.3s ease;">';
+    
+    // Top Bar com Título e Toggle
+    $html .= '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">';
+    $html .= '<div>';
+    $html .= '<div style="display: flex; align-items: center; gap: 8px;">';
+    $html .= '<span style="font-size: 1rem;">🔘</span>';
+    $html .= '<strong style="color: #ffffff; font-size: 0.92rem; letter-spacing: 0.3px;">' . View::e($title) . '</strong>';
+    $html .= '</div>';
+    if ($subtitle) {
+        $html .= '<span style="font-size: 0.74rem; color: #a7adb4; display: block; margin-top: 3px;">' . View::e($subtitle) . '</span>';
+    }
+    $html .= '</div>';
+    $html .= '<div style="display: flex; align-items: center; gap: 8px;">';
+    $html .= '<span style="font-size: 0.74rem; color: #a7adb4;">Visibilidade:</span>';
+    $html .= $renderToggle($btnKey . '_visible', $defaultVisible);
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // Live Preview Bar
+    $html .= '<div style="margin-bottom: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">';
+    $html .= '<span style="font-size: 0.75rem; color: #8e8880; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Prévia Visual do Botão:</span>';
+    $html .= '<div id="live_prev_wrap_' . $btnKey . '">';
+    $html .= '<span id="live_prev_btn_' . $btnKey . '" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.84rem; font-weight: 600; text-decoration: none; cursor: default; transition: all 0.25s ease; background: ' . View::e($curBg) . '; color: ' . View::e($curColor) . '; border: 1px solid ' . View::e($curBorder) . '; border-radius: ' . View::e($curRadius) . '; box-shadow: ' . View::e($curShadow) . ';">';
+    $html .= '<span id="live_prev_ico_' . $btnKey . '" style="color: ' . View::e($curIconColor) . '; font-size: 0.95rem; ' . ($curIcon === '' ? 'display: none;' : '') . '">' . View::e($curIcon) . '</span>';
+    $html .= '<span id="live_prev_txt_' . $btnKey . '">' . View::e($curText) . '</span>';
+    $html .= '</span>';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // Grid de Configurações
+    $html .= '<div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">';
+
+    // 1. Texto do Botão
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Texto do Botão</label>';
+    $html .= '<input type="text" name="' . $btnKey . '_text" id="' . $btnKey . '_text" class="form-input btn-ctrl-text" data-key="' . $btnKey . '" value="' . View::e($curText) . '" placeholder="' . View::e($defaultText) . '" style="font-size: 0.8rem; padding: 6px 10px;" oninput="updateBtnPreview(\'' . $btnKey . '\')">';
+    $html .= '</div>';
+
+    // 2. Link ou Ação
+    $html .= '<div class="form-group">';
+    if ($isActionOnly) {
+        $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Destino / Ação</label>';
+        $html .= '<input type="text" name="' . $btnKey . '_url" id="' . $btnKey . '_url" class="form-input" value="' . View::e($curUrl ?: '#') . '" style="font-size: 0.8rem; padding: 6px 10px;" placeholder="Ação de Sistema">';
+        $html .= '<span class="field-hint" style="font-size: 0.7rem; color: #a7adb4;">' . View::e($actionHint ?: 'Ação integrada ao sistema (preservada).') . '</span>';
+    } else {
+        $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Link ou Destino (URL / WhatsApp / E-mail)</label>';
+        $html .= '<input type="text" name="' . $btnKey . '_url" id="' . $btnKey . '_url" class="form-input" value="' . View::e($curUrl) . '" placeholder="' . View::e($defaultUrl) . '" style="font-size: 0.8rem; padding: 6px 10px;">';
+        $html .= '<span class="field-hint" style="font-size: 0.7rem; color: #a7adb4;">Ex: /loja, https://wa.me/..., mailto:...</span>';
+    }
+    $html .= '</div>';
+
+    // 3. Cor de Fundo
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Cor de Fundo</label>';
+    $html .= '<div style="display: flex; gap: 6px; align-items: center;">';
+    $html .= '<input type="color" class="color-picker-sync" value="' . (str_starts_with($curBg, '#') && strlen($curBg) === 7 ? $curBg : '#202020') . '" oninput="syncColorInput(this, \'' . $btnKey . '_bg\'); updateBtnPreview(\'' . $btnKey . '\')" style="width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $btnKey . '_bg" id="' . $btnKey . '_bg" class="form-input" value="' . View::e($curBg) . '" style="font-size: 0.8rem; padding: 6px 8px; flex: 1;" oninput="updateBtnPreview(\'' . $btnKey . '\')">';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // 4. Cor da Letra
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Cor da Letra (Texto)</label>';
+    $html .= '<div style="display: flex; gap: 6px; align-items: center;">';
+    $html .= '<input type="color" class="color-picker-sync" value="' . (str_starts_with($curColor, '#') && strlen($curColor) === 7 ? $curColor : '#FFFFFF') . '" oninput="syncColorInput(this, \'' . $btnKey . '_color\'); updateBtnPreview(\'' . $btnKey . '\')" style="width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $btnKey . '_color" id="' . $btnKey . '_color" class="form-input" value="' . View::e($curColor) . '" style="font-size: 0.8rem; padding: 6px 8px; flex: 1;" oninput="updateBtnPreview(\'' . $btnKey . '\')">';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // 5. Cor da Borda
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Cor da Borda</label>';
+    $html .= '<div style="display: flex; gap: 6px; align-items: center;">';
+    $html .= '<input type="color" class="color-picker-sync" value="' . (str_starts_with($curBorder, '#') && strlen($curBorder) === 7 ? $curBorder : '#404040') . '" oninput="syncColorInput(this, \'' . $btnKey . '_border\'); updateBtnPreview(\'' . $btnKey . '\')" style="width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $btnKey . '_border" id="' . $btnKey . '_border" class="form-input" value="' . View::e($curBorder) . '" style="font-size: 0.8rem; padding: 6px 8px; flex: 1;" oninput="updateBtnPreview(\'' . $btnKey . '\')">';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // 6. Ícone
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Ícone do Botão</label>';
+    $html .= '<select name="' . $btnKey . '_icon" id="' . $btnKey . '_icon" class="form-select" style="font-size: 0.8rem; padding: 6px 8px;" onchange="updateBtnPreview(\'' . $btnKey . '\')">';
+    foreach ($icons as $iVal => $iLbl) {
+        $sel = ($curIcon === $iVal) ? 'selected' : '';
+        $html .= '<option value="' . View::e($iVal) . '" ' . $sel . '>' . View::e($iLbl) . '</option>';
+    }
+    $html .= '</select>';
+    $html .= '</div>';
+
+    // 7. Cor do Ícone
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Cor do Ícone</label>';
+    $html .= '<div style="display: flex; gap: 6px; align-items: center;">';
+    $html .= '<input type="color" class="color-picker-sync" value="' . (str_starts_with($curIconColor, '#') && strlen($curIconColor) === 7 ? $curIconColor : '#CBD0D6') . '" oninput="syncColorInput(this, \'' . $btnKey . '_icon_color\'); updateBtnPreview(\'' . $btnKey . '\')" style="width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $btnKey . '_icon_color" id="' . $btnKey . '_icon_color" class="form-input" value="' . View::e($curIconColor) . '" style="font-size: 0.8rem; padding: 6px 8px; flex: 1;" oninput="updateBtnPreview(\'' . $btnKey . '\')">';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    // 8. Borda Arredondada (Raio)
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Arredondamento das Bordas</label>';
+    $html .= '<select name="' . $btnKey . '_radius" id="' . $btnKey . '_radius" class="form-select" style="font-size: 0.8rem; padding: 6px 8px;" onchange="updateBtnPreview(\'' . $btnKey . '\')">';
+    foreach ($radiusOptions as $rVal => $rLbl) {
+        $sel = ($curRadius === $rVal) ? 'selected' : '';
+        $html .= '<option value="' . View::e($rVal) . '" ' . $sel . '>' . View::e($rLbl) . '</option>';
+    }
+    $html .= '</select>';
+    $html .= '</div>';
+
+    // 9. Sombra e Efeito Visual
+    $html .= '<div class="form-group">';
+    $html .= '<label style="color: #CBD0D6; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; display: block;">Efeito Visual & Sombra</label>';
+    $html .= '<select name="' . $btnKey . '_shadow" id="' . $btnKey . '_shadow" class="form-select" style="font-size: 0.8rem; padding: 6px 8px;" onchange="updateBtnPreview(\'' . $btnKey . '\')">';
+    foreach ($shadowOptions as $sVal => $sLbl) {
+        $sel = ($curShadow === $sVal) ? 'selected' : '';
+        $html .= '<option value="' . View::e($sVal) . '" ' . $sel . '>' . View::e($sLbl) . '</option>';
+    }
+    $html .= '</select>';
+    $html .= '</div>';
+
+    $html .= '</div>'; // end form-grid
+    $html .= '</div>'; // end card
+
+    return $html;
+};
 ?>
 
 <div class="landing-editor-container">
@@ -3559,6 +3762,101 @@ $renderToggle = function(string $key, string $default = '1'): string {
                            value="<?= View::e(Setting::get('footer_pay_badge4', 'Gateway Homologado ASAAS')) ?>">
                 </div>
 
+                <!-- SUBSEÇÃO: EDITOR DE BOTÕES DE CONTATO & RODAPÉ INSTITUCIONAL -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 16px;">
+                    <div style="background: rgba(167, 173, 180, 0.06); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.2); margin-bottom: 14px;">
+                        <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <span>🔘</span> Editor de Botões de Contato & Redes Sociais do Rodapé
+                        </h4>
+                        <span class="field-hint" style="margin: 0;">Personalize texto, cores (fundo, letra e borda), ícones, arredondamento e ative/desative cada botão individualmente.</span>
+                    </div>
+
+                    <?= $renderButtonEditor('footer_btn_whatsapp', [
+                        'title' => 'Botão Oficial de Atendimento via WhatsApp',
+                        'subtitle' => 'Exibido nas colunas de atendimento e links diretos de contato no rodapé.',
+                        'default_text' => Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp'),
+                        'default_url' => 'https://wa.me/' . Setting::get('hero_whatsapp_number', '5511999999999'),
+                        'default_visible' => Setting::get('footer_whatsapp_visible', '1'),
+                        'default_bg' => '#202020',
+                        'default_color' => '#FFFFFF',
+                        'default_border' => '#CBD0D6',
+                        'default_icon' => '💬',
+                        'default_icon_color' => '#CBD0D6',
+                        'default_radius' => '8px',
+                        'default_shadow' => 'none'
+                    ]) ?>
+
+                    <?= $renderButtonEditor('footer_btn_instagram', [
+                        'title' => 'Botão Oficial do Instagram da DIVINIUM',
+                        'subtitle' => 'Link de direcionamento para o perfil oficial no Instagram no rodapé.',
+                        'default_text' => 'Instagram Oficial',
+                        'default_url' => Setting::get('footer_instagram', 'https://instagram.com/divinium'),
+                        'default_visible' => Setting::get('footer_socials_visible', '1'),
+                        'default_bg' => '#181A1D',
+                        'default_color' => '#ded7cf',
+                        'default_border' => '#404040',
+                        'default_icon' => '✦',
+                        'default_icon_color' => '#CBD0D6',
+                        'default_radius' => '8px',
+                        'default_shadow' => 'none'
+                    ]) ?>
+
+                    <?= $renderButtonEditor('footer_btn_email', [
+                        'title' => 'Botão Oficial de E-mail de Atendimento',
+                        'subtitle' => 'Abre o envio de mensagem para o e-mail oficial no rodapé.',
+                        'default_text' => Setting::get('footer_email', 'atendimento@divinium.com.br'),
+                        'default_url' => 'mailto:' . Setting::get('footer_email', 'atendimento@divinium.com.br'),
+                        'default_visible' => Setting::get('footer_email_visible', '1'),
+                        'default_bg' => '#181A1D',
+                        'default_color' => '#ded7cf',
+                        'default_border' => '#404040',
+                        'default_icon' => '✉️',
+                        'default_icon_color' => '#CBD0D6',
+                        'default_radius' => '8px',
+                        'default_shadow' => 'none'
+                    ]) ?>
+                </div>
+
+                <!-- SUBSEÇÃO: BOTÕES GLOBAIS DE RODAPÉ DAS PÁGINAS INSTITUCIONAIS -->
+                <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 16px;">
+                    <div style="background: rgba(202, 161, 92, 0.06); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(202, 161, 92, 0.2); margin-bottom: 14px;">
+                        <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                            <span>🏛️</span> Botões Globais de Rodapé das Páginas Institucionais
+                        </h4>
+                        <span class="field-hint" style="margin: 0;">Botões exibidos na base dos cartões de Trocas, Garantia, LGPD, Termos de Uso e Política de Frete.</span>
+                    </div>
+
+                    <?= $renderButtonEditor('inst_btn_back_store', [
+                        'title' => 'Botão Global: Explorar Vitrine da Boutique',
+                        'subtitle' => 'Permite ao visitante retornar à vitrine (/loja) após conferir as páginas legais.',
+                        'default_text' => '← Explorar Vitrine da Boutique',
+                        'default_url' => '/loja',
+                        'default_visible' => '1',
+                        'default_bg' => 'transparent',
+                        'default_color' => '#CBD0D6',
+                        'default_border' => 'rgba(255,255,255,0.15)',
+                        'default_icon' => '←',
+                        'default_icon_color' => '#CBD0D6',
+                        'default_radius' => '8px',
+                        'default_shadow' => 'none'
+                    ]) ?>
+
+                    <?= $renderButtonEditor('inst_btn_concierge', [
+                        'title' => 'Botão Global: Falar com o Concierge',
+                        'subtitle' => 'Canal direto via WhatsApp com o Concierge VIP em todas as páginas institucionais.',
+                        'default_text' => 'Falar com o Concierge',
+                        'default_url' => 'https://wa.me/' . Setting::get('hero_whatsapp_number', '5511999999999'),
+                        'default_visible' => '1',
+                        'default_bg' => '#CBD0D6',
+                        'default_color' => '#202020',
+                        'default_border' => '#737B85',
+                        'default_icon' => '💬',
+                        'default_icon_color' => '#202020',
+                        'default_radius' => '8px',
+                        'default_shadow' => 'none'
+                    ]) ?>
+                </div>
+
                 <!-- ============================================================== -->
                 <!-- BLOCO: CHECKOUT DIRETO, PAGAMENTO PIX & SACOLA DE COMPRAS -->
                 <!-- ============================================================== -->
@@ -3872,19 +4170,109 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                    value="<?= View::e(Setting::get('checkout_lbl_total', 'Total Estimado:')) ?>">
                         </div>
 
-                        <div class="form-group">
-                            <label for="checkout_btn_submit_text">Texto do Botão Principal de Conclusão</label>
-                            <input type="text" id="checkout_btn_submit_text" name="checkout_btn_submit_text" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar')) ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <div class="field-label-row">
-                                <label for="checkout_return_store_text">Link 'Escolher mais joias'</label>
-                                <?= $renderToggle('checkout_return_store_visible') ?>
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 16px;">
+                            <div style="background: rgba(167, 173, 180, 0.06); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.2); margin-bottom: 14px;">
+                                <h4 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+                                    <span>🔘</span> Editor Completo dos Botões do Checkout, Sacola & Pix
+                                </h4>
+                                <span class="field-hint" style="margin: 0;">Configure texto, cores, bordas, ícones, arredondamento e visibilidade individual de cada botão do checkout e da sacola lateral.</span>
                             </div>
-                            <input type="text" id="checkout_return_store_text" name="checkout_return_store_text" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique')) ?>">
+
+                            <?= $renderButtonEditor('checkout_btn_cep', [
+                                'title' => 'Botão: Buscar / Calcular CEP no Formulário',
+                                'subtitle' => 'Dispara a busca de endereço e cotação de frete ao vivo ao preencher o CEP.',
+                                'default_text' => Setting::get('checkout_btn_search_cep', 'Buscar'),
+                                'default_url' => 'javascript:consultarCep()',
+                                'action_only' => true,
+                                'action_hint' => 'Ação do sistema: busca de endereço por CEP (preservada).',
+                                'default_visible' => '1',
+                                'default_bg' => '#202020',
+                                'default_color' => '#FFFFFF',
+                                'default_border' => '#CBD0D6',
+                                'default_icon' => '🔍',
+                                'default_icon_color' => '#CBD0D6',
+                                'default_radius' => '6px',
+                                'default_shadow' => 'none'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('checkout_btn_pix', [
+                                'title' => 'Botão: Copiar Código / Chave Pix em 1 Clique',
+                                'subtitle' => 'Copia o código Pix Copia e Cola instantaneamente para o dispositivo do cliente.',
+                                'default_text' => Setting::get('checkout_btn_copy_pix', 'Copiar Código Pix'),
+                                'default_url' => 'javascript:copyPixKey()',
+                                'action_only' => true,
+                                'action_hint' => 'Ação do sistema: cópia instantânea da chave Pix (preservada).',
+                                'default_visible' => '1',
+                                'default_bg' => '#202020',
+                                'default_color' => '#CBD0D6',
+                                'default_border' => '#CBD0D6',
+                                'default_icon' => '📋',
+                                'default_icon_color' => '#CBD0D6',
+                                'default_radius' => '6px',
+                                'default_shadow' => 'none'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('checkout_btn_submit', [
+                                'title' => 'Botão Principal: Confirmar Pedido & Continuar',
+                                'subtitle' => 'Ação definitiva de envio e finalização do pedido no checkout.',
+                                'default_text' => Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar'),
+                                'default_url' => 'submit',
+                                'action_only' => true,
+                                'action_hint' => 'Ação do sistema: processamento de checkout (preservada).',
+                                'default_visible' => '1',
+                                'default_bg' => '#202020',
+                                'default_color' => '#FFFFFF',
+                                'default_border' => '#202020',
+                                'default_icon' => '🔒',
+                                'default_icon_color' => '#CBD0D6',
+                                'default_radius' => '8px',
+                                'default_shadow' => '0 4px 15px rgba(0,0,0,0.2)'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('checkout_return_store', [
+                                'title' => 'Botão / Link: Escolher mais joias na boutique',
+                                'subtitle' => 'Exibido abaixo do resumo de compras para permitir continuar navegando.',
+                                'default_text' => Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique'),
+                                'default_url' => '/loja',
+                                'default_visible' => Setting::get('checkout_return_store_visible', '1'),
+                                'default_bg' => 'transparent',
+                                'default_color' => '#737B85',
+                                'default_border' => 'transparent',
+                                'default_icon' => '←',
+                                'default_icon_color' => '#737B85',
+                                'default_radius' => '6px',
+                                'default_shadow' => 'none'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('cart_btn_checkout', [
+                                'title' => 'Botão: Finalizar Compra da Gaveta da Sacola (Cart Drawer)',
+                                'subtitle' => 'Botão de conversão na gaveta lateral para levar o cliente direto ao checkout.',
+                                'default_text' => Setting::get('cart_checkout_btn', 'Finalizar Compra'),
+                                'default_url' => '/checkout',
+                                'default_visible' => '1',
+                                'default_bg' => '#202020',
+                                'default_color' => '#FFFFFF',
+                                'default_border' => '#202020',
+                                'default_icon' => '🛍️',
+                                'default_icon_color' => '#CBD0D6',
+                                'default_radius' => '8px',
+                                'default_shadow' => '0 4px 12px rgba(0,0,0,0.15)'
+                            ]) ?>
+
+                            <?= $renderButtonEditor('cart_btn_discover', [
+                                'title' => 'Botão: Descobrir Coleção (Sacola Vazia)',
+                                'subtitle' => 'Exibido dentro da gaveta lateral quando a sacola ainda está vazia.',
+                                'default_text' => Setting::get('cart_drawer_discover', 'Descobrir Coleção'),
+                                'default_url' => '/loja',
+                                'default_visible' => '1',
+                                'default_bg' => '#CBD0D6',
+                                'default_color' => '#202020',
+                                'default_border' => '#737B85',
+                                'default_icon' => '✦',
+                                'default_icon_color' => '#202020',
+                                'default_radius' => '8px',
+                                'default_shadow' => 'none'
+                            ]) ?>
                         </div>
                     </div>
                 </div>
@@ -4353,6 +4741,78 @@ $renderToggle = function(string $key, string $default = '1'): string {
                             </div>
                         </div>
 
+                        <!-- 🎯 BOTÕES DE AÇÃO & CONTATO ESPECÍFICOS DESTA PÁGINA INSTITUCIONAL -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                <div>
+                                    <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        🎯 Botões de Ação & Contato Específicos Desta Página
+                                    </span>
+                                    <span style="font-size: 0.74rem; color: #8e8880;">Configure o botão de ação principal (CTA) e personalize os botões de navegação no rodapé para <?= View::e($pCfg['name']) ?>.</span>
+                                </div>
+                            </div>
+
+                            <!-- Botão de Ação Direta (CTA Principal da Página) -->
+                            <?= $renderButtonEditor('page_' . $pKey . '_cta', [
+                                'title' => 'Botão de Ação Principal (CTA) para ' . $pCfg['name'],
+                                'subtitle' => 'Exibido em destaque no card editorial para facilitar o contato ou solicitação do cliente.',
+                                'default_text' => ($pKey === 'trocas' ? 'Solicitar Troca via WhatsApp' :
+                                                  ($pKey === 'garantia' ? 'Solicitar Atendimento de Garantia' :
+                                                  ($pKey === 'privacidade' ? 'Contatar Encarregado LGPD (DPO)' :
+                                                  ($pKey === 'termos' ? 'Dúvidas sobre os Termos' : 'Consultar Frete & Rastreamento')))),
+                                'default_url' => ($pKey === 'privacidade' ? 'mailto:dpo@divinium.com.br' : 'https://wa.me/' . Setting::get('hero_whatsapp_number', '5511999999999')),
+                                'default_visible' => '1',
+                                'default_bg' => '#202020',
+                                'default_color' => '#FFFFFF',
+                                'default_border' => '#CBD0D6',
+                                'default_icon' => ($pKey === 'privacidade' ? '✉️' : ($pKey === 'frete' ? '🚚' : '💬')),
+                                'default_icon_color' => '#CBD0D6',
+                                'default_radius' => '8px',
+                                'default_shadow' => '0 4px 14px rgba(0,0,0,0.2)'
+                            ]) ?>
+
+                            <!-- Opção de Sobrescrever os Botões de Rodapé desta Página -->
+                            <div style="margin-top: 10px; padding: 12px 14px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                                <div class="field-label-row">
+                                    <label style="font-size: 0.8rem; font-weight: 600; color: #CBD0D6;">Personalizar Botões do Rodapé Apenas para Esta Página?</label>
+                                    <?= $renderToggle('page_' . $pKey . '_custom_footer_btns', '0') ?>
+                                </div>
+                                <span class="field-hint" style="font-size: 0.72rem;">Se desativado, esta página usará os Botões Globais de Rodapé configurados em Dados Jurídicos. Se ativado, usará os botões abaixo.</span>
+                            </div>
+
+                            <div id="custom_footer_btns_<?= $pKey ?>" class="sub-section-fields-container <?= Setting::get('page_' . $pKey . '_custom_footer_btns', '0') !== '1' ? 'is-dimmed' : '' ?>" style="margin-top: 12px; transition: all 0.3s ease; <?= Setting::get('page_' . $pKey . '_custom_footer_btns', '0') !== '1' ? 'opacity: 0.35; pointer-events: none;' : '' ?>">
+                                <?= $renderButtonEditor('page_' . $pKey . '_btn_back', [
+                                    'title' => 'Botão: Explorar Vitrine (Exclusivo desta página)',
+                                    'subtitle' => 'Substitui o botão de retorno da vitrine apenas para ' . $pCfg['name'],
+                                    'default_text' => '← Explorar Vitrine da Boutique',
+                                    'default_url' => '/loja',
+                                    'default_visible' => '1',
+                                    'default_bg' => 'transparent',
+                                    'default_color' => '#CBD0D6',
+                                    'default_border' => 'rgba(255,255,255,0.15)',
+                                    'default_icon' => '←',
+                                    'default_icon_color' => '#CBD0D6',
+                                    'default_radius' => '8px',
+                                    'default_shadow' => 'none'
+                                ]) ?>
+
+                                <?= $renderButtonEditor('page_' . $pKey . '_btn_concierge', [
+                                    'title' => 'Botão: Falar com o Concierge (Exclusivo desta página)',
+                                    'subtitle' => 'Substitui o botão de concierge apenas para ' . $pCfg['name'],
+                                    'default_text' => 'Falar com o Concierge',
+                                    'default_url' => 'https://wa.me/' . Setting::get('hero_whatsapp_number', '5511999999999'),
+                                    'default_visible' => '1',
+                                    'default_bg' => '#CBD0D6',
+                                    'default_color' => '#202020',
+                                    'default_border' => '#737B85',
+                                    'default_icon' => '💬',
+                                    'default_icon_color' => '#202020',
+                                    'default_radius' => '8px',
+                                    'default_shadow' => 'none'
+                                ]) ?>
+                            </div>
+                        </div>
+
                         <!-- BLOCOS DINÂMICOS & AVISOS COMPLEMENTARES -->
                         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; margin-bottom: 18px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
@@ -4360,7 +4820,7 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                     <span style="display: block; color: var(--gold-accent, #CBD0D6); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
                                         ✨ Blocos Adicionais, Avisos & Informações Complementares
                                     </span>
-                                    <span style="font-size: 0.74rem; color: #8e8880;">Adicione avisos em destaque (callouts), seções de links ou cláusulas personalizadas. Você pode reordenar (⬆️/⬇️), ocultar ou excluir livremente.</span>
+                                    <span style="font-size: 0.74rem; color: #8e8880;">Adicione avisos em destaque (callouts), seções de links ou cláusulas personalizadas. Você pode reordenar (⬆️/⬇️), ocultar, incluir botões ou excluir livremente.</span>
                                 </div>
                                 <button type="button" class="btn-admin-secondary" onclick="addInstBlock('<?= $pKey ?>')" style="font-size: 0.76rem; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(212,186,136,0.3); color: #ded7cf;">
                                     <span>➕ Adicionar Novo Bloco</span>
@@ -4406,6 +4866,68 @@ $renderToggle = function(string $key, string $default = '1'): string {
                                             </div>
                                         </div>
                                         <textarea class="form-textarea inst-blk-content" rows="2" style="font-size: 0.78rem; padding: 6px 10px;" placeholder="Conteúdo do bloco adicional..." oninput="syncInstBlocks('<?= $pKey ?>')"><?= View::e($bContent) ?></textarea>
+
+                                        <!-- BOTÃO EMBUTIDO NO BLOCO ADICIONAL -->
+                                        <div class="inst-blk-btn-config" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.08);">
+                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                                <label style="font-size: 0.74rem; color: #CBD0D6; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                                    <input type="checkbox" class="inst-blk-has-btn" <?= !empty($blk['has_button']) ? 'checked' : '' ?> onchange="toggleBlockBtnFields(this); syncInstBlocks('<?= $pKey ?>')">
+                                                    <span>🔘 Incluir Botão de Ação neste Bloco</span>
+                                                </label>
+                                            </div>
+                                            <div class="inst-blk-btn-fields" style="<?= empty($blk['has_button']) ? 'display: none;' : '' ?> display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px;">
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Texto do Botão:</label>
+                                                    <input type="text" class="form-input inst-blk-btn-text" value="<?= View::e($blk['button_text'] ?? '') ?>" placeholder="Ex: Falar no WhatsApp" style="font-size: 0.75rem; padding: 4px 8px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Link / URL:</label>
+                                                    <input type="text" class="form-input inst-blk-btn-url" value="<?= View::e($blk['button_url'] ?? '') ?>" placeholder="Ex: https://wa.me/..." style="font-size: 0.75rem; padding: 4px 8px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor de Fundo:</label>
+                                                    <div style="display: flex; gap: 4px; align-items: center;">
+                                                        <input type="color" value="<?= !empty($blk['button_bg']) ? View::e($blk['button_bg']) : '#202020' ?>" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('<?= $pKey ?>')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                                                        <input type="text" class="form-input inst-blk-btn-bg" value="<?= View::e($blk['button_bg'] ?? '#202020') ?>" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor da Letra:</label>
+                                                    <div style="display: flex; gap: 4px; align-items: center;">
+                                                        <input type="color" value="<?= !empty($blk['button_color']) ? View::e($blk['button_color']) : '#FFFFFF' ?>" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('<?= $pKey ?>')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                                                        <input type="text" class="form-input inst-blk-btn-color" value="<?= View::e($blk['button_color'] ?? '#FFFFFF') ?>" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor da Borda:</label>
+                                                    <div style="display: flex; gap: 4px; align-items: center;">
+                                                        <input type="color" value="<?= !empty($blk['button_border']) ? View::e($blk['button_border']) : '#CBD0D6' ?>" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('<?= $pKey ?>')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                                                        <input type="text" class="form-input inst-blk-btn-border" value="<?= View::e($blk['button_border'] ?? '#CBD0D6') ?>" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('<?= $pKey ?>')">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Ícone:</label>
+                                                    <select class="form-select inst-blk-btn-icon" style="font-size: 0.72rem; padding: 4px 6px;" onchange="syncInstBlocks('<?= $pKey ?>')">
+                                                        <option value="" <?= empty($blk['button_icon']) ? 'selected' : '' ?>>Sem Ícone</option>
+                                                        <option value="✦" <?= ($blk['button_icon'] ?? '') === '✦' ? 'selected' : '' ?>>✦ Estrela</option>
+                                                        <option value="💬" <?= ($blk['button_icon'] ?? '') === '💬' ? 'selected' : '' ?>>💬 WhatsApp</option>
+                                                        <option value="↗" <?= ($blk['button_icon'] ?? '') === '↗' ? 'selected' : '' ?>>↗ Link</option>
+                                                        <option value="✉️" <?= ($blk['button_icon'] ?? '') === '✉️' ? 'selected' : '' ?>>✉️ E-mail</option>
+                                                        <option value="🔒" <?= ($blk['button_icon'] ?? '') === '🔒' ? 'selected' : '' ?>>🔒 Seguro</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Arredondamento:</label>
+                                                    <select class="form-select inst-blk-btn-radius" style="font-size: 0.72rem; padding: 4px 6px;" onchange="syncInstBlocks('<?= $pKey ?>')">
+                                                        <option value="0px" <?= ($blk['button_radius'] ?? '') === '0px' ? 'selected' : '' ?>>0px (Reto)</option>
+                                                        <option value="4px" <?= ($blk['button_radius'] ?? '') === '4px' ? 'selected' : '' ?>>4px (Sutil)</option>
+                                                        <option value="8px" <?= ($blk['button_radius'] ?? '8px') === '8px' ? 'selected' : '' ?>>8px (Padrão)</option>
+                                                        <option value="12px" <?= ($blk['button_radius'] ?? '') === '12px' ? 'selected' : '' ?>>12px (Suave)</option>
+                                                        <option value="24px" <?= ($blk['button_radius'] ?? '') === '24px' ? 'selected' : '' ?>>24px (Pill)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -5030,19 +5552,83 @@ function syncInstBlocks(slug) {
         const typeSelect = row.querySelector('.inst-blk-type');
         const visChk = row.querySelector('.inst-blk-vis');
         const contentArea = row.querySelector('.inst-blk-content');
+
+        const hasBtnChk = row.querySelector('.inst-blk-has-btn');
+        const btnTextInput = row.querySelector('.inst-blk-btn-text');
+        const btnUrlInput = row.querySelector('.inst-blk-btn-url');
+        const btnBgInput = row.querySelector('.inst-blk-btn-bg');
+        const btnColorInput = row.querySelector('.inst-blk-btn-color');
+        const btnBorderInput = row.querySelector('.inst-blk-btn-border');
+        const btnIconInput = row.querySelector('.inst-blk-btn-icon');
+        const btnRadiusInput = row.querySelector('.inst-blk-btn-radius');
         
         blocks.push({
             id: row.getAttribute('data-id') || ('blk_' + Date.now() + '_' + idx),
             title: titleInput ? titleInput.value.trim() : '',
             type: typeSelect ? typeSelect.value : 'standard',
             visible: visChk ? (visChk.checked ? 1 : 0) : 1,
-            content: contentArea ? contentArea.value.trim() : ''
+            content: contentArea ? contentArea.value.trim() : '',
+            has_button: hasBtnChk ? (hasBtnChk.checked ? 1 : 0) : 0,
+            button_text: btnTextInput ? btnTextInput.value.trim() : '',
+            button_url: btnUrlInput ? btnUrlInput.value.trim() : '',
+            button_bg: btnBgInput ? btnBgInput.value.trim() : '#202020',
+            button_color: btnColorInput ? btnColorInput.value.trim() : '#FFFFFF',
+            button_border: btnBorderInput ? btnBorderInput.value.trim() : '#CBD0D6',
+            button_icon: btnIconInput ? btnIconInput.value : '',
+            button_radius: btnRadiusInput ? btnRadiusInput.value : '8px'
         });
     });
 
     const hiddenInput = document.getElementById('page_' + slug + '_blocks_json');
     if (hiddenInput) {
         hiddenInput.value = JSON.stringify(blocks);
+    }
+}
+
+function toggleBlockBtnFields(chk) {
+    const parent = chk.closest('.inst-blk-btn-config');
+    if (!parent) return;
+    const fields = parent.querySelector('.inst-blk-btn-fields');
+    if (fields) {
+        fields.style.display = chk.checked ? 'grid' : 'none';
+    }
+}
+
+function updateBtnPreview(key) {
+    const textInput = document.getElementById(key + '_text');
+    const bgInput = document.getElementById(key + '_bg');
+    const colorInput = document.getElementById(key + '_color');
+    const borderInput = document.getElementById(key + '_border');
+    const iconInput = document.getElementById(key + '_icon');
+    const iconColorInput = document.getElementById(key + '_icon_color');
+    const radiusInput = document.getElementById(key + '_radius');
+    const shadowInput = document.getElementById(key + '_shadow');
+
+    const prevBtn = document.getElementById('live_prev_btn_' + key);
+    const prevTxt = document.getElementById('live_prev_txt_' + key);
+    const prevIco = document.getElementById('live_prev_ico_' + key);
+
+    if (prevBtn) {
+        if (bgInput) prevBtn.style.backgroundColor = bgInput.value;
+        if (colorInput) prevBtn.style.color = colorInput.value;
+        if (borderInput) prevBtn.style.borderColor = borderInput.value;
+        if (radiusInput) prevBtn.style.borderRadius = radiusInput.value;
+        if (shadowInput) prevBtn.style.boxShadow = shadowInput.value;
+    }
+    if (prevTxt && textInput) {
+        prevTxt.innerText = textInput.value || 'Botão';
+    }
+    if (prevIco && iconInput) {
+        prevIco.innerText = iconInput.value;
+        prevIco.style.display = iconInput.value ? 'inline-block' : 'none';
+        if (iconColorInput) prevIco.style.color = iconColorInput.value;
+    }
+}
+
+function syncColorInput(picker, targetId) {
+    const target = document.getElementById(targetId);
+    if (target) {
+        target.value = picker.value;
     }
 }
 
@@ -5085,6 +5671,68 @@ function addInstBlock(slug) {
             </div>
         </div>
         <textarea class="form-textarea inst-blk-content" rows="2" style="font-size: 0.78rem; padding: 6px 10px;" placeholder="Conteúdo do bloco adicional..." oninput="syncInstBlocks('${slug}')"></textarea>
+
+        <!-- BOTÃO EMBUTIDO NO NOVO BLOCO -->
+        <div class="inst-blk-btn-config" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.08);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <label style="font-size: 0.74rem; color: #CBD0D6; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <input type="checkbox" class="inst-blk-has-btn" onchange="toggleBlockBtnFields(this); syncInstBlocks('${slug}')">
+                    <span>🔘 Incluir Botão de Ação neste Bloco</span>
+                </label>
+            </div>
+            <div class="inst-blk-btn-fields" style="display: none; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px;">
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Texto do Botão:</label>
+                    <input type="text" class="form-input inst-blk-btn-text" value="" placeholder="Ex: Falar no WhatsApp" style="font-size: 0.75rem; padding: 4px 8px;" oninput="syncInstBlocks('${slug}')">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Link / URL:</label>
+                    <input type="text" class="form-input inst-blk-btn-url" value="" placeholder="Ex: https://wa.me/..." style="font-size: 0.75rem; padding: 4px 8px;" oninput="syncInstBlocks('${slug}')">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor de Fundo:</label>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="color" value="#202020" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('${slug}')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                        <input type="text" class="form-input inst-blk-btn-bg" value="#202020" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('${slug}')">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor da Letra:</label>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="color" value="#FFFFFF" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('${slug}')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                        <input type="text" class="form-input inst-blk-btn-color" value="#FFFFFF" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('${slug}')">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Cor da Borda:</label>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="color" value="#CBD0D6" oninput="this.nextElementSibling.value = this.value; syncInstBlocks('${slug}')" style="width: 24px; height: 24px; border: none; border-radius: 4px; padding: 0; cursor: pointer; background: transparent;">
+                        <input type="text" class="form-input inst-blk-btn-border" value="#CBD0D6" style="font-size: 0.72rem; padding: 3px 6px; width: 85px;" oninput="syncInstBlocks('${slug}')">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Ícone:</label>
+                    <select class="form-select inst-blk-btn-icon" style="font-size: 0.72rem; padding: 4px 6px;" onchange="syncInstBlocks('${slug}')">
+                        <option value="" selected>Sem Ícone</option>
+                        <option value="✦">✦ Estrela</option>
+                        <option value="💬">💬 WhatsApp</option>
+                        <option value="↗">↗ Link</option>
+                        <option value="✉️">✉️ E-mail</option>
+                        <option value="🔒">🔒 Seguro</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem; color: #8e8880; display: block;">Arredondamento:</label>
+                    <select class="form-select inst-blk-btn-radius" style="font-size: 0.72rem; padding: 4px 6px;" onchange="syncInstBlocks('${slug}')">
+                        <option value="0px">0px (Reto)</option>
+                        <option value="4px">4px (Sutil)</option>
+                        <option value="8px" selected>8px (Padrão)</option>
+                        <option value="12px">12px (Suave)</option>
+                        <option value="24px">24px (Pill)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     `;
     container.appendChild(row);
     syncInstBlocks(slug);
@@ -5283,31 +5931,103 @@ function openInstPreview(slug) {
         const bContent = row.querySelector('.inst-blk-content')?.value?.trim() || '';
         const bType = row.querySelector('.inst-blk-type')?.value || 'standard';
 
-        if (!bContent) return;
+        const bHasBtn = row.querySelector('.inst-blk-has-btn')?.checked;
+        const bBtnTxt = row.querySelector('.inst-blk-btn-text')?.value?.trim() || '';
+        const bBtnBg = row.querySelector('.inst-blk-btn-bg')?.value || '#202020';
+        const bBtnColor = row.querySelector('.inst-blk-btn-color')?.value || '#FFFFFF';
+        const bBtnBorder = row.querySelector('.inst-blk-btn-border')?.value || '#CBD0D6';
+        const bBtnIcon = row.querySelector('.inst-blk-btn-icon')?.value || '';
+        const bBtnRadius = row.querySelector('.inst-blk-btn-radius')?.value || '8px';
+
+        let btnHtml = '';
+        if (bHasBtn && bBtnTxt) {
+            btnHtml = `
+                <div style="margin-top: 14px;">
+                    <span style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; font-size: 0.84rem; font-weight: 600; background: ${bBtnBg}; color: ${bBtnColor}; border: 1px solid ${bBtnBorder}; border-radius: ${bBtnRadius}; cursor: pointer;">
+                        ${bBtnIcon ? `<span>${escapeInstHtml(bBtnIcon)}</span>` : ''}
+                        <span>${escapeInstHtml(bBtnTxt)}</span>
+                    </span>
+                </div>
+            `;
+        }
+
+        if (!bContent && !btnHtml) return;
 
         if (bType === 'callout') {
             blocksHtml += `
                 <div style="margin: 22px 0; padding: 16px 20px; background: rgba(212,186,136,0.08); border-left: 3px solid #CBD0D6; border-radius: 4px;">
                     ${bTitle ? `<h5 style="color: #CBD0D6; margin: 0 0 6px; font-size: 0.95rem; font-weight: 700;">✦ ${escapeInstHtml(bTitle)}</h5>` : ''}
-                    <p style="margin: 0; color: #ded7cf; font-size: 0.92rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>
+                    ${bContent ? `<p style="margin: 0; color: #ded7cf; font-size: 0.92rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>` : ''}
+                    ${btnHtml}
                 </div>
             `;
         } else if (bType === 'links') {
             blocksHtml += `
                 <div style="margin: 22px 0; padding: 18px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;">
                     ${bTitle ? `<h5 style="color: #ffffff; margin: 0 0 10px; font-size: 0.95rem; font-weight: 700;">${escapeInstHtml(bTitle)}</h5>` : ''}
-                    <p style="margin: 0; color: #a8a096; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>
+                    ${bContent ? `<p style="margin: 0; color: #a8a096; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;">${escapeInstHtml(bContent)}</p>` : ''}
+                    ${btnHtml}
                 </div>
             `;
         } else {
             blocksHtml += `
                 <div style="margin: 22px 0;">
                     ${bTitle ? `<h4 style="font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif); font-size: 1.25rem; color: #CBD0D6; margin: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px;">${escapeInstHtml(bTitle)}</h4>` : ''}
-                    <p style="font-size: 0.95rem; line-height: 1.7; color: #ded7cf; white-space: pre-wrap; margin: 0 0 16px;">${escapeInstHtml(bContent)}</p>
+                    ${bContent ? `<p style="font-size: 0.95rem; line-height: 1.7; color: #ded7cf; white-space: pre-wrap; margin: 0 0 16px;">${escapeInstHtml(bContent)}</p>` : ''}
+                    ${btnHtml}
                 </div>
             `;
         }
     });
+
+    // CTA da página
+    const ctaVisChk = panel.querySelector(`input[name="page_${slug}_cta_visible"]`);
+    const ctaIsVis = ctaVisChk ? ctaVisChk.checked : false;
+    let ctaHtml = '';
+    if (ctaIsVis) {
+        const ctaTxt = panel.querySelector(`input[name="page_${slug}_cta_text"]`)?.value || 'Falar no Concierge';
+        const ctaBg = panel.querySelector(`input[name="page_${slug}_cta_bg"]`)?.value || '#202020';
+        const ctaColor = panel.querySelector(`input[name="page_${slug}_cta_color"]`)?.value || '#FFFFFF';
+        const ctaBorder = panel.querySelector(`input[name="page_${slug}_cta_border"]`)?.value || '#CBD0D6';
+        const ctaIcon = panel.querySelector(`select[name="page_${slug}_cta_icon"]`)?.value || '';
+        const ctaRadius = panel.querySelector(`select[name="page_${slug}_cta_radius"]`)?.value || '8px';
+        const ctaShadow = panel.querySelector(`select[name="page_${slug}_cta_shadow"]`)?.value || 'none';
+
+        ctaHtml = `
+            <div style="margin: 32px 0 16px; padding: 20px 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                <div>
+                    <strong style="color: #ffffff; font-size: 1rem; font-family: 'Cormorant Garamond', Georgia, serif;">Canal Oficial &amp; Suporte Dedicado</strong>
+                    <span style="font-size: 0.82rem; color: #a8a096; display: block; margin-top: 2px;">Atendimento direto com a equipe de curadoria DIVINIUM.</span>
+                </div>
+                <span style="display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; font-size: 0.86rem; font-weight: 700; background: ${ctaBg}; color: ${ctaColor}; border: 1px solid ${ctaBorder}; border-radius: ${ctaRadius}; box-shadow: ${ctaShadow}; cursor: pointer;">
+                    ${ctaIcon ? `<span>${escapeInstHtml(ctaIcon)}</span>` : ''}
+                    <span>${escapeInstHtml(ctaTxt)}</span>
+                </span>
+            </div>
+        `;
+    }
+
+    // Botões de Rodapé da Página
+    const customFooterChk = panel.querySelector(`input[name="page_${slug}_custom_footer_btns"]`);
+    const useCustomFooter = customFooterChk ? customFooterChk.checked : false;
+    const backPrefix = useCustomFooter ? `page_${slug}_btn_back` : 'inst_btn_back_store';
+    const concPrefix = useCustomFooter ? `page_${slug}_btn_concierge` : 'inst_btn_concierge';
+
+    const backVisChk = document.querySelector(`input[name="${backPrefix}_visible"]`);
+    const backIsVis = backVisChk ? backVisChk.checked : true;
+    const backTxt = document.querySelector(`input[name="${backPrefix}_text"]`)?.value || '← Explorar Boutique';
+    const backBg = document.querySelector(`input[name="${backPrefix}_bg"]`)?.value || 'transparent';
+    const backColor = document.querySelector(`input[name="${backPrefix}_color"]`)?.value || '#CBD0D6';
+    const backBorder = document.querySelector(`input[name="${backPrefix}_border"]`)?.value || 'rgba(255,255,255,0.15)';
+    const backRadius = document.querySelector(`select[name="${backPrefix}_radius"]`)?.value || '8px';
+
+    const concVisChk = document.querySelector(`input[name="${concPrefix}_visible"]`);
+    const concIsVis = concVisChk ? concVisChk.checked : true;
+    const concTxt = document.querySelector(`input[name="${concPrefix}_text"]`)?.value || 'Falar com o Concierge';
+    const concBg = document.querySelector(`input[name="${concPrefix}_bg"]`)?.value || '#CBD0D6';
+    const concColor = document.querySelector(`input[name="${concPrefix}_color"]`)?.value || '#202020';
+    const concBorder = document.querySelector(`input[name="${concPrefix}_border"]`)?.value || '#737B85';
+    const concRadius = document.querySelector(`select[name="${concPrefix}_radius"]`)?.value || '8px';
 
     const previewContent = `
         <div style="background-color: #0b0b0a; color: #ded7cf; padding: 40px 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
@@ -5333,15 +6053,17 @@ function openInstPreview(slug) {
                 
                 ${blocksHtml}
 
+                ${ctaHtml}
+
                 <!-- FAIXA DE RODAPÉ DO CARD INSTITUCIONAL -->
                 <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
                     <div style="font-size: 0.78rem; color: #a8a096; display: flex; align-items: center; gap: 8px;">
                         <span style="color: #CBD0D6;">✦</span>
                         <span>DIVINIUM JOIAS • Banho de Prata &amp; Gemas Naturais Raras</span>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <span style="display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; background: transparent; color: #ded7cf; border: 1px solid rgba(255,255,255,0.15);">← Explorar Boutique</span>
-                        <span style="display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; background: #CBD0D6; color: #202020; font-weight: 700;">Falar com o Concierge</span>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        ${backIsVis ? `<span style="display: inline-block; padding: 8px 16px; border-radius: ${backRadius}; font-size: 0.8rem; background: ${backBg}; color: ${backColor}; border: 1px solid ${backBorder};">${escapeInstHtml(backTxt)}</span>` : ''}
+                        ${concIsVis ? `<span style="display: inline-block; padding: 8px 16px; border-radius: ${concRadius}; font-size: 0.8rem; background: ${concBg}; color: ${concColor}; font-weight: 700; border: 1px solid ${concBorder};">${escapeInstHtml(concTxt)}</span>` : ''}
                     </div>
                 </div>
             </div>

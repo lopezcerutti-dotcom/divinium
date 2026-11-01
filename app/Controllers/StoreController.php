@@ -1603,6 +1603,25 @@ class StoreController
             $safeTitle = \App\Core\View::e($title);
             $safeContent = nl2br(\App\Core\View::e($content));
 
+            $btnHtml = '';
+            if (!empty($block['has_button']) && !empty($block['button_text'])) {
+                $bText = \App\Core\View::e($block['button_text']);
+                $bUrl = \App\Core\View::e($block['button_url'] ?? '#');
+                $bBg = !empty($block['button_bg']) ? \App\Core\View::e($block['button_bg']) : '#202020';
+                $bColor = !empty($block['button_color']) ? \App\Core\View::e($block['button_color']) : '#FFFFFF';
+                $bBorder = !empty($block['button_border']) ? \App\Core\View::e($block['button_border']) : '#CBD0D6';
+                $bIcon = !empty($block['button_icon']) ? \App\Core\View::e($block['button_icon']) : '';
+                $bRadius = !empty($block['button_radius']) ? \App\Core\View::e($block['button_radius']) : '8px';
+
+                $btnHtml = '<div style="margin-top: 14px;">';
+                $btnHtml .= '<a href="' . $bUrl . '" class="inst-block-btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.84rem; font-weight: 600; text-decoration: none; background: ' . $bBg . ' !important; color: ' . $bColor . ' !important; border: 1px solid ' . $bBorder . ' !important; border-radius: ' . $bRadius . ' !important; transition: all 0.25s ease;">';
+                if ($bIcon !== '') {
+                    $btnHtml .= '<span>' . $bIcon . '</span>';
+                }
+                $btnHtml .= '<span>' . $bText . '</span>';
+                $btnHtml .= '</a></div>';
+            }
+
             if ($type === 'callout' || $type === 'notice') {
                 $html .= '<div class="editorial-callout" style="background: rgba(202,161,92,0.06); border: 1px solid rgba(202,161,92,0.25); border-left: 3px solid #CBD0D6; border-radius: 8px; padding: 18px 22px; margin: 24px 0;">';
                 if ($title !== '') {
@@ -1611,6 +1630,7 @@ class StoreController
                 if ($content !== '') {
                     $html .= '<div style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">' . $safeContent . '</div>';
                 }
+                $html .= $btnHtml;
                 $html .= '</div>';
             } elseif ($type === 'links') {
                 $html .= '<div class="editorial-links-block" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 18px 20px; margin: 24px 0;">';
@@ -1620,6 +1640,7 @@ class StoreController
                 if ($content !== '') {
                     $html .= '<div style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.65;">' . $safeContent . '</div>';
                 }
+                $html .= $btnHtml;
                 $html .= '</div>';
             } else {
                 if ($title !== '') {
@@ -1628,6 +1649,7 @@ class StoreController
                 if ($content !== '') {
                     $html .= '<p>' . $safeContent . '</p>';
                 }
+                $html .= $btnHtml;
             }
         }
 

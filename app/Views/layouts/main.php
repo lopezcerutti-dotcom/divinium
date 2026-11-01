@@ -1317,6 +1317,102 @@
     <?php endif; ?>
 
     <!-- 3. GAVETA LATERAL DO CARRINHO (CART DRAWER) -->
+    <?php
+    // Controles Avançados de Botões: Sacola (Drawer) & Rodapé / Contatos
+    $cartCheckoutVisible = \App\Models\Setting::get('cart_btn_checkout_visible', '1') === '1';
+    $cartCheckoutText = \App\Models\Setting::get('cart_btn_checkout_text', \App\Models\Setting::get('cart_checkout_btn', 'Finalizar Compra'));
+    $cartCheckoutUrl = \App\Models\Setting::get('cart_btn_checkout_url', '/checkout');
+    $cartCheckoutBg = \App\Models\Setting::get('cart_btn_checkout_bg', '#202020');
+    $cartCheckoutColor = \App\Models\Setting::get('cart_btn_checkout_color', '#FFFFFF');
+    $cartCheckoutBorder = \App\Models\Setting::get('cart_btn_checkout_border', '#202020');
+    $cartCheckoutIcon = \App\Models\Setting::get('cart_btn_checkout_icon', 'arrow-right');
+    $cartCheckoutIconColor = \App\Models\Setting::get('cart_btn_checkout_icon_color', '#FFFFFF');
+    $cartCheckoutRadius = \App\Models\Setting::get('cart_btn_checkout_radius', '6px');
+    $cartCheckoutShadow = \App\Models\Setting::get('cart_btn_checkout_shadow', 'noble');
+
+    $cartDiscoverVisible = \App\Models\Setting::get('cart_btn_discover_visible', '1') === '1';
+    $cartDiscoverText = \App\Models\Setting::get('cart_btn_discover_text', \App\Models\Setting::get('cart_drawer_discover', 'Descobrir Coleção'));
+    $cartDiscoverUrl = \App\Models\Setting::get('cart_btn_discover_url', '#collections');
+    $cartDiscoverBg = \App\Models\Setting::get('cart_btn_discover_bg', 'transparent');
+    $cartDiscoverColor = \App\Models\Setting::get('cart_btn_discover_color', '#202020');
+    $cartDiscoverBorder = \App\Models\Setting::get('cart_btn_discover_border', '#202020');
+    $cartDiscoverIcon = \App\Models\Setting::get('cart_btn_discover_icon', 'sparkle');
+    $cartDiscoverIconColor = \App\Models\Setting::get('cart_btn_discover_icon_color', '#202020');
+    $cartDiscoverRadius = \App\Models\Setting::get('cart_btn_discover_radius', '20px');
+    $cartDiscoverShadow = \App\Models\Setting::get('cart_btn_discover_shadow', 'none');
+
+    $footerWaVisible = (\App\Models\Setting::get('footer_btn_whatsapp_visible', '1') === '1') && (\App\Models\Setting::get('footer_whatsapp_visible', '1') === '1');
+    $footerWaText = \App\Models\Setting::get('footer_btn_whatsapp_text', \App\Models\Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp'));
+    $footerWaUrl = \App\Models\Setting::get('footer_btn_whatsapp_url', 'https://wa.me/' . \App\Models\Setting::get('hero_whatsapp_number', '5511999999999'));
+    $footerWaBg = \App\Models\Setting::get('footer_btn_whatsapp_bg', 'transparent');
+    $footerWaColor = \App\Models\Setting::get('footer_btn_whatsapp_color', '#CBD0D6');
+    $footerWaBorder = \App\Models\Setting::get('footer_btn_whatsapp_border', 'rgba(255,255,255,0.15)');
+    $footerWaIcon = \App\Models\Setting::get('footer_btn_whatsapp_icon', 'whatsapp');
+    $footerWaIconColor = \App\Models\Setting::get('footer_btn_whatsapp_icon_color', '#25D366');
+    $footerWaRadius = \App\Models\Setting::get('footer_btn_whatsapp_radius', '6px');
+    $footerWaShadow = \App\Models\Setting::get('footer_btn_whatsapp_shadow', 'none');
+
+    $footerInstaVisible = (\App\Models\Setting::get('footer_btn_instagram_visible', '1') === '1') && (\App\Models\Setting::get('footer_socials_visible', '1') === '1');
+    $footerInstaText = \App\Models\Setting::get('footer_btn_instagram_text', 'Instagram');
+    $footerInstaUrl = \App\Models\Setting::get('footer_btn_instagram_url', \App\Models\Setting::get('footer_instagram', 'https://instagram.com'));
+    $footerInstaBg = \App\Models\Setting::get('footer_btn_instagram_bg', 'transparent');
+    $footerInstaColor = \App\Models\Setting::get('footer_btn_instagram_color', '#CBD0D6');
+    $footerInstaBorder = \App\Models\Setting::get('footer_btn_instagram_border', 'rgba(255,255,255,0.15)');
+    $footerInstaIcon = \App\Models\Setting::get('footer_btn_instagram_icon', 'instagram');
+    $footerInstaIconColor = \App\Models\Setting::get('footer_btn_instagram_icon_color', '#E4405F');
+    $footerInstaRadius = \App\Models\Setting::get('footer_btn_instagram_radius', '6px');
+    $footerInstaShadow = \App\Models\Setting::get('footer_btn_instagram_shadow', 'none');
+
+    $footerEmailVisible = (\App\Models\Setting::get('footer_btn_email_visible', '1') === '1') && (\App\Models\Setting::get('footer_email_visible', '1') === '1');
+    $footerEmailText = \App\Models\Setting::get('footer_btn_email_text', \App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br'));
+    $footerEmailVal = \App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br');
+    $footerEmailUrl = \App\Models\Setting::get('footer_btn_email_url', 'mailto:' . $footerEmailVal);
+    $footerEmailBg = \App\Models\Setting::get('footer_btn_email_bg', 'transparent');
+    $footerEmailColor = \App\Models\Setting::get('footer_btn_email_color', '#CBD0D6');
+    $footerEmailBorder = \App\Models\Setting::get('footer_btn_email_border', 'rgba(255,255,255,0.15)');
+    $footerEmailIcon = \App\Models\Setting::get('footer_btn_email_icon', 'mail');
+    $footerEmailIconColor = \App\Models\Setting::get('footer_btn_email_icon_color', '#CBD0D6');
+    $footerEmailRadius = \App\Models\Setting::get('footer_btn_email_radius', '6px');
+    $footerEmailShadow = \App\Models\Setting::get('footer_btn_email_shadow', 'none');
+
+    $layoutShadowMap = [
+        'none' => 'none',
+        'subtle' => '0 2px 8px rgba(0,0,0,0.06)',
+        'noble' => '0 4px 16px rgba(0,0,0,0.12)',
+        'glow' => '0 0 18px rgba(203, 208, 214, 0.45)',
+        'flat' => 'none',
+    ];
+
+    $renderLayoutIcon = function($iconKey, $iconColor) {
+        if (!$iconKey || $iconKey === 'none') return '';
+        $style = 'color: ' . \App\Core\View::e($iconColor) . '; display: inline-flex; align-items: center; justify-content: center;';
+        switch ($iconKey) {
+            case 'arrow-right':
+            case '→':
+                return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="' . \App\Core\View::e($iconColor) . '" stroke-width="2" style="margin-left: 5px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+            case 'arrow-left':
+            case '←':
+                return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="' . \App\Core\View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
+            case 'sparkle':
+            case '✦':
+                return '<span style="' . $style . ' font-size: 0.9rem; margin-right: 5px;">✦</span>';
+            case 'bag':
+            case '🛍️':
+                return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="' . \App\Core\View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
+            case 'whatsapp':
+            case '💬':
+                return '<span style="' . $style . ' font-size: 0.95rem; margin-right: 5px;">💬</span>';
+            case 'instagram':
+            case '📷':
+                return '<span style="' . $style . ' font-size: 0.95rem; margin-right: 5px;">📷</span>';
+            case 'mail':
+            case '✉️':
+                return '<span style="' . $style . ' font-size: 0.95rem; margin-right: 5px;">✉️</span>';
+            default:
+                return '<span style="' . $style . ' margin-right: 5px;">' . \App\Core\View::e($iconKey) . '</span>';
+        }
+    };
+    ?>
     <?php if (\App\Models\Setting::get('checkout_direct_cart_enabled', '1') === '1'): ?>
     <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
     <aside class="cart-drawer" id="cartDrawer" aria-label="Sacola de compras">
@@ -1328,7 +1424,12 @@
             <div class="empty-cart-state">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="empty-icon"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 <p><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_empty', 'Sua sacola está vazia no momento.')) ?></p>
-                <a href="#collections" class="btn-discover" onclick="closeDrawer()"><?= \App\Core\View::e(\App\Models\Setting::get('cart_drawer_discover', 'Descobrir Coleção')) ?></a>
+                <?php if ($cartDiscoverVisible): ?>
+                <a href="<?= \App\Core\View::e($cartDiscoverUrl) ?>" class="btn-discover" onclick="closeDrawer()" style="background: <?= \App\Core\View::e($cartDiscoverBg) ?> !important; color: <?= \App\Core\View::e($cartDiscoverColor) ?> !important; border: 1px solid <?= \App\Core\View::e($cartDiscoverBorder) ?> !important; border-radius: <?= \App\Core\View::e($cartDiscoverRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$cartDiscoverShadow] ?? 'none') ?> !important; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: all 0.2s ease;">
+                    <?= $renderLayoutIcon($cartDiscoverIcon, $cartDiscoverIconColor) ?>
+                    <span><?= \App\Core\View::e($cartDiscoverText) ?></span>
+                </a>
+                <?php endif; ?>
             </div>
         </div>
         <div class="cart-drawer-footer">
@@ -1339,7 +1440,12 @@
             <div class="cart-perks">
                 <small><?= \App\Core\View::e(\App\Models\Setting::get('cart_security_badge', '🔒 Pagamento 100% Seguro via ASAAS • Pix com QR Code Instantâneo')) ?></small>
             </div>
-            <a href="/checkout" class="btn-checkout-primary"><?= \App\Core\View::e(\App\Models\Setting::get('cart_checkout_btn', 'Finalizar Compra')) ?></a>
+            <?php if ($cartCheckoutVisible): ?>
+            <a href="<?= \App\Core\View::e($cartCheckoutUrl) ?>" class="btn-checkout-primary" style="background: <?= \App\Core\View::e($cartCheckoutBg) ?> !important; color: <?= \App\Core\View::e($cartCheckoutColor) ?> !important; border: 1px solid <?= \App\Core\View::e($cartCheckoutBorder) ?> !important; border-radius: <?= \App\Core\View::e($cartCheckoutRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$cartCheckoutShadow] ?? 'none') ?> !important; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: all 0.2s ease;">
+                <?= $renderLayoutIcon($cartCheckoutIcon, $cartCheckoutIconColor) ?>
+                <span><?= \App\Core\View::e($cartCheckoutText) ?></span>
+            </a>
+            <?php endif; ?>
         </div>
     </aside>
     <?php endif; ?>
@@ -1358,9 +1464,19 @@
                 <p class="brand-tagline"><?= \App\Core\View::e(\App\Models\Setting::get('footer_tagline', 'Joalheria fina concebida para quem aprecia a nobreza atemporal, o luxo silencioso e o design autoral inconfundível.')) ?></p>
                 <?php endif; ?>
                 <?php if (\App\Models\Setting::get('footer_socials_visible', '1') === '1'): ?>
-                <div class="footer-socials">
-                    <a href="<?= \App\Core\View::e(\App\Models\Setting::get('footer_instagram', 'https://instagram.com')) ?>" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-                    <a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp VIP</a>
+                <div class="footer-socials" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <?php if ($footerInstaVisible): ?>
+                    <a href="<?= \App\Core\View::e($footerInstaUrl) ?>" target="_blank" rel="noopener" aria-label="Instagram" class="footer-btn-insta" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: <?= \App\Core\View::e($footerInstaBg) ?> !important; color: <?= \App\Core\View::e($footerInstaColor) ?> !important; border: 1px solid <?= \App\Core\View::e($footerInstaBorder) ?> !important; border-radius: <?= \App\Core\View::e($footerInstaRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$footerInstaShadow] ?? 'none') ?> !important; text-decoration: none; font-size: 0.82rem; transition: all 0.2s ease;">
+                        <?= $renderLayoutIcon($footerInstaIcon, $footerInstaIconColor) ?>
+                        <span><?= \App\Core\View::e($footerInstaText) ?></span>
+                    </a>
+                    <?php endif; ?>
+                    <?php if ($footerWaVisible): ?>
+                    <a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank" rel="noopener" aria-label="WhatsApp" class="footer-btn-wa" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: <?= \App\Core\View::e($footerWaBg) ?> !important; color: <?= \App\Core\View::e($footerWaColor) ?> !important; border: 1px solid <?= \App\Core\View::e($footerWaBorder) ?> !important; border-radius: <?= \App\Core\View::e($footerWaRadius) ?> !important; box-shadow: <?= \App\Core\View::e($layoutShadowMap[$footerWaShadow] ?? 'none') ?> !important; text-decoration: none; font-size: 0.82rem; transition: all 0.2s ease;">
+                        <?= $renderLayoutIcon($footerWaIcon, $footerWaIconColor) ?>
+                        <span><?= \App\Core\View::e($footerWaText) ?></span>
+                    </a>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
             </div>
@@ -1379,11 +1495,21 @@
             <div class="footer-col">
                 <h4><?= \App\Core\View::e(\App\Models\Setting::get('footer_col2_title', 'Atendimento & Concierge')) ?></h4>
                 <ul>
-                    <?php if (\App\Models\Setting::get('footer_whatsapp_visible', '1') === '1'): ?>
-                    <li><a href="https://wa.me/<?= \App\Core\View::e(\App\Models\Setting::get('hero_whatsapp_number', '5511999999999')) ?>" target="_blank"><?= \App\Core\View::e(\App\Models\Setting::get('footer_whatsapp_label', 'Atendimento via WhatsApp')) ?></a></li>
+                    <?php if ($footerWaVisible): ?>
+                    <li>
+                        <a href="<?= \App\Core\View::e($footerWaUrl) ?>" target="_blank" class="footer-link-wa" style="display: inline-flex; align-items: center; gap: 6px;">
+                            <?= $renderLayoutIcon($footerWaIcon, $footerWaIconColor) ?>
+                            <span><?= \App\Core\View::e($footerWaText) ?></span>
+                        </a>
+                    </li>
                     <?php endif; ?>
-                    <?php if (\App\Models\Setting::get('footer_email_visible', '1') === '1'): ?>
-                    <li><a href="mailto:<?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?>"><?= \App\Core\View::e(\App\Models\Setting::get('footer_email', 'atendimento@divinium.com.br')) ?></a></li>
+                    <?php if ($footerEmailVisible): ?>
+                    <li>
+                        <a href="<?= \App\Core\View::e($footerEmailUrl) ?>" class="footer-link-email" style="display: inline-flex; align-items: center; gap: 6px;">
+                            <?= $renderLayoutIcon($footerEmailIcon, $footerEmailIconColor) ?>
+                            <span><?= \App\Core\View::e($footerEmailText) ?></span>
+                        </a>
+                    </li>
                     <?php endif; ?>
                     <?php if (\App\Models\Setting::get('page_trocas_enabled', '1') === '1'): ?>
                     <li><a href="/trocas-e-devolucoes"><?= \App\Core\View::e(\App\Models\Setting::get('footer_returns_text', \App\Models\Setting::get('page_trocas_title', 'Trocas e Devoluções (CDC 7 Dias)'))) ?></a></li>
@@ -1442,6 +1568,13 @@
             </div>
         </div>
     </footer>
+
+    <style>
+    .btn-checkout-primary:hover, .btn-discover:hover, .footer-btn-insta:hover, .footer-btn-wa:hover, .footer-link-wa:hover, .footer-link-email:hover, .btn-inst-cta:hover, .inst-block-btn:hover {
+        filter: brightness(1.15);
+        transform: translateY(-1px);
+    }
+    </style>
 
     <!-- 6. BANNER DE COOKIES LGPD -->
     <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite">
