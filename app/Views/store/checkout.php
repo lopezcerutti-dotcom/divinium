@@ -64,9 +64,9 @@ $optWaBadge = Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO');
 $optWaDesc = Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.');
 
 $optCardEnabled = Setting::get('checkout_opt_card_enabled', '1') === '1';
-$optCardTitle = Setting::getRaw('checkout_opt_card_title', '💳 Cartão de Crédito');
-$optCardBadge = Setting::getRaw('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
-$optCardDesc = Setting::getRaw('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
+$optCardTitle = Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito');
+$optCardBadge = Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
+$optCardDesc = Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
 
 // Métodos Habilitados & Método Padrão Inicial
 $enabledPaymentMethods = [];

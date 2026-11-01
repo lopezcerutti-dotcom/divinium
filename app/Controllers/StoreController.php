@@ -1206,13 +1206,13 @@ class StoreController
             ],
             'guia-de-medidas' => [
                 'title' => \App\Models\Setting::get('page_size_guide_title', 'Guia de Medidas & Tamanhos de Anéis'),
-                'desc' => 'Aprenda a identificar a medida exata do seu aro para um ajuste perfeito e confortável.',
+                'desc' => \App\Models\Setting::get('page_size_guide_subtitle', 'Aprenda a identificar a medida exata do seu aro para um ajuste perfeito e confortável.'),
                 'content_key' => 'policy_size_guide_content',
                 'default_content' => "<h3>Como Descobrir o Tamanho do Seu Anel</h3><p>Para assegurar que seu anel DIVINIUM se encaixe perfeitamente com toda a elegância e conforto, utilize o método prático do diâmetro interno.</p><h4>Método do Diâmetro Interno</h4><ol><li>Selecione um anel ou aliança que sirva perfeitamente no dedo desejado.</li><li>Com uma régua milimetrada, meça a distância interna (linha reta de borda a borda interna), desconsiderando a espessura do aro.</li><li>Consulte a tabela de equivalências:<ul><li>15,5 mm = Aro 12</li><li>16,2 mm = Aro 14</li><li>16,8 mm = Aro 16</li><li>17,5 mm = Aro 18</li><li>18,2 mm = Aro 20</li><li>18,8 mm = Aro 22</li><li>19,5 mm = Aro 24</li></ul></li></ol><p>Em caso de dúvidas entre dois números, recomendamos a escolha do tamanho maior para máximo conforto durante todas as estações do ano.</p>"
             ],
             'dpo' => [
                 'title' => \App\Models\Setting::get('page_dpo_title', 'Encarregado de Proteção de Dados (DPO)'),
-                'desc' => 'Canal direto de atendimento para solicitações e direitos previstos pela LGPD.',
+                'desc' => \App\Models\Setting::get('page_dpo_subtitle', 'Canal direto de atendimento para solicitações e direitos previstos pela LGPD.'),
                 'content_key' => 'policy_dpo_content',
                 'default_content' => "<h3>Canal do Encarregado de Dados (DPO)</h3><p>Em atendimento ao Artigo 41 da Lei Federal nº 13.709/2018 (LGPD), a DIVINIUM disponibiliza este canal oficial de comunicação direto entre os titulares de dados, a empresa e a Autoridade Nacional de Proteção de Dados (ANPD).</p><h4>Encarregado Oficial:</h4><p><strong>Comitê de Privacidade & Governança de Dados</strong><br>E-mail: <strong>dpo@divinium.com.br</strong><br>Horário de Atendimento: Segunda a Sexta, das 09h às 18h (Horário de Brasília)</p><p>As solicitações de consulta, retificação ou exclusão de dados serão respondidas dentro dos prazos legais estipulados pela legislação vigente.</p>"
             ]
@@ -1225,6 +1225,8 @@ class StoreController
             'politica-de-privacidade' => 'page_privacidade_enabled',
             'termos-de-uso' => 'page_termos_enabled',
             'politica-de-frete-e-entrega' => 'page_frete_enabled',
+            'guia-de-medidas' => 'page_size_guide_enabled',
+            'dpo' => 'page_dpo_enabled',
         ];
 
         if (isset($pageToggles[$slug]) && \App\Models\Setting::get($pageToggles[$slug], '1') !== '1') {
@@ -1284,7 +1286,7 @@ class StoreController
      */
     private function buildReturnsPolicyHtml(): string
     {
-        $rawIntro = trim((string)\App\Models\Setting::get('page_trocas_content', \App\Models\Setting::get('page_trocas_intro', '')));
+        $rawIntro = trim((string)\App\Models\Setting::get('page_trocas_content', \App\Models\Setting::get('page_trocas_intro', \App\Models\Setting::get('policy_returns_content', ''))));
         if ($rawIntro === '') {
             $rawIntro = 'Todas as peças DIVINIUM são concebidas sob rigorosos padrões de alta joalheria. Caso deseje solicitar uma troca ou devolução, seguimos integralmente as disposições da Lei nº 8.078/1990 (Código de Defesa do Consumidor) e Decreto nº 7.962/2013.';
         }
@@ -1326,13 +1328,9 @@ class StoreController
         ];
 
         foreach ($sections as $sec) {
-            $val = \App\Models\Setting::get($sec['key']);
-            if ($val === null) {
-                $text = $sec['default'];
-            } elseif (trim((string)$val) !== '') {
-                $text = trim((string)$val);
-            } else {
-                continue; // Ocultado se estiver vazio
+            $text = trim((string)\App\Models\Setting::get($sec['key'], $sec['default']));
+            if ($text === '') {
+                continue;
             }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
             $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
@@ -1347,7 +1345,7 @@ class StoreController
      */
     private function buildWarrantyPolicyHtml(): string
     {
-        $rawIntro = trim((string)\App\Models\Setting::get('page_garantia_content', \App\Models\Setting::get('page_garantia_intro', '')));
+        $rawIntro = trim((string)\App\Models\Setting::get('page_garantia_content', \App\Models\Setting::get('page_garantia_intro', \App\Models\Setting::get('policy_warranty_content', ''))));
         if ($rawIntro === '') {
             $rawIntro = 'A DIVINIUM assegura a excelência e autenticidade de cada joia autoral. Nossas peças recebem acabamento nobre com Banho de Prata de alta durabilidade e abrigam gemas minerais 100% autênticas envoltas em matriz de resina cristalina nobre.';
         }
@@ -1389,13 +1387,9 @@ class StoreController
         ];
 
         foreach ($sections as $sec) {
-            $val = \App\Models\Setting::get($sec['key']);
-            if ($val === null) {
-                $text = $sec['default'];
-            } elseif (trim((string)$val) !== '') {
-                $text = trim((string)$val);
-            } else {
-                continue; // Ocultado se estiver vazio
+            $text = trim((string)\App\Models\Setting::get($sec['key'], $sec['default']));
+            if ($text === '') {
+                continue;
             }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
             $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
@@ -1410,7 +1404,7 @@ class StoreController
      */
     private function buildPrivacyPolicyHtml(): string
     {
-        $rawIntro = trim((string)\App\Models\Setting::get('page_privacidade_content', \App\Models\Setting::get('page_privacidade_intro', '')));
+        $rawIntro = trim((string)\App\Models\Setting::get('page_privacidade_content', \App\Models\Setting::get('page_privacidade_intro', \App\Models\Setting::get('policy_privacy_content', ''))));
         if ($rawIntro === '') {
             $rawIntro = 'A DIVINIUM JOIAS valoriza a privacidade e a segurança das informações de nossos clientes. Esta Política está em total conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD).';
         }
@@ -1457,13 +1451,9 @@ class StoreController
         ];
 
         foreach ($sections as $sec) {
-            $val = \App\Models\Setting::get($sec['key']);
-            if ($val === null) {
-                $text = $sec['default'];
-            } elseif (trim((string)$val) !== '') {
-                $text = trim((string)$val);
-            } else {
-                continue; // Ocultado se estiver vazio
+            $text = trim((string)\App\Models\Setting::get($sec['key'], $sec['default']));
+            if ($text === '') {
+                continue;
             }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
             $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
@@ -1478,7 +1468,7 @@ class StoreController
      */
     private function buildTermsOfUseHtml(): string
     {
-        $rawIntro = trim((string)\App\Models\Setting::get('page_termos_content', \App\Models\Setting::get('page_termos_intro', '')));
+        $rawIntro = trim((string)\App\Models\Setting::get('page_termos_content', \App\Models\Setting::get('page_termos_intro', \App\Models\Setting::get('terms_of_use_content', ''))));
         if ($rawIntro === '') {
             $rawIntro = 'Bem-vindo à plataforma digital oficial da DIVINIUM. Ao navegar neste portal ou adquirir nossas peças, você expressa sua plena concordância com as condições aqui estabelecidas.';
         }
@@ -1520,13 +1510,9 @@ class StoreController
         ];
 
         foreach ($sections as $sec) {
-            $val = \App\Models\Setting::get($sec['key']);
-            if ($val === null) {
-                $text = $sec['default'];
-            } elseif (trim((string)$val) !== '') {
-                $text = trim((string)$val);
-            } else {
-                continue; // Ocultado se estiver vazio
+            $text = trim((string)\App\Models\Setting::get($sec['key'], $sec['default']));
+            if ($text === '') {
+                continue;
             }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
             $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
@@ -1613,13 +1599,9 @@ class StoreController
         ];
 
         foreach ($sections as $sec) {
-            $val = \App\Models\Setting::get($sec['key']);
-            if ($val === null) {
-                $text = $sec['default'];
-            } elseif (trim((string)$val) !== '') {
-                $text = trim((string)$val);
-            } else {
-                continue; // Ocultado se estiver vazio
+            $text = trim((string)\App\Models\Setting::get($sec['key'], $sec['default']));
+            if ($text === '') {
+                continue;
             }
             $html .= '<h4>' . \App\Core\View::e($sec['title']) . '</h4>';
             $html .= '<p>' . nl2br(\App\Core\View::e($text)) . '</p>';
