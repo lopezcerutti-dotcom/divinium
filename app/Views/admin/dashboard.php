@@ -77,13 +77,10 @@
             <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
                 ✦
             </div>
-            <span style="background: rgba(167, 173, 180, 0.15); color: #CBD0D6; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
-                4 Paletas Autorais
-            </span>
         </div>
         <div class="exec-card-body">
             <h3>Gestão de Temas & Identidade</h3>
-            <p>Alterne a estética da boutique entre Prata Nobre & Noir, Branco Perolado & Platina e Grafite com um clique.</p>
+            <p>Personalize as cores da Identidade Visual DIVINIUM com controles individuais e pré-visualização ao vivo.</p>
         </div>
         <div class="exec-card-footer">
             <span style="font-size: 0.78rem; color: #8e8880;">Design System dinâmico</span>
