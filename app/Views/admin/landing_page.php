@@ -4085,58 +4085,101 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                         </div>
 
                         <!-- OPÇÕES DE PAGAMENTO (NOMES, BADGES & DESCRIÇÕES) -->
-                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 8px;">
-                            <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.88rem; text-transform: uppercase;">
-                                💳 Formas de Pagamento (Nomes, Badges & Descrições)
-                            </h5>
+                        <div class="form-group full-width" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; margin-top: 12px;">
+                            <div style="background: rgba(167, 173, 180, 0.05); padding: 14px 18px; border-radius: 8px; border: 1px solid rgba(167, 173, 180, 0.15); margin-bottom: 16px;">
+                                <h5 style="color: #CBD0D6; margin: 0 0 4px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 8px;">
+                                    <span>💳</span> Formas de Pagamento (Nomes, Badges & Descrições)
+                                </h5>
+                                <span class="field-hint" style="margin: 0;">Ative ou desative individualmente cada modalidade de pagamento do checkout e personalize seus nomes, badges e instruções.</span>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="checkout_opt_pix_title">Nome da Opção Pix</label>
-                            <input type="text" id="checkout_opt_pix_title" name="checkout_opt_pix_title" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_pix_title', '⚡ Pix Instantâneo')) ?>">
+                        <!-- 1. MODALIDADE PIX -->
+                        <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 1.1rem;">⚡</span>
+                                    <strong style="color: #ffffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.03em;">Modalidade 1: Pix Instantâneo</strong>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 0.75rem; color: #a7adb4;">Status no Checkout:</span>
+                                    <?= $renderToggle('checkout_opt_pix_enabled', '1') ?>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+                                <div>
+                                    <label for="checkout_opt_pix_title" style="font-size: 0.78rem; color: #CBD0D6;">Nome da Opção Pix</label>
+                                    <input type="text" id="checkout_opt_pix_title" name="checkout_opt_pix_title" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_pix_title', '⚡ Pix Instantâneo')) ?>">
+                                </div>
+                                <div>
+                                    <label for="checkout_opt_pix_desc" style="font-size: 0.78rem; color: #CBD0D6;">Descrição da Opção Pix</label>
+                                    <input type="text" id="checkout_opt_pix_desc" name="checkout_opt_pix_desc" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_pix_desc', 'Aprovação imediata. QR Code gerado instantaneamente na tela.')) ?>">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="checkout_opt_pix_desc">Descrição da Opção Pix</label>
-                            <input type="text" id="checkout_opt_pix_desc" name="checkout_opt_pix_desc" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_pix_desc', 'Aprovação imediata. QR Code gerado instantaneamente na tela.')) ?>">
+                        <!-- 2. MODALIDADE CONCIERGE WHATSAPP -->
+                        <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 1.1rem;">💬</span>
+                                    <strong style="color: #ffffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.03em;">Modalidade 2: Concierge WhatsApp VIP</strong>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 0.75rem; color: #a7adb4;">Status no Checkout:</span>
+                                    <?= $renderToggle('checkout_opt_wa_enabled', '1') ?>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 10px;">
+                                <div>
+                                    <label for="checkout_opt_wa_title" style="font-size: 0.78rem; color: #CBD0D6;">Nome da Opção Concierge WhatsApp</label>
+                                    <input type="text" id="checkout_opt_wa_title" name="checkout_opt_wa_title" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_wa_title', '💬 Concierge VIP (WhatsApp)')) ?>">
+                                </div>
+                                <div>
+                                    <label for="checkout_opt_wa_badge" style="font-size: 0.78rem; color: #CBD0D6;">Badge do Concierge WhatsApp</label>
+                                    <input type="text" id="checkout_opt_wa_badge" name="checkout_opt_wa_badge" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO')) ?>">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="checkout_opt_wa_desc" style="font-size: 0.78rem; color: #CBD0D6;">Descrição do Concierge WhatsApp</label>
+                                <input type="text" id="checkout_opt_wa_desc" name="checkout_opt_wa_desc" class="form-input"
+                                       value="<?= View::e(Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.')) ?>">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="checkout_opt_wa_title">Nome da Opção Concierge WhatsApp</label>
-                            <input type="text" id="checkout_opt_wa_title" name="checkout_opt_wa_title" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_wa_title', '💬 Concierge VIP (WhatsApp)')) ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="checkout_opt_wa_badge">Badge do Concierge WhatsApp</label>
-                            <input type="text" id="checkout_opt_wa_badge" name="checkout_opt_wa_badge" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO')) ?>">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="checkout_opt_wa_desc">Descrição do Concierge WhatsApp</label>
-                            <input type="text" id="checkout_opt_wa_desc" name="checkout_opt_wa_desc" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.')) ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="checkout_opt_card_title">Nome da Opção Cartão</label>
-                            <input type="text" id="checkout_opt_card_title" name="checkout_opt_card_title" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="checkout_opt_card_badge">Badge da Opção Cartão</label>
-                            <input type="text" id="checkout_opt_card_badge" name="checkout_opt_card_badge" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="checkout_opt_card_desc">Descrição da Opção Cartão</label>
-                            <input type="text" id="checkout_opt_card_desc" name="checkout_opt_card_desc" class="form-input"
-                                   value="<?= View::e(Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
+                        <!-- 3. MODALIDADE CARTÃO DE CRÉDITO -->
+                        <div class="form-group full-width" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 1.1rem;">💳</span>
+                                    <strong style="color: #ffffff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.03em;">Modalidade 3: Cartão de Crédito</strong>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 0.75rem; color: #a7adb4;">Status no Checkout:</span>
+                                    <?= $renderToggle('checkout_opt_card_enabled', '1') ?>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 10px;">
+                                <div>
+                                    <label for="checkout_opt_card_title" style="font-size: 0.78rem; color: #CBD0D6;">Nome da Opção Cartão</label>
+                                    <input type="text" id="checkout_opt_card_title" name="checkout_opt_card_title" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito')) ?>">
+                                </div>
+                                <div>
+                                    <label for="checkout_opt_card_badge" style="font-size: 0.78rem; color: #CBD0D6;">Badge da Opção Cartão</label>
+                                    <input type="text" id="checkout_opt_card_badge" name="checkout_opt_card_badge" class="form-input"
+                                           value="<?= View::e(Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS')) ?>">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="checkout_opt_card_desc" style="font-size: 0.78rem; color: #CBD0D6;">Descrição da Opção Cartão</label>
+                                <input type="text" id="checkout_opt_card_desc" name="checkout_opt_card_desc" class="form-input"
+                                       value="<?= View::e(Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.')) ?>">
+                            </div>
                         </div>
 
                         <!-- RÓTULOS DO RESUMO & BOTÕES -->

@@ -51,19 +51,29 @@ $lblClientCep = Setting::get('checkout_lbl_cep', 'CEP de Entrega *');
 $lblClientAddress = Setting::get('checkout_lbl_address', 'Endereço Completo & Bairro');
 $btnSearchCep = Setting::get('checkout_btn_search_cep', 'Buscar');
 
-// Opções de Pagamento (Nomes, Tags & Descrições)
+// Opções de Pagamento (Ativação, Nomes, Tags & Descrições)
+$optPixEnabled = Setting::get('checkout_opt_pix_enabled', '1') === '1';
 $optPixTitle = Setting::get('checkout_opt_pix_title', '⚡ Pix Instantâneo');
 $optPixBadge = Setting::get('checkout_opt_pix_badge', 'DE DESCONTO');
 $optPixDesc = Setting::get('checkout_opt_pix_desc', 'Aprovação imediata. QR Code gerado instantaneamente na tela.');
 $btnCopyPix = Setting::get('checkout_btn_copy_pix', '📋 Copiar Chave');
 
+$optWaEnabled = Setting::get('checkout_opt_wa_enabled', '1') === '1';
 $optWaTitle = Setting::get('checkout_opt_wa_title', '💬 Concierge VIP (WhatsApp)');
 $optWaBadge = Setting::get('checkout_opt_wa_badge', 'ATENDIMENTO HUMANO');
 $optWaDesc = Setting::get('checkout_opt_wa_desc', 'Conclua o pedido diretamente com um especialista e tire todas as dúvidas.');
 
+$optCardEnabled = Setting::get('checkout_opt_card_enabled', '1') === '1';
 $optCardTitle = Setting::get('checkout_opt_card_title', '💳 Cartão de Crédito');
 $optCardBadge = Setting::get('checkout_opt_card_badge', 'ATÉ 10X SEM JUROS');
 $optCardDesc = Setting::get('checkout_opt_card_desc', 'Pagamento processado em ambiente 100% criptografado homologado ASAAS.');
+
+// Métodos Habilitados & Método Padrão Inicial
+$enabledPaymentMethods = [];
+if ($optPixEnabled) $enabledPaymentMethods[] = 'pix';
+if ($optWaEnabled) $enabledPaymentMethods[] = 'whatsapp';
+if ($optCardEnabled) $enabledPaymentMethods[] = 'card';
+$defaultPaymentMethod = !empty($enabledPaymentMethods) ? $enabledPaymentMethods[0] : '';
 
 // Botão de Envio
 $btnSubmitText = Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar');
@@ -253,9 +263,10 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                         </h2>
 
                         <div class="payment-methods-grid">
+                            <?php if ($optPixEnabled): ?>
                             <!-- Opção 1: Pix -->
-                            <label class="payment-option active" id="optPix">
-                                <input type="radio" name="payment_method" value="pix" checked onchange="switchPaymentMethod('pix')">
+                            <label class="payment-option <?= $defaultPaymentMethod === 'pix' ? 'active' : '' ?>" id="optPix">
+                                <input type="radio" name="payment_method" value="pix" <?= $defaultPaymentMethod === 'pix' ? 'checked' : '' ?> onchange="switchPaymentMethod('pix')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
                                         <span class="opt-name"><?= View::e($optPixTitle) ?></span>
@@ -266,10 +277,12 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                     <p class="opt-desc"><?= View::e($optPixDesc) ?></p>
                                 </div>
                             </label>
+                            <?php endif; ?>
 
+                            <?php if ($optWaEnabled): ?>
                             <!-- Opção 2: Concierge VIP WhatsApp -->
-                            <label class="payment-option" id="optWa">
-                                <input type="radio" name="payment_method" value="whatsapp" onchange="switchPaymentMethod('whatsapp')">
+                            <label class="payment-option <?= $defaultPaymentMethod === 'whatsapp' ? 'active' : '' ?>" id="optWa">
+                                <input type="radio" name="payment_method" value="whatsapp" <?= $defaultPaymentMethod === 'whatsapp' ? 'checked' : '' ?> onchange="switchPaymentMethod('whatsapp')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
                                         <span class="opt-name"><?= View::e($optWaTitle) ?></span>
@@ -278,10 +291,12 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                     <p class="opt-desc"><?= View::e($optWaDesc) ?></p>
                                 </div>
                             </label>
+                            <?php endif; ?>
 
+                            <?php if ($optCardEnabled): ?>
                             <!-- Opção 3: Cartão de Crédito em até 10x -->
-                            <label class="payment-option" id="optCard">
-                                <input type="radio" name="payment_method" value="card" onchange="switchPaymentMethod('card')">
+                            <label class="payment-option <?= $defaultPaymentMethod === 'card' ? 'active' : '' ?>" id="optCard">
+                                <input type="radio" name="payment_method" value="card" <?= $defaultPaymentMethod === 'card' ? 'checked' : '' ?> onchange="switchPaymentMethod('card')">
                                 <div class="payment-option-inner">
                                     <div class="payment-opt-top">
                                         <span class="opt-name"><?= View::e($optCardTitle) ?></span>
@@ -290,11 +305,21 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                     <p class="opt-desc"><?= View::e($optCardDesc) ?></p>
                                 </div>
                             </label>
+                            <?php endif; ?>
+
+                            <?php if (empty($enabledPaymentMethods)): ?>
+                            <div style="grid-column: 1 / -1; background: rgba(0,0,0,0.03); padding: 18px 20px; border-radius: 8px; text-align: center; border: 1px dashed rgba(0,0,0,0.15);">
+                                <span style="font-size: 1.2rem; display: block; margin-bottom: 6px;">🏛️</span>
+                                <strong style="color: var(--text-primary); font-size: 0.95rem; display: block; margin-bottom: 4px;">Nenhuma forma de pagamento online disponível no momento.</strong>
+                                <span style="font-size: 0.82rem; color: var(--text-secondary);">Por favor, entre em contato diretamente com o nosso Concierge VIP para concluir seu pedido.</span>
+                            </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Painel Dinâmico de Instruções de Pagamento -->
-                        <div id="paymentInstructionsBox" class="payment-instructions-card">
-                            <div id="pixInstructions">
+                        <div id="paymentInstructionsBox" class="payment-instructions-card" style="<?= empty($enabledPaymentMethods) ? 'display: none;' : '' ?>">
+                            <?php if ($optPixEnabled): ?>
+                            <div id="pixInstructions" style="<?= $defaultPaymentMethod === 'pix' ? 'display: block;' : 'display: none;' ?>">
                                 <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;"><?= View::e($pixTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 14px;">
                                     <?= View::e($pixDesc) ?>
@@ -311,20 +336,25 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
                                     </button>
                                 </div>
                             </div>
+                            <?php endif; ?>
 
-                            <div id="waInstructions" style="display: none;">
+                            <?php if ($optWaEnabled): ?>
+                            <div id="waInstructions" style="<?= $defaultPaymentMethod === 'whatsapp' ? 'display: block;' : 'display: none;' ?>">
                                 <h4 style="color: var(--text-primary, #202020); margin: 0 0 8px; font-size: 1rem;"><?= View::e($waTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
                                     <?= View::e($waDesc) ?>
                                 </p>
                             </div>
+                            <?php endif; ?>
 
-                            <div id="cardInstructions" style="display: none;">
+                            <?php if ($optCardEnabled): ?>
+                            <div id="cardInstructions" style="<?= $defaultPaymentMethod === 'card' ? 'display: block;' : 'display: none;' ?>">
                                 <h4 style="color: var(--text-primary); margin: 0 0 8px; font-size: 1rem;"><?= View::e($cardTitle) ?></h4>
                                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
                                     <?= View::e($cardDesc) ?>
                                 </p>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout" style="background: <?= View::e($btnSubmitBg) ?> !important; color: <?= View::e($btnSubmitColor) ?> !important; border: 1px solid <?= View::e($btnSubmitBorder) ?> !important; border-radius: <?= View::e($btnSubmitRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnSubmitShadow] ?? 'none') ?> !important; <?= !$btnSubmitVisible ? 'display: none !important;' : 'display: flex; justify-content: center; align-items: center; gap: 8px;' ?> cursor: pointer; transition: all 0.25s ease;">
@@ -911,7 +941,8 @@ $renderCheckoutBtnIcon = function($iconKey, $iconColor) {
 </style>
 
 <script>
-let currentPaymentMethod = 'pix';
+let currentPaymentMethod = <?= json_encode($defaultPaymentMethod) ?>;
+const enabledPaymentMethods = <?= json_encode($enabledPaymentMethods) ?>;
 let cartSubtotal = 0;
 let selectedShipping = {
     price: 0,
@@ -922,31 +953,42 @@ const pixDiscountPercent = <?= json_encode($pixDiscountPercent) ?>;
 const pixDiscountVisible = <?= json_encode($pixDiscountVisible) ?>;
 
 function switchPaymentMethod(method) {
+    if (!enabledPaymentMethods.includes(method)) {
+        return;
+    }
     currentPaymentMethod = method;
     document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('active'));
     
-    document.getElementById('pixInstructions').style.display = 'none';
-    document.getElementById('waInstructions').style.display = 'none';
-    document.getElementById('cardInstructions').style.display = 'none';
+    const pixInst = document.getElementById('pixInstructions');
+    const waInst = document.getElementById('waInstructions');
+    const cardInst = document.getElementById('cardInstructions');
+    
+    if (pixInst) pixInst.style.display = 'none';
+    if (waInst) waInst.style.display = 'none';
+    if (cardInst) cardInst.style.display = 'none';
     
     const submitBtn = document.getElementById('btnSubmitCheckout');
     const submitTextSpan = document.getElementById('btnSubmitCheckoutText');
+    const customSubmitBase = <?= json_encode($btnSubmitText) ?>;
 
     if (method === 'pix') {
-        document.getElementById('optPix').classList.add('active');
-        document.getElementById('pixInstructions').style.display = 'block';
+        const optEl = document.getElementById('optPix');
+        if (optEl) optEl.classList.add('active');
+        if (pixInst) pixInst.style.display = 'block';
         if (submitTextSpan) {
             submitTextSpan.textContent = `Confirmar Pedido & Gerar Pix ${pixDiscountVisible && pixDiscountPercent > 0 ? '(-' + pixDiscountPercent + '%)' : ''}`;
         }
     } else if (method === 'whatsapp') {
-        document.getElementById('optWa').classList.add('active');
-        document.getElementById('waInstructions').style.display = 'block';
+        const optEl = document.getElementById('optWa');
+        if (optEl) optEl.classList.add('active');
+        if (waInst) waInst.style.display = 'block';
         if (submitTextSpan) {
             submitTextSpan.textContent = 'Avançar para Atendimento WhatsApp';
         }
     } else if (method === 'card') {
-        document.getElementById('optCard').classList.add('active');
-        document.getElementById('cardInstructions').style.display = 'block';
+        const optEl = document.getElementById('optCard');
+        if (optEl) optEl.classList.add('active');
+        if (cardInst) cardInst.style.display = 'block';
         if (submitTextSpan) {
             submitTextSpan.textContent = 'Pagar no Cartão de Crédito';
         }
@@ -1234,6 +1276,11 @@ function handleCheckoutSubmit(e) {
     }
     const finalTotal = Math.max(0, (cartSubtotal - discount) + (selectedShipping.price || 0));
 
+    if (!currentPaymentMethod) {
+        alert('Nenhuma modalidade de pagamento online ativa disponível no momento. Entre em contato com nosso atendimento para suporte personalizado.');
+        return;
+    }
+
     if (currentPaymentMethod === 'whatsapp') {
         let msg = `Olá! Gostaria de concluir meu pedido na DIVINIUM:\n\n*Cliente:* ${name}\n*E-mail:* ${email}\n*Telefone:* ${phone}\n*CEP:* ${cep}\n*Endereço:* ${address}\n\n*Itens Selecionados:*\n`;
         items.forEach(it => {
@@ -1263,6 +1310,16 @@ function handleCheckoutSubmit(e) {
 document.addEventListener('DOMContentLoaded', () => {
     loadCartFromStorage();
     window.addEventListener('cart:updated', loadCartFromStorage);
+    if (currentPaymentMethod) {
+        switchPaymentMethod(currentPaymentMethod);
+    } else {
+        const submitBtn = document.getElementById('btnSubmitCheckout');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            submitBtn.title = 'Nenhuma forma de pagamento online disponível no momento.';
+        }
+    }
 });
 </script>
 
