@@ -5574,11 +5574,15 @@ async function handleEditorSubmit(e) {
         formData.append('_csrf_token', csrfToken);
     }
 
+    const payload = {};
+    formData.forEach((v, k) => { payload[k] = v; });
+
     try {
         const response = await fetch('/admin/landing-page/salvar', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
@@ -5917,11 +5921,15 @@ async function saveSingleInstitutionalPage(slug, btn) {
         }
     });
 
+    const payload = {};
+    formData.forEach((v, k) => { payload[k] = v; });
+
     try {
         const response = await fetch('/admin/institucionais/salvar', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
@@ -7366,7 +7374,7 @@ async function uploadSiteBgFromLanding(fileInput) {
     formData.append('_csrf_token', csrf);
 
     try {
-        const res = await fetch('/admin/temas/upload-fundo', {
+        const res = await fetch('/admin/temas/upload-bg', {
             method: 'POST',
             body: formData,
             headers: {

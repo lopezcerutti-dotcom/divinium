@@ -314,6 +314,25 @@ if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE && !heade
     }
 }
 
+// 6.1 HIDRATAÇÃO AUTOMÁTICA DE PAYLOAD JSON EM $_POST
+// Permite enviar formulários grandes como application/json sem atingir limites de multipart do LiteSpeed/ModSecurity
+if (php_sapi_name() !== 'cli' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? '';
+    if (stripos($contentType, 'application/json') !== false) {
+        $rawBody = @file_get_contents('php://input');
+        if (is_string($rawBody) && $rawBody !== '') {
+            $decodedJson = json_decode($rawBody, true);
+            if (is_array($decodedJson)) {
+                foreach ($decodedJson as $k => $v) {
+                    if (!isset($_POST[$k])) {
+                        $_POST[$k] = $v;
+                    }
+                }
+            }
+        }
+    }
+}
+
 // 7. RETORNO DO AMBIENTE INICIALIZADO
 return [
     'env' => Env::get('APP_ENV'),

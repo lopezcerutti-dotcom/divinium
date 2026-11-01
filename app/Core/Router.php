@@ -78,11 +78,11 @@ class Router
             }
         }
 
-        // 3. Rota não encontrada (404)
-        http_response_code(404);
+        // 3. Rota não encontrada (retorna HTTP 200 no LiteSpeed/Hostinger para impedir interceptação de erro do servidor)
+        http_response_code(200);
         if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
             header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode(['error' => 'Página ou recurso não encontrado.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success' => false, 'error' => 'Página ou recurso não encontrado.'], JSON_UNESCAPED_UNICODE);
         } else {
             header('Content-Type: text/html; charset=UTF-8');
             echo '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Página Não Encontrada | Divinium</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>body{background:#F8F8F7;color:#202020;font-family:\'Inter\',sans-serif;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;box-sizing:border-box;}.error-card{background:#FFFFFF;border:1px solid #737B85;border-radius:16px;padding:48px 32px;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.06);}h1{font-family:\'Cormorant Garamond\',Georgia,serif;letter-spacing:4px;font-weight:400;font-size:3.5rem;margin:0 0 10px;color:#202020;}p{color:#686868;font-size:1.05rem;line-height:1.6;margin:0 0 28px;}a{color:#202020;background:linear-gradient(135deg,#CBD0D6 0%,#A7ADB4 100%);border:1px solid #737B85;padding:12px 30px;border-radius:24px;text-decoration:none;display:inline-block;font-weight:700;letter-spacing:0.5px;transition:all 0.3s ease;}a:hover{filter:brightness(0.95);transform:translateY(-2px);}</style></head><body><div class="error-card"><h1>404</h1><p>A joia ou página que você procura não foi encontrada ou foi movida.</p><a href="/">Voltar à Boutique</a></div></body></html>';
@@ -331,6 +331,7 @@ class Router
             $this->post($p . '/temas/salvar', [\App\Controllers\AdminController::class, 'saveDefaultTheme'], $adminAuth);
             $this->post($p . '/temas/salvar-custom', [\App\Controllers\AdminController::class, 'saveCustomTheme'], $adminAuth);
             $this->post($p . '/temas/upload-bg', [\App\Controllers\AdminController::class, 'uploadBackgroundImage'], $adminAuth);
+            $this->post($p . '/temas/upload-fundo', [\App\Controllers\AdminController::class, 'uploadBackgroundImage'], $adminAuth);
             $this->post($p . '/temas/remover-bg', [\App\Controllers\AdminController::class, 'removeBackgroundImage'], $adminAuth);
             $this->post($p . '/configuracoes/salvar', [\App\Controllers\AdminController::class, 'saveStoreSettings'], $adminAuth);
             $this->post($p . '/metricas/salvar', [\App\Controllers\AdminController::class, 'saveMetricsConfig'], $adminAuth);

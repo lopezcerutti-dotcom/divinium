@@ -925,7 +925,7 @@ class StoreController
         $paymentMethod = trim((string)($input['payment_method'] ?? ''));
 
         if ($paymentMethod === 'card' && \App\Models\Setting::get('checkout_opt_card_enabled', '1') !== '1') {
-            http_response_code(400);
+            http_response_code(200);
             echo json_encode([
                 'success' => false,
                 'error' => 'A modalidade de pagamento por Cartão de Crédito está desativada no momento. Por favor, escolha outra opção.'
@@ -934,7 +934,7 @@ class StoreController
         }
 
         if ($paymentMethod === 'pix' && \App\Models\Setting::get('checkout_opt_pix_enabled', '1') !== '1') {
-            http_response_code(400);
+            http_response_code(200);
             echo json_encode([
                 'success' => false,
                 'error' => 'A modalidade de pagamento via Pix está desativada no momento.'
@@ -943,7 +943,7 @@ class StoreController
         }
 
         if ($paymentMethod === 'whatsapp' && \App\Models\Setting::get('checkout_opt_wa_enabled', '1') !== '1') {
-            http_response_code(400);
+            http_response_code(200);
             echo json_encode([
                 'success' => false,
                 'error' => 'A modalidade de atendimento Concierge VIP está desativada no momento.'
@@ -952,7 +952,7 @@ class StoreController
         }
 
         if ($paymentMethod === '') {
-            http_response_code(400);
+            http_response_code(200);
             echo json_encode([
                 'success' => false,
                 'error' => 'Nenhuma forma de pagamento selecionada.'

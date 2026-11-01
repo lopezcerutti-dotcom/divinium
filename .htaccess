@@ -6,8 +6,10 @@
 # Forçar index.php como único ponto de entrada para impedir conflitos com default.php da Hostinger
 DirectoryIndex index.php
 
-# Front Controller gerencia respostas de erro diretamente no PHP
-# Removidos ErrorDocument 404 e 500 para impedir loops recursivos de subrequest no LiteSpeed / Hostinger
+# Páginas estáticas de contingência para impedir que o LiteSpeed da Hostinger exiba
+# "Configuração do servidor incompleta. Por favor, contate o administrador."
+ErrorDocument 500 /500.html
+ErrorDocument 503 /500.html
 
 # 1. DESATIVAR LISTAGEM DE DIRETÓRIOS COM SEGURANÇA (MOD_GUARDS)
 <IfModule mod_autoindex.c>
@@ -97,8 +99,9 @@ AddDefaultCharset UTF-8
     RewriteCond %{HTTP:CF-Visitor} !'"scheme":"https"' [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Se index.php já for o alvo, não reescrever novamente
-    RewriteRule ^index.php$ - [L]
+    # Se index.php ou 500.html já forem o alvo, não reescrever novamente
+    RewriteRule ^index\.php$ - [L]
+    RewriteRule ^500\.html$ - [L]
 
     # Encaminhar todas as requisições que não sejam arquivos reais para o index.php
     RewriteCond %{REQUEST_FILENAME} !-f

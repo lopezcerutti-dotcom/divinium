@@ -1689,11 +1689,19 @@ async function handleDisplaySubmit(e) {
 
     try {
         const formData = new FormData(form);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+            || document.querySelector('input[name="_csrf_token"]')?.value 
+            || '';
+        const payload = {};
+        formData.forEach((v, k) => { payload[k] = v; });
         const resp = await fetch(form.action, {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
             }
         });
 

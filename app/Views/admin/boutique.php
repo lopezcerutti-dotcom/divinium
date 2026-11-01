@@ -1524,11 +1524,15 @@ async function handleBoutiqueSubmit(e) {
         formData.append('_csrf_token', csrfToken);
     }
 
+    const payload = {};
+    formData.forEach((v, k) => { payload[k] = v; });
+
     try {
         const response = await fetch('/admin/boutique/salvar', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'

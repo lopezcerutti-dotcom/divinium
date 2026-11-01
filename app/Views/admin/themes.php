@@ -1311,11 +1311,15 @@ async function handleCustomThemeSubmit(e) {
         || document.querySelector('input[name="_csrf_token"]')?.value 
         || '';
 
+    const payload = {};
+    formData.forEach((v, k) => { payload[k] = v; });
+
     try {
         const res = await fetch('/admin/temas/salvar-custom', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
@@ -1508,11 +1512,15 @@ async function saveBackgroundSettings() {
         || document.querySelector('input[name="_csrf_token"]')?.value 
         || '';
 
+    const payload = {};
+    formData.forEach((v, k) => { payload[k] = v; });
+
     try {
         const res = await fetch('/admin/temas/salvar-custom', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'

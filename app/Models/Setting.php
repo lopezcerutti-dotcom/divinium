@@ -226,6 +226,28 @@ class Setting
     public static function setMany(array $data): bool
     {
         try {
+            if (self::$cache === null) {
+                self::loadAll();
+            }
+            if (self::$cache === null) {
+                self::$cache = [];
+            }
+
+            // Filtrar apenas chaves válidas que realmente sofreram alteração (evita centenas de queries desnecessárias)
+            $toSave = [];
+            foreach ($data as $key => $value) {
+                if (is_string($key) && $key !== '' && !str_starts_with($key, '_')) {
+                    $val = is_scalar($value) ? (string) $value : json_encode($value, JSON_UNESCAPED_UNICODE);
+                    if (!array_key_exists($key, self::$cache) || (string) self::$cache[$key] !== $val) {
+                        $toSave[$key] = $val;
+                    }
+                }
+            }
+
+            if (empty($toSave)) {
+                return true;
+            }
+
             $pdo = Database::getConnection();
             $inTx = false;
             try {
@@ -238,25 +260,17 @@ class Setting
             $update = $pdo->prepare('UPDATE settings SET value = :value WHERE key_name = :key_name');
             $insert = $pdo->prepare('INSERT INTO settings (key_name, value) VALUES (:key_name, :value)');
 
-            if (self::$cache === null) {
-                self::$cache = [];
-            }
+            foreach ($toSave as $key => $val) {
+                $check->execute(['key_name' => $key]);
+                $exists = ((int) $check->fetchColumn()) > 0;
 
-            foreach ($data as $key => $value) {
-                if (is_string($key) && !str_starts_with($key, '_')) {
-                    $val = is_scalar($value) ? (string) $value : json_encode($value, JSON_UNESCAPED_UNICODE);
-
-                    $check->execute(['key_name' => $key]);
-                    $exists = ((int) $check->fetchColumn()) > 0;
-
-                    if ($exists) {
-                        $update->execute(['value' => $val, 'key_name' => $key]);
-                    } else {
-                        $insert->execute(['key_name' => $key, 'value' => $val]);
-                    }
-
-                    self::$cache[$key] = $val;
+                if ($exists) {
+                    $update->execute(['value' => $val, 'key_name' => $key]);
+                } else {
+                    $insert->execute(['key_name' => $key, 'value' => $val]);
                 }
+
+                self::$cache[$key] = $val;
             }
 
             if ($inTx && $pdo->inTransaction()) {
@@ -272,10 +286,11 @@ class Setting
             }
             error_log('Erro ao salvar lote de configurações: ' . $e->getMessage());
 
-            // Fallback seguro chave a chave
+            // Fallback seguro chave a chave apenas para as chaves alteradas
             $fallbackSuccess = true;
-            foreach ($data as $k => $v) {
-                if (is_string($k) && !str_starts_with($k, '_')) {
+            $fallbackList = !empty($toSave) ? $toSave : $data;
+            foreach ($fallbackList as $k => $v) {
+                if (is_string($k) && $k !== '' && !str_starts_with($k, '_')) {
                     $val = is_scalar($v) ? (string) $v : json_encode($v, JSON_UNESCAPED_UNICODE);
                     if (!self::set($k, $val)) {
                         $fallbackSuccess = false;
