@@ -274,9 +274,6 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
         <button type="button" class="tab-btn" onclick="switchSection('sec-about', this)">
             <span>📜 Manifesto & Sobre</span>
         </button>
-        <button type="button" class="tab-btn" onclick="switchSection('sec-collections', this)">
-            <span>✨ Vitrine & Coleções</span>
-        </button>
         <button type="button" class="tab-btn" onclick="switchSection('sec-services', this)">
             <span>🛡️ Serviços & Garantia</span>
         </button>
@@ -326,7 +323,6 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                 $sectionsList = [
                     'hero' => ['name' => 'Abertura / Hero Principal & Carrossel', 'desc' => 'Dobra inicial com chamada nobre, fotos editoriais e botões de ação', 'tab' => 'sec-hero', 'icon' => '👑'],
                     'about' => ['name' => 'Manifesto & Sobre a Marca', 'desc' => 'Narrativa conceitual de design, resina nobre, ouro e foto editorial', 'tab' => 'sec-about', 'icon' => '📜'],
-                    'collections' => ['name' => 'Vitrine de Coleções & Lançamentos', 'desc' => 'Grade de joias da Home, filtros de categoria e card lifestyle', 'tab' => 'sec-collections', 'icon' => '✨'],
                     'services' => ['name' => 'Serviços, Garantia & Autoria', 'desc' => 'Grade com 3 serviços exclusivos de sintonia, cuidado e garantia', 'tab' => 'sec-services', 'icon' => '🛡️'],
                     'heritage' => ['name' => 'Peça Única & Tradição', 'desc' => 'Destaque especial da joia autoral com selo de exclusividade', 'tab' => 'sec-heritage', 'icon' => '💎'],
                     'testimonials' => ['name' => 'Depoimentos & Experiência VIP', 'desc' => 'Avaliações de clientes verificadas, foto e miniaturas', 'tab' => 'sec-testimonials', 'icon' => '💬']
@@ -2494,100 +2490,6 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_pillar3_desc">Pilar 3 - Descrição</label>
                     <input type="text" id="about_pillar3_desc" name="about_pillar3_desc" class="form-input"
                            value="<?= \App\Core\View::e(Setting::get('about_pillar3_desc', 'Cada peça é acompanhada do certificado oficial de autenticidade e pureza dos materiais.')) ?>">
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- SEÇÃO 6: VITRINE DE PRODUTOS & FILTROS NA HOME -->
-        <!-- ============================================================== -->
-        <div class="editor-section-card" id="sec-collections">
-            <div class="section-card-header">
-                <div class="section-icon">✦</div>
-                <div>
-                    <h3>Vitrine de Produtos, Filtros & Card Lifestyle na Home</h3>
-                    <p>Configurações legadas de texto da vitrine. Para gerenciar coleções por categoria, utilize a nova aba Lançamentos.</p>
-                </div>
-            </div>
-
-            <div style="background: rgba(212,186,136,0.1); border: 1px solid rgba(212,186,136,0.25); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
-                <div>
-                    <strong style="color: #CBD0D6; display: block; margin-bottom: 4px;">🚀 Gerenciamento de Coleções centralizado na aba Lançamentos</strong>
-                    <span style="color: #a8a096; font-size: 0.85rem;">Você pode criar, editar, reordenar coleções e gerenciar produtos separados por categoria (Braceletes, Colares, Anéis) na aba Lançamentos.</span>
-                </div>
-                <a href="/admin/lancamentos" class="btn-admin-gold" style="white-space: nowrap; font-size: 0.82rem; padding: 8px 16px; text-decoration: none;">
-                    Ir para Lançamentos ↗
-                </a>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="collections_tag">Tag da Seção</label>
-                    <input type="text" id="collections_tag" name="collections_tag" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('collections_tag', 'SELEÇÃO EXCLUSIVA')) ?>"
-                           placeholder="SELEÇÃO EXCLUSIVA">
-                </div>
-
-                <div class="form-group">
-                    <label for="collections_title">Título da Vitrine</label>
-                    <input type="text" id="collections_title" name="collections_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('collections_title', 'Braceletes CAMINHOS')) ?>"
-                           placeholder="Braceletes CAMINHOS">
-                </div>
-
-                <!-- Filtros em Pílulas da Vitrine -->
-                <div class="form-group">
-                    <label for="filter_pill_all">Pílula: Todas as Peças</label>
-                    <input type="text" id="filter_pill_all" name="filter_pill_all" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('filter_pill_all', 'Todas as Peças')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="filter_pill_verde">Pílula: Quartzo Verde</label>
-                    <input type="text" id="filter_pill_verde" name="filter_pill_verde" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('filter_pill_verde', 'Quartzo Verde')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="filter_pill_madre">Pílula: Madrepérola</label>
-                    <input type="text" id="filter_pill_madre" name="filter_pill_madre" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('filter_pill_madre', 'Madrepérola')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="filter_pill_verm">Pílula: Jaspe Vermelho</label>
-                    <input type="text" id="filter_pill_verm" name="filter_pill_verm" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('filter_pill_verm', 'Jaspe Vermelho')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="filter_pill_onix">Pílula: Ônix Negro</label>
-                    <input type="text" id="filter_pill_onix" name="filter_pill_onix" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('filter_pill_onix', 'Ônix Negro')) ?>">
-                </div>
-
-                <!-- Card Editorial Lateral (Coleção no Espelho) -->
-                <div class="form-group">
-                    <label for="showcase_lifestyle_title">Card Espelho - Título</label>
-                    <input type="text" id="showcase_lifestyle_title" name="showcase_lifestyle_title" class="form-input"
-                           value="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_title', 'Harmonia Mineral no Espelho')) ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="showcase_lifestyle_img">Card Espelho - Imagem</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="showcase_lifestyle_img" name="showcase_lifestyle_img" class="form-input"
-                               value="<?= \App\Core\View::e(Setting::get('showcase_lifestyle_img', '/assets/images/products/colecao-completa-espelho.jpg')) ?>">
-                        <label class="btn-admin-secondary" style="cursor: pointer; white-space: nowrap; padding: 8px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
-                            <span>📁 Enviar</span>
-                            <input type="file" accept="image/*" style="display: none;" onchange="uploadMediaFile(this, 'showcase_lifestyle_img', 'editorials')">
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="showcase_lifestyle_text">Card Espelho - Descrição</label>
-                    <textarea id="showcase_lifestyle_text" name="showcase_lifestyle_text" class="form-textarea" rows="2"><?= \App\Core\View::e(Setting::get('showcase_lifestyle_text', 'Seis caminhos, seis vibrações. Combine mais de uma cor para expressar as diferentes nuances da sua presença.')) ?></textarea>
                 </div>
             </div>
         </div>
