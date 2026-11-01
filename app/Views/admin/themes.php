@@ -1,20 +1,136 @@
 <?php
 /**
- * VIEW: GESTÃO DE TEMAS & IDENTIDADE VISUAL - ADMIN DIVINIUM
+ * VIEW: IDENTIDADE VISUAL DIVINIUM — EDITOR DE PALETA ÚNICA PERSONALIZÁVEL
  */
+$isSinglePaletteSaved = (($customSettings['divinium_single_palette_saved'] ?? '') === '1');
+
+$paletteElements = [
+    [
+        'key'     => 'custom_color_bg',
+        'picker'  => 'picker_bg',
+        'label'   => 'Fundo principal',
+        'initial' => '#FFFFFF',
+    ],
+    [
+        'key'     => 'custom_color_bg_alt',
+        'picker'  => 'picker_bg_alt',
+        'label'   => 'Fundo secundário',
+        'initial' => '#F7F7F7',
+    ],
+    [
+        'key'     => 'custom_color_surface',
+        'picker'  => 'picker_surface',
+        'label'   => 'Fundo dos cards',
+        'initial' => '#FFFFFF',
+    ],
+    [
+        'key'     => 'custom_color_section_bg',
+        'picker'  => 'picker_section_bg',
+        'label'   => 'Fundo das seções',
+        'initial' => '#F2F2F2',
+    ],
+    [
+        'key'     => 'custom_color_title',
+        'picker'  => 'picker_title',
+        'label'   => 'Títulos',
+        'initial' => '#171717',
+    ],
+    [
+        'key'     => 'custom_color_text',
+        'picker'  => 'picker_text',
+        'label'   => 'Textos principais',
+        'initial' => '#555555',
+    ],
+    [
+        'key'     => 'custom_color_text_muted',
+        'picker'  => 'picker_text_muted',
+        'label'   => 'Textos secundários',
+        'initial' => '#777777',
+    ],
+    [
+        'key'     => 'custom_color_primary',
+        'picker'  => 'picker_primary',
+        'label'   => 'Cor principal da marca',
+        'initial' => '#171717',
+    ],
+    [
+        'key'     => 'custom_color_accent',
+        'picker'  => 'picker_accent',
+        'label'   => 'Cor de destaque',
+        'initial' => '#A7ADB4',
+    ],
+    [
+        'key'     => 'custom_color_btn_primary_bg',
+        'picker'  => 'picker_btn_primary_bg',
+        'label'   => 'Botões principais — fundo',
+        'initial' => '#171717',
+    ],
+    [
+        'key'     => 'custom_color_btn_primary_text',
+        'picker'  => 'picker_btn_primary_text',
+        'label'   => 'Botões principais — texto',
+        'initial' => '#FFFFFF',
+    ],
+    [
+        'key'     => 'custom_color_btn_secondary_bg',
+        'picker'  => 'picker_btn_secondary_bg',
+        'label'   => 'Botões secundários — fundo',
+        'initial' => '#FFFFFF',
+    ],
+    [
+        'key'     => 'custom_color_btn_secondary_text',
+        'picker'  => 'picker_btn_secondary_text',
+        'label'   => 'Botões secundários — texto',
+        'initial' => '#171717',
+    ],
+    [
+        'key'     => 'custom_color_border',
+        'picker'  => 'picker_border',
+        'label'   => 'Bordas e divisórias',
+        'initial' => '#D9DDE1',
+    ],
+    [
+        'key'     => 'custom_color_icon_nav',
+        'picker'  => 'picker_icon_nav',
+        'label'   => 'Ícones',
+        'initial' => '#777777',
+    ],
+    [
+        'key'     => 'custom_color_link',
+        'picker'  => 'picker_link',
+        'label'   => 'Links',
+        'initial' => '#555555',
+    ],
+    [
+        'key'     => 'custom_color_btn_hover',
+        'picker'  => 'picker_btn_hover',
+        'label'   => 'Hover dos botões',
+        'initial' => '#A7ADB4',
+    ],
+];
+
+$resolvePaletteColor = static function (string $key, string $initialHex) use ($customSettings, $isSinglePaletteSaved): string {
+    if ($isSinglePaletteSaved && !empty($customSettings[$key])) {
+        $val = strtoupper(trim((string) $customSettings[$key]));
+        if (preg_match('/^#[0-9A-F]{6}$/', $val)) {
+            return $val;
+        }
+    }
+    return strtoupper($initialHex);
+};
 ?>
 
-<!-- BANNER DE APRESENTAÇÃO DE TEMAS -->
+<!-- BANNER DE APRESENTAÇÃO DA PALETA ÚNICA -->
 <div class="admin-card" style="background: linear-gradient(135deg, rgba(167, 173, 180, 0.14) 0%, rgba(20, 22, 26, 0.95) 100%); border: 1px solid rgba(167, 173, 180, 0.35); margin-bottom: 28px; padding: 26px 30px;">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
         <div>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
                 <span style="color: #cbd0d6; font-size: 1.3rem;">✦</span>
-                <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: #ffffff; margin: 0; letter-spacing: 0.5px;">Gestão de Temas & Identidade Visual Nobre</h2>
-                <span style="background: rgba(167, 173, 180, 0.15); color: #cbd0d6; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">Branco, Preto, Prata & Grafite</span>
+                <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: #ffffff; margin: 0; letter-spacing: 0.5px;">Identidade Visual DIVINIUM</h2>
+                <span style="background: rgba(167, 173, 180, 0.15); color: #cbd0d6; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; text-transform: uppercase;">Paleta Única Editável</span>
             </div>
             <p style="font-size: 0.88rem; color: #b8b1a7; margin: 0; max-width: 720px; line-height: 1.5;">
-                Defina o tema visual padrão que será carregado automaticamente para todos os visitantes da loja e landing page. Você também pode testar cada tema no seu navegador em tempo real.
+                Personalize individualmente cada cor da paleta oficial da DIVINIUM por seletor visual ou código HEX, visualize as alterações antes de aplicar e restaure qualquer cor ao seu valor inicial quando desejar.
             </p>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -25,475 +141,83 @@
     </div>
 </div>
 
-<!-- GRID DOS 4 TEMAS LUXUOSOS -->
-<div class="themes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 35px;">
-    <?php foreach ($themes as $theme): ?>
-        <?php $isActive = $theme['is_default']; ?>
-        <div class="theme-card <?= $isActive ? 'active-theme' : '' ?>" id="card-<?= $theme['id'] ?>" style="background: #1e1e1e; border: 1px solid <?= $isActive ? $theme['primary_color'] : 'rgba(255, 255, 255, 0.1)' ?>; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; box-shadow: <?= $isActive ? '0 12px 30px rgba(0,0,0,0.5), 0 0 25px ' . $theme['primary_color'] . '33' : '0 8px 20px rgba(0,0,0,0.3)' ?>;">
-            
-            <!-- BADGE SUPERIOR -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.06); color: <?= $theme['primary_color'] ?>; border: 1px solid <?= $theme['primary_color'] ?>44;">
-                    <?= \App\Core\View::e($theme['badge']) ?>
-                </span>
-                
-                <?php if ($isActive): ?>
-                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #FFFFFF; background: rgba(167, 173, 180, 0.2); padding: 4px 10px; border-radius: 8px; border: 1px solid #A7ADB4;">
-                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #A7ADB4; box-shadow: 0 0 8px #A7ADB4;"></span>
-                        Tema Padrão do Site
-                    </span>
-                <?php else: ?>
-                    <span class="active-badge" id="badge-<?= $theme['id'] ?>" style="display: none; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #FFFFFF; background: rgba(167, 173, 180, 0.2); padding: 4px 10px; border-radius: 8px; border: 1px solid #A7ADB4;">
-                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #A7ADB4; box-shadow: 0 0 8px #A7ADB4;"></span>
-                        Tema Padrão do Site
-                    </span>
-                <?php endif; ?>
-            </div>
-
-            <!-- TÍTULO E SUBTÍTULO -->
-            <div>
-                <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: #ffffff; margin: 0 0 4px; display: flex; align-items: center; gap: 8px;">
-                    <?= \App\Core\View::e($theme['name']) ?>
-                </h3>
-                <span style="font-size: 0.78rem; color: <?= $theme['primary_color'] ?>; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px;">
-                    <?= \App\Core\View::e($theme['subtitle']) ?>
-                </span>
-                <p style="font-size: 0.82rem; color: #9e978e; line-height: 1.45; margin: 0 0 20px;">
-                    <?= \App\Core\View::e($theme['description']) ?>
-                </p>
-            </div>
-
-            <!-- AMOSTRA DE PALETA DE CORES -->
-            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
-                <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: 600;">Paleta Harmônica:</div>
-                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                    <div title="Paleta Principal: <?= $theme['primary_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['primary_color'] ?>; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 0 10px <?= $theme['primary_color'] ?>55;"></div>
-                    <div title="Realces / Acentos: <?= $theme['accent_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['accent_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div title="Fundo do Tema: <?= $theme['bg_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['bg_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div title="Superfícies & Cards: <?= $theme['surface_color'] ?? '#FFFFFF' ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['surface_color'] ?? '#FFFFFF' ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div title="Texto: <?= $theme['text_color'] ?>" style="width: 28px; height: 28px; border-radius: 50%; background: <?= $theme['text_color'] ?>; border: 2px solid rgba(255,255,255,0.2);"></div>
-                    <div style="margin-left: auto; font-size: 0.72rem; color: #cbd5e1; font-family: monospace; font-weight: 600;">
-                        <?= $theme['primary_color'] ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MINI PREVIEW VISUAL -->
-            <div style="background: <?= $theme['bg_color'] ?>; border: 1px solid <?= $theme['accent_color'] ?>55; border-radius: 10px; padding: 14px; margin-bottom: 22px; position: relative; overflow: hidden; box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);">
-                <div style="font-size: 0.68rem; text-transform: uppercase; color: <?= $theme['accent_color'] ?>; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px;">Exemplo de Botão & Tipografia:</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-serif); font-size: 1.15rem; color: <?= $theme['text_color'] ?>; font-weight: 700; letter-spacing: 0.5px;">
-                        Divinium Joias
-                    </span>
-                    <span style="font-size: 0.72rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; background: <?= $theme['primary_color'] ?>; color: <?= $theme['text_color'] ?>; border: 1px solid <?= $theme['accent_color'] ?>; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                        Comprar Joia
-                    </span>
-                </div>
-            </div>
-
-            <!-- BOTÕES DE AÇÃO -->
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <button type="button" 
-                        class="btn-admin-gold" 
-                        style="flex: 1; padding: 10px 14px; font-size: 0.8rem; text-align: center; justify-content: center;"
-                        onclick="setDefaultTheme('<?= $theme['id'] ?>', this)">
-                    <span>Definir Padrão</span>
-                </button>
-                <button type="button" 
-                        class="btn-admin-cancel" 
-                        style="padding: 10px 14px; font-size: 0.8rem; border-color: rgba(255,255,255,0.18);"
-                        onclick="previewThemeOnPage('<?= $theme['id'] ?>')">
-                    <span>Testar Aqui 👁</span>
-                </button>
-            </div>
-
-        </div>
-    <?php endforeach; ?>
-</div>
-
-
-<!-- ESTÚDIO DE PERSONALIZAÇÃO DE CORES INDEPENDENTES & IDENTIDADE VISUAL NOBRE -->
+<!-- PALETA ÚNICA EDITÁVEL: IDENTIDADE VISUAL DIVINIUM -->
 <div class="admin-card" style="border: 1px solid rgba(167, 173, 180, 0.35); padding: 26px; margin-bottom: 30px; background: #16181b;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; flex-wrap: wrap; gap: 14px;">
         <div>
-            <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; font-size: 1.35rem; margin: 0; color: #FFFFFF;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                 <span style="color: #A7ADB4;">🎨</span>
-                Estúdio de Cores & Elementos Independentes (DIVINIUM)
-            </h3>
+                <h3 class="card-title" style="font-size: 1.35rem; margin: 0; color: #FFFFFF;">
+                    Identidade Visual DIVINIUM
+                </h3>
+                <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; color: #FFFFFF; background: rgba(167, 173, 180, 0.2); padding: 4px 10px; border-radius: 8px; border: 1px solid #A7ADB4;">
+                    <span style="width: 7px; height: 7px; border-radius: 50%; background: #A7ADB4; box-shadow: 0 0 8px #A7ADB4;"></span>
+                    Paleta Oficial Ativa
+                </span>
+            </div>
             <p style="font-size: 0.82rem; color: #9e978e; margin: 4px 0 0;">
-                Cada controle afeta estritamente sua função específica. Mudar o fundo não altera textos nem ícones; mudar os botões não recolore títulos nem links.
+                Edite cada cor de forma independente. Fotografias, imagens das joias e personalizações específicas de componentes que já possuem controles próprios permanecem preservadas.
             </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <button type="button" class="btn-admin-secondary" onclick="resetToThemeDefaults()">
-                <span>Restaurar Padrões</span>
+                <span>↺ Restaurar Todas as Cores Iniciais</span>
             </button>
-            <button type="button" class="btn-admin-gold" onclick="document.getElementById('customThemeForm').requestSubmit()">
-                <span>Salvar Cores & Estilos</span>
+            <button type="button" id="btnSavePaletteMain" class="btn-admin-gold" onclick="document.getElementById('customThemeForm').requestSubmit()">
+                <span>Salvar e Aplicar Paleta</span>
             </button>
         </div>
     </div>
 
     <form id="customThemeForm" onsubmit="handleCustomThemeSubmit(event)">
         <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
+        <input type="hidden" name="divinium_single_palette_saved" value="1">
 
-        <!-- SEÇÃO 1: FUNDOS & SUPERFÍCIES PRINCIPAIS -->
-        <div style="margin-bottom: 16px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 1. Fundos Principais & Superfícies da Loja:</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Fundo Base Principal -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_bg" style="font-size: 0.78rem; margin: 0;">Fundo Base Principal (--bg-main):</label>
-                    <button type="button" onclick="clearColorField('custom_color_bg', 'picker_bg', '#F8F8F7')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
+        <!-- GRADE DOS 17 CONTROLES INDIVIDUAIS DE CORES -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 16px; margin-bottom: 26px;">
+            <?php foreach ($paletteElements as $item): ?>
+                <?php
+                    $k = $item['key'];
+                    $pId = $item['picker'];
+                    $lbl = $item['label'];
+                    $initHex = $item['initial'];
+                    $currentVal = $resolvePaletteColor($k, $initHex);
+                ?>
+                <div class="form-group" style="margin: 0; background: rgba(255, 255, 255, 0.025); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 6px;">
+                        <label for="<?= $k ?>" style="font-size: 0.8rem; font-weight: 600; color: #f1f5f9; margin: 0;">
+                            <?= \App\Core\View::e($lbl) ?>
+                        </label>
+                        <button type="button"
+                                onclick="clearColorField('<?= $k ?>', '<?= $pId ?>', '<?= $initHex ?>')"
+                                title="Restaurar ao valor inicial (<?= $initHex ?>)"
+                                style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: #cbd5e1; cursor: pointer; font-size: 0.68rem; padding: 2px 7px; transition: all 0.2s;">
+                            ↺ <?= $initHex ?>
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color"
+                               id="<?= $pId ?>"
+                               value="<?= \App\Core\View::e($currentVal) ?>"
+                               oninput="syncFromColorPicker('<?= $k ?>', this.value)"
+                               onchange="syncFromColorPicker('<?= $k ?>', this.value)"
+                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.22); background: transparent; cursor: pointer; flex-shrink: 0;">
+                        <input type="text"
+                               id="<?= $k ?>"
+                               name="<?= $k ?>"
+                               class="form-input"
+                               value="<?= \App\Core\View::e($currentVal) ?>"
+                               maxlength="7"
+                               placeholder="<?= $initHex ?>"
+                               oninput="syncFromHexField(this, '<?= $pId ?>')"
+                               onblur="normalizeHexOnBlur(this, '<?= $pId ?>', '<?= $initHex ?>')"
+                               style="font-family: monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                    </div>
                 </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_bg" value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F8F8F7') ?>" onchange="document.getElementById('custom_color_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_bg" name="custom_color_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_bg'] ?? '#F8F8F7') ?>" oninput="document.getElementById('picker_bg').value = this.value; updateCustomPreview();">
-                </div>
-                <div style="display: flex; gap: 5px; margin-top: 6px;">
-                    <button type="button" onclick="setQuickColor('custom_color_bg', 'picker_bg', '#F8F8F7')" title="Branco Perolado (#F8F8F7)" style="width: 18px; height: 18px; border-radius: 50%; background: #F8F8F7; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_bg', 'picker_bg', '#F0F0EF')" title="Cinza Muito Claro (#F0F0EF)" style="width: 18px; height: 18px; border-radius: 50%; background: #F0F0EF; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_bg', 'picker_bg', '#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_bg', 'picker_bg', '#252525')" title="Preto Grafite (#252525)" style="width: 18px; height: 18px; border-radius: 50%; background: #252525; border: 1px solid #555; cursor: pointer;"></button>
-                </div>
-            </div>
-
-            <!-- Fundo Secundário (Seções Alternadas) -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_bg_alt" style="font-size: 0.78rem; margin: 0;">Fundo Secundário (--bg-alt):</label>
-                    <button type="button" onclick="clearColorField('custom_color_bg_alt', 'picker_bg_alt', '#F0F0EF')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_bg_alt" value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#F0F0EF') ?>" onchange="document.getElementById('custom_color_bg_alt').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_bg_alt" name="custom_color_bg_alt" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_bg_alt'] ?? '#F0F0EF') ?>" oninput="document.getElementById('picker_bg_alt').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Seções alternadas (Sobre, Depoimentos, etc).</span>
-            </div>
-
-            <!-- Superfície dos Cards -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_surface" style="font-size: 0.78rem; margin: 0;">Superfície dos Cards (--surface-card):</label>
-                    <button type="button" onclick="clearColorField('custom_color_surface', 'picker_surface', '#FFFFFF')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_surface" value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#FFFFFF') ?>" onchange="document.getElementById('custom_color_surface').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_surface" name="custom_color_surface" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_surface'] ?? '#FFFFFF') ?>" oninput="document.getElementById('picker_surface').value = this.value; updateCustomPreview();">
-                </div>
-                <div style="display: flex; gap: 5px; margin-top: 6px;">
-                    <button type="button" onclick="setQuickColor('custom_color_surface', 'picker_surface', '#FFFFFF')" title="Branco Puro (#FFFFFF)" style="width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_surface', 'picker_surface', '#F8F8F7')" title="Branco Perolado (#F8F8F7)" style="width: 18px; height: 18px; border-radius: 50%; background: #F8F8F7; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_surface', 'picker_surface', '#F0F0EF')" title="Cinza Claro (#F0F0EF)" style="width: 18px; height: 18px; border-radius: 50%; background: #F0F0EF; border: 1px solid #aaa; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_surface', 'picker_surface', '#252525')" title="Preto Grafite (#252525)" style="width: 18px; height: 18px; border-radius: 50%; background: #252525; border: 1px solid #555; cursor: pointer;"></button>
-                </div>
-            </div>
-
-            <!-- Superfície de Caixas e Modais -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_surface_box" style="font-size: 0.78rem; margin: 0;">Caixas & Modais (--surface-box):</label>
-                    <button type="button" onclick="clearColorField('custom_color_surface_box', 'picker_surface_box', '#FFFFFF')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_surface_box" value="<?= \App\Core\View::e($customSettings['custom_color_surface_box'] ?? '#FFFFFF') ?>" onchange="document.getElementById('custom_color_surface_box').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_surface_box" name="custom_color_surface_box" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_surface_box'] ?? '#FFFFFF') ?>" oninput="document.getElementById('picker_surface_box').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Fundo de gavetas laterais, modais e caixas flutuantes.</span>
-            </div>
+            <?php endforeach; ?>
         </div>
 
-        <!-- SEÇÃO 2: TIPOGRAFIA INDEPENDENTE -->
-        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 2. Tipografia Independente (Títulos, Subtítulos e Textos):</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Títulos Principais -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_title" style="font-size: 0.78rem; margin: 0;">Títulos Principais (--title-color):</label>
-                    <button type="button" onclick="clearColorField('custom_color_title', 'picker_title', '#202020')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_title" value="<?= \App\Core\View::e($customSettings['custom_color_title'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_title').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_title" name="custom_color_title" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_title'] ?? '#202020') ?>" oninput="document.getElementById('picker_title').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">H1 a H6, títulos de seções e nomes das joias.</span>
-            </div>
-
-            <!-- Subtítulos -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_subtitle" style="font-size: 0.78rem; margin: 0;">Subtítulos (--subtitle-color):</label>
-                    <button type="button" onclick="clearColorField('custom_color_subtitle', 'picker_subtitle', '#686868')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_subtitle" value="<?= \App\Core\View::e($customSettings['custom_color_subtitle'] ?? '#686868') ?>" onchange="document.getElementById('custom_color_subtitle').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_subtitle" name="custom_color_subtitle" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_subtitle'] ?? '#686868') ?>" oninput="document.getElementById('picker_subtitle').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Linhas finas editoriais e subtítulos de apoio.</span>
-            </div>
-
-            <!-- Texto Comum / Parágrafos -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_text" style="font-size: 0.78rem; margin: 0;">Texto Normal (--text-body):</label>
-                    <button type="button" onclick="clearColorField('custom_color_text', 'picker_text', '#202020')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_text" value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_text').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_text" name="custom_color_text" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_text'] ?? '#202020') ?>" oninput="document.getElementById('picker_text').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Parágrafos, formulários e leitura geral (Preto Suave #202020).</span>
-            </div>
-
-            <!-- Textos Secundários / Muted -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_text_muted" style="font-size: 0.78rem; margin: 0;">Texto Muted (--text-muted):</label>
-                    <button type="button" onclick="clearColorField('custom_color_text_muted', 'picker_text_muted', '#686868')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_text_muted" value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#686868') ?>" onchange="document.getElementById('custom_color_text_muted').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_text_muted" name="custom_color_text_muted" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_text_muted'] ?? '#686868') ?>" oninput="document.getElementById('picker_text_muted').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Detalhes técnicos, legendas e descrições sutis.</span>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 3: ÍCONES INDEPENDENTES & LINKS -->
-        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 3. Ícones & Links Independentes (Não sofrem alteração com fundo):</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Ícones Decorativos -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_icon_decor" style="font-size: 0.78rem; margin: 0;">Ícones Decorativos (--icon-decor-color):</label>
-                    <button type="button" onclick="clearColorField('custom_color_icon_decor', 'picker_icon_decor', '#A7ADB4')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_icon_decor" value="<?= \App\Core\View::e($customSettings['custom_color_icon_decor'] ?? '#A7ADB4') ?>" onchange="document.getElementById('custom_color_icon_decor').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_icon_decor" name="custom_color_icon_decor" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_icon_decor'] ?? '#A7ADB4') ?>" oninput="document.getElementById('picker_icon_decor').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Estrelas, sparkles, selos de qualidade e detalhes metálicos.</span>
-            </div>
-
-            <!-- Ícones Funcionais & Navegação -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_icon_nav" style="font-size: 0.78rem; margin: 0;">Ícones Funcionais (--icon-nav-color):</label>
-                    <button type="button" onclick="clearColorField('custom_color_icon_nav', 'picker_icon_nav', '#202020')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_icon_nav" value="<?= \App\Core\View::e($customSettings['custom_color_icon_nav'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_icon_nav').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_icon_nav" name="custom_color_icon_nav" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_icon_nav'] ?? '#202020') ?>" oninput="document.getElementById('picker_icon_nav').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Sacola de compras, busca, setas, menu e fechar.</span>
-            </div>
-
-            <!-- Links Normais -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_link" style="font-size: 0.78rem; margin: 0;">Cor dos Links (--link-color):</label>
-                    <button type="button" onclick="clearColorField('custom_color_link', 'picker_link', '#202020')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_link" value="<?= \App\Core\View::e($customSettings['custom_color_link'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_link').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_link" name="custom_color_link" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_link'] ?? '#202020') ?>" oninput="document.getElementById('picker_link').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Links do menu e rodapé em estado normal.</span>
-            </div>
-
-            <!-- Hover dos Links -->
-            <div class="form-group" style="margin: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="custom_color_link_hover" style="font-size: 0.78rem; margin: 0;">Hover dos Links (--link-hover):</label>
-                    <button type="button" onclick="clearColorField('custom_color_link_hover', 'picker_link_hover', '#737B85')" title="Restaurar padrão" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem; padding: 0 4px;">✕ Padrão</button>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_link_hover" value="<?= \App\Core\View::e($customSettings['custom_color_link_hover'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_link_hover').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_link_hover" name="custom_color_link_hover" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_link_hover'] ?? '#737B85') ?>" oninput="document.getElementById('picker_link_hover').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Tom de realce suave ao passar o mouse.</span>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 4: BOTÕES INDEPENDENTES (PRIMÁRIOS E SECUNDÁRIOS) -->
-        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 4. Botões de Ação Independentes:</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Fundo Botão Primário -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_btn_primary_bg" style="font-size: 0.78rem;">Fundo Botão Primário (--btn-primary-bg):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_btn_primary_bg" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_bg'] ?? $customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" onchange="document.getElementById('custom_color_btn_primary_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_btn_primary_bg" name="custom_color_btn_primary_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_bg'] ?? $customSettings['custom_color_primary'] ?? '#A7ADB4') ?>" oninput="document.getElementById('picker_btn_primary_bg').value = this.value; updateCustomPreview();">
-                </div>
-                <div style="display: flex; gap: 5px; margin-top: 6px;">
-                    <button type="button" onclick="setQuickColor('custom_color_btn_primary_bg', 'picker_btn_primary_bg', '#A7ADB4')" title="Prata Fosca (#A7ADB4)" style="width: 18px; height: 18px; border-radius: 50%; background: #A7ADB4; border: 1px solid #999; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_btn_primary_bg', 'picker_btn_primary_bg', '#CBD0D6')" title="Platina (#CBD0D6)" style="width: 18px; height: 18px; border-radius: 50%; background: #CBD0D6; border: 1px solid #ccc; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_btn_primary_bg', 'picker_btn_primary_bg', '#737B85')" title="Cinza Prata (#737B85)" style="width: 18px; height: 18px; border-radius: 50%; background: #737B85; border: 1px solid #555; cursor: pointer;"></button>
-                    <button type="button" onclick="setQuickColor('custom_color_btn_primary_bg', 'picker_btn_primary_bg', '#202020')" title="Preto Suave (#202020)" style="width: 18px; height: 18px; border-radius: 50%; background: #202020; border: 1px solid #444; cursor: pointer;"></button>
-                </div>
-            </div>
-
-            <!-- Texto Botão Primário -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_btn_primary_text" style="font-size: 0.78rem;">Texto Botão Primário (--btn-primary-text):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_btn_primary_text" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_text'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_btn_primary_text').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_btn_primary_text" name="custom_color_btn_primary_text" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_text'] ?? '#202020') ?>" oninput="document.getElementById('picker_btn_primary_text').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Preto #202020 para contraste AA sobre prata.</span>
-            </div>
-
-            <!-- Borda Botão Primário -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_btn_primary_border" style="font-size: 0.78rem;">Borda Botão Primário (--btn-primary-border):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_btn_primary_border" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_border'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_btn_primary_border').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_btn_primary_border" name="custom_color_btn_primary_border" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_btn_primary_border'] ?? '#737B85') ?>" oninput="document.getElementById('picker_btn_primary_border').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Cinza-prata #737B85.</span>
-            </div>
-
-            <!-- Fundo Botão Secundário -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_btn_secondary_bg" style="font-size: 0.78rem;">Fundo Botão Secundário (--btn-secondary-bg):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_btn_secondary_bg" value="<?= \App\Core\View::e($customSettings['custom_color_btn_secondary_bg'] ?? '#F0F0EF') ?>" onchange="document.getElementById('custom_color_btn_secondary_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_btn_secondary_bg" name="custom_color_btn_secondary_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_btn_secondary_bg'] ?? '#F0F0EF') ?>" oninput="document.getElementById('picker_btn_secondary_bg').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Botões secundários e contornos.</span>
-            </div>
-
-            <!-- Texto Botão Secundário -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_btn_secondary_text" style="font-size: 0.78rem;">Texto Botão Secundário (--btn-secondary-text):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_btn_secondary_text" value="<?= \App\Core\View::e($customSettings['custom_color_btn_secondary_text'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_btn_secondary_text').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_btn_secondary_text" name="custom_color_btn_secondary_text" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_btn_secondary_text'] ?? '#202020') ?>" oninput="document.getElementById('picker_btn_secondary_text').value = this.value; updateCustomPreview();">
-                </div>
-                <span style="font-size: 0.65rem; color: #888; display: block; margin-top: 4px;">Padrão: Preto #202020.</span>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 5: BORDAS, ESTADOS & MENSAGENS -->
-        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 5. Bordas, Foco & Mensagens de Status (Feedback Funcional Preservado):</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Borda Principal -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_border" style="font-size: 0.78rem;">Bordas Principais (--border-color):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_border" value="<?= \App\Core\View::e($customSettings['custom_color_border'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_border').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_border" name="custom_color_border" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_border'] ?? '#737B85') ?>" oninput="document.getElementById('picker_border').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Anel de Foco / Acessibilidade -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_focus_ring" style="font-size: 0.78rem;">Foco & Seleção (--focus-ring):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_focus_ring" value="<?= \App\Core\View::e($customSettings['custom_color_focus_ring'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_focus_ring').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_focus_ring" name="custom_color_focus_ring" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_focus_ring'] ?? '#737B85') ?>" oninput="document.getElementById('picker_focus_ring').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Sucesso -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_success" style="font-size: 0.78rem;">Mensagem de Sucesso (--color-success):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_success" value="<?= \App\Core\View::e($customSettings['custom_color_success'] ?? '#2E7D32') ?>" onchange="document.getElementById('custom_color_success').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_success" name="custom_color_success" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_success'] ?? '#2E7D32') ?>" oninput="document.getElementById('picker_success').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Alerta -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_warning" style="font-size: 0.78rem;">Mensagem de Alerta (--color-warning):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_warning" value="<?= \App\Core\View::e($customSettings['custom_color_warning'] ?? '#D97706') ?>" onchange="document.getElementById('custom_color_warning').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_warning" name="custom_color_warning" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_warning'] ?? '#D97706') ?>" oninput="document.getElementById('picker_warning').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Erro -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_error" style="font-size: 0.78rem;">Mensagem de Erro (--color-error):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_error" value="<?= \App\Core\View::e($customSettings['custom_color_error'] ?? '#DC2626') ?>" onchange="document.getElementById('custom_color_error').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_error" name="custom_color_error" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_error'] ?? '#DC2626') ?>" oninput="document.getElementById('picker_error').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 6: PREÇOS, DESCONTOS, ETIQUETAS & FORMULÁRIOS -->
-        <div style="margin-bottom: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
-            <span style="font-size: 0.78rem; text-transform: uppercase; color: #A7ADB4; font-weight: 700; letter-spacing: 0.5px;">✦ 6. Preços, Descontos, Badges & Campos de Formulário:</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px;">
-            <!-- Cor dos Preços -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_price" style="font-size: 0.78rem;">Destaque de Preços (--price-color):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_price" value="<?= \App\Core\View::e($customSettings['custom_color_price'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_price').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_price" name="custom_color_price" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_price'] ?? '#202020') ?>" oninput="document.getElementById('picker_price').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Cor dos Descontos -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_discount" style="font-size: 0.78rem;">Destaque de Desconto / Pix (--discount-color):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_discount" value="<?= \App\Core\View::e($customSettings['custom_color_discount'] ?? '#737B85') ?>" onchange="document.getElementById('custom_color_discount').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_discount" name="custom_color_discount" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_discount'] ?? '#737B85') ?>" oninput="document.getElementById('picker_discount').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Fundo dos Badges -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_badge_bg" style="font-size: 0.78rem;">Fundo das Etiquetas & Badges (--badge-bg):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_badge_bg" value="<?= \App\Core\View::e($customSettings['custom_color_badge_bg'] ?? '#F0F0EF') ?>" onchange="document.getElementById('custom_color_badge_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_badge_bg" name="custom_color_badge_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_badge_bg'] ?? '#F0F0EF') ?>" oninput="document.getElementById('picker_badge_bg').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Texto dos Badges -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_badge_text" style="font-size: 0.78rem;">Texto das Etiquetas & Badges (--badge-text):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_badge_text" value="<?= \App\Core\View::e($customSettings['custom_color_badge_text'] ?? '#202020') ?>" onchange="document.getElementById('custom_color_badge_text').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_badge_text" name="custom_color_badge_text" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_badge_text'] ?? '#202020') ?>" oninput="document.getElementById('picker_badge_text').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Fundo dos Campos -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_input_bg" style="font-size: 0.78rem;">Fundo dos Campos / Inputs (--input-bg):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_input_bg" value="<?= \App\Core\View::e($customSettings['custom_color_input_bg'] ?? '#FFFFFF') ?>" onchange="document.getElementById('custom_color_input_bg').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_input_bg" name="custom_color_input_bg" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_input_bg'] ?? '#FFFFFF') ?>" oninput="document.getElementById('picker_input_bg').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-
-            <!-- Borda dos Campos -->
-            <div class="form-group" style="margin: 0;">
-                <label for="custom_color_input_border" style="font-size: 0.78rem;">Borda dos Campos / Inputs (--input-border):</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="color" id="picker_input_border" value="<?= \App\Core\View::e($customSettings['custom_color_input_border'] ?? '#CBD0D6') ?>" onchange="document.getElementById('custom_color_input_border').value = this.value; updateCustomPreview();" style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
-                    <input type="text" id="custom_color_input_border" name="custom_color_input_border" class="form-input" value="<?= \App\Core\View::e($customSettings['custom_color_input_border'] ?? '#CBD0D6') ?>" oninput="document.getElementById('picker_input_border').value = this.value; updateCustomPreview();">
-                </div>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 7: GRID DE TIPOGRAFIA E FORMAS -->
+        <!-- CONTROLES DE TIPOGRAFIA E BORDAS PRESERVADOS -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 18px;">
             <div class="form-group" style="margin: 0;">
                 <label for="custom_font_serif">Tipografia dos Títulos Principais</label>
@@ -525,53 +249,96 @@
             </div>
         </div>
 
-        <!-- PRÉ-VISUALIZADOR DA SUA PALETA AO VIVO (DEMONSTRADOR DE CONTRASTE REAL) -->
-        <div id="customPalettePreviewBox" style="margin-top: 24px; background: #FFFFFF; border: 1px solid rgba(167, 173, 180, 0.4); border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
-                <div style="flex: 1; min-width: 260px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <!-- PRÉ-VISUALIZADOR EM TEMPO REAL — IDENTIDADE VISUAL DIVINIUM -->
+        <div style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                <span style="font-size: 0.78rem; text-transform: uppercase; color: #cbd0d6; font-weight: 700; letter-spacing: 0.5px;">
+                    ✦ Pré-visualização em Tempo Real — Identidade Visual DIVINIUM (Antes de Aplicar):
+                </span>
+                <span id="paletteSaveFeedback" style="font-size: 0.78rem; color: #9e978e;">
+                    Altere qualquer cor acima para visualizar imediatamente o resultado.
+                </span>
+            </div>
+
+            <!-- Fundo Principal (#FFFFFF) -->
+            <div id="customPalettePreviewBox" style="background: #FFFFFF; border: 1px solid #D9DDE1; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px; transition: all 0.2s ease;">
+
+                <!-- Fundo Secundário (#F7F7F7) + Marca Principal (#171717) + Ícones (#777777) + Links (#555555) -->
+                <div id="previewSecondaryBar" style="background: #F7F7F7; border: 1px solid #D9DDE1; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
                         <span id="previewDecorIcon" style="font-size: 1.1rem; color: #A7ADB4;">✦</span>
-                        <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.35rem; color: #202020; font-weight: 700;">
-                            Divinium Joias Contemporâneas
+                        <span id="previewBrandLogo" style="font-family: var(--font-serif); font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; color: #171717;">
+                            DIVINIUM
+                        </span>
+                        <span id="previewAccentBadge" style="font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #A7ADB4; color: #171717; text-transform: uppercase;">
+                            Destaque
                         </span>
                     </div>
-                    <span id="previewSubtitleText" style="font-size: 0.82rem; color: #686868; display: block; margin-bottom: 6px; font-weight: 600;">
-                        Joalheria Autoral com Banho de Prata & Luxo Silencioso
-                    </span>
-                    <span id="previewSampleText" style="font-size: 0.85rem; color: #202020; display: block; line-height: 1.45;">
-                        Cada peça é desenhada para harmonizar proporção anatômica, pureza mineral e acabamento acetinado de precisão.
-                    </span>
-                    <span id="previewSampleMuted" style="font-size: 0.76rem; color: #686868; display: block; margin-top: 4px;">
-                        Garantia vitalícia do metal nobre com certificado oficial de autenticidade mineral.
-                    </span>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <a href="javascript:void(0)" id="previewSampleLink" style="font-size: 0.82rem; color: #202020; text-decoration: underline; font-weight: 600;">Ver Coleção</a>
-                        <span id="previewNavIcon" style="font-size: 0.9rem; color: #202020;">🔍</span>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="button" id="previewBtnSampleSecondary" style="background: #F0F0EF; color: #202020; border: 1px solid #CBD0D6; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
-                            <span>Secundário</span>
-                        </button>
-                        <button type="button" id="previewBtnSample" style="background: #A7ADB4; color: #202020; border: 1px solid #737B85; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
-                            <span>Botão Primário</span>
-                        </button>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <a href="javascript:void(0)" id="previewSampleLink" style="font-size: 0.82rem; color: #555555; text-decoration: underline; font-weight: 600;">Link da Boutique</a>
+                        <span id="previewNavIcon" style="display: inline-flex; align-items: center; gap: 8px; color: #777777;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Pílulas de Status Funcional -->
-            <div style="display: flex; gap: 10px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px; flex-wrap: wrap;">
-                <span id="previewSuccessBadge" style="font-size: 0.72rem; font-weight: 700; color: #2E7D32; background: rgba(46,125,50,0.1); padding: 3px 10px; border-radius: 12px;">✓ Pedido Aprovado (Sucesso)</span>
-                <span id="previewWarningBadge" style="font-size: 0.72rem; font-weight: 700; color: #D97706; background: rgba(217,119,6,0.1); padding: 3px 10px; border-radius: 12px;">⚠ Poucas Peças em Estoque (Alerta)</span>
-                <span id="previewErrorBadge" style="font-size: 0.72rem; font-weight: 700; color: #DC2626; background: rgba(220,38,38,0.1); padding: 3px 10px; border-radius: 12px;">✕ Campo Obrigatório (Erro)</span>
+                <!-- Fundo das Seções (#F2F2F2) -->
+                <div id="previewSectionBox" style="background: #F2F2F2; border: 1px solid #D9DDE1; border-radius: 10px; padding: 18px;">
+                    <!-- Fundo dos Cards (#FFFFFF) -->
+                    <div id="previewCardSurface" style="background: #FFFFFF; border: 1px solid #D9DDE1; border-radius: 8px; padding: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <div style="flex: 1; min-width: 260px;">
+                            <span id="previewSerifTitle" style="font-family: var(--font-serif); font-size: 1.35rem; color: #171717; font-weight: 700; display: block; margin-bottom: 6px;">
+                                Joalheria Autoral & Biojoias Contemporâneas
+                            </span>
+                            <span id="previewSampleText" style="font-size: 0.86rem; color: #555555; display: block; line-height: 1.5; margin-bottom: 6px;">
+                                Texto principal demonstrando leitura confortável, equilíbrio visual e fidelidade de contraste sobre o fundo dos cards.
+                            </span>
+                            <hr id="previewDividerLine" style="border: none; border-top: 1px solid #D9DDE1; margin: 10px 0;">
+                            <span id="previewSampleMuted" style="font-size: 0.78rem; color: #777777; display: block;">
+                                Texto secundário para legendas, especificações técnicas e observações sutis.
+                            </span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button type="button"
+                                        id="previewBtnSampleSecondary"
+                                        onmouseenter="applyPreviewBtnHover(this, true)"
+                                        onmouseleave="applyPreviewBtnHover(this, false)"
+                                        style="background: #FFFFFF; color: #171717; border: 1px solid #D9DDE1; padding: 9px 16px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">
+                                    <span>Botão Secundário</span>
+                                </button>
+                                <button type="button"
+                                        id="previewBtnSample"
+                                        onmouseenter="applyPreviewBtnHover(this, true)"
+                                        onmouseleave="applyPreviewBtnHover(this, false)"
+                                        style="background: #171717; color: #FFFFFF; border: 1px solid #171717; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">
+                                    <span>Botão Principal</span>
+                                </button>
+                                <button type="button"
+                                        id="previewBtnHoverSample"
+                                        style="background: #A7ADB4; color: #171717; border: 1px solid #A7ADB4; padding: 9px 14px; border-radius: 8px; font-weight: 600; font-size: 0.76rem; cursor: default;">
+                                    <span>Hover dos Botões</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+            <button type="button" class="btn-admin-secondary" onclick="resetToThemeDefaults()">
+                <span>↺ Restaurar Todas as Cores Iniciais</span>
+            </button>
+            <button type="submit" id="btnSavePaletteBottom" class="btn-admin-gold">
+                <span>Salvar e Aplicar Paleta</span>
+            </button>
         </div>
     </form>
 </div>
-
 <!-- ==============================================================================
      ESTÚDIO DE PERSONALIZAÇÃO DE FUNDOS & TEXTURAS (11 DESTINOS COM MODOS MUTUAMENTE EXCLUSIVOS)
      ============================================================================== -->
@@ -1077,229 +844,218 @@ $texturePresets = [
 
 <script>
 // ==============================================================================
-// GESTÃO DE TEMAS NATIVOS & ALTERNADOR VISUAL
+// IDENTIDADE VISUAL DIVINIUM — GESTÃO DA PALETA ÚNICA EDITÁVEL
 // ==============================================================================
-function previewThemeOnPage(themeId) {
-    if (window.diviniumApplyTheme) {
-        window.diviniumApplyTheme(themeId);
-    } else {
-        const themes = [
-            'theme-silver-noir', 'theme-pearl-platinum', 'theme-nude-pearl', 'theme-contemporary-graphite',
-            'theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose'
-        ];
-        themes.forEach(t => {
-            document.documentElement.classList.remove(t);
-            document.body.classList.remove(t);
-        });
-        document.documentElement.classList.add(themeId);
-        document.body.classList.add(themeId);
-        localStorage.setItem('divinium_theme', themeId);
-    }
+const DIVINIUM_INITIAL_PALETTE = {
+    custom_color_bg:                 { picker: 'picker_bg',                 initial: '#FFFFFF' },
+    custom_color_bg_alt:             { picker: 'picker_bg_alt',             initial: '#F7F7F7' },
+    custom_color_surface:            { picker: 'picker_surface',            initial: '#FFFFFF' },
+    custom_color_section_bg:         { picker: 'picker_section_bg',         initial: '#F2F2F2' },
+    custom_color_title:              { picker: 'picker_title',              initial: '#171717' },
+    custom_color_text:               { picker: 'picker_text',               initial: '#555555' },
+    custom_color_text_muted:         { picker: 'picker_text_muted',         initial: '#777777' },
+    custom_color_primary:            { picker: 'picker_primary',            initial: '#171717' },
+    custom_color_accent:             { picker: 'picker_accent',             initial: '#A7ADB4' },
+    custom_color_btn_primary_bg:     { picker: 'picker_btn_primary_bg',     initial: '#171717' },
+    custom_color_btn_primary_text:   { picker: 'picker_btn_primary_text',   initial: '#FFFFFF' },
+    custom_color_btn_secondary_bg:   { picker: 'picker_btn_secondary_bg',   initial: '#FFFFFF' },
+    custom_color_btn_secondary_text: { picker: 'picker_btn_secondary_text', initial: '#171717' },
+    custom_color_border:             { picker: 'picker_border',             initial: '#D9DDE1' },
+    custom_color_icon_nav:           { picker: 'picker_icon_nav',           initial: '#777777' },
+    custom_color_link:               { picker: 'picker_link',               initial: '#555555' },
+    custom_color_btn_hover:          { picker: 'picker_btn_hover',          initial: '#A7ADB4' }
+};
 
-    const toast = document.createElement('div');
-    toast.style.position = 'fixed';
-    toast.style.bottom = '24px';
-    toast.style.right = '24px';
-    toast.style.background = '#1a1816';
-    toast.style.border = '1px solid #cbd0d6';
-    toast.style.color = '#fff';
-    toast.style.padding = '12px 20px';
-    toast.style.borderRadius = '8px';
-    toast.style.boxShadow = '0 8px 25px rgba(0,0,0,0.5)';
-    toast.style.fontSize = '0.85rem';
-    toast.style.zIndex = '99999';
-    toast.textContent = '✦ Tema aplicado no seu navegador para teste instantâneo!';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
-}
-
-async function setDefaultTheme(themeId, btnElement) {
-    const originalText = btnElement.innerHTML;
-    btnElement.disabled = true;
-    btnElement.innerHTML = '<span>Salvando...</span>';
-
-    try {
-        const formData = new FormData();
-        formData.append('theme_id', themeId);
-        
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        formData.append('_csrf_token', csrfToken);
-
-        const response = await fetch('/admin/temas/salvar', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        });
-
-        const rawText = await response.text();
-        let data;
-        try {
-            data = JSON.parse(rawText);
-        } catch (jsonErr) {
-            throw new Error('O servidor respondeu com formato inesperado. Se sua sessão expirou, recarregue a página.');
-        }
-
-        if (data.auth_required) {
-            alert('Sua sessão administrativa expirou. Por favor, faça login novamente.');
-            window.location.reload();
-            return;
-        }
-
-        if (data.success) {
-            document.querySelectorAll('.theme-card').forEach(c => {
-                c.classList.remove('active-theme');
-                c.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            });
-            document.querySelectorAll('.active-badge').forEach(b => b.style.display = 'none');
-
-            const card = document.getElementById('card-' + themeId);
-            if (card) card.classList.add('active-theme');
-            const badge = document.getElementById('badge-' + themeId);
-            if (badge) badge.style.display = 'inline-flex';
-
-            previewThemeOnPage(themeId);
-
-            btnElement.innerHTML = '<span>✓ Definido!</span>';
-            setTimeout(() => {
-                btnElement.disabled = false;
-                btnElement.innerHTML = originalText;
-            }, 1800);
-        } else {
-            alert('Erro: ' + (data.error || 'Não foi possível salvar o tema.'));
-            btnElement.disabled = false;
-            btnElement.innerHTML = originalText;
-        }
-    } catch (err) {
-        alert('Falha na comunicação: ' + err.message);
-        btnElement.disabled = false;
-        btnElement.innerHTML = originalText;
-    }
-}
-
-// ==============================================================================
-// GESTÃO DAS CORES INDEPENDENTES & PREVIEW DA PALETA
-// ==============================================================================
-function setQuickColor(inputId, pickerId, val) {
+function syncFromColorPicker(inputId, hexVal) {
     const input = document.getElementById(inputId);
+    if (input) {
+        input.value = String(hexVal || '').toUpperCase();
+    }
+    updateCustomPreview();
+}
+
+function syncFromHexField(inputEl, pickerId) {
+    if (!inputEl) return;
+    let val = inputEl.value.trim().toUpperCase();
+    if (val && !val.startsWith('#')) {
+        val = '#' + val;
+    }
+    if (/^#[0-9A-F]{6}$/.test(val)) {
+        const picker = document.getElementById(pickerId);
+        if (picker) picker.value = val;
+        updateCustomPreview();
+    }
+}
+
+function normalizeHexOnBlur(inputEl, pickerId, fallbackHex) {
+    if (!inputEl) return;
+    let val = inputEl.value.trim().toUpperCase();
+    if (val && !val.startsWith('#')) {
+        val = '#' + val;
+    }
+    if (/^#[0-9A-F]{3}$/.test(val)) {
+        val = '#' + val[1] + val[1] + val[2] + val[2] + val[3] + val[3];
+    }
+    if (!/^#[0-9A-F]{6}$/.test(val)) {
+        val = fallbackHex.toUpperCase();
+    }
+    inputEl.value = val;
     const picker = document.getElementById(pickerId);
-    if (input) input.value = val;
     if (picker) picker.value = val;
     updateCustomPreview();
 }
 
-function clearColorField(inputId, pickerId, defaultVal) {
+function setQuickColor(inputId, pickerId, val) {
+    const clean = String(val || '').toUpperCase();
     const input = document.getElementById(inputId);
     const picker = document.getElementById(pickerId);
-    if (input) input.value = defaultVal;
-    if (picker) picker.value = defaultVal;
+    if (input) input.value = clean;
+    if (picker) picker.value = clean;
     updateCustomPreview();
 }
 
+function clearColorField(inputId, pickerId, defaultVal) {
+    setQuickColor(inputId, pickerId, defaultVal);
+}
+
 function getContrastColor(hex) {
-    if (!hex || hex.length < 7) return '#202020';
+    if (!hex || hex.length < 7) return '#171717';
     const r = parseInt(hex.substr(1, 2), 16);
     const g = parseInt(hex.substr(3, 2), 16);
     const b = parseInt(hex.substr(5, 2), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 140 ? '#202020' : '#FFFFFF';
+    return yiq >= 140 ? '#171717' : '#FFFFFF';
+}
+
+function applyPreviewBtnHover(btnEl, isHover) {
+    if (!btnEl) return;
+    const hoverColor = document.getElementById('custom_color_btn_hover')?.value || '#A7ADB4';
+    if (isHover) {
+        btnEl.style.backgroundColor = hoverColor;
+        btnEl.style.borderColor = hoverColor;
+        btnEl.style.color = getContrastColor(hoverColor);
+    } else {
+        updateCustomPreview();
+    }
 }
 
 function updateCustomPreview() {
-    const bg = document.getElementById('custom_color_bg')?.value || '#F8F8F7';
-    const surface = document.getElementById('custom_color_surface')?.value || '#FFFFFF';
-    const title = document.getElementById('custom_color_title')?.value || '#202020';
-    const subtitle = document.getElementById('custom_color_subtitle')?.value || '#686868';
-    const text = document.getElementById('custom_color_text')?.value || '#202020';
-    const textMuted = document.getElementById('custom_color_text_muted')?.value || '#686868';
-    const iconDecor = document.getElementById('custom_color_icon_decor')?.value || '#A7ADB4';
-    const iconNav = document.getElementById('custom_color_icon_nav')?.value || '#202020';
-    const link = document.getElementById('custom_color_link')?.value || '#202020';
-    const btnPrimaryBg = document.getElementById('custom_color_btn_primary_bg')?.value || '#A7ADB4';
-    const btnPrimaryText = document.getElementById('custom_color_btn_primary_text')?.value || getContrastColor(btnPrimaryBg);
-    const btnPrimaryBorder = document.getElementById('custom_color_btn_primary_border')?.value || '#737B85';
-    const btnSecondaryBg = document.getElementById('custom_color_btn_secondary_bg')?.value || '#F0F0EF';
-    const btnSecondaryText = document.getElementById('custom_color_btn_secondary_text')?.value || '#202020';
-    const btnSecondaryBorder = document.getElementById('custom_color_btn_secondary_border')?.value || '#CBD0D6';
+    const bgMain          = document.getElementById('custom_color_bg')?.value || '#FFFFFF';
+    const bgAlt           = document.getElementById('custom_color_bg_alt')?.value || '#F7F7F7';
+    const surfaceCard     = document.getElementById('custom_color_surface')?.value || '#FFFFFF';
+    const sectionBg       = document.getElementById('custom_color_section_bg')?.value || '#F2F2F2';
+    const titleColor      = document.getElementById('custom_color_title')?.value || '#171717';
+    const textMain        = document.getElementById('custom_color_text')?.value || '#555555';
+    const textMuted       = document.getElementById('custom_color_text_muted')?.value || '#777777';
+    const brandPrimary    = document.getElementById('custom_color_primary')?.value || '#171717';
+    const accentColor     = document.getElementById('custom_color_accent')?.value || '#A7ADB4';
+    const btnPrimaryBg    = document.getElementById('custom_color_btn_primary_bg')?.value || '#171717';
+    const btnPrimaryText  = document.getElementById('custom_color_btn_primary_text')?.value || '#FFFFFF';
+    const btnSecondaryBg  = document.getElementById('custom_color_btn_secondary_bg')?.value || '#FFFFFF';
+    const btnSecondaryTxt = document.getElementById('custom_color_btn_secondary_text')?.value || '#171717';
+    const borderColor     = document.getElementById('custom_color_border')?.value || '#D9DDE1';
+    const iconColor       = document.getElementById('custom_color_icon_nav')?.value || '#777777';
+    const linkColor       = document.getElementById('custom_color_link')?.value || '#555555';
+    const btnHoverColor   = document.getElementById('custom_color_btn_hover')?.value || '#A7ADB4';
+
     const fontSerif = document.getElementById('custom_font_serif')?.value || "'Cormorant Garamond', Georgia, serif";
-    const radius = document.getElementById('custom_border_radius')?.value || '8px';
+    const radius    = document.getElementById('custom_border_radius')?.value || '8px';
 
     const box = document.getElementById('customPalettePreviewBox');
     if (box) {
-        box.style.backgroundColor = surface;
-        box.style.borderColor = btnPrimaryBorder;
+        box.style.backgroundColor = bgMain;
+        box.style.borderColor = borderColor;
     }
+
+    const secBar = document.getElementById('previewSecondaryBar');
+    if (secBar) {
+        secBar.style.backgroundColor = bgAlt;
+        secBar.style.borderColor = borderColor;
+    }
+
+    const secBox = document.getElementById('previewSectionBox');
+    if (secBox) {
+        secBox.style.backgroundColor = sectionBg;
+        secBox.style.borderColor = borderColor;
+    }
+
+    const cardSurface = document.getElementById('previewCardSurface');
+    if (cardSurface) {
+        cardSurface.style.backgroundColor = surfaceCard;
+        cardSurface.style.borderColor = borderColor;
+    }
+
+    const divider = document.getElementById('previewDividerLine');
+    if (divider) {
+        divider.style.borderTopColor = borderColor;
+    }
+
+    const brandLogo = document.getElementById('previewBrandLogo');
+    if (brandLogo) {
+        brandLogo.style.color = brandPrimary;
+        brandLogo.style.fontFamily = fontSerif;
+    }
+
+    const decorEl = document.getElementById('previewDecorIcon');
+    if (decorEl) decorEl.style.color = accentColor;
+
+    const accentBadge = document.getElementById('previewAccentBadge');
+    if (accentBadge) {
+        accentBadge.style.backgroundColor = accentColor;
+        accentBadge.style.color = getContrastColor(accentColor);
+    }
+
     const titleEl = document.getElementById('previewSerifTitle');
     if (titleEl) {
-        titleEl.style.color = title;
+        titleEl.style.color = titleColor;
         titleEl.style.fontFamily = fontSerif;
     }
-    const subEl = document.getElementById('previewSubtitleText');
-    if (subEl) subEl.style.color = subtitle;
+
     const sampleText = document.getElementById('previewSampleText');
-    if (sampleText) sampleText.style.color = text;
+    if (sampleText) sampleText.style.color = textMain;
+
     const sampleMuted = document.getElementById('previewSampleMuted');
     if (sampleMuted) sampleMuted.style.color = textMuted;
 
-    const decorEl = document.getElementById('previewDecorIcon');
-    if (decorEl) decorEl.style.color = iconDecor;
     const navEl = document.getElementById('previewNavIcon');
-    if (navEl) navEl.style.color = iconNav;
+    if (navEl) navEl.style.color = iconColor;
 
     const linkEl = document.getElementById('previewSampleLink');
-    if (linkEl) linkEl.style.color = link;
+    if (linkEl) linkEl.style.color = linkColor;
 
     const btn = document.getElementById('previewBtnSample');
     if (btn) {
         btn.style.backgroundColor = btnPrimaryBg;
         btn.style.color = btnPrimaryText;
-        btn.style.borderColor = btnPrimaryBorder;
+        btn.style.borderColor = btnPrimaryBg;
         btn.style.borderRadius = radius;
     }
 
     const btnSec = document.getElementById('previewBtnSampleSecondary');
     if (btnSec) {
         btnSec.style.backgroundColor = btnSecondaryBg;
-        btnSec.style.color = btnSecondaryText;
-        btnSec.style.borderColor = btnSecondaryBorder;
+        btnSec.style.color = btnSecondaryTxt;
+        btnSec.style.borderColor = borderColor;
         btnSec.style.borderRadius = radius;
+    }
+
+    const btnHover = document.getElementById('previewBtnHoverSample');
+    if (btnHover) {
+        btnHover.style.backgroundColor = btnHoverColor;
+        btnHover.style.borderColor = btnHoverColor;
+        btnHover.style.color = getContrastColor(btnHoverColor);
+        btnHover.style.borderRadius = radius;
     }
 }
 
 function resetToThemeDefaults() {
-    if (!confirm('Deseja realmente restaurar os padrões visuais originais da DIVINIUM (Prata Nobre & Noir)? Quaisquer alterações não salvas serão substituídas.')) {
+    if (!confirm('Deseja restaurar todas as 17 cores da Identidade Visual DIVINIUM aos valores iniciais?')) {
         return;
     }
-    setQuickColor('custom_color_bg', 'picker_bg', '#F8F8F7');
-    setQuickColor('custom_color_bg_alt', 'picker_bg_alt', '#F0F0EF');
-    setQuickColor('custom_color_surface', 'picker_surface', '#FFFFFF');
-    setQuickColor('custom_color_surface_box', 'picker_surface_box', '#FFFFFF');
-    setQuickColor('custom_color_title', 'picker_title', '#202020');
-    setQuickColor('custom_color_subtitle', 'picker_subtitle', '#686868');
-    setQuickColor('custom_color_text', 'picker_text', '#202020');
-    setQuickColor('custom_color_text_muted', 'picker_text_muted', '#686868');
-    setQuickColor('custom_color_icon_decor', 'picker_icon_decor', '#A7ADB4');
-    setQuickColor('custom_color_icon_nav', 'picker_icon_nav', '#202020');
-    setQuickColor('custom_color_link', 'picker_link', '#202020');
-    setQuickColor('custom_color_link_hover', 'picker_link_hover', '#737B85');
-    setQuickColor('custom_color_btn_primary_bg', 'picker_btn_primary_bg', '#A7ADB4');
-    setQuickColor('custom_color_btn_primary_text', 'picker_btn_primary_text', '#202020');
-    setQuickColor('custom_color_btn_primary_border', 'picker_btn_primary_border', '#737B85');
-    setQuickColor('custom_color_btn_secondary_bg', 'picker_btn_secondary_bg', '#F0F0EF');
-    setQuickColor('custom_color_btn_secondary_text', 'picker_btn_secondary_text', '#202020');
-    setQuickColor('custom_color_btn_secondary_border', 'picker_btn_secondary_border', '#CBD0D6');
-    setQuickColor('custom_color_border', 'picker_border', '#737B85');
-    setQuickColor('custom_color_focus_ring', 'picker_focus_ring', '#737B85');
-    setQuickColor('custom_color_success', 'picker_success', '#2E7D32');
-    setQuickColor('custom_color_warning', 'picker_warning', '#D97706');
-    setQuickColor('custom_color_error', 'picker_error', '#DC2626');
-
-    document.getElementById('custom_font_serif').value = "'Cormorant Garamond', Georgia, serif";
-    document.getElementById('custom_border_radius').value = '8px';
-
+    Object.keys(DIVINIUM_INITIAL_PALETTE).forEach(key => {
+        const cfg = DIVINIUM_INITIAL_PALETTE[key];
+        setQuickColor(key, cfg.picker, cfg.initial);
+    });
     updateCustomPreview();
 }
 
@@ -1314,6 +1070,12 @@ async function handleCustomThemeSubmit(e) {
     const payload = {};
     formData.forEach((v, k) => { payload[k] = v; });
 
+    const btnTop = document.getElementById('btnSavePaletteMain');
+    const btnBottom = document.getElementById('btnSavePaletteBottom');
+    const feedback = document.getElementById('paletteSaveFeedback');
+    if (btnTop) { btnTop.disabled = true; btnTop.innerHTML = '<span>Salvando...</span>'; }
+    if (btnBottom) { btnBottom.disabled = true; btnBottom.innerHTML = '<span>Salvando...</span>'; }
+
     try {
         const res = await fetch('/admin/temas/salvar-custom', {
             method: 'POST',
@@ -1327,16 +1089,22 @@ async function handleCustomThemeSubmit(e) {
         });
         const data = await res.json();
         if (data.success) {
-            alert(data.message || 'Cores e identidade visual salvas com sucesso!');
+            if (feedback) {
+                feedback.textContent = '✓ ' + (data.message || 'Paleta Identidade Visual DIVINIUM salva e aplicada com sucesso!');
+                feedback.style.color = '#4ade80';
+            }
+            alert(data.message || 'Paleta Identidade Visual DIVINIUM salva e aplicada com sucesso!');
             window.location.reload();
         } else {
-            alert(data.error || 'Erro ao salvar tema personalizado.');
+            alert(data.error || 'Erro ao salvar a paleta.');
         }
     } catch (err) {
         alert('Erro ao conectar ao servidor: ' + err.message);
+    } finally {
+        if (btnTop) { btnTop.disabled = false; btnTop.innerHTML = '<span>Salvar e Aplicar Paleta</span>'; }
+        if (btnBottom) { btnBottom.disabled = false; btnBottom.innerHTML = '<span>Salvar e Aplicar Paleta</span>'; }
     }
 }
-
 // ==============================================================================
 // GESTÃO DE FUNDOS & TEXTURAS (11 ÁREAS COM MODOS MUTUAMENTE EXCLUSIVOS)
 // ==============================================================================

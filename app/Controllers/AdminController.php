@@ -2245,74 +2245,29 @@ class AdminController
             session_start();
         }
 
-        $defaultTheme = \App\Models\Setting::get('default_theme', 'theme-silver-noir');
+        $defaultTheme = 'identidade-visual-divinium';
         $customThemeSettings = \App\Models\Setting::getAll();
 
         $themesList = [
             [
-                'id' => 'theme-silver-noir',
-                'name' => 'Prata Nobre & Noir',
-                'subtitle' => 'Clássico Minimalista',
-                'description' => 'Elegância minimalista e sofisticada com branco perolado, preto suave, prata fosca e realces grafite. Uma joalheria de luxo discreto.',
-                'primary_color' => '#A7ADB4',
-                'accent_color' => '#737B85',
-                'bg_color' => '#F8F8F7',
-                'surface_color' => '#FFFFFF',
-                'text_color' => '#202020',
-                'text_muted' => '#686868',
-                'badge' => 'Clássico Minimalista',
-                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #A7ADB4 50%, #737B85 100%)',
-                'is_default' => in_array($defaultTheme, ['theme-silver-noir', 'theme-gold'], true)
-            ],
-            [
-                'id' => 'theme-pearl-platinum',
-                'name' => 'Branco Perolado & Platina',
-                'subtitle' => 'Quiet Luxury',
-                'description' => 'Minimalismo luminoso com superfícies brancas, detalhes em prata fosca e tipografia refinada em preto suave.',
-                'primary_color' => '#A7ADB4',
-                'accent_color' => '#737B85',
-                'bg_color' => '#FFFFFF',
-                'surface_color' => '#FFFFFF',
-                'text_color' => '#202020',
-                'text_muted' => '#686868',
-                'badge' => 'Quiet Luxury',
-                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #CBD0D6 50%, #737B85 100%)',
-                'is_default' => in_array($defaultTheme, ['theme-pearl-platinum', 'theme-silver'], true)
-            ],
-            [
-                'id' => 'theme-nude-pearl',
-                'name' => 'Pérola Pura & Prata',
-                'subtitle' => 'Monocromático Nobre',
-                'description' => 'Harmonia impecável de branco perolado, prata escovada e contraste preciso para destacar as joias com absoluta pureza.',
-                'primary_color' => '#A7ADB4',
-                'accent_color' => '#737B85',
-                'bg_color' => '#F8F8F7',
-                'surface_color' => '#FFFFFF',
-                'text_color' => '#202020',
-                'text_muted' => '#686868',
-                'badge' => 'Monocromático Nobre',
-                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #A7ADB4 50%, #202020 100%)',
-                'is_default' => in_array($defaultTheme, ['theme-nude-pearl', 'theme-emerald'], true)
-            ],
-            [
-                'id' => 'theme-contemporary-graphite',
-                'name' => 'Prata & Grafite Contemporâneo',
-                'subtitle' => 'Contemporâneo',
-                'description' => 'Estética moderna e arquitetônica com fundo cinza muito claro, superfícies brancas e acabamento em prata fosca e grafite.',
-                'primary_color' => '#A7ADB4',
-                'accent_color' => '#737B85',
-                'bg_color' => '#F0F0EF',
-                'surface_color' => '#FFFFFF',
-                'text_color' => '#202020',
-                'text_muted' => '#686868',
-                'badge' => 'Contemporâneo',
-                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #A7ADB4 50%, #252525 100%)',
-                'is_default' => in_array($defaultTheme, ['theme-contemporary-graphite', 'theme-rose'], true)
+                'id' => 'identidade-visual-divinium',
+                'name' => 'Identidade Visual DIVINIUM',
+                'subtitle' => 'Paleta Oficial Personalizável',
+                'description' => 'Paleta única da DIVINIUM, totalmente personalizável pelo painel administrativo.',
+                'primary_color' => $customThemeSettings['custom_color_primary'] ?? '#171717',
+                'accent_color' => $customThemeSettings['custom_color_accent'] ?? '#A7ADB4',
+                'bg_color' => $customThemeSettings['custom_color_bg'] ?? '#FFFFFF',
+                'surface_color' => $customThemeSettings['custom_color_surface'] ?? '#FFFFFF',
+                'text_color' => $customThemeSettings['custom_color_text'] ?? '#555555',
+                'text_muted' => $customThemeSettings['custom_color_text_muted'] ?? '#777777',
+                'badge' => 'Identidade Visual DIVINIUM',
+                'gradient' => 'linear-gradient(135deg, #FFFFFF 0%, #A7ADB4 50%, #171717 100%)',
+                'is_default' => true
             ]
         ];
 
         View::render('admin/themes', [
-            'pageTitle' => 'Gestão de Temas & Identidade Visual | Divinium',
+            'pageTitle' => 'Identidade Visual DIVINIUM | Editor de Paleta',
             'adminUser' => $_SESSION['admin_user'] ?? ['name' => 'Administrador', 'email' => 'admin@divinium.com.br'],
             'defaultTheme' => $defaultTheme,
             'themes' => $themesList,
@@ -2325,38 +2280,55 @@ class AdminController
      */
     public function saveDefaultTheme(): void
     {
-        $theme = trim((string) ($_POST['theme_id'] ?? 'theme-silver-noir'));
-        $allowed = [
-            'theme-silver-noir', 'theme-pearl-platinum', 'theme-nude-pearl', 'theme-contemporary-graphite',
-            'theme-gold', 'theme-silver', 'theme-emerald', 'theme-rose', 'theme-custom'
-        ];
-        if (!in_array($theme, $allowed, true)) {
-            $this->respond(['success' => false, 'error' => 'Tema inválido.'], 200);
-            return;
-        }
-
+        $theme = 'identidade-visual-divinium';
         \App\Models\Setting::set('default_theme', $theme);
         $this->respond([
             'success' => true,
-            'message' => 'Tema padrão do site atualizado com sucesso!'
+            'message' => 'Identidade Visual DIVINIUM definida como padrão!'
         ]);
     }
 
     /**
-     * Salvar Personalização da Paleta de Cores Customizada
+     * Salvar Personalização da Paleta Identidade Visual DIVINIUM
      */
     public function saveCustomTheme(): void
     {
         try {
+            if (!empty($_POST['divinium_single_palette_saved'])) {
+                $_POST['default_theme'] = 'identidade-visual-divinium';
+
+                // Sincroniza tokens de tema da paleta única sem sobrescrever controles próprios de componentes
+                if (isset($_POST['custom_color_bg'])) {
+                    $_POST['site_bg_color'] = $_POST['custom_color_bg'];
+                }
+                if (isset($_POST['custom_color_section_bg'])) {
+                    $_POST['custom_color_surface_box'] = $_POST['custom_color_section_bg'];
+                }
+                if (isset($_POST['custom_color_text_muted'])) {
+                    $_POST['custom_color_subtitle'] = $_POST['custom_color_text_muted'];
+                }
+                if (isset($_POST['custom_color_accent'])) {
+                    $_POST['custom_color_icon_decor'] = $_POST['custom_color_accent'];
+                }
+                if (isset($_POST['custom_color_border'])) {
+                    $_POST['custom_color_border_subtle'] = $_POST['custom_color_border'];
+                    $_POST['custom_color_btn_secondary_border'] = $_POST['custom_color_border'];
+                }
+                if (isset($_POST['custom_color_btn_hover'])) {
+                    $_POST['custom_color_link_hover'] = $_POST['custom_color_btn_hover'];
+                    $_POST['custom_color_btn_primary_border'] = $_POST['custom_color_btn_hover'];
+                }
+            }
+
             \App\Models\Setting::setMany($_POST);
             $this->respond([
                 'success' => true,
-                'message' => 'Paleta personalizada e identidade visual gravadas com sucesso!'
+                'message' => 'Paleta Identidade Visual DIVINIUM salva e aplicada com sucesso!'
             ]);
         } catch (\Throwable $e) {
             $this->respond([
                 'success' => false,
-                'error' => 'Erro ao salvar tema personalizado: ' . $e->getMessage()
+                'error' => 'Erro ao salvar paleta: ' . $e->getMessage()
             ], 200);
         }
     }
