@@ -414,36 +414,36 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                    <button type="button" class="btn-admin-cancel" style="background: #141312; border: 1px solid rgba(202,161,92,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
+                    <button type="button" class="btn-admin-cancel" style="background: #F8F8F7; border: 1px solid #A7ADB4; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('gold')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #CBD0D6; border: 1px solid #fff;"></span>
-                            <strong style="color: #CBD0D6; font-size: 0.84rem;">Noir Ateliê Ouro</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #202020;"></span>
+                            <strong style="color: #202020; font-size: 0.84rem;">Pérola & Prata Noir (Padrão)</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #252525 • Ouro #A7ADB4</span>
+                        <span style="font-size: 0.72rem; color: #686868;">Fundo #F8F8F7 • Prata #A7ADB4</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #1e1e1d; border: 1px solid rgba(255,255,255,0.2); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
+                    <button type="button" class="btn-admin-cancel" style="background: #FFFFFF; border: 1px solid #CBD0D6; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('silver')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 1px solid #CBD0D6;"></span>
-                            <strong style="color: #ffffff; font-size: 0.84rem;">Marfim & Banho de Prata</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #737B85;"></span>
+                            <strong style="color: #202020; font-size: 0.84rem;">Branco Puro & Platina</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #FBF9F5 • Prata #FFFFFF</span>
+                        <span style="font-size: 0.72rem; color: #686868;">Fundo #FFFFFF • Prata #A7ADB4</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #18120e; border: 1px solid rgba(212,139,96,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('rose')">
+                    <button type="button" class="btn-admin-cancel" style="background: #F0F0EF; border: 1px solid #737B85; text-align: left; padding: 10px 14px;" onclick="applyThemePalette('rose')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #d48b60; border: 1px solid #fff;"></span>
-                            <strong style="color: #d48b60; font-size: 0.84rem;">Terracota & Aço</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #737B85; border: 1px solid #202020;"></span>
+                            <strong style="color: #202020; font-size: 0.84rem;">Platina & Grafite Suave</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #120D0A • Terracota #D48B60</span>
+                        <span style="font-size: 0.72rem; color: #686868;">Fundo #F0F0EF • Prata #A7ADB4</span>
                     </button>
 
-                    <button type="button" class="btn-admin-cancel" style="background: #091710; border: 1px solid rgba(56,161,105,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('emerald')">
+                    <button type="button" class="btn-admin-cancel" style="background: #252525; border: 1px solid rgba(167,173,180,0.4); text-align: left; padding: 10px 14px;" onclick="applyThemePalette('emerald')">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #38a169; border: 1px solid #fff;"></span>
-                            <strong style="color: #38a169; font-size: 0.84rem;">Esmeralda Imperial</strong>
+                            <span style="width: 14px; height: 14px; border-radius: 50%; background: #A7ADB4; border: 1px solid #fff;"></span>
+                            <strong style="color: #FFFFFF; font-size: 0.84rem;">Noir Grafite & Prata</strong>
                         </div>
-                        <span style="font-size: 0.72rem; color: #8e8880;">Fundo #06130D • Esmeralda #38A169</span>
+                        <span style="font-size: 0.72rem; color: #A7ADB4;">Fundo #252525 • Prata #A7ADB4</span>
                     </button>
                 </div>
             </div>
@@ -458,14 +458,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
             <div class="form-grid" style="margin-bottom: 24px;">
                 <!-- Fundo Base Global -->
                 <div class="form-group">
-                    <label for="lp_custom_color_bg">Fundo Base Global (Dark Noir)</label>
+                    <label for="lp_custom_color_bg">Fundo Base Global (Branco Perolado)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_bg" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
                                oninput="document.getElementById('lp_custom_color_bg').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_bg" name="custom_color_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_bg', '#252525')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_bg').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Aplica-se ao fundo de todas as páginas da loja (Home, Boutique, Produto, Checkout, etc.)</span>
@@ -476,19 +476,19 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_surface">Superfície dos Cards & Caixas</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_surface" 
-                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#FFFFFF')) ?>" 
                                oninput="document.getElementById('lp_custom_color_surface').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_surface" name="custom_color_surface" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_surface', '#141312')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_surface', '#FFFFFF')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_surface').value = this.value; updateThemeColorsLivePreview();">
                     </div>
                     <span class="field-hint">Aplica-se às caixas de produtos, formulários e fichas técnicas.</span>
                 </div>
 
-                <!-- Cor Primária Ouro -->
+                <!-- Cor Primária Prata Fosca -->
                 <div class="form-group">
-                    <label for="lp_custom_color_primary">Cor Primária (Ouro / Botões Principais)</label>
+                    <label for="lp_custom_color_primary">Cor Primária (Prata Fosca / Botões Principais)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_primary" 
                                value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
@@ -498,7 +498,7 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                                value="<?= View::e(Setting::get('custom_color_primary', '#A7ADB4')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_primary').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Define o tom dos botões de compra, títulos e detalhes nobres.</span>
+                    <span class="field-hint">Define o tom dos botões de compra e detalhes nobres em prata fosca.</span>
                 </div>
 
                 <!-- Cor de Realce -->
@@ -506,14 +506,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_accent">Cor de Realce (Hover & Acentos)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_accent" 
-                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#737B85')) ?>" 
                                oninput="document.getElementById('lp_custom_color_accent').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_accent" name="custom_color_accent" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_accent', '#E0C080')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_accent', '#737B85')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_accent').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Brilho dourado ao passar o cursor do mouse sobre links e botões.</span>
+                    <span class="field-hint">Cinza-prata escuro ao passar o cursor do mouse sobre links e botões.</span>
                 </div>
 
                 <!-- Texto Principal -->
@@ -521,14 +521,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_text">Texto Principal (Leitura & Títulos)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_text" 
-                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#202020')) ?>" 
                                oninput="document.getElementById('lp_custom_color_text').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_text" name="custom_color_text" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_text', '#F4EFEA')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text', '#202020')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Cor dos títulos e corpo de texto principal.</span>
+                    <span class="field-hint">Cor dos títulos e corpo de texto principal (#202020).</span>
                 </div>
 
                 <!-- Texto Suave -->
@@ -536,14 +536,14 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="lp_custom_color_text_muted">Texto Suave (Secundário / Legendas)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="picker_lp_color_text_muted" 
-                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#686868')) ?>" 
                                oninput="document.getElementById('lp_custom_color_text_muted').value = this.value; updateThemeColorsLivePreview();"
                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                         <input type="text" id="lp_custom_color_text_muted" name="custom_color_text_muted" class="form-input" 
-                               value="<?= View::e(Setting::get('custom_color_text_muted', '#9E978E')) ?>" 
+                               value="<?= View::e(Setting::get('custom_color_text_muted', '#686868')) ?>" 
                                oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('picker_lp_color_text_muted').value = this.value; updateThemeColorsLivePreview();">
                     </div>
-                    <span class="field-hint">Legendas, especificações técnicas e notas de rodapé.</span>
+                    <span class="field-hint">Legendas, subtítulos e especificações técnicas (#686868).</span>
                 </div>
             </div>
 
@@ -645,18 +645,18 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                             <label for="lp_site_bg_color" style="font-size: 0.8rem; font-weight: 700; color: #CBD0D6; margin: 0; text-transform: uppercase; letter-spacing: 0.04em;">
                                 🎨 Cor de Fundo Base do Site:
                             </label>
-                            <button type="button" class="btn-admin-cancel" style="padding: 2px 8px; font-size: 0.7rem;" onclick="document.getElementById('lp_site_bg_color').value = ''; document.getElementById('picker_site_bg_color').value = '#252525'; updateThemeColorsLivePreview();">
+                            <button type="button" class="btn-admin-cancel" style="padding: 2px 8px; font-size: 0.7rem;" onclick="document.getElementById('lp_site_bg_color').value = ''; document.getElementById('picker_site_bg_color').value = '#F8F8F7'; updateThemeColorsLivePreview();">
                                 ✕ Limpar / Herdar Padrão
                             </button>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <input type="color" id="picker_site_bg_color" 
-                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
+                                   value="<?= View::e(Setting::get('site_bg_color', '') ?: Setting::get('custom_color_bg', '#F8F8F7')) ?>" 
                                    oninput="document.getElementById('lp_site_bg_color').value = this.value; updateThemeColorsLivePreview();"
                                    style="width: 48px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;">
                             <input type="text" id="lp_site_bg_color" name="site_bg_color" class="form-input" 
-                                   value="<?= View::e(Setting::get('site_bg_color', Setting::get('custom_color_bg', '#252525'))) ?>" 
-                                   placeholder="Ex: #F8F8F7 ou #252525"
+                                   value="<?= View::e(Setting::get('site_bg_color', '')) ?>" 
+                                   placeholder="Vazio = herda #F8F8F7 (Branco Perolado)"
                                    oninput="if(this.value.startsWith('#') && (this.value.length === 4 || this.value.length === 7)) document.getElementById('picker_site_bg_color').value = this.value; updateThemeColorsLivePreview();">
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
@@ -2195,27 +2195,27 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_text_color">Cor dos Parágrafos / Textos</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_text_color_picker" 
-                               value="<?= Setting::get('about_text_color', '#ded7cf') ?>" 
+                               value="<?= Setting::get('about_text_color', '#E2E4E7') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_text_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_text_color" name="about_text_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_text_color', '#ded7cf')) ?>" 
-                               placeholder="#ded7cf"
+                               value="<?= View::e(Setting::get('about_text_color', '#E2E4E7')) ?>" 
+                               placeholder="#E2E4E7"
                                oninput="if(this.value.length===7){document.getElementById('about_text_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor dos parágrafos descritivos da história.</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="about_accent_color">Cor de Destaque / Ouro (Citação & Detalhes)</label>
+                    <label for="about_accent_color">Cor de Destaque / Prata (Citação & Detalhes)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_accent_color_picker" 
-                               value="<?= Setting::get('about_accent_color', '#CBD0D6') ?>" 
+                               value="<?= Setting::get('about_accent_color', '#A7ADB4') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_accent_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_accent_color" name="about_accent_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_accent_color', '#CBD0D6')) ?>" 
-                               placeholder="#CBD0D6"
+                               value="<?= View::e(Setting::get('about_accent_color', '#A7ADB4')) ?>" 
+                               placeholder="#A7ADB4"
                                oninput="if(this.value.length===7){document.getElementById('about_accent_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor da citação poética em itálico e toques nobres.</span>
@@ -2225,12 +2225,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_tag_color">Cor da Tag / Selo Superior</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_tag_color_picker" 
-                               value="<?= Setting::get('about_tag_color', '#CBD0D6') ?>" 
+                               value="<?= Setting::get('about_tag_color', '#A7ADB4') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_tag_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_tag_color" name="about_tag_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_tag_color', '#CBD0D6')) ?>" 
-                               placeholder="#CBD0D6"
+                               value="<?= View::e(Setting::get('about_tag_color', '#A7ADB4')) ?>" 
+                               placeholder="#A7ADB4"
                                oninput="if(this.value.length===7){document.getElementById('about_tag_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do selo 'MANIFESTO DIVINIUM' acima do título.</span>
@@ -2240,12 +2240,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_btn_color">Cor do Botão de Ação (Borda & Texto)</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_btn_color_picker" 
-                               value="<?= Setting::get('about_btn_color', '#CBD0D6') ?>" 
+                               value="<?= Setting::get('about_btn_color', '#A7ADB4') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_btn_color').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_btn_color" name="about_btn_color" class="form-input" 
-                               value="<?= View::e(Setting::get('about_btn_color', '#CBD0D6')) ?>" 
-                               placeholder="#CBD0D6"
+                               value="<?= View::e(Setting::get('about_btn_color', '#A7ADB4')) ?>" 
+                               placeholder="#A7ADB4"
                                oninput="if(this.value.length===7){document.getElementById('about_btn_color_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor do botão 'Conheça Nossa História'.</span>
@@ -2255,12 +2255,12 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_card_bg">Fundo do Card da Miniatura Macro</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color" id="about_card_bg_picker" 
-                               value="<?= Setting::get('about_card_bg', '#161513') ?>" 
+                               value="<?= Setting::get('about_card_bg', '#202020') ?>" 
                                style="width: 42px; height: 38px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px;"
                                oninput="document.getElementById('about_card_bg').value = this.value; updateAboutLivePreview();">
                         <input type="text" id="about_card_bg" name="about_card_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('about_card_bg', '#161513')) ?>" 
-                               placeholder="#161513"
+                               value="<?= View::e(Setting::get('about_card_bg', '#202020')) ?>" 
+                               placeholder="#202020"
                                oninput="if(this.value.length===7){document.getElementById('about_card_bg_picker').value=this.value;} updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Cor de fundo do card de textura mineral.</span>
@@ -2270,19 +2270,19 @@ $renderButtonEditor = function(string $btnKey, array $options = []) use ($render
                     <label for="about_card_border">Borda do Card da Miniatura Macro</label>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="text" id="about_card_border" name="about_card_border" class="form-input" 
-                               value="<?= View::e(Setting::get('about_card_border', 'rgba(212, 186, 136, 0.25)')) ?>" 
-                               placeholder="rgba(212, 186, 136, 0.25)"
+                               value="<?= View::e(Setting::get('about_card_border', 'rgba(167, 173, 180, 0.25)')) ?>" 
+                               placeholder="rgba(167, 173, 180, 0.25)"
                                oninput="updateAboutLivePreview();">
                     </div>
-                    <span class="field-hint">Ex: rgba(212, 186, 136, 0.25) ou #332d24.</span>
+                    <span class="field-hint">Ex: rgba(167, 173, 180, 0.25) ou #333333.</span>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="about_caption_bg">Fundo da Legenda Editorial da Foto</label>
                     <div style="display: flex; gap: 8px; align-items: center; max-width: 450px;">
                         <input type="text" id="about_caption_bg" name="about_caption_bg" class="form-input" 
-                               value="<?= View::e(Setting::get('about_caption_bg', 'rgba(18, 17, 16, 0.85)')) ?>" 
-                               placeholder="rgba(18, 17, 16, 0.85)"
+                               value="<?= View::e(Setting::get('about_caption_bg', 'rgba(37, 37, 37, 0.85)')) ?>" 
+                               placeholder="rgba(37, 37, 37, 0.85)"
                                oninput="updateAboutLivePreview();">
                     </div>
                     <span class="field-hint">Fundo translúcido da barra inferior da foto editorial lateral.</span>
@@ -7281,36 +7281,36 @@ function checkInitialEditorTab() {
 function applyThemePalette(themeName) {
     const palettes = {
         'gold': {
-            bg: '#252525',
-            surface: '#141312',
+            bg: '#F8F8F7',
+            surface: '#FFFFFF',
             primary: '#A7ADB4',
-            accent: '#E0C080',
-            text: '#F4EFEA',
-            textMuted: '#9E978E'
+            accent: '#737B85',
+            text: '#202020',
+            textMuted: '#686868'
         },
         'silver': {
-            bg: '#FBF9F5',
+            bg: '#FFFFFF',
             surface: '#FFFFFF',
-            primary: '#1A1918',
-            accent: '#8A8782',
-            text: '#1A1918',
-            textMuted: '#6B665F'
+            primary: '#A7ADB4',
+            accent: '#737B85',
+            text: '#202020',
+            textMuted: '#686868'
         },
         'rose': {
-            bg: '#120D0A',
-            surface: '#1C1510',
-            primary: '#D48B60',
-            accent: '#E5A882',
-            text: '#F9F4F0',
-            textMuted: '#A89990'
+            bg: '#F0F0EF',
+            surface: '#FFFFFF',
+            primary: '#A7ADB4',
+            accent: '#737B85',
+            text: '#202020',
+            textMuted: '#686868'
         },
         'emerald': {
-            bg: '#06130D',
-            surface: '#0D2018',
-            primary: '#38A169',
-            accent: '#68D391',
-            text: '#EBF8F2',
-            textMuted: '#8BA698'
+            bg: '#252525',
+            surface: '#1A1C1E',
+            primary: '#A7ADB4',
+            accent: '#CBD0D6',
+            text: '#FFFFFF',
+            textMuted: '#CBD0D6'
         }
     };
 
@@ -7335,10 +7335,10 @@ function applyThemePalette(themeName) {
 }
 
 function updateThemeColorsLivePreview() {
-    const bgVal = document.getElementById('lp_site_bg_color')?.value || document.getElementById('lp_custom_color_bg')?.value || '#252525';
-    const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#141312';
-    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#CBD0D6';
-    const textVal = document.getElementById('lp_custom_color_text')?.value || '#ffffff';
+    const bgVal = document.getElementById('lp_site_bg_color')?.value || document.getElementById('lp_custom_color_bg')?.value || '#F8F8F7';
+    const surfaceVal = document.getElementById('lp_custom_color_surface')?.value || '#FFFFFF';
+    const primaryVal = document.getElementById('lp_custom_color_primary')?.value || '#A7ADB4';
+    const textVal = document.getElementById('lp_custom_color_text')?.value || '#202020';
     const imgVal = document.getElementById('lp_site_bg_image')?.value?.trim() || '';
     const overlayVal = parseFloat(document.getElementById('lp_site_bg_overlay')?.value || '0.75');
     const repeatVal = document.getElementById('lp_site_bg_repeat')?.value || 'cover';

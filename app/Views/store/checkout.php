@@ -96,118 +96,19 @@ $waDesc = Setting::get('checkout_wa_instructions_text', 'Ao avançar, nossa equi
 $cardTitle = Setting::get('checkout_card_instructions_title', 'Cartão de Crédito com Parcelamento Sem Juros');
 $cardDesc = Setting::get('checkout_card_instructions_text', 'Você será direcionado para o gateway seguro homologado da Divinium para inserção protegida dos dados do cartão em até 10x.');
 
-// Controles Individuais Avançados dos Botões do Checkout
+// Controles de Textos e Visibilidade dos Botões do Checkout (Padrão 22a9aa6)
 $btnCepVisible = Setting::get('checkout_btn_cep_visible', '1') === '1';
 $btnCepText = Setting::get('checkout_btn_cep_text', Setting::get('checkout_btn_search_cep', 'Buscar'));
-$btnCepBg = Setting::get('checkout_btn_cep_bg', '');
-$btnCepColor = Setting::get('checkout_btn_cep_color', '');
-$btnCepBorder = Setting::get('checkout_btn_cep_border', '');
-$btnCepIcon = Setting::get('checkout_btn_cep_icon', 'search');
-$btnCepIconColor = Setting::get('checkout_btn_cep_icon_color', '#737B85');
-$btnCepRadius = Setting::get('checkout_btn_cep_radius', '');
-$btnCepShadow = Setting::get('checkout_btn_cep_shadow', 'none');
 
 $btnPixVisible = Setting::get('checkout_btn_pix_visible', '1') === '1';
 $btnPixText = Setting::get('checkout_btn_pix_text', Setting::get('checkout_btn_copy_pix', 'Copiar Chave'));
-$btnPixBg = Setting::get('checkout_btn_pix_bg', '');
-$btnPixColor = Setting::get('checkout_btn_pix_color', '');
-$btnPixBorder = Setting::get('checkout_btn_pix_border', '');
-$btnPixIcon = Setting::get('checkout_btn_pix_icon', 'copy');
-$btnPixIconColor = Setting::get('checkout_btn_pix_icon_color', '#202020');
-$btnPixRadius = Setting::get('checkout_btn_pix_radius', '');
-$btnPixShadow = Setting::get('checkout_btn_pix_shadow', 'subtle');
 
 $btnSubmitVisible = Setting::get('checkout_btn_submit_visible', '1') === '1';
 $btnSubmitText = Setting::get('checkout_btn_submit_text', 'Confirmar Pedido & Continuar');
-$btnSubmitBg = Setting::get('checkout_btn_submit_bg', '');
-$btnSubmitColor = Setting::get('checkout_btn_submit_color', '');
-$btnSubmitBorder = Setting::get('checkout_btn_submit_border', '');
-$btnSubmitIcon = Setting::get('checkout_btn_submit_icon', 'arrow-right');
-$btnSubmitIconColor = Setting::get('checkout_btn_submit_icon_color', '#202020');
-$btnSubmitRadius = Setting::get('checkout_btn_submit_radius', '');
-$btnSubmitShadow = Setting::get('checkout_btn_submit_shadow', 'noble');
 
 $returnStoreVisible = Setting::get('checkout_return_store_visible', '1') === '1';
 $returnStoreText = Setting::get('checkout_return_store_text', '← Escolher mais joias na boutique');
 $returnStoreUrl = Setting::get('checkout_return_store_url', '/loja');
-$returnStoreBg = Setting::get('checkout_return_store_bg', '');
-$returnStoreColor = Setting::get('checkout_return_store_color', '');
-$returnStoreBorder = Setting::get('checkout_return_store_border', '');
-$returnStoreIcon = Setting::get('checkout_return_store_icon', 'none');
-$returnStoreIconColor = Setting::get('checkout_return_store_icon_color', '#737B85');
-$returnStoreRadius = Setting::get('checkout_return_store_radius', '');
-$returnStoreShadow = Setting::get('checkout_return_store_shadow', 'none');
-
-$checkoutShadowMap = [
-    'none' => 'none',
-    'subtle' => '0 2px 8px rgba(0,0,0,0.06)',
-    'noble' => '0 4px 16px rgba(0,0,0,0.12)',
-    'glow' => '0 0 18px rgba(203, 208, 214, 0.45)',
-    'flat' => 'none',
-];
-
-$renderCheckoutBtnIcon = function($iconKey, $iconColor) {
-    if (!$iconKey || $iconKey === 'none') return '';
-    $style = 'color: ' . View::e($iconColor) . '; display: inline-flex; align-items: center; justify-content: center;';
-    switch ($iconKey) {
-        case 'search':
-        case '🔍':
-            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
-        case 'copy':
-        case '📋':
-            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-        case 'arrow-right':
-        case '→':
-            return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-left: 6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
-        case 'arrow-left':
-        case '←':
-            return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 6px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
-        case 'bag':
-        case '🛍️':
-            return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' . View::e($iconColor) . '" stroke-width="2" style="margin-right: 5px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
-        case 'whatsapp':
-        case '💬':
-            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">💬</span>';
-        case 'instagram':
-        case '📷':
-            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">📷</span>';
-        case 'mail':
-        case '✉️':
-            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">✉️</span>';
-        case 'sparkle':
-        case '✦':
-            return '<span style="' . $style . ' font-size: 1rem; margin-right: 5px;">✦</span>';
-        default:
-            return '<span style="' . $style . ' margin-right: 5px;">' . View::e($iconKey) . '</span>';
-    }
-};
-
-$btnCepInline = [];
-if (!empty($btnCepBg) && $btnCepBg !== '#202020') $btnCepInline[] = 'background: ' . View::e($btnCepBg) . ' !important';
-if (!empty($btnCepColor) && $btnCepColor !== '#FFFFFF') $btnCepInline[] = 'color: ' . View::e($btnCepColor) . ' !important';
-if (!empty($btnCepBorder) && $btnCepBorder !== '#202020') $btnCepInline[] = 'border-color: ' . View::e($btnCepBorder) . ' !important';
-if (!empty($btnCepRadius)) $btnCepInline[] = 'border-radius: ' . View::e($btnCepRadius) . ' !important';
-if (!empty($btnCepShadow) && $btnCepShadow !== 'none') $btnCepInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$btnCepShadow] ?? 'none') . ' !important';
-if (!$btnCepVisible) $btnCepInline[] = 'display: none !important';
-$btnCepStyleAttr = !empty($btnCepInline) ? implode('; ', $btnCepInline) . ';' : '';
-
-$btnSubmitInline = [];
-if (!empty($btnSubmitBg) && $btnSubmitBg !== '#202020') $btnSubmitInline[] = 'background: ' . View::e($btnSubmitBg) . ' !important';
-if (!empty($btnSubmitColor) && $btnSubmitColor !== '#FFFFFF') $btnSubmitInline[] = 'color: ' . View::e($btnSubmitColor) . ' !important';
-if (!empty($btnSubmitBorder) && $btnSubmitBorder !== '#202020') $btnSubmitInline[] = 'border-color: ' . View::e($btnSubmitBorder) . ' !important';
-if (!empty($btnSubmitRadius)) $btnSubmitInline[] = 'border-radius: ' . View::e($btnSubmitRadius) . ' !important';
-if (!empty($btnSubmitShadow) && $btnSubmitShadow !== 'none' && $btnSubmitShadow !== 'noble') $btnSubmitInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$btnSubmitShadow] ?? 'none') . ' !important';
-if (!$btnSubmitVisible) $btnSubmitInline[] = 'display: none !important';
-$btnSubmitStyleAttr = !empty($btnSubmitInline) ? implode('; ', $btnSubmitInline) . ';' : '';
-
-$returnStoreInline = [];
-if (!empty($returnStoreBg) && $returnStoreBg !== 'transparent') $returnStoreInline[] = 'background: ' . View::e($returnStoreBg) . ' !important';
-if (!empty($returnStoreColor)) $returnStoreInline[] = 'color: ' . View::e($returnStoreColor) . ' !important';
-if (!empty($returnStoreBorder) && $returnStoreBorder !== 'transparent') $returnStoreInline[] = 'border-color: ' . View::e($returnStoreBorder) . ' !important';
-if (!empty($returnStoreRadius)) $returnStoreInline[] = 'border-radius: ' . View::e($returnStoreRadius) . ' !important';
-if (!empty($returnStoreShadow) && $returnStoreShadow !== 'none') $returnStoreInline[] = 'box-shadow: ' . View::e($checkoutShadowMap[$returnStoreShadow] ?? 'none') . ' !important';
-if (!$returnStoreVisible) $returnStoreInline[] = 'display: none !important';
-$returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreInline) . ';' : '';
 ?>
 
 <div class="checkout-page-container">
@@ -260,10 +161,11 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
                                 <label for="clientCep"><?= View::e($lblClientCep) ?></label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" id="clientCep" name="cep" class="form-input" placeholder="00000-000" maxlength="9" required>
-                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()" style="<?= $btnCepStyleAttr ?>">
-                                        <?= $renderCheckoutBtnIcon($btnCepIcon, $btnCepIconColor) ?>
+                                    <?php if ($btnCepVisible): ?>
+                                    <button type="button" class="btn-calc-cep" id="btnConsultarCep" onclick="consultarCep()">
                                         <span id="btnConsultarCepText"><?= View::e($btnCepText) ?></span>
                                     </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -363,9 +265,11 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
                                         <code id="pixKeyValueDisplay"><?= View::e($pixKey) ?></code>
                                         <small style="display: block; color: var(--text-secondary); margin-top: 2px;">Titular: <?= View::e($pixBeneficiary) ?></small>
                                     </div>
-                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')" style="<?= !$btnPixVisible ? 'display: none !important;' : '' ?>">
+                                    <?php if ($btnPixVisible): ?>
+                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')">
                                         <span id="copyPixBtnText"><?= View::e($btnPixText) ?></span>
                                     </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <?php endif; ?>
@@ -389,10 +293,12 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
                             <?php endif; ?>
                         </div>
 
-                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout" style="<?= $btnSubmitStyleAttr ?>">
-                            <?= $renderCheckoutBtnIcon($btnSubmitIcon, $btnSubmitIconColor) ?>
+                        <?php if ($btnSubmitVisible): ?>
+                        <button type="submit" class="btn-checkout-submit" id="btnSubmitCheckout">
                             <span id="btnSubmitCheckoutText"><?= View::e($btnSubmitText) ?></span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </button>
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>
@@ -452,10 +358,7 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
                     </div>
 
                     <?php if ($returnStoreVisible): ?>
-                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store" style="<?= $returnStoreStyleAttr ?>">
-                        <?= $renderCheckoutBtnIcon($returnStoreIcon, $returnStoreIconColor) ?>
-                        <span><?= View::e($returnStoreText) ?></span>
-                    </a>
+                    <a href="<?= View::e($returnStoreUrl) ?>" class="btn-return-store"><?= View::e($returnStoreText) ?></a>
                     <?php endif; ?>
                 </div>
             </div>
