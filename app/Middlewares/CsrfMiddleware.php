@@ -47,9 +47,9 @@ class CsrfMiddleware
             session_start();
         }
 
-        // Webhooks e tracking APIs utilizam transporte seguro assíncrono, dispensando CSRF
+        // Webhooks, frete e endpoints de API pública assíncrona dispensam CSRF
         $uri = $_SERVER['REQUEST_URI'] ?? '';
-        if (str_starts_with($uri, '/api/webhooks/') || str_starts_with($uri, '/api/track/')) {
+        if (str_starts_with($uri, '/api/webhooks/') || str_starts_with($uri, '/api/track/') || str_starts_with($uri, '/api/frete/') || str_starts_with($uri, '/api/checkout/')) {
             return;
         }
 
