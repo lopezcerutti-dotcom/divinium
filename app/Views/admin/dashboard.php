@@ -71,28 +71,6 @@
         </div>
     </div>
 
-    <!-- MÓDULO 3: EDITOR DA LANDING PAGE -->
-    <div class="exec-module-card" style="border-left: 3px solid #A7ADB4;">
-        <div class="exec-card-top">
-            <div class="exec-card-icon" style="background: rgba(167, 173, 180, 0.12); color: #CBD0D6;">
-                ✎
-            </div>
-            <span style="background: rgba(167, 173, 180, 0.15); color: #FFFFFF; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
-                CMS Ao Vivo
-            </span>
-        </div>
-        <div class="exec-card-body">
-            <h3>Editor de Textos & Landing Page</h3>
-            <p>Edite 100% dos textos do site: cabeçalho, menu, sacola, minerais, serviços, depoimentos, loja e rodapé ao vivo.</p>
-        </div>
-        <div class="exec-card-footer">
-            <span style="font-size: 0.78rem; color: #8e8880;">Atualização instantânea</span>
-            <a href="/admin/landing-page" class="btn-admin-gold" style="padding: 8px 16px; font-size: 0.82rem;">
-                <span>Editar Textos ↗</span>
-            </a>
-        </div>
-    </div>
-
     <!-- MÓDULO 4: INTEGRAÇÃO BLING ERP -->
     <div class="exec-module-card" style="border-left: 3px solid #737B85;">
         <div class="exec-card-top">
