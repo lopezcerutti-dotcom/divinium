@@ -230,14 +230,12 @@
         // -------------------------------------------------------------------------
         // 2. CORES INDEPENDENTES POR FUNÇÃO (NUNCA ACOPLADAS)
         // -------------------------------------------------------------------------
-        $isCustomTheme = ($rawServerTheme === 'theme-custom');
-
         // Fundos & Superfícies
-        $rawBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_bg') : null;
-        $rawSiteBg = $isCustomTheme ? \App\Models\Setting::get('site_bg_color') : null;
-        $rawBgAlt = $isCustomTheme ? \App\Models\Setting::get('custom_color_bg_alt') : null;
-        $rawSurface = $isCustomTheme ? \App\Models\Setting::get('custom_color_surface') : null;
-        $rawSurfaceBox = $isCustomTheme ? \App\Models\Setting::get('custom_color_surface_box') : null;
+        $rawBg = \App\Models\Setting::get('custom_color_bg');
+        $rawSiteBg = \App\Models\Setting::get('site_bg_color');
+        $rawBgAlt = \App\Models\Setting::get('custom_color_bg_alt');
+        $rawSurface = \App\Models\Setting::get('custom_color_surface');
+        $rawSurfaceBox = \App\Models\Setting::get('custom_color_surface_box');
 
         $effBgMain = !empty($rawSiteBg) ? $rawSiteBg : (!empty($rawBg) ? $rawBg : $activeThemeDef['bg']);
         $effBgAlt = !empty($rawBgAlt) ? $rawBgAlt : $activeThemeDef['bg_alt'];
@@ -277,10 +275,10 @@
         $gRgb = $hexToRgb($glowColor, [167, 173, 180]);
 
         // Tipografia Independente
-        $rawTitle = $isCustomTheme ? \App\Models\Setting::get('custom_color_title') : null;
-        $rawSubtitle = $isCustomTheme ? \App\Models\Setting::get('custom_color_subtitle') : null;
-        $rawText = $isCustomTheme ? \App\Models\Setting::get('custom_color_text') : null;
-        $rawTextMuted = $isCustomTheme ? \App\Models\Setting::get('custom_color_text_muted') : null;
+        $rawTitle = \App\Models\Setting::get('custom_color_title');
+        $rawSubtitle = \App\Models\Setting::get('custom_color_subtitle');
+        $rawText = \App\Models\Setting::get('custom_color_text');
+        $rawTextMuted = \App\Models\Setting::get('custom_color_text_muted');
 
         $effTitleColor = !empty($rawTitle) ? $rawTitle : (!empty($rawText) ? $rawText : $activeThemeDef['title']);
         $effSubtitleColor = !empty($rawSubtitle) ? $rawSubtitle : (!empty($rawTextMuted) ? $rawTextMuted : $activeThemeDef['subtitle']);
@@ -288,28 +286,28 @@
         $effTextMuted = !empty($rawTextMuted) ? $rawTextMuted : $activeThemeDef['text_muted'];
 
         // Ícones Independentes
-        $rawIconDecor = $isCustomTheme ? \App\Models\Setting::get('custom_color_icon_decor') : null;
-        $rawIconNav = $isCustomTheme ? \App\Models\Setting::get('custom_color_icon_nav') : null;
-        $rawLegacyPrimary = $isCustomTheme ? \App\Models\Setting::get('custom_color_primary') : null;
+        $rawIconDecor = \App\Models\Setting::get('custom_color_icon_decor');
+        $rawIconNav = \App\Models\Setting::get('custom_color_icon_nav');
+        $rawLegacyPrimary = \App\Models\Setting::get('custom_color_primary');
 
         $effIconDecor = !empty($rawIconDecor) ? $rawIconDecor : (!empty($rawLegacyPrimary) ? $rawLegacyPrimary : $activeThemeDef['icon_decor']);
         $effIconNav = !empty($rawIconNav) ? $rawIconNav : $activeThemeDef['icon_nav'];
 
         // Links Independentes
-        $rawLink = $isCustomTheme ? \App\Models\Setting::get('custom_color_link') : null;
-        $rawLinkHover = $isCustomTheme ? \App\Models\Setting::get('custom_color_link_hover') : null;
-        $rawLegacyAccent = $isCustomTheme ? \App\Models\Setting::get('custom_color_accent') : null;
+        $rawLink = \App\Models\Setting::get('custom_color_link');
+        $rawLinkHover = \App\Models\Setting::get('custom_color_link_hover');
+        $rawLegacyAccent = \App\Models\Setting::get('custom_color_accent');
 
         $effLinkColor = !empty($rawLink) ? $rawLink : $activeThemeDef['link'];
         $effLinkHover = !empty($rawLinkHover) ? $rawLinkHover : (!empty($rawLegacyAccent) ? $rawLegacyAccent : $activeThemeDef['link_hover']);
 
         // Botões Independentes
-        $rawBtnPrimaryBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_bg') : null;
-        $rawBtnPrimaryText = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_text') : null;
-        $rawBtnPrimaryBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_primary_border') : null;
-        $rawBtnSecondaryBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_bg') : null;
-        $rawBtnSecondaryText = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_text') : null;
-        $rawBtnSecondaryBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_btn_secondary_border') : null;
+        $rawBtnPrimaryBg = \App\Models\Setting::get('custom_color_btn_primary_bg');
+        $rawBtnPrimaryText = \App\Models\Setting::get('custom_color_btn_primary_text');
+        $rawBtnPrimaryBorder = \App\Models\Setting::get('custom_color_btn_primary_border');
+        $rawBtnSecondaryBg = \App\Models\Setting::get('custom_color_btn_secondary_bg');
+        $rawBtnSecondaryText = \App\Models\Setting::get('custom_color_btn_secondary_text');
+        $rawBtnSecondaryBorder = \App\Models\Setting::get('custom_color_btn_secondary_border');
 
         $effBtnPrimaryBg = !empty($rawBtnPrimaryBg) ? $rawBtnPrimaryBg : (!empty($rawLegacyPrimary) ? $rawLegacyPrimary : $activeThemeDef['btn_primary_bg']);
         $effBtnPrimaryText = !empty($rawBtnPrimaryText) ? $rawBtnPrimaryText : $calcContrastColor($effBtnPrimaryBg);
@@ -320,59 +318,59 @@
         $effBtnSecondaryBorder = !empty($rawBtnSecondaryBorder) ? $rawBtnSecondaryBorder : $activeThemeDef['btn_secondary_border'];
 
         // Bordas & Divisores
-        $rawBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_border') : null;
-        $rawBorderSubtle = $isCustomTheme ? \App\Models\Setting::get('custom_color_border_subtle') : null;
+        $rawBorder = \App\Models\Setting::get('custom_color_border');
+        $rawBorderSubtle = \App\Models\Setting::get('custom_color_border_subtle');
         $effBorderColor = !empty($rawBorder) ? $rawBorder : $activeThemeDef['border'];
         $effBorderSubtle = !empty($rawBorderSubtle) ? $rawBorderSubtle : $activeThemeDef['border_subtle'];
 
         // Estados Interativos
-        $rawHoverBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_hover_bg') : null;
-        $rawFocusRing = $isCustomTheme ? \App\Models\Setting::get('custom_color_focus_ring') : null;
-        $rawDisabled = $isCustomTheme ? \App\Models\Setting::get('custom_color_disabled') : null;
+        $rawHoverBg = \App\Models\Setting::get('custom_color_hover_bg');
+        $rawFocusRing = \App\Models\Setting::get('custom_color_focus_ring');
+        $rawDisabled = \App\Models\Setting::get('custom_color_disabled');
         $effHoverBg = !empty($rawHoverBg) ? $rawHoverBg : $activeThemeDef['hover_bg'];
         $effFocusRing = !empty($rawFocusRing) ? $rawFocusRing : $activeThemeDef['focus_ring'];
         $effDisabledColor = !empty($rawDisabled) ? $rawDisabled : $activeThemeDef['disabled'];
 
         // Mensagens & Status
-        $effColorSuccess = $isCustomTheme ? \App\Models\Setting::get('custom_color_success', '#2E7D32') : '#2E7D32';
-        $effColorWarning = $isCustomTheme ? \App\Models\Setting::get('custom_color_warning', '#D97706') : '#D97706';
-        $effColorError = $isCustomTheme ? \App\Models\Setting::get('custom_color_error', '#DC2626') : '#DC2626';
+        $effColorSuccess = \App\Models\Setting::get('custom_color_success', '#2E7D32');
+        $effColorWarning = \App\Models\Setting::get('custom_color_warning', '#D97706');
+        $effColorError = \App\Models\Setting::get('custom_color_error', '#DC2626');
 
         // Destaque de Preços e Descontos
-        $rawPrice = $isCustomTheme ? \App\Models\Setting::get('custom_color_price') : null;
-        $rawDiscount = $isCustomTheme ? \App\Models\Setting::get('custom_color_discount') : null;
+        $rawPrice = \App\Models\Setting::get('custom_color_price');
+        $rawDiscount = \App\Models\Setting::get('custom_color_discount');
         $effPriceColor = !empty($rawPrice) ? $rawPrice : $activeThemeDef['title'];
         $effDiscountColor = !empty($rawDiscount) ? $rawDiscount : '#737B85';
 
         // Etiquetas e Badges
-        $rawBadgeBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_bg') : null;
-        $rawBadgeText = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_text') : null;
-        $rawBadgeBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_badge_border') : null;
+        $rawBadgeBg = \App\Models\Setting::get('custom_color_badge_bg');
+        $rawBadgeText = \App\Models\Setting::get('custom_color_badge_text');
+        $rawBadgeBorder = \App\Models\Setting::get('custom_color_badge_border');
         $effBadgeBg = !empty($rawBadgeBg) ? $rawBadgeBg : 'rgba(167, 173, 180, 0.18)';
         $effBadgeText = !empty($rawBadgeText) ? $rawBadgeText : $activeThemeDef['text'];
         $effBadgeBorder = !empty($rawBadgeBorder) ? $rawBadgeBorder : 'rgba(167, 173, 180, 0.35)';
 
         // Campos de Formulário & Inputs
-        $rawInputBg = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_bg') : null;
-        $rawInputBorder = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_border') : null;
-        $rawInputText = $isCustomTheme ? \App\Models\Setting::get('custom_color_input_text') : null;
+        $rawInputBg = \App\Models\Setting::get('custom_color_input_bg');
+        $rawInputBorder = \App\Models\Setting::get('custom_color_input_border');
+        $rawInputText = \App\Models\Setting::get('custom_color_input_text');
         $effInputBg = !empty($rawInputBg) ? $rawInputBg : '#FFFFFF';
         $effInputBorder = !empty($rawInputBorder) ? $rawInputBorder : 'rgba(115, 123, 133, 0.28)';
         $effInputText = !empty($rawInputText) ? $rawInputText : $activeThemeDef['text'];
 
         // Header, Footer & Top Banner
-        $rawHeaderBg = $isCustomTheme ? \App\Models\Setting::get('header_bg_color') : null;
-        $rawHeaderText = $isCustomTheme ? \App\Models\Setting::get('header_text_color') : null;
+        $rawHeaderBg = \App\Models\Setting::get('header_bg_color');
+        $rawHeaderText = \App\Models\Setting::get('header_text_color');
         $effHeaderBg = !empty($rawHeaderBg) ? $rawHeaderBg : $activeThemeDef['header_bg'];
         $effHeaderText = !empty($rawHeaderText) ? $rawHeaderText : $activeThemeDef['header_text'];
 
-        $rawFooterBg = $isCustomTheme ? \App\Models\Setting::get('footer_bg_color') : null;
-        $rawFooterText = $isCustomTheme ? \App\Models\Setting::get('footer_text_color') : null;
+        $rawFooterBg = \App\Models\Setting::get('footer_bg_color');
+        $rawFooterText = \App\Models\Setting::get('footer_text_color');
         $effFooterBg = !empty($rawFooterBg) ? $rawFooterBg : $activeThemeDef['footer_bg'];
         $effFooterText = !empty($rawFooterText) ? $rawFooterText : $activeThemeDef['footer_text'];
 
-        $rawTopBannerBg = $isCustomTheme ? \App\Models\Setting::get('top_banner_bg_color') : null;
-        $rawTopBannerText = $isCustomTheme ? \App\Models\Setting::get('top_banner_text_color') : null;
+        $rawTopBannerBg = \App\Models\Setting::get('top_banner_bg_color');
+        $rawTopBannerText = \App\Models\Setting::get('top_banner_text_color');
         $effTopBannerBg = !empty($rawTopBannerBg) ? $rawTopBannerBg : '#252525';
         $effTopBannerText = !empty($rawTopBannerText) ? $rawTopBannerText : '#FFFFFF';
 
@@ -701,7 +699,6 @@
             border-color: var(--border-color) !important;
         }
 
-        <?php if ($isCustomTheme): ?>
         /* BADGES & ETIQUETAS */
         body.luxury-theme .badge-tag,
         body.luxury-theme .product-badge,
@@ -733,7 +730,6 @@
         body.luxury-theme #summaryPixRow span {
             color: var(--discount-color) !important;
         }
-        <?php endif; ?>
 
         /* CABEÇALHO, RODAPÉ & TOP BANNER */
         body.luxury-theme .main-header {

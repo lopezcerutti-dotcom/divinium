@@ -363,8 +363,7 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
                                         <code id="pixKeyValueDisplay"><?= View::e($pixKey) ?></code>
                                         <small style="display: block; color: var(--text-secondary); margin-top: 2px;">Titular: <?= View::e($pixBeneficiary) ?></small>
                                     </div>
-                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')" style="background: <?= View::e($btnPixBg) ?> !important; color: <?= View::e($btnPixColor) ?> !important; border: 1px solid <?= View::e($btnPixBorder) ?> !important; border-radius: <?= View::e($btnPixRadius) ?> !important; box-shadow: <?= View::e($checkoutShadowMap[$btnPixShadow] ?? 'none') ?> !important; <?= !$btnPixVisible ? 'display: none !important;' : 'display: inline-flex; align-items: center; justify-content: center; gap: 4px;' ?> cursor: pointer; transition: all 0.2s ease;">
-                                        <?= $renderCheckoutBtnIcon($btnPixIcon, $btnPixIconColor) ?>
+                                    <button type="button" class="btn-copy-pix" onclick="copyPixKey('<?= View::e($pixKey) ?>')" style="<?= !$btnPixVisible ? 'display: none !important;' : '' ?>">
                                         <span id="copyPixBtnText"><?= View::e($btnPixText) ?></span>
                                     </button>
                                 </div>
@@ -592,8 +591,8 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
     transition: all 0.2s;
 }
 .btn-calc-cep:hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
+    background: var(--gold-accent, #A7ADB4);
+    color: #25272A;
 }
 
 /* Frete em tempo real */
@@ -772,8 +771,8 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
     white-space: nowrap;
 }
 .btn-copy-pix:hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
+    background: var(--gold-hover, #737B85);
+    color: #FFFFFF;
 }
 .btn-checkout-submit {
     width: 100%;
@@ -793,8 +792,10 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
     transition: all 0.25s ease;
 }
 .btn-checkout-submit:hover:not(:disabled) {
-    filter: brightness(1.15);
+    background: var(--gold-hover, #737B85);
+    color: #FFFFFF;
     transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(115, 123, 133, 0.25);
 }
 .btn-checkout-submit:disabled, .btn-checkout-submit.disabled {
     background: #CBD0D6;
@@ -960,8 +961,8 @@ $returnStoreStyleAttr = !empty($returnStoreInline) ? implode('; ', $returnStoreI
     transition: color 0.2s;
 }
 .btn-return-store:hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
+    color: var(--text-primary, #25272A);
+    text-decoration: underline;
 }
 @media (max-width: 900px) {
     .checkout-grid {

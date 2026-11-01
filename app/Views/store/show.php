@@ -448,19 +448,19 @@ $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" 
                             <div class="direct-bag-buttons-grid">
                                 <?php if ($showAddToCartBtn): ?>
                                 <button type="button" class="btn-luxury-add-bag" id="btnAddToCartMain" onclick="addProductToBag(event)" style="<?= View::e($addToCartStyleAttr) ?>">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($addToCartIconColorAttr) ?>" stroke-width="2" style="color: <?= View::e($addToCartIconColorAttr) ?>;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                                         <line x1="3" y1="6" x2="21" y2="6"></line>
                                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                                     </svg>
-                                    <span id="btnAddToCartText" style="<?= (!empty($addToCartText) && $addToCartText !== '#ffffff') ? 'color: ' . View::e($addToCartText) . ' !important;' : '' ?>"><?= View::e($addToCartBtnText) ?></span>
+                                    <span id="btnAddToCartText"><?= View::e($addToCartBtnText) ?></span>
                                 </button>
                                 <?php endif; ?>
 
                                 <?php if ($showBuyNowBtn): ?>
                                 <button type="button" class="btn-luxury-buy-direct" id="btnBuyNowMain" onclick="buyNowDirect(event)" style="<?= View::e($buyNowStyleAttr) ?>">
-                                    <span style="<?= (!empty($buyNowText) && $buyNowText !== '#1a1918' && $buyNowText !== '#202020') ? 'color: ' . View::e($buyNowText) . ' !important;' : '' ?>"><?= View::e($buyNowBtnText) ?></span>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="<?= View::e($buyNowIconColorAttr) ?>" stroke-width="2.2" style="color: <?= View::e($buyNowIconColorAttr) ?>;">
+                                    <span><?= View::e($buyNowBtnText) ?></span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                         <polyline points="12 5 19 12 12 19"></polyline>
                                     </svg>
