@@ -889,6 +889,20 @@
             <?php if (!empty($stCardOverlayColor)): ?>color: <?= \App\Core\View::e($stCardOverlayColor) ?> !important;<?php endif; ?>
         }
         <?php endif; ?>
+
+        /* TÍTULO DA SEÇÃO DE SEGURANÇA & CANAIS DA BOUTIQUE (TODO EM PRETO) */
+        .store-reasons-section .reasons-title,
+        .store-reasons-section .reasons-title *,
+        body.luxury-theme .store-reasons-section .reasons-title,
+        body.luxury-theme .store-reasons-section .reasons-title *,
+        body.luxury-theme .store-reasons-section .reasons-title .gold-gradient-glow,
+        .page-store .store-reasons-section .reasons-title,
+        .page-store .store-reasons-section .reasons-title * {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            background: none !important;
+            background-image: none !important;
+        }
         <?php if (!empty(\App\Models\Setting::get('product_card_bg'))): ?>
         body.luxury-theme.page-product .product-gallery-card,
         body.luxury-theme.page-product .product-info-panel,

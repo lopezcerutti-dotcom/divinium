@@ -465,9 +465,9 @@ if (!function_exists('getButtonColorAndSizeAttrs')) {
             <?php endif; ?>
 
             <?php if (Setting::get('store_reasons_title_visible', '1') === '1'): ?>
-            <h2 class="reasons-title">
-                <?= View::e(Setting::get('store_reasons_title', 'Sua Experiência Segura em')) ?> 
-                <span class="gold-gradient-glow"><?= View::e(Setting::get('store_reasons_highlight', 'Nossos Canais Oficiais')) ?></span>
+            <h2 class="reasons-title" style="color: #000000 !important;">
+                <span style="color: #000000 !important;"><?= View::e(Setting::get('store_reasons_title', 'Sua Experiência Segura em')) ?></span> 
+                <span class="gold-gradient-glow" style="color: #000000 !important; -webkit-text-fill-color: #000000 !important; background: none !important;"><?= View::e(Setting::get('store_reasons_highlight', 'Nossos Canais Oficiais')) ?></span>
             </h2>
             <?php endif; ?>
 
