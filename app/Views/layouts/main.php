@@ -781,10 +781,112 @@
             background-color: <?= \App\Core\View::e(\App\Models\Setting::get('home_card_bg')) ?> !important;
         }
         <?php endif; ?>
-        <?php if (!empty(\App\Models\Setting::get('store_card_bg'))): ?>
+        /* =========================================================================
+           CORES EXCLUSIVAS DOS CARDS DE PRODUTOS DA BOUTIQUE (/loja)
+           ========================================================================= */
+        <?php
+            $stCardBg = \App\Models\Setting::get('store_card_bg', '');
+            $stCardBorder = \App\Models\Setting::get('store_card_border_color', '');
+            $stCardHoverBorder = \App\Models\Setting::get('store_card_hover_border_color', '');
+            $stCardMediaBg = \App\Models\Setting::get('store_card_media_bg', '');
+            $stCardTitleColor = \App\Models\Setting::get('store_card_title_color', '');
+            $stCardTitleHover = \App\Models\Setting::get('store_card_title_hover_color', '');
+            $stCardPriceColor = \App\Models\Setting::get('store_card_price_color', '');
+            $stCardPricePrefix = \App\Models\Setting::get('store_card_price_prefix_color', '');
+            $stCardBadgeBg = \App\Models\Setting::get('store_card_badge_bg', '');
+            $stCardBadgeColor = \App\Models\Setting::get('store_card_badge_color', '');
+            $stCardBadgeBorder = \App\Models\Setting::get('store_card_badge_border', '');
+            $stCardBtnBg = \App\Models\Setting::get('store_card_btn_bg', '');
+            $stCardBtnColor = \App\Models\Setting::get('store_card_btn_color', '');
+            $stCardBtnBorder = \App\Models\Setting::get('store_card_btn_border', '');
+            $stCardBtnHoverBg = \App\Models\Setting::get('store_card_btn_hover_bg', '');
+            $stCardBtnHoverColor = \App\Models\Setting::get('store_card_btn_hover_color', '');
+            $stCardBtnHoverBorder = \App\Models\Setting::get('store_card_btn_hover_border', '');
+            $stCardOverlayBg = \App\Models\Setting::get('store_card_overlay_btn_bg', '');
+            $stCardOverlayColor = \App\Models\Setting::get('store_card_overlay_btn_color', '');
+        ?>
+        <?php if (!empty($stCardBg)): ?>
         body.luxury-theme.page-store .store-product-card,
-        body.luxury-theme.page-store .reason-card {
-            background-color: <?= \App\Core\View::e(\App\Models\Setting::get('store_card_bg')) ?> !important;
+        body.luxury-theme.page-store .reason-card,
+        .page-store .store-product-card {
+            background: <?= \App\Core\View::e($stCardBg) ?> !important;
+            background-color: <?= \App\Core\View::e($stCardBg) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardBorder)): ?>
+        body.luxury-theme.page-store .store-product-card,
+        .page-store .store-product-card {
+            border-color: <?= \App\Core\View::e($stCardBorder) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardHoverBorder)): ?>
+        body.luxury-theme.page-store .store-product-card:hover,
+        .page-store .store-product-card:hover {
+            border-color: <?= \App\Core\View::e($stCardHoverBorder) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardMediaBg)): ?>
+        body.luxury-theme.page-store .store-card-media,
+        .page-store .store-card-media {
+            background: <?= \App\Core\View::e($stCardMediaBg) ?> !important;
+            background-color: <?= \App\Core\View::e($stCardMediaBg) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardTitleColor)): ?>
+        body.luxury-theme.page-store .store-card-title-clean a,
+        .page-store .store-card-title-clean a {
+            color: <?= \App\Core\View::e($stCardTitleColor) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardTitleHover)): ?>
+        body.luxury-theme.page-store .store-card-title-clean a:hover,
+        .page-store .store-card-title-clean a:hover {
+            color: <?= \App\Core\View::e($stCardTitleHover) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardPriceColor)): ?>
+        body.luxury-theme.page-store .store-card-price-clean,
+        body.luxury-theme.page-store .store-card-price-clean span:not(.price-prefix),
+        .page-store .store-card-price-clean,
+        .page-store .store-card-price-clean span:not(.price-prefix) {
+            color: <?= \App\Core\View::e($stCardPriceColor) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardPricePrefix)): ?>
+        body.luxury-theme.page-store .store-card-price-clean .price-prefix,
+        .page-store .store-card-price-clean .price-prefix {
+            color: <?= \App\Core\View::e($stCardPricePrefix) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardBadgeBg) || !empty($stCardBadgeColor) || !empty($stCardBadgeBorder)): ?>
+        body.luxury-theme.page-store .store-product-card .badge-metal,
+        .page-store .store-product-card .badge-metal {
+            <?php if (!empty($stCardBadgeBg)): ?>background: <?= \App\Core\View::e($stCardBadgeBg) ?> !important; background-color: <?= \App\Core\View::e($stCardBadgeBg) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBadgeColor)): ?>color: <?= \App\Core\View::e($stCardBadgeColor) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBadgeBorder)): ?>border-color: <?= \App\Core\View::e($stCardBadgeBorder) ?> !important;<?php endif; ?>
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardBtnBg) || !empty($stCardBtnColor) || !empty($stCardBtnBorder)): ?>
+        body.luxury-theme.page-store .store-product-card .btn-card-discreet,
+        .page-store .store-product-card .btn-card-discreet {
+            <?php if (!empty($stCardBtnBg)): ?>background: <?= \App\Core\View::e($stCardBtnBg) ?> !important; background-color: <?= \App\Core\View::e($stCardBtnBg) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBtnColor)): ?>color: <?= \App\Core\View::e($stCardBtnColor) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBtnBorder)): ?>border-color: <?= \App\Core\View::e($stCardBtnBorder) ?> !important;<?php endif; ?>
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardBtnHoverBg) || !empty($stCardBtnHoverColor) || !empty($stCardBtnHoverBorder)): ?>
+        body.luxury-theme.page-store .store-product-card .btn-card-discreet:hover,
+        .page-store .store-product-card .btn-card-discreet:hover {
+            <?php if (!empty($stCardBtnHoverBg)): ?>background: <?= \App\Core\View::e($stCardBtnHoverBg) ?> !important; background-color: <?= \App\Core\View::e($stCardBtnHoverBg) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBtnHoverColor)): ?>color: <?= \App\Core\View::e($stCardBtnHoverColor) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardBtnHoverBorder)): ?>border-color: <?= \App\Core\View::e($stCardBtnHoverBorder) ?> !important;<?php endif; ?>
+        }
+        <?php endif; ?>
+        <?php if (!empty($stCardOverlayBg) || !empty($stCardOverlayColor)): ?>
+        body.luxury-theme.page-store .store-product-card .overlay-cta-text,
+        .page-store .store-product-card .overlay-cta-text {
+            <?php if (!empty($stCardOverlayBg)): ?>background: <?= \App\Core\View::e($stCardOverlayBg) ?> !important; background-color: <?= \App\Core\View::e($stCardOverlayBg) ?> !important;<?php endif; ?>
+            <?php if (!empty($stCardOverlayColor)): ?>color: <?= \App\Core\View::e($stCardOverlayColor) ?> !important;<?php endif; ?>
         }
         <?php endif; ?>
         <?php if (!empty(\App\Models\Setting::get('product_card_bg'))): ?>

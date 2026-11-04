@@ -33,8 +33,8 @@ $renderColorField = function(string $key, string $default, string $label, string
     $html = '<div class="form-group">';
     $html .= '<label for="' . $key . '" style="color: #CBD0D6; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: block;">' . View::e($label) . '</label>';
     $html .= '<div style="display: flex; gap: 8px; align-items: center;">';
-    $html .= '<input type="color" id="picker_' . $key . '" value="' . View::e($pickerVal) . '" oninput="syncColorInput(this, \'' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview();" style="width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
-    $html .= '<input type="text" name="' . $key . '" id="' . $key . '" class="form-input" value="' . View::e($val) . '" placeholder="' . View::e($default) . '" style="font-size: 0.82rem; padding: 7px 10px; flex: 1;" oninput="syncPickerInput(this, \'picker_' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview();">';
+    $html .= '<input type="color" id="picker_' . $key . '" value="' . View::e($pickerVal) . '" oninput="syncColorInput(this, \'' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview(); if (typeof updateStoreCardPreview === \'function\') updateStoreCardPreview();" style="width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 1px; cursor: pointer; background: transparent;">';
+    $html .= '<input type="text" name="' . $key . '" id="' . $key . '" class="form-input" value="' . View::e($val) . '" placeholder="' . View::e($default) . '" style="font-size: 0.82rem; padding: 7px 10px; flex: 1;" oninput="syncPickerInput(this, \'picker_' . $key . '\'); if (typeof updateProductElementPreview === \'function\') updateProductElementPreview(); if (typeof updateStoreCardPreview === \'function\') updateStoreCardPreview();">';
     $html .= '</div>';
     if (!empty($hint)) {
         $html .= '<span class="field-hint" style="font-size: 0.72rem; color: #a7adb4; margin-top: 2px;">' . View::e($hint) . '</span>';
@@ -290,6 +290,20 @@ $renderColorField = function(string $key, string $default, string $label, string
                     </div>
                     <input type="text" id="store_info_pill_text" name="store_info_pill_text" class="form-input" 
                            value="<?= View::e(Setting::get('store_info_pill_text', 'Escolha seu canal de compra favorito com segurança')) ?>">
+                </div>
+
+                <!-- Atalho para Cores dos Cards da Boutique -->
+                <div class="form-group full-width" style="background: rgba(167, 173, 180, 0.08); border: 1px solid rgba(167, 173, 180, 0.28); border-radius: 10px; padding: 14px 18px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 1.4rem;">🎨</span>
+                        <div>
+                            <strong style="color: #CBD0D6; font-size: 0.92rem; display: block; margin-bottom: 2px;">Cores dos Cards de Produtos da Boutique</strong>
+                            <span style="color: #a7adb4; font-size: 0.8rem;">Personalize fundos, bordas, títulos, preços, selos e botões com pré-visualização ao vivo.</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-admin-gold" style="font-size: 0.78rem; padding: 7px 14px;" onclick="switchBoutiqueSection('bsec-colors', document.querySelector('.editor-nav-tabs button[onclick*=\'bsec-colors\']')); document.getElementById('sec-card-colors-anchor')?.scrollIntoView({ behavior: 'smooth' });">
+                        <span>Personalizar Cores dos Cards ↗</span>
+                    </button>
                 </div>
 
                 <!-- Elementos dos Cards de Produtos -->
@@ -1347,6 +1361,160 @@ $renderColorField = function(string $key, string $default, string $label, string
                     </select>
                 </div>
             </div>
+
+            <!-- ============================================================== -->
+            <!-- SUBSEÇÃO: CORES DOS CARDS DE PRODUTOS DA BOUTIQUE (/loja) -->
+            <!-- ============================================================== -->
+            <div id="sec-card-colors-anchor" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 28px; padding-top: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 18px;">
+                    <div>
+                        <h4 style="color: #ffffff; margin: 0 0 6px; font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                            <span>💎</span> Cores dos Cards de Produtos da Boutique (/loja)
+                        </h4>
+                        <p style="color: #b5ada3; font-size: 0.84rem; margin: 0; line-height: 1.5; max-width: 720px;">
+                            Edição individual e completa de todas as cores dos cards de joias da Boutique. Veja o resultado em tempo real no card de prévia à direita.
+                        </p>
+                    </div>
+
+                    <!-- Presets Rápidos de Cores dos Cards -->
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                        <span style="font-size: 0.75rem; color: #a7adb4; font-weight: 600; text-transform: uppercase;">Presets Rápidos:</span>
+                        <button type="button" class="btn-admin-secondary" style="font-size: 0.75rem; padding: 6px 10px;" onclick="applyStoreCardPreset('default')">
+                            <span>🖤 Noir & Prata (Padrão)</span>
+                        </button>
+                        <button type="button" class="btn-admin-secondary" style="font-size: 0.75rem; padding: 6px 10px;" onclick="applyStoreCardPreset('light')">
+                            <span>🤍 Branco & Platina</span>
+                        </button>
+                        <button type="button" class="btn-admin-secondary" style="font-size: 0.75rem; padding: 6px 10px;" onclick="applyStoreCardPreset('platinum')">
+                            <span>🪙 Titânio & Prata</span>
+                        </button>
+                        <button type="button" class="btn-admin-cancel" style="font-size: 0.75rem; padding: 6px 10px;" onclick="applyStoreCardPreset('clear')">
+                            <span>🔄 Limpar (Herdar Tema)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap;">
+                    
+                    <!-- COLUNA DE CONTROLES DE CORES -->
+                    <div style="flex: 1 1 500px; min-width: 320px;">
+                        
+                        <!-- 1. Fundo e Superfície do Card -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;">
+                            <strong style="color: #CBD0D6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                                <span>🔲</span> 1. Fundo, Bordas & Superfície do Card
+                            </strong>
+                            <div class="form-grid">
+                                <?= $renderColorField('store_card_bg', '#141312', 'Fundo do Card', 'Fundo principal da caixa do produto.') ?>
+                                <?= $renderColorField('store_card_border_color', 'rgba(255, 255, 255, 0.08)', 'Borda do Card', 'Linha de contorno externa do card.') ?>
+                                <?= $renderColorField('store_card_hover_border_color', '#A7ADB4', 'Borda no Hover (Cursor sobre o Card)', 'Destaque ao passar o mouse ou tocar.') ?>
+                                <?= $renderColorField('store_card_media_bg', '#000000', 'Fundo da Foto / Imagem', 'Fundo atrás da fotografia da joia.') ?>
+                            </div>
+                        </div>
+
+                        <!-- 2. Tipografia e Preços -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;">
+                            <strong style="color: #CBD0D6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                                <span>✍️</span> 2. Título, Nome da Joia & Preços
+                            </strong>
+                            <div class="form-grid">
+                                <?= $renderColorField('store_card_title_color', '#ffffff', 'Nome da Joia (Título)', 'Cor da tipografia serifada do produto.') ?>
+                                <?= $renderColorField('store_card_title_hover_color', '#A7ADB4', 'Nome da Joia no Hover', 'Cor do link quando o cursor passa por cima.') ?>
+                                <?= $renderColorField('store_card_price_color', '#ffffff', 'Preço do Produto', 'Cor do valor em reais (R$ ...).') ?>
+                                <?= $renderColorField('store_card_price_prefix_color', '#8e8880', 'Prefixo ("A partir de")', 'Cor do texto auxiliar antes do valor.') ?>
+                            </div>
+                        </div>
+
+                        <!-- 3. Selo de Metal / Variações no Topo -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;">
+                            <strong style="color: #CBD0D6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                                <span>✦</span> 3. Selo de Metal Flutuante no Topo
+                            </strong>
+                            <div class="form-grid">
+                                <?= $renderColorField('store_card_badge_bg', '#0d0c0b', 'Fundo do Selo', 'Ex: Banho de Prata ou contagem de gemas.') ?>
+                                <?= $renderColorField('store_card_badge_color', '#e6e0d8', 'Texto do Selo', 'Cor das letras e do sparkle do selo.') ?>
+                                <?= $renderColorField('store_card_badge_border', 'rgba(255, 255, 255, 0.15)', 'Borda do Selo', 'Linha de contorno do selo.') ?>
+                            </div>
+                        </div>
+
+                        <!-- 4. Botão Principal do Card ("Conhecer a Peça") -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px;">
+                            <strong style="color: #CBD0D6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                                <span>🔘</span> 4. Botão de Ação do Card ("Conhecer a Peça")
+                            </strong>
+                            <div class="form-grid">
+                                <?= $renderColorField('store_card_btn_bg', 'transparent', 'Fundo Normal do Botão', 'Padrão transparente ou cor sólida.') ?>
+                                <?= $renderColorField('store_card_btn_color', '#ffffff', 'Texto Normal do Botão', 'Cor das letras e da seta do botão.') ?>
+                                <?= $renderColorField('store_card_btn_border', 'rgba(255, 255, 255, 0.18)', 'Borda Normal do Botão', 'Linha de contorno do botão.') ?>
+                                <?= $renderColorField('store_card_btn_hover_bg', '#A7ADB4', 'Fundo do Botão no Hover', 'Cor de preenchimento ao passar o mouse.') ?>
+                                <?= $renderColorField('store_card_btn_hover_color', '#202020', 'Texto do Botão no Hover', 'Cor das letras ao passar o mouse.') ?>
+                                <?= $renderColorField('store_card_btn_hover_border', '#737B85', 'Borda do Botão no Hover', 'Borda do botão ao passar o mouse.') ?>
+                            </div>
+                        </div>
+
+                        <!-- 5. Botão de Hover sobre a Imagem (Overlay CTA) -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 18px;">
+                            <strong style="color: #CBD0D6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                                <span>🖼️</span> 5. Botão de Hover sobre a Foto (Overlay CTA)
+                            </strong>
+                            <div class="form-grid">
+                                <?= $renderColorField('store_card_overlay_btn_bg', '#A7ADB4', 'Fundo da Pílula Flutuante', 'Exibida sobre a foto quando o cliente passa o cursor.') ?>
+                                <?= $renderColorField('store_card_overlay_btn_color', '#202020', 'Texto da Pílula Flutuante', 'Cor do texto e do ícone de seta.') ?>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- COLUNA DIREITA: PRÉVIA AO VIVO DO CARD DA BOUTIQUE -->
+                    <div style="width: 320px; flex-shrink: 0; position: sticky; top: 90px;">
+                        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,186,136,0.3); border-radius: 14px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                <strong style="color: #CBD0D6; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 6px;">
+                                    <span>👁️</span> Prévia do Card ao Vivo
+                                </strong>
+                                <span style="font-size: 0.68rem; color: #a7adb4; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">Interativo</span>
+                            </div>
+
+                            <!-- CARD DE AMOSTRA -->
+                            <div id="previewStoreCardSample" style="border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(255, 255, 255, 0.08); background: #141312; transition: all 0.25s ease;">
+                                <!-- Mídia da Foto -->
+                                <div id="previewStoreCardMedia" style="position: relative; width: 100%; aspect-ratio: 1 / 1.05; background: #000000; overflow: hidden; display: flex; align-items: center; justify-content: center; transition: background 0.25s ease;">
+                                    <div style="position: absolute; top: 12px; left: 12px; z-index: 2;">
+                                        <span id="previewStoreCardBadge" style="background: rgba(13, 12, 11, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); color: #e6e0d8; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">✦ Banho de Prata</span>
+                                    </div>
+                                    <img src="/assets/images/hero/featured-green-shell.jpg" alt="Joia de Exemplo" style="width: 100%; height: 100%; object-fit: contain; padding: 8px;" onerror="this.src='/assets/images/products/bracelete-verde.jpg';">
+                                    <div id="previewStoreCardOverlay" style="position: absolute; inset: 0; background: rgba(13, 12, 11, 0.45); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease;">
+                                        <span id="previewStoreCardOverlayBtn" style="background: #A7ADB4; color: #202020; padding: 8px 16px; border-radius: 20px; font-size: 0.74rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                            <span>Conhecer a Peça</span>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Corpo com Título, Preço e Botão -->
+                                <div style="padding: 18px 16px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                                    <h5 id="previewStoreCardTitle" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.18rem; font-weight: 500; margin: 0 0 8px 0; color: #ffffff; line-height: 1.3; transition: color 0.25s ease;">
+                                        Bracelete Caminhos Quartzo Verde
+                                    </h5>
+                                    <div id="previewStoreCardPriceWrap" style="margin-bottom: 14px; font-size: 1.05rem; font-weight: 700;">
+                                        <span id="previewStoreCardPricePrefix" style="font-size: 0.74rem; font-weight: 400; color: #8e8880; margin-right: 4px; text-transform: uppercase; letter-spacing: 0.05em;">A partir de</span>
+                                        <span id="previewStoreCardPrice" style="color: #ffffff;">R$ 380,00</span>
+                                    </div>
+                                    <div id="previewStoreCardBtn" style="width: 100%; padding: 9px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.18); background: transparent; color: #ffffff; font-size: 0.76rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.25s ease;">
+                                        <span>Conhecer a Peça</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 0.72rem; color: #a7adb4; text-align: center; margin: 12px 0 0; line-height: 1.4;">
+                                💡 Passe o cursor sobre o card acima para testar o efeito de hover na foto e no botão.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
         <!-- BARRA FLUTUANTE DE SALVAMENTO -->
@@ -1504,7 +1672,201 @@ function updateProductElementPreview() {
     }
 }
 
+function updateStoreCardPreview() {
+    const cardSample = document.getElementById('previewStoreCardSample');
+    if (!cardSample) return;
+
+    const getVal = (id, fallback) => {
+        const el = document.getElementById(id);
+        const val = el ? el.value.trim() : '';
+        return val !== '' ? val : fallback;
+    };
+
+    const cardBg = getVal('store_card_bg', '#141312');
+    const cardBorder = getVal('store_card_border_color', 'rgba(255, 255, 255, 0.08)');
+    const hoverBorder = getVal('store_card_hover_border_color', '#A7ADB4');
+    const mediaBg = getVal('store_card_media_bg', '#000000');
+    const titleColor = getVal('store_card_title_color', '#ffffff');
+    const titleHover = getVal('store_card_title_hover_color', '#A7ADB4');
+    const priceColor = getVal('store_card_price_color', '#ffffff');
+    const pricePrefix = getVal('store_card_price_prefix_color', '#8e8880');
+    const badgeBg = getVal('store_card_badge_bg', '#0d0c0b');
+    const badgeColor = getVal('store_card_badge_color', '#e6e0d8');
+    const badgeBorder = getVal('store_card_badge_border', 'rgba(255, 255, 255, 0.15)');
+    const btnBg = getVal('store_card_btn_bg', 'transparent');
+    const btnColor = getVal('store_card_btn_color', '#ffffff');
+    const btnBorder = getVal('store_card_btn_border', 'rgba(255, 255, 255, 0.18)');
+    const btnHoverBg = getVal('store_card_btn_hover_bg', '#A7ADB4');
+    const btnHoverColor = getVal('store_card_btn_hover_color', '#202020');
+    const btnHoverBorder = getVal('store_card_btn_hover_border', '#737B85');
+    const overlayBg = getVal('store_card_overlay_btn_bg', '#A7ADB4');
+    const overlayColor = getVal('store_card_overlay_btn_color', '#202020');
+
+    cardSample.style.background = cardBg;
+    cardSample.style.borderColor = cardBorder;
+
+    const mediaEl = document.getElementById('previewStoreCardMedia');
+    if (mediaEl) mediaEl.style.background = mediaBg;
+
+    const badgeEl = document.getElementById('previewStoreCardBadge');
+    if (badgeEl) {
+        badgeEl.style.background = badgeBg;
+        badgeEl.style.color = badgeColor;
+        badgeEl.style.borderColor = badgeBorder;
+    }
+
+    const titleEl = document.getElementById('previewStoreCardTitle');
+    if (titleEl) titleEl.style.color = titleColor;
+
+    const priceEl = document.getElementById('previewStoreCardPrice');
+    if (priceEl) priceEl.style.color = priceColor;
+
+    const prefixEl = document.getElementById('previewStoreCardPricePrefix');
+    if (prefixEl) prefixEl.style.color = pricePrefix;
+
+    const btnEl = document.getElementById('previewStoreCardBtn');
+    if (btnEl) {
+        btnEl.style.background = btnBg;
+        btnEl.style.color = btnColor;
+        btnEl.style.borderColor = btnBorder;
+    }
+
+    const overlayBtnEl = document.getElementById('previewStoreCardOverlayBtn');
+    if (overlayBtnEl) {
+        overlayBtnEl.style.background = overlayBg;
+        overlayBtnEl.style.color = overlayColor;
+    }
+
+    // Hover effect for the preview card
+    cardSample.onmouseenter = function() {
+        cardSample.style.borderColor = hoverBorder;
+        if (titleEl) titleEl.style.color = titleHover;
+        const ov = document.getElementById('previewStoreCardOverlay');
+        if (ov) ov.style.opacity = '1';
+    };
+    cardSample.onmouseleave = function() {
+        cardSample.style.borderColor = cardBorder;
+        if (titleEl) titleEl.style.color = titleColor;
+        const ov = document.getElementById('previewStoreCardOverlay');
+        if (ov) ov.style.opacity = '0';
+    };
+
+    if (btnEl) {
+        btnEl.onmouseenter = function() {
+            btnEl.style.background = btnHoverBg;
+            btnEl.style.color = btnHoverColor;
+            btnEl.style.borderColor = btnHoverBorder;
+        };
+        btnEl.onmouseleave = function() {
+            btnEl.style.background = btnBg;
+            btnEl.style.color = btnColor;
+            btnEl.style.borderColor = btnBorder;
+        };
+    }
+}
+
+function applyStoreCardPreset(preset) {
+    const presets = {
+        'default': {
+            'store_card_bg': '#141312',
+            'store_card_border_color': '#2a2826',
+            'store_card_hover_border_color': '#A7ADB4',
+            'store_card_media_bg': '#000000',
+            'store_card_title_color': '#ffffff',
+            'store_card_title_hover_color': '#A7ADB4',
+            'store_card_price_color': '#ffffff',
+            'store_card_price_prefix_color': '#8e8880',
+            'store_card_badge_bg': '#0d0c0b',
+            'store_card_badge_color': '#e6e0d8',
+            'store_card_badge_border': '#33302b',
+            'store_card_btn_bg': '#1f1e1d',
+            'store_card_btn_color': '#ffffff',
+            'store_card_btn_border': '#3a3834',
+            'store_card_btn_hover_bg': '#A7ADB4',
+            'store_card_btn_hover_color': '#202020',
+            'store_card_btn_hover_border': '#737B85',
+            'store_card_overlay_btn_bg': '#A7ADB4',
+            'store_card_overlay_btn_color': '#202020'
+        },
+        'light': {
+            'store_card_bg': '#ffffff',
+            'store_card_border_color': '#e2e2e0',
+            'store_card_hover_border_color': '#737B85',
+            'store_card_media_bg': '#f8f8f7',
+            'store_card_title_color': '#1c1b1a',
+            'store_card_title_hover_color': '#737B85',
+            'store_card_price_color': '#1c1b1a',
+            'store_card_price_prefix_color': '#777777',
+            'store_card_badge_bg': '#f2f2f0',
+            'store_card_badge_color': '#202020',
+            'store_card_badge_border': '#d0d0ce',
+            'store_card_btn_bg': '#1c1b1a',
+            'store_card_btn_color': '#ffffff',
+            'store_card_btn_border': '#1c1b1a',
+            'store_card_btn_hover_bg': '#737B85',
+            'store_card_btn_hover_color': '#ffffff',
+            'store_card_btn_hover_border': '#737B85',
+            'store_card_overlay_btn_bg': '#1c1b1a',
+            'store_card_overlay_btn_color': '#ffffff'
+        },
+        'platinum': {
+            'store_card_bg': '#1d1d1f',
+            'store_card_border_color': '#38383c',
+            'store_card_hover_border_color': '#CBD0D6',
+            'store_card_media_bg': '#141416',
+            'store_card_title_color': '#F0F0EF',
+            'store_card_title_hover_color': '#CBD0D6',
+            'store_card_price_color': '#CBD0D6',
+            'store_card_price_prefix_color': '#9DA5AE',
+            'store_card_badge_bg': '#28282c',
+            'store_card_badge_color': '#CBD0D6',
+            'store_card_badge_border': '#44444a',
+            'store_card_btn_bg': '#CBD0D6',
+            'store_card_btn_color': '#1a1a1c',
+            'store_card_btn_border': '#CBD0D6',
+            'store_card_btn_hover_bg': '#737B85',
+            'store_card_btn_hover_color': '#ffffff',
+            'store_card_btn_hover_border': '#737B85',
+            'store_card_overlay_btn_bg': '#CBD0D6',
+            'store_card_overlay_btn_color': '#1a1a1c'
+        },
+        'clear': {
+            'store_card_bg': '',
+            'store_card_border_color': '',
+            'store_card_hover_border_color': '',
+            'store_card_media_bg': '',
+            'store_card_title_color': '',
+            'store_card_title_hover_color': '',
+            'store_card_price_color': '',
+            'store_card_price_prefix_color': '',
+            'store_card_badge_bg': '',
+            'store_card_badge_color': '',
+            'store_card_badge_border': '',
+            'store_card_btn_bg': '',
+            'store_card_btn_color': '',
+            'store_card_btn_border': '',
+            'store_card_btn_hover_bg': '',
+            'store_card_btn_hover_color': '',
+            'store_card_btn_hover_border': '',
+            'store_card_overlay_btn_bg': '',
+            'store_card_overlay_btn_color': ''
+        }
+    };
+
+    const values = presets[preset];
+    if (!values) return;
+
+    for (const [key, val] of Object.entries(values)) {
+        const input = document.getElementById(key);
+        if (input) input.value = val;
+        const picker = document.getElementById('picker_' + key);
+        if (picker && val && val.startsWith('#') && val.length === 7) picker.value = val;
+    }
+    updateStoreCardPreview();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    updateStoreCardPreview();
     updateProductElementPreview();
 });
 
