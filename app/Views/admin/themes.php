@@ -5,107 +5,262 @@
 $isSinglePaletteSaved = (($customSettings['divinium_single_palette_saved'] ?? '') === '1');
 
 $paletteElements = [
+    // ✦ PALETA GLOBAL & DESIGN SYSTEM
     [
         'key'     => 'custom_color_bg',
         'picker'  => 'picker_bg',
         'label'   => 'Fundo principal',
         'initial' => '#FFFFFF',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_bg_alt',
         'picker'  => 'picker_bg_alt',
         'label'   => 'Fundo secundário',
         'initial' => '#F7F7F7',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_surface',
         'picker'  => 'picker_surface',
         'label'   => 'Fundo dos cards',
         'initial' => '#FFFFFF',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_section_bg',
         'picker'  => 'picker_section_bg',
         'label'   => 'Fundo das seções',
         'initial' => '#F2F2F2',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_title',
         'picker'  => 'picker_title',
         'label'   => 'Títulos',
         'initial' => '#171717',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_text',
         'picker'  => 'picker_text',
         'label'   => 'Textos principais',
         'initial' => '#555555',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_text_muted',
         'picker'  => 'picker_text_muted',
         'label'   => 'Textos secundários',
         'initial' => '#777777',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_primary',
         'picker'  => 'picker_primary',
         'label'   => 'Cor principal da marca',
         'initial' => '#171717',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_accent',
         'picker'  => 'picker_accent',
         'label'   => 'Cor de destaque',
         'initial' => '#A7ADB4',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_btn_primary_bg',
         'picker'  => 'picker_btn_primary_bg',
         'label'   => 'Botões principais — fundo',
         'initial' => '#171717',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_btn_primary_text',
         'picker'  => 'picker_btn_primary_text',
         'label'   => 'Botões principais — texto',
         'initial' => '#FFFFFF',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_btn_secondary_bg',
         'picker'  => 'picker_btn_secondary_bg',
         'label'   => 'Botões secundários — fundo',
         'initial' => '#FFFFFF',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_btn_secondary_text',
         'picker'  => 'picker_btn_secondary_text',
         'label'   => 'Botões secundários — texto',
         'initial' => '#171717',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_border',
         'picker'  => 'picker_border',
         'label'   => 'Bordas e divisórias',
         'initial' => '#D9DDE1',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_icon_nav',
         'picker'  => 'picker_icon_nav',
         'label'   => 'Ícones',
         'initial' => '#777777',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_link',
         'picker'  => 'picker_link',
         'label'   => 'Links',
         'initial' => '#555555',
+        'section' => '✦ Paleta Global & Design System',
     ],
     [
         'key'     => 'custom_color_btn_hover',
         'picker'  => 'picker_btn_hover',
         'label'   => 'Hover dos botões',
         'initial' => '#A7ADB4',
+        'section' => '✦ Paleta Global & Design System',
+    ],
+
+    // 👑 HERO BANNER PRINCIPAL
+    [
+        'key'     => 'custom_color_hero_bg',
+        'picker'  => 'picker_hero_bg',
+        'label'   => 'Hero — Fundo',
+        'initial' => '#252525',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_title',
+        'picker'  => 'picker_hero_title',
+        'label'   => 'Hero — Título Principal',
+        'initial' => '#FFFFFF',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_subtitle',
+        'picker'  => 'picker_hero_subtitle',
+        'label'   => 'Hero — Subtítulo / Descrição',
+        'initial' => '#CBD0D6',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_badge_bg',
+        'picker'  => 'picker_hero_badge_bg',
+        'label'   => 'Hero — Selo Editorial (Fundo)',
+        'initial' => '#1E2024',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_badge_text',
+        'picker'  => 'picker_hero_badge_text',
+        'label'   => 'Hero — Selo Editorial (Texto/Ícone)',
+        'initial' => '#CBD0D6',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_badge_border',
+        'picker'  => 'picker_hero_badge_border',
+        'label'   => 'Hero — Selo Editorial (Borda)',
+        'initial' => '#4A5058',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_btn_bg',
+        'picker'  => 'picker_hero_btn_bg',
+        'label'   => 'Hero — Botão Principal (Fundo)',
+        'initial' => '#CBD0D6',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_btn_text',
+        'picker'  => 'picker_hero_btn_text',
+        'label'   => 'Hero — Botão Principal (Texto)',
+        'initial' => '#171717',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_btn_sec_text',
+        'picker'  => 'picker_hero_btn_sec_text',
+        'label'   => 'Hero — Botão Concierge (Texto/Borda)',
+        'initial' => '#F3EFE6',
+        'section' => '👑 Hero Banner Principal',
+    ],
+    [
+        'key'     => 'custom_color_hero_trust_text',
+        'picker'  => 'picker_hero_trust_text',
+        'label'   => 'Hero — Selos de Confiança (Texto/Ícone)',
+        'initial' => '#CBD0D6',
+        'section' => '👑 Hero Banner Principal',
+    ],
+
+    // 🛍️ ABA DA SACOLA (CART DRAWER)
+    [
+        'key'     => 'custom_color_cart_bg',
+        'picker'  => 'picker_cart_bg',
+        'label'   => 'Sacola — Fundo Principal',
+        'initial' => '#FFFFFF',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_footer_bg',
+        'picker'  => 'picker_cart_footer_bg',
+        'label'   => 'Sacola — Fundo do Rodapé & Header',
+        'initial' => '#F7F7F7',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_title',
+        'picker'  => 'picker_cart_title',
+        'label'   => 'Sacola — Título ("Sua Sacola...")',
+        'initial' => '#171717',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_item_title',
+        'picker'  => 'picker_cart_item_title',
+        'label'   => 'Sacola — Nome dos Produtos',
+        'initial' => '#171717',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_text',
+        'picker'  => 'picker_cart_text',
+        'label'   => 'Sacola — Textos e Detalhes',
+        'initial' => '#555555',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_price',
+        'picker'  => 'picker_cart_price',
+        'label'   => 'Sacola — Preço e Subtotal',
+        'initial' => '#171717',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_border',
+        'picker'  => 'picker_cart_border',
+        'label'   => 'Sacola — Bordas e Divisórias',
+        'initial' => '#D9DDE1',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_btn_bg',
+        'picker'  => 'picker_cart_btn_bg',
+        'label'   => 'Sacola — Botão Finalizar (Fundo)',
+        'initial' => '#171717',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
+    ],
+    [
+        'key'     => 'custom_color_cart_btn_text',
+        'picker'  => 'picker_cart_btn_text',
+        'label'   => 'Sacola — Botão Finalizar (Texto)',
+        'initial' => '#FFFFFF',
+        'section' => '🛍️ Aba da Sacola (Gaveta Lateral)',
     ],
 ];
 
@@ -173,9 +328,22 @@ $resolvePaletteColor = static function (string $key, string $initialHex) use ($c
         <input type="hidden" name="_csrf_token" value="<?= \App\Middlewares\CsrfMiddleware::getToken() ?>">
         <input type="hidden" name="divinium_single_palette_saved" value="1">
 
-        <!-- GRADE DOS 17 CONTROLES INDIVIDUAIS DE CORES -->
+        <!-- GRADE DE CONTROLES INDIVIDUAIS DE CORES ORGANIZADOS POR SEÇÃO -->
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 16px; margin-bottom: 26px;">
-            <?php foreach ($paletteElements as $item): ?>
+            <?php 
+            $currentSection = null;
+            foreach ($paletteElements as $item): 
+                $sec = $item['section'] ?? '';
+                if ($sec !== $currentSection):
+                    $currentSection = $sec;
+            ?>
+                <div style="grid-column: 1 / -1; margin-top: <?= $currentSection === '✦ Paleta Global & Design System' ? '0' : '22px' ?>; margin-bottom: 4px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.95rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">
+                        <?= \App\Core\View::e($currentSection) ?>
+                    </span>
+                    <span style="font-size: 0.72rem; color: #a7adb4; text-transform: uppercase; letter-spacing: 0.5px;">Cores Editáveis</span>
+                </div>
+            <?php endif; ?>
                 <?php
                     $k = $item['key'];
                     $pId = $item['picker'];
@@ -197,21 +365,21 @@ $resolvePaletteColor = static function (string $key, string $initialHex) use ($c
                     </div>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <input type="color"
-                               id="<?= $pId ?>"
-                               value="<?= \App\Core\View::e($currentVal) ?>"
-                               oninput="syncFromColorPicker('<?= $k ?>', this.value)"
-                               onchange="syncFromColorPicker('<?= $k ?>', this.value)"
-                               style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.22); background: transparent; cursor: pointer; flex-shrink: 0;">
+                                id="<?= $pId ?>"
+                                value="<?= \App\Core\View::e($currentVal) ?>"
+                                oninput="syncFromColorPicker('<?= $k ?>', this.value)"
+                                onchange="syncFromColorPicker('<?= $k ?>', this.value)"
+                                style="width: 44px; height: 38px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.22); background: transparent; cursor: pointer; flex-shrink: 0;">
                         <input type="text"
-                               id="<?= $k ?>"
-                               name="<?= $k ?>"
-                               class="form-input"
-                               value="<?= \App\Core\View::e($currentVal) ?>"
-                               maxlength="7"
-                               placeholder="<?= $initHex ?>"
-                               oninput="syncFromHexField(this, '<?= $pId ?>')"
-                               onblur="normalizeHexOnBlur(this, '<?= $pId ?>', '<?= $initHex ?>')"
-                               style="font-family: monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                                id="<?= $k ?>"
+                                name="<?= $k ?>"
+                                class="form-input"
+                                value="<?= \App\Core\View::e($currentVal) ?>"
+                                maxlength="7"
+                                placeholder="<?= $initHex ?>"
+                                oninput="syncFromHexField(this, '<?= $pId ?>')"
+                                onblur="normalizeHexOnBlur(this, '<?= $pId ?>', '<?= $initHex ?>')"
+                                style="font-family: monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -326,6 +494,83 @@ $resolvePaletteColor = static function (string $key, string $initialHex) use ($c
                     </div>
                 </div>
 
+                <!-- PRÉ-VISUALIZAÇÃO ESPECÍFICA: HERO BANNER & ABA DA SACOLA -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 4px;">
+                    <!-- PRÉ-VISUALIZAÇÃO: HERO BANNER PRINCIPAL -->
+                    <div id="previewHeroBox" style="background: #252525; border: 1px solid #4A5058; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.2s ease;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div id="previewHeroBadge" style="display: inline-flex; align-items: center; gap: 6px; background: #1E2024; border: 1px solid #4A5058; color: #CBD0D6; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.5px;">
+                                    <span id="previewHeroBadgeSparkle" style="color: #CBD0D6;">✦</span>
+                                    <span id="previewHeroBadgeText">HAUTE JOAILLERIE • EDIÇÃO AUTORAL</span>
+                                </div>
+                                <span style="font-size: 0.7rem; color: #888888; text-transform: uppercase; font-weight: 600;">Hero Banner</span>
+                            </div>
+                            <h3 id="previewHeroTitle" style="font-family: var(--font-serif); font-size: 1.35rem; color: #FFFFFF; line-height: 1.2; margin: 0 0 8px 0; font-weight: 400;">
+                                Joias que Revelam o Luxo Silencioso
+                            </h3>
+                            <p id="previewHeroSubtitle" style="font-size: 0.8rem; color: #CBD0D6; line-height: 1.45; margin: 0 0 14px 0;">
+                                A nobreza do banho de prata entrelaçada à vibração autêntica de gemas minerais raras.
+                            </p>
+                            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+                                <button type="button" id="previewHeroBtn" style="background: #CBD0D6; color: #171717; border: 1px solid #CBD0D6; padding: 7px 14px; border-radius: 20px; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+                                    Explorar Coleção →
+                                </button>
+                                <button type="button" id="previewHeroSecBtn" style="background: rgba(255,255,255,0.04); color: #F3EFE6; border: 1px solid #F3EFE6; padding: 7px 12px; border-radius: 20px; font-weight: 500; font-size: 0.76rem; cursor: pointer;">
+                                    Concierge WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                        <div id="previewHeroTrustStrip" style="display: flex; gap: 10px; flex-wrap: wrap; font-size: 0.7rem; color: #CBD0D6; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+                            <span>✦ Banho de Prata</span>
+                            <span>✦ Gemas 100% Naturais</span>
+                            <span>✦ Certificado de Garantia</span>
+                        </div>
+                    </div>
+
+                    <!-- PRÉ-VISUALIZAÇÃO: ABA DA SACOLA (CART DRAWER) -->
+                    <div id="previewCartBox" style="background: #FFFFFF; border: 1px solid #D9DDE1; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease;">
+                        <div>
+                            <!-- Header da Sacola -->
+                            <div id="previewCartHeader" style="background: #F7F7F7; border-bottom: 1px solid #D9DDE1; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                                <span id="previewCartTitle" style="font-family: var(--font-serif); font-size: 1.05rem; font-weight: 700; color: #171717;">
+                                    Sua Sacola de Escolhas
+                                </span>
+                                <span id="previewCartCloseBtn" style="font-size: 1.2rem; color: #171717; cursor: pointer; line-height: 1;">&times;</span>
+                            </div>
+                            <!-- Corpo da Sacola com Item -->
+                            <div id="previewCartBody" style="background: #FFFFFF; padding: 14px 16px;">
+                                <div id="previewCartItemRow" style="display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #D9DDE1; padding-bottom: 10px;">
+                                    <div style="width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">💎</div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div id="previewCartItemName" style="font-family: var(--font-serif); font-size: 0.92rem; font-weight: 700; color: #171717; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            Bracelete Caminhos Prata
+                                        </div>
+                                        <div id="previewCartItemDetail" style="font-size: 0.72rem; color: #555555;">
+                                            Gema: Quartzo Verde • Qtd: 1
+                                        </div>
+                                    </div>
+                                    <div id="previewCartItemPrice" style="font-weight: 700; font-size: 0.88rem; color: #171717; flex-shrink: 0;">
+                                        R$ 489,00
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Footer da Sacola -->
+                        <div id="previewCartFooter" style="background: #F7F7F7; border-top: 1px solid #D9DDE1; padding: 12px 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span id="previewCartSubtotalLabel" style="font-size: 0.82rem; font-weight: 600; color: #555555;">Subtotal:</span>
+                                <span id="previewCartSubtotalVal" style="font-size: 0.98rem; font-weight: 700; color: #171717;">R$ 489,00</span>
+                            </div>
+                            <div id="previewCartPerks" style="font-size: 0.68rem; color: #555555; margin-bottom: 10px; line-height: 1.3;">
+                                🔒 Pagamento Seguro via ASAAS • Pix Instantâneo
+                            </div>
+                            <button type="button" id="previewCartBtn" style="width: 100%; background: #171717; color: #FFFFFF; border: 1px solid #171717; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                                Finalizar Compra Segura
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -863,7 +1108,30 @@ const DIVINIUM_INITIAL_PALETTE = {
     custom_color_border:             { picker: 'picker_border',             initial: '#D9DDE1' },
     custom_color_icon_nav:           { picker: 'picker_icon_nav',           initial: '#777777' },
     custom_color_link:               { picker: 'picker_link',               initial: '#555555' },
-    custom_color_btn_hover:          { picker: 'picker_btn_hover',          initial: '#A7ADB4' }
+    custom_color_btn_hover:          { picker: 'picker_btn_hover',          initial: '#A7ADB4' },
+
+    // Hero Banner Principal
+    custom_color_hero_bg:            { picker: 'picker_hero_bg',            initial: '#252525' },
+    custom_color_hero_title:         { picker: 'picker_hero_title',         initial: '#FFFFFF' },
+    custom_color_hero_subtitle:      { picker: 'picker_hero_subtitle',      initial: '#CBD0D6' },
+    custom_color_hero_badge_bg:      { picker: 'picker_hero_badge_bg',      initial: '#1E2024' },
+    custom_color_hero_badge_text:    { picker: 'picker_hero_badge_text',    initial: '#CBD0D6' },
+    custom_color_hero_badge_border:  { picker: 'picker_hero_badge_border',  initial: '#4A5058' },
+    custom_color_hero_btn_bg:        { picker: 'picker_hero_btn_bg',        initial: '#CBD0D6' },
+    custom_color_hero_btn_text:      { picker: 'picker_hero_btn_text',      initial: '#171717' },
+    custom_color_hero_btn_sec_text:  { picker: 'picker_hero_btn_sec_text',  initial: '#F3EFE6' },
+    custom_color_hero_trust_text:    { picker: 'picker_hero_trust_text',    initial: '#CBD0D6' },
+
+    // Aba da Sacola (Cart Drawer)
+    custom_color_cart_bg:            { picker: 'picker_cart_bg',            initial: '#FFFFFF' },
+    custom_color_cart_footer_bg:     { picker: 'picker_cart_footer_bg',     initial: '#F7F7F7' },
+    custom_color_cart_title:         { picker: 'picker_cart_title',         initial: '#171717' },
+    custom_color_cart_item_title:    { picker: 'picker_cart_item_title',    initial: '#171717' },
+    custom_color_cart_text:          { picker: 'picker_cart_text',          initial: '#555555' },
+    custom_color_cart_price:         { picker: 'picker_cart_price',         initial: '#171717' },
+    custom_color_cart_border:        { picker: 'picker_cart_border',        initial: '#D9DDE1' },
+    custom_color_cart_btn_bg:        { picker: 'picker_cart_btn_bg',        initial: '#171717' },
+    custom_color_cart_btn_text:      { picker: 'picker_cart_btn_text',      initial: '#FFFFFF' }
 };
 
 function syncFromColorPicker(inputId, hexVal) {
@@ -1047,9 +1315,114 @@ function updateCustomPreview() {
         btnHover.style.borderRadius = radius;
     }
 }
+    // Atualização em Tempo Real — Hero Banner
+    const heroBg        = document.getElementById('custom_color_hero_bg')?.value || '#252525';
+    const heroTitle     = document.getElementById('custom_color_hero_title')?.value || '#FFFFFF';
+    const heroSub       = document.getElementById('custom_color_hero_subtitle')?.value || '#CBD0D6';
+    const heroBadgeBg   = document.getElementById('custom_color_hero_badge_bg')?.value || '#1E2024';
+    const heroBadgeTxt  = document.getElementById('custom_color_hero_badge_text')?.value || '#CBD0D6';
+    const heroBadgeBdr  = document.getElementById('custom_color_hero_badge_border')?.value || '#4A5058';
+    const heroBtnBg     = document.getElementById('custom_color_hero_btn_bg')?.value || '#CBD0D6';
+    const heroBtnTxt    = document.getElementById('custom_color_hero_btn_text')?.value || '#171717';
+    const heroBtnSecTxt = document.getElementById('custom_color_hero_btn_sec_text')?.value || '#F3EFE6';
+    const heroTrustTxt  = document.getElementById('custom_color_hero_trust_text')?.value || '#CBD0D6';
+
+    const pHeroBox = document.getElementById('previewHeroBox');
+    if (pHeroBox) {
+        pHeroBox.style.backgroundColor = heroBg;
+        pHeroBox.style.borderColor = heroBadgeBdr;
+    }
+    const pHeroBadge = document.getElementById('previewHeroBadge');
+    if (pHeroBadge) {
+        pHeroBadge.style.backgroundColor = heroBadgeBg;
+        pHeroBadge.style.borderColor = heroBadgeBdr;
+        pHeroBadge.style.color = heroBadgeTxt;
+    }
+    const pHeroSparkle = document.getElementById('previewHeroBadgeSparkle');
+    if (pHeroSparkle) pHeroSparkle.style.color = heroBadgeTxt;
+    const pHeroTitle = document.getElementById('previewHeroTitle');
+    if (pHeroTitle) {
+        pHeroTitle.style.color = heroTitle;
+        pHeroTitle.style.fontFamily = fontSerif;
+    }
+    const pHeroSub = document.getElementById('previewHeroSubtitle');
+    if (pHeroSub) pHeroSub.style.color = heroSub;
+    const pHeroBtn = document.getElementById('previewHeroBtn');
+    if (pHeroBtn) {
+        pHeroBtn.style.backgroundColor = heroBtnBg;
+        pHeroBtn.style.borderColor = heroBtnBg;
+        pHeroBtn.style.color = heroBtnTxt;
+        pHeroBtn.style.borderRadius = radius;
+    }
+    const pHeroSecBtn = document.getElementById('previewHeroSecBtn');
+    if (pHeroSecBtn) {
+        pHeroSecBtn.style.borderColor = heroBtnSecTxt;
+        pHeroSecBtn.style.color = heroBtnSecTxt;
+        pHeroSecBtn.style.borderRadius = radius;
+    }
+    const pHeroTrust = document.getElementById('previewHeroTrustStrip');
+    if (pHeroTrust) pHeroTrust.style.color = heroTrustTxt;
+
+    // Atualização em Tempo Real — Aba da Sacola (Cart Drawer)
+    const cartBg        = document.getElementById('custom_color_cart_bg')?.value || '#FFFFFF';
+    const cartFootBg    = document.getElementById('custom_color_cart_footer_bg')?.value || '#F7F7F7';
+    const cartTitle     = document.getElementById('custom_color_cart_title')?.value || '#171717';
+    const cartItemTitle = document.getElementById('custom_color_cart_item_title')?.value || '#171717';
+    const cartText      = document.getElementById('custom_color_cart_text')?.value || '#555555';
+    const cartPrice     = document.getElementById('custom_color_cart_price')?.value || '#171717';
+    const cartBorder    = document.getElementById('custom_color_cart_border')?.value || '#D9DDE1';
+    const cartBtnBg     = document.getElementById('custom_color_cart_btn_bg')?.value || '#171717';
+    const cartBtnTxt    = document.getElementById('custom_color_cart_btn_text')?.value || '#FFFFFF';
+
+    const pCartBox = document.getElementById('previewCartBox');
+    if (pCartBox) pCartBox.style.borderColor = cartBorder;
+    const pCartHeader = document.getElementById('previewCartHeader');
+    if (pCartHeader) {
+        pCartHeader.style.backgroundColor = cartFootBg;
+        pCartHeader.style.borderBottomColor = cartBorder;
+    }
+    const pCartTitle = document.getElementById('previewCartTitle');
+    if (pCartTitle) {
+        pCartTitle.style.color = cartTitle;
+        pCartTitle.style.fontFamily = fontSerif;
+    }
+    const pCartClose = document.getElementById('previewCartCloseBtn');
+    if (pCartClose) pCartClose.style.color = cartTitle;
+    const pCartBody = document.getElementById('previewCartBody');
+    if (pCartBody) pCartBody.style.backgroundColor = cartBg;
+    const pCartRow = document.getElementById('previewCartItemRow');
+    if (pCartRow) pCartRow.style.borderBottomColor = cartBorder;
+    const pCartItemName = document.getElementById('previewCartItemName');
+    if (pCartItemName) {
+        pCartItemName.style.color = cartItemTitle;
+        pCartItemName.style.fontFamily = fontSerif;
+    }
+    const pCartItemDet = document.getElementById('previewCartItemDetail');
+    if (pCartItemDet) pCartItemDet.style.color = cartText;
+    const pCartItemPr = document.getElementById('previewCartItemPrice');
+    if (pCartItemPr) pCartItemPr.style.color = cartPrice;
+    const pCartFooter = document.getElementById('previewCartFooter');
+    if (pCartFooter) {
+        pCartFooter.style.backgroundColor = cartFootBg;
+        pCartFooter.style.borderTopColor = cartBorder;
+    }
+    const pCartSubLbl = document.getElementById('previewCartSubtotalLabel');
+    if (pCartSubLbl) pCartSubLbl.style.color = cartText;
+    const pCartSubVal = document.getElementById('previewCartSubtotalVal');
+    if (pCartSubVal) pCartSubVal.style.color = cartPrice;
+    const pCartPerks = document.getElementById('previewCartPerks');
+    if (pCartPerks) pCartPerks.style.color = cartText;
+    const pCartBtn = document.getElementById('previewCartBtn');
+    if (pCartBtn) {
+        pCartBtn.style.backgroundColor = cartBtnBg;
+        pCartBtn.style.borderColor = cartBtnBg;
+        pCartBtn.style.color = cartBtnTxt;
+        pCartBtn.style.borderRadius = radius;
+    }
+
 
 function resetToThemeDefaults() {
-    if (!confirm('Deseja restaurar todas as 17 cores da Identidade Visual DIVINIUM aos valores iniciais?')) {
+    if (!confirm('Deseja restaurar todas as cores da Identidade Visual DIVINIUM aos valores iniciais?')) {
         return;
     }
     Object.keys(DIVINIUM_INITIAL_PALETTE).forEach(key => {

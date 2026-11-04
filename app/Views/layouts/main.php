@@ -921,6 +921,200 @@
             background-color: <?= \App\Core\View::e(\App\Models\Setting::get('institutional_card_bg')) ?> !important;
         }
         <?php endif; ?>
+        /* =========================================================================
+           CORES EXCLUSIVAS DO HERO BANNER PRINCIPAL (PALETA PERSONALIZADA)
+           ========================================================================= */
+        <?php
+            $heroBgCol = \App\Models\Setting::get('custom_color_hero_bg', '');
+            $heroTitleCol = \App\Models\Setting::get('custom_color_hero_title', '');
+            $heroSubtitleCol = \App\Models\Setting::get('custom_color_hero_subtitle', '');
+            $heroBadgeBgCol = \App\Models\Setting::get('custom_color_hero_badge_bg', '');
+            $heroBadgeTextCol = \App\Models\Setting::get('custom_color_hero_badge_text', '');
+            $heroBadgeBorderCol = \App\Models\Setting::get('custom_color_hero_badge_border', '');
+            $heroBtnBgCol = \App\Models\Setting::get('custom_color_hero_btn_bg', '');
+            $heroBtnTextCol = \App\Models\Setting::get('custom_color_hero_btn_text', '');
+            $heroBtnSecTextCol = \App\Models\Setting::get('custom_color_hero_btn_sec_text', '');
+            $heroTrustTextCol = \App\Models\Setting::get('custom_color_hero_trust_text', '');
+        ?>
+        <?php if (!empty($heroBgCol)): ?>
+        .hero-section,
+        body.luxury-theme .hero-section {
+            background-color: <?= \App\Core\View::e($heroBgCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($heroTitleCol)): ?>
+        body.luxury-theme .hero-section .hero-title,
+        .hero-section .hero-title {
+            color: <?= \App\Core\View::e($heroTitleCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($heroSubtitleCol)): ?>
+        body.luxury-theme .hero-section .hero-subtitle,
+        body.luxury-theme .hero-section .hero-subtitle strong,
+        .hero-section .hero-subtitle,
+        .hero-section .hero-subtitle strong {
+            color: <?= \App\Core\View::e($heroSubtitleCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($heroBadgeBgCol) || !empty($heroBadgeTextCol) || !empty($heroBadgeBorderCol)): ?>
+        body.luxury-theme .hero-section .hero-editorial-badge,
+        .hero-section .hero-editorial-badge {
+            <?php if (!empty($heroBadgeBgCol)): ?>background-color: <?= \App\Core\View::e($heroBadgeBgCol) ?> !important; background: <?= \App\Core\View::e($heroBadgeBgCol) ?> !important;<?php endif; ?>
+            <?php if (!empty($heroBadgeTextCol)): ?>color: <?= \App\Core\View::e($heroBadgeTextCol) ?> !important;<?php endif; ?>
+            <?php if (!empty($heroBadgeBorderCol)): ?>border-color: <?= \App\Core\View::e($heroBadgeBorderCol) ?> !important;<?php endif; ?>
+        }
+        <?php if (!empty($heroBadgeTextCol)): ?>
+        body.luxury-theme .hero-section .hero-editorial-badge span,
+        body.luxury-theme .hero-section .hero-editorial-badge .badge-sparkle,
+        .hero-section .hero-editorial-badge span,
+        .hero-section .hero-editorial-badge .badge-sparkle {
+            color: <?= \App\Core\View::e($heroBadgeTextCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php endif; ?>
+        <?php if (!empty($heroBtnBgCol) || !empty($heroBtnTextCol)): ?>
+        body.luxury-theme .hero-section .btn-hero-gold,
+        .hero-section .btn-hero-gold {
+            <?php if (!empty($heroBtnBgCol)): ?>background: <?= \App\Core\View::e($heroBtnBgCol) ?> !important; background-color: <?= \App\Core\View::e($heroBtnBgCol) ?> !important; border-color: <?= \App\Core\View::e($heroBtnBgCol) ?> !important;<?php endif; ?>
+            <?php if (!empty($heroBtnTextCol)): ?>color: <?= \App\Core\View::e($heroBtnTextCol) ?> !important;<?php endif; ?>
+        }
+        <?php if (!empty($heroBtnTextCol)): ?>
+        body.luxury-theme .hero-section .btn-hero-gold span,
+        body.luxury-theme .hero-section .btn-hero-gold svg,
+        .hero-section .btn-hero-gold span,
+        .hero-section .btn-hero-gold svg {
+            color: <?= \App\Core\View::e($heroBtnTextCol) ?> !important;
+            stroke: <?= \App\Core\View::e($heroBtnTextCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php endif; ?>
+        <?php if (!empty($heroBtnSecTextCol)): ?>
+        body.luxury-theme .hero-section .btn-hero-ghost,
+        .hero-section .btn-hero-ghost {
+            color: <?= \App\Core\View::e($heroBtnSecTextCol) ?> !important;
+            border-color: <?= \App\Core\View::e($heroBtnSecTextCol) ?> !important;
+        }
+        body.luxury-theme .hero-section .btn-hero-ghost span,
+        body.luxury-theme .hero-section .btn-hero-ghost svg,
+        .hero-section .btn-hero-ghost span,
+        .hero-section .btn-hero-ghost svg {
+            color: <?= \App\Core\View::e($heroBtnSecTextCol) ?> !important;
+            stroke: <?= \App\Core\View::e($heroBtnSecTextCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($heroTrustTextCol)): ?>
+        body.luxury-theme .hero-section .hero-trust-strip .trust-badge,
+        body.luxury-theme .hero-section .hero-trust-strip .trust-badge *,
+        .hero-section .hero-trust-strip .trust-badge,
+        .hero-section .hero-trust-strip .trust-badge * {
+            color: <?= \App\Core\View::e($heroTrustTextCol) ?> !important;
+        }
+        <?php endif; ?>
+
+        /* =========================================================================
+           CORES EXCLUSIVAS DA ABA DA SACOLA (CART DRAWER)
+           ========================================================================= */
+        <?php
+            $cartBgCol = \App\Models\Setting::get('custom_color_cart_bg', '');
+            $cartFooterBgCol = \App\Models\Setting::get('custom_color_cart_footer_bg', '');
+            $cartTitleCol = \App\Models\Setting::get('custom_color_cart_title', '');
+            $cartItemTitleCol = \App\Models\Setting::get('custom_color_cart_item_title', '');
+            $cartTextCol = \App\Models\Setting::get('custom_color_cart_text', '');
+            $cartPriceCol = \App\Models\Setting::get('custom_color_cart_price', '');
+            $cartBorderCol = \App\Models\Setting::get('custom_color_cart_border', '');
+            $cartBtnBgCol = \App\Models\Setting::get('custom_color_cart_btn_bg', '');
+            $cartBtnTextCol = \App\Models\Setting::get('custom_color_cart_btn_text', '');
+        ?>
+        <?php if (!empty($cartBgCol)): ?>
+        .cart-drawer,
+        .cart-drawer-body,
+        body.luxury-theme .cart-drawer,
+        body.luxury-theme .cart-drawer-body {
+            background: <?= \App\Core\View::e($cartBgCol) ?> !important;
+            background-color: <?= \App\Core\View::e($cartBgCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartFooterBgCol)): ?>
+        .cart-drawer-header,
+        .cart-drawer-footer,
+        body.luxury-theme .cart-drawer-header,
+        body.luxury-theme .cart-drawer-footer {
+            background: <?= \App\Core\View::e($cartFooterBgCol) ?> !important;
+            background-color: <?= \App\Core\View::e($cartFooterBgCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartTitleCol)): ?>
+        .cart-drawer-header h3,
+        .cart-drawer-header .close-drawer-btn,
+        body.luxury-theme .cart-drawer-header h3,
+        body.luxury-theme .cart-drawer-header .close-drawer-btn {
+            color: <?= \App\Core\View::e($cartTitleCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartItemTitleCol)): ?>
+        .cart-drawer .cart-item-row h4,
+        #cartDrawerBody .cart-item-row h4,
+        .cart-drawer .cart-item-row button[onclick*="changeCartItemQty"] + span,
+        body.luxury-theme .cart-drawer .cart-item-row h4,
+        body.luxury-theme #cartDrawerBody .cart-item-row h4 {
+            color: <?= \App\Core\View::e($cartItemTitleCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartTextCol)): ?>
+        .cart-drawer .cart-perks,
+        .cart-drawer .cart-perks small,
+        .cart-drawer .empty-cart-state p,
+        .cart-drawer .cart-subtotal-row > span:first-child,
+        .cart-drawer .cart-item-row span:not(.cart-item-price-val),
+        .cart-drawer .cart-item-row button[onclick*="changeCartItemQty"],
+        .cart-drawer .cart-item-row button[onclick*="removeFromCart"],
+        .cart-drawer .btn-discover,
+        #cartDrawerBody .cart-item-row span:not(.cart-item-price-val),
+        body.luxury-theme .cart-drawer .cart-perks,
+        body.luxury-theme .cart-drawer .empty-cart-state p {
+            color: <?= \App\Core\View::e($cartTextCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartPriceCol)): ?>
+        .cart-subtotal-row,
+        .cart-subtotal-row .subtotal-val,
+        #cartSubtotalVal,
+        .cart-drawer .cart-item-row .cart-item-price-val,
+        #cartDrawerBody .cart-item-row div > span:last-child,
+        body.luxury-theme .cart-subtotal-row,
+        body.luxury-theme .cart-subtotal-row .subtotal-val,
+        body.luxury-theme #cartSubtotalVal {
+            color: <?= \App\Core\View::e($cartPriceCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartBorderCol)): ?>
+        .cart-drawer-header,
+        .cart-drawer-footer,
+        .cart-drawer .cart-item-row,
+        .cart-drawer .btn-discover,
+        #cartDrawerBody .cart-item-row,
+        body.luxury-theme .cart-drawer-header,
+        body.luxury-theme .cart-drawer-footer {
+            border-color: <?= \App\Core\View::e($cartBorderCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cartBtnBgCol) || !empty($cartBtnTextCol)): ?>
+        .cart-drawer .btn-checkout-primary,
+        body.luxury-theme .cart-drawer .btn-checkout-primary {
+            <?php if (!empty($cartBtnBgCol)): ?>background: <?= \App\Core\View::e($cartBtnBgCol) ?> !important; background-color: <?= \App\Core\View::e($cartBtnBgCol) ?> !important; border-color: <?= \App\Core\View::e($cartBtnBgCol) ?> !important;<?php endif; ?>
+            <?php if (!empty($cartBtnTextCol)): ?>color: <?= \App\Core\View::e($cartBtnTextCol) ?> !important;<?php endif; ?>
+        }
+        <?php if (!empty($cartBtnTextCol)): ?>
+        .cart-drawer .btn-checkout-primary span,
+        .cart-drawer .btn-checkout-primary svg,
+        body.luxury-theme .cart-drawer .btn-checkout-primary span,
+        body.luxury-theme .cart-drawer .btn-checkout-primary svg {
+            color: <?= \App\Core\View::e($cartBtnTextCol) ?> !important;
+            stroke: <?= \App\Core\View::e($cartBtnTextCol) ?> !important;
+        }
+        <?php endif; ?>
+        <?php endif; ?>
+
 
         /* -------------------------------------------------------------------------
            CORES PERSONALIZADAS: SEÇÃO EXPERIÊNCIA DE SERVIÇOS EXCLUSIVOS
