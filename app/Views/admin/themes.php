@@ -1314,7 +1314,7 @@ function updateCustomPreview() {
         btnHover.style.color = getContrastColor(btnHoverColor);
         btnHover.style.borderRadius = radius;
     }
-}
+
     // Atualização em Tempo Real — Hero Banner
     const heroBg        = document.getElementById('custom_color_hero_bg')?.value || '#252525';
     const heroTitle     = document.getElementById('custom_color_hero_title')?.value || '#FFFFFF';
@@ -1419,7 +1419,7 @@ function updateCustomPreview() {
         pCartBtn.style.color = cartBtnTxt;
         pCartBtn.style.borderRadius = radius;
     }
-
+}
 
 function resetToThemeDefaults() {
     if (!confirm('Deseja restaurar todas as cores da Identidade Visual DIVINIUM aos valores iniciais?')) {
